@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_declarations
+
 import 'package:dikantin/app/modules/pesanan/controllers/pesanan_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -89,8 +91,7 @@ class _ProsesState extends State<Proses> {
           return Container(
             height: mediaHeight * 0.25,
             child: Center(
-              child:
-                  Lottie.asset('assets/animation_lokcom8c.json', repeat: false),
+              child: Lottie.asset('assets/notList.json', repeat: true),
             ),
           );
         } else {
@@ -107,8 +108,10 @@ class _ProsesState extends State<Proses> {
                       arguments: orderData.transaksi?.kodeTr);
                 },
                 child: Padding(
-                  padding: const EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.only(
+                      top: 10, left: 10, right: 10, bottom: 5),
                   child: Card(
+                      color: Colors.white,
                       key: ValueKey(
                           orderData.transaksi?.kodeTr), // Gunakan key unik
                       shape: RoundedRectangleBorder(

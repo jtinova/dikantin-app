@@ -118,8 +118,8 @@ class _FavoriteState extends State<Favorite> {
                     return Container(
                         height: mediaHeight * 0.25,
                         child: Center(
-                          child: Lottie.asset('assets/animation_lokcom8c.json',
-                              repeat: false),
+                          child:
+                              Lottie.asset('assets/search.json', repeat: true),
                         ));
                   } else {
                     return Container(
@@ -285,8 +285,8 @@ class _FavoriteState extends State<Favorite> {
                     return Container(
                         height: mediaHeight * 0.25,
                         child: Center(
-                          child: Lottie.asset('assets/animation_lokcom8c.json',
-                              repeat: false),
+                          child:
+                              Lottie.asset('assets/search.json', repeat: true),
                         ));
                   } else {
                     return Container(
@@ -338,8 +338,7 @@ class _FavoriteState extends State<Favorite> {
                                     '${dataPenjualan.nama ?? ''} Kantin ${dataPenjualan.idKantin}',
                                     style: GoogleFonts.poppins(
                                       textStyle: TextStyle(
-                                        fontSize:
-                                             13,
+                                        fontSize: 13,
                                         color: Colors.white,
                                         fontWeight: FontWeight.normal,
                                       ),
@@ -354,8 +353,7 @@ class _FavoriteState extends State<Favorite> {
                                     '${dataPenjualan.penjualanHariIni ?? ''} $kategoriPesan',
                                     style: GoogleFonts.poppins(
                                       textStyle: TextStyle(
-                                        fontSize:
-                                             13,
+                                        fontSize: 13,
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
                                       ),

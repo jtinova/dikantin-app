@@ -21,6 +21,8 @@ class OrderView extends GetView<OrderController> {
   Widget build(BuildContext context) {
     double textScaleFactor = MediaQuery.of(context).textScaleFactor;
 
+    final mediaHeight =
+        MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
     final query = MediaQuery.of(context);
     print('textscalefactor: ${query.textScaleFactor}');
     print('devicePixelRatio: ${query.devicePixelRatio}');
@@ -141,9 +143,39 @@ class OrderView extends GetView<OrderController> {
                   child: Obx(
                     () => homeController.cartList.isEmpty
                         ? Center(
-                            child: Lottie.asset(
-                                'assets/animation_lokccsws.json',
-                                repeat: false))
+                            child: Container(
+                              height: mediaHeight * 0.33,
+                              child: Column(
+                                children: [
+                                  Center(
+                                      child: Lottie.asset('assets/ceklist.json',
+                                          repeat: true)),
+                                  Column(
+                                    children: [
+                                      Text(
+                                        "Transaksi Berhasil !!",
+                                        style: TextStyle(
+                                            fontSize: textScaleFactor <= 1.15
+                                                ? 15
+                                                : 12,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        "Ditunggu ya untuk pesanannya",
+                                        style: TextStyle(
+                                            fontSize: textScaleFactor <= 1.15
+                                                ? 15
+                                                : 12,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w300),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
                         : ListView.builder(
                             itemCount: homeController.cartList.length,
                             shrinkWrap: true,
@@ -331,65 +363,68 @@ class OrderView extends GetView<OrderController> {
                       SizedBox(
                         height: 5,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            child: Row(
-                              children: [
-                                Icon(
-                                  homeController.isCashSelected.value
-                                      ? CarbonIcons.money
-                                      : CarbonIcons.wallet,
-                                  size: 24.0,
-                                  color: homeController.isCashSelected.value
-                                      ? Colors.blue
-                                      : Colors.blue,
-                                ),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                FittedBox(
-                                  alignment: Alignment.center,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        color: Color(0xFFD0E0FE),
-                                        borderRadius: BorderRadius.circular(5)),
-                                    child: Text(
-                                      homeController.isCashSelected.value
-                                          ? ' Cash '
-                                          : ' Polije Pay ',
-                                      style: GoogleFonts.poppins(
-                                        textStyle: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.normal,
-                                          color: Colors.blue,
+                      InkWell(
+                        onTap: () {
+                          paymentMethod(context);
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    homeController.isCashSelected.value
+                                        ? CarbonIcons.money
+                                        : CarbonIcons.wallet,
+                                    size: 24.0,
+                                    color: homeController.isCashSelected.value
+                                        ? Colors.blue
+                                        : Colors.blue,
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  FittedBox(
+                                    alignment: Alignment.center,
+                                    child: Container(
+                                      padding: EdgeInsets.only(
+                                          left: 7, right: 7, top: 2, bottom: 2),
+                                      decoration: BoxDecoration(
+                                          color: Color(0xFFD0E0FE),
+                                          borderRadius:
+                                              BorderRadius.circular(5)),
+                                      child: Text(
+                                        homeController.isCashSelected.value
+                                            ? ' Cash '
+                                            : ' Polije Pay ',
+                                        style: GoogleFonts.poppins(
+                                          textStyle: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.normal,
+                                            color: Colors.blue,
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                // Text(
-                                //   'Rp. 50.000',
-                                //   style: GoogleFonts.poppins(
-                                //     textStyle: TextStyle(
-                                //       fontSize: 15,
-                                //       fontWeight: FontWeight.bold,
-                                //       color: Colors.black,
-                                //     ),
-                                //   ),
-                                // ),
-                              ],
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  // Text(
+                                  //   'Rp. 50.000',
+                                  //   style: GoogleFonts.poppins(
+                                  //     textStyle: TextStyle(
+                                  //       fontSize: 15,
+                                  //       fontWeight: FontWeight.bold,
+                                  //       color: Colors.black,
+                                  //     ),
+                                  //   ),
+                                  // ),
+                                ],
+                              ),
                             ),
-                          ),
-                          InkWell(
-                            onTap: () {
-                              paymentMethod(context);
-                            },
-                            child: Container(
+                            Container(
                               decoration: BoxDecoration(
                                   color: Color(0xFFD0E0FE),
                                   borderRadius: BorderRadius.circular(10)),
@@ -399,11 +434,11 @@ class OrderView extends GetView<OrderController> {
                                 color: Colors.blue,
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                       SizedBox(
-                        height: 5,
+                        height: 10,
                       ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -419,6 +454,9 @@ class OrderView extends GetView<OrderController> {
                         onPressed: () {
                           if (homeController.cartList.isNotEmpty) {
                             homeController.submitOrder();
+                            Future.delayed(Duration(seconds: 5), () {
+                              Get.offAllNamed('/navigation');
+                            });
                           } else {
                             Get.snackbar('Error', 'Keranjang kosong');
                           }

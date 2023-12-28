@@ -22,6 +22,8 @@ class _SemuaState extends State<Semua> {
   Widget build(BuildContext context) {
     double textScaleFactor = MediaQuery.of(context).textScaleFactor;
 
+    final mediaHeight =
+        MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
     final query = MediaQuery.of(context);
     print('textscalefactor: ${query.textScaleFactor}');
     print('devicePixelRatio: ${query.devicePixelRatio}');
@@ -64,7 +66,7 @@ class _SemuaState extends State<Semua> {
                         decoration: InputDecoration.collapsed(
                           filled: true,
                           fillColor: Colors.transparent,
-                          hintText: "Mau mamam apa hari ini ?",
+                          hintText: "Mau jajan apa hari ini ?",
                           hintStyle: TextStyle(
                               color: Colors.grey[500], fontFamily: 'Mulish'),
                           hoverColor: Colors.transparent,
@@ -124,9 +126,13 @@ class _SemuaState extends State<Semua> {
                         ),
                       );
                     } else if (controller.searchResults.isEmpty) {
-                      return Center(
-                          child: Lottie.asset('assets/animation_lokcsauz.json',
-                              repeat: false));
+                      return Container(
+                        height: mediaHeight * 0.35,
+                        child: Center(
+                          child:
+                              Lottie.asset('assets/search.json', repeat: false),
+                        ),
+                      );
                     } else {
                       return GridView.builder(
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

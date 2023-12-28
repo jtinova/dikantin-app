@@ -108,10 +108,9 @@ class RiwayatKurirView extends GetView<RiwayatKurirController> {
           );
         } else if (controllerc.loadRiwayat.data?.isEmpty ?? true) {
           return Container(
-              height: mediaHeight * 0.25,
+              height: mediaHeight * 0.40,
               child: Center(
-                child: Lottie.asset('assets/animation_lokcom8c.json',
-                    repeat: false),
+                child: Lottie.asset('assets/notList.json', repeat: true),
               ));
         } else {
           return ListView.builder(

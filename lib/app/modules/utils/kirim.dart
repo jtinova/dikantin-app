@@ -88,10 +88,9 @@ class _KirimState extends State<Kirim> {
           );
         } else if (controller.pesananDikirim.data?.isEmpty ?? true) {
           return Container(
-              height: mediaHeight * 0.25,
+              height: mediaHeight * 0.40,
               child: Center(
-                child: Lottie.asset('assets/animation_lokcom8c.json',
-                    repeat: false),
+                child: Lottie.asset('assets/notList.json', repeat: true),
               ));
         } else {
           return ListView.builder(
@@ -109,6 +108,7 @@ class _KirimState extends State<Kirim> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Card(
+                      color: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(
                             10.0), // Sesuaikan dengan radius yang diinginkan

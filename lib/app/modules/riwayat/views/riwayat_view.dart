@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../pesanan/controllers/pesanan_controller.dart';
 import '../controllers/riwayat_controller.dart';
@@ -132,7 +133,7 @@ class RiwayatView extends GetView<RiwayatController> {
                               padding: EdgeInsets.zero,
                               onPressed: () {
                                 riwayatController.chooseDate();
-                              },
+                              }, // Tambahkan baris ini untuk mengatur warna dasar
                               iconSize: mediaBody * 0.001,
                               icon: const Icon(
                                 Icons.edit_calendar_rounded,
@@ -193,6 +194,8 @@ class RiwayatView extends GetView<RiwayatController> {
   Widget content(BuildContext context) {
     double textScaleFactor = MediaQuery.of(context).textScaleFactor;
 
+    final mediaHeight =
+        MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
     return Expanded(
       child: Obx(() {
         if (riwayatController.isLoading.value) {
@@ -231,12 +234,10 @@ class RiwayatView extends GetView<RiwayatController> {
             ),
           );
         } else if (riwayatController.searchResults.isEmpty) {
-          return Center(
-            child: Text(
-              "Data Not Found",
-              style: TextStyle(
-                fontSize: 16.0,
-              ),
+          return Container(
+            height: mediaHeight * 0.25,
+            child: Center(
+              child: Lottie.asset('assets/notList.json', repeat: true),
             ),
           );
         } else {
@@ -257,6 +258,7 @@ class RiwayatView extends GetView<RiwayatController> {
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Card(
+                    color: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(
                           10.0), // Sesuaikan dengan radius yang diinginkan

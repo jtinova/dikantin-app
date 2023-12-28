@@ -505,8 +505,9 @@ class ProfileView extends GetView<ProfileController> {
                 height: 10,
               ),
               ElevatedButton.icon(
-                icon: const Icon(Icons.save),
-                label: const Text("Save Change"),
+                icon: const Icon(Icons.save, color: Colors.white),
+                label: const Text("Save Change",
+                    style: TextStyle(color: Colors.white)),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
                 ),

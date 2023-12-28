@@ -69,9 +69,11 @@ class KeranjangView extends GetView<KeranjangController> {
               child: Container(
                 child: Obx(
                   () => homeController.cartList.isEmpty
-                      ? Center(
-                          child: Lottie.asset('assets/animation_lokccsws.json',
-                              repeat: false))
+                      ? Container(
+                          child: Center(
+                              child: Lottie.asset('assets/notList.json',
+                                  repeat: false)),
+                        )
                       : ListView.builder(
                           itemCount: homeController.cartList.length,
                           shrinkWrap: true,
@@ -498,7 +500,7 @@ class KeranjangView extends GetView<KeranjangController> {
                       children: [
                         Text(homeController.totalPrice.toRupiah(),
                             style: GoogleFonts.poppins(
-                                fontSize: 14, fontWeight: FontWeight.bold)),
+                                fontSize: 25, fontWeight: FontWeight.bold)),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.blue,

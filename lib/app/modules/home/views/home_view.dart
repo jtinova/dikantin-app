@@ -272,91 +272,86 @@ class HomeView extends GetView<HomeController> {
                                 borderRadius: BorderRadius.circular(10),
                                 color: Color(0xFF2579FD),
                               ),
-                              child: Padding(
-                                padding: const EdgeInsets.fromLTRB(7, 2, 7, 0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              top: 0, left: 15),
-                                          child: Container(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  "${controller.countc.toString()} item",
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 15),
+                                        child: Container(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "${controller.countc.toString()} item",
+                                                style: GoogleFonts.poppins(
+                                                  textStyle: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                              ),
+                                              Container(
+                                                width: mediaWidth * 0.5,
+                                                child: Text(
+                                                  "Siap mengantar pesanan ",
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  maxLines:
+                                                      1, // Set a maximum number of lines
+
                                                   style: GoogleFonts.poppins(
                                                     textStyle: TextStyle(
                                                       fontSize: 12,
                                                       color: Colors.white,
                                                       fontWeight:
-                                                          FontWeight.w500,
+                                                          FontWeight.normal,
                                                     ),
                                                   ),
                                                 ),
-                                                Container(
-                                                  width: mediaWidth * 0.5,
-                                                  child: Text(
-                                                    "Siap mengantar pesanan ",
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    maxLines:
-                                                        1, // Set a maximum number of lines
-
-                                                    style: GoogleFonts.poppins(
-                                                      textStyle: TextStyle(
-                                                        fontSize: 12,
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.normal,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                        Container(
-                                          padding: EdgeInsets.only(
-                                              top: 10, right: 8),
-                                          child: Center(
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  controller.totalPrice
-                                                      .toRupiah(),
-                                                  style: GoogleFonts.poppins(
-                                                    textStyle: TextStyle(
-                                                      fontSize: 13,
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                    ),
+                                      ),
+                                      Container(
+                                        padding: EdgeInsets.only(right: 15),
+                                        child: Center(
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                controller.totalPrice
+                                                    .toRupiah(),
+                                                style: GoogleFonts.poppins(
+                                                  textStyle: TextStyle(
+                                                    fontSize: 13,
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.w600,
                                                   ),
                                                 ),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                                Icon(
-                                                  Icons.shopping_cart,
-                                                  size: 24,
-                                                  color: Colors.white,
-                                                ),
-                                              ],
-                                            ),
+                                              ),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              Icon(
+                                                Icons.shopping_cart,
+                                                size: 24,
+                                                color: Colors.white,
+                                              ),
+                                            ],
                                           ),
-                                        )
-                                      ],
-                                    ),
-                                  ],
-                                ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ],
                               ),
                             ),
                           ),
