@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../data/models/profile_model.dart';
+import '../../../data/models/unit_model.dart';
 import '../../../data/providers/profile_provider.dart';
 
 class OrderController extends GetxController {
@@ -17,8 +18,9 @@ class OrderController extends GetxController {
   final ProfileProvider provider = ProfileProvider().obs();
   final _customerProvider = CustomerProvider().obs;
   Rx<Profile> profile = Profile().obs;
+  Rx<Unit> unit = Unit().obs;
   var addressController = TextEditingController();
-
+  RxBool isButtonEnabled = true.obs;
   RxBool isImageUploading = false.obs;
   RxBool isLoading = true.obs;
 
@@ -37,6 +39,8 @@ class OrderController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    getCustomerData();
+    getUnit();
   }
 
   @override
@@ -74,6 +78,8 @@ class OrderController extends GetxController {
   }
 
   Future<void> getAddressFromLatLong(Position position) async {
+    print('Latitude: ${position.latitude}');
+    print('Longitude: ${position.longitude}');
     List<Placemark> placemarks =
         await placemarkFromCoordinates(position.latitude, position.longitude);
     print(placemarks);
@@ -99,18 +105,35 @@ class OrderController extends GetxController {
     }
   }
 
-  Future<void> editAlamat({
-    required String alamat,
-  }) async {
+  Future<void> getUnit() async {
+    try {
+      isLoading(true);
+
+      // Call the getCustomer method from CustomerProvider
+      Unit result = await _customerProvider.value.getDataUnit();
+
+      // Update the customer data
+      unit(result);
+
+      isLoading(false);
+    } catch (error) {
+      isLoading(false);
+      print('Error fetching dataprofile: $error');
+    }
+  }
+
+  Future<void> editAlamat(
+      {required String alamat,
+      required String lat,
+      required String long,
+      required String ket}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
 
     if (token != null) {
       try {
         await provider.editAlamat(
-          token: token,
-          alamat: alamat,
-        );
+            token: token, alamat: alamat, long: long, lat: lat, ket: ket);
         await getCustomerData();
       } catch (error) {
         // Handle and print the error
@@ -119,6 +142,27 @@ class OrderController extends GetxController {
     } else {
       // Handle case where token is not available (e.g., user not logged in)
       print('Token not available. User not logged in.');
+    }
+  }
+
+  Future<void> getAccurateLocation() async {
+    try {
+      isLoading(true);
+
+      // Mendapatkan lokasi terkini dengan akurasi terbaik
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.best,
+      );
+
+      // Menyimpan lokasi terkini
+      myPosition.value = position;
+
+      // Mendapatkan alamat dari lokasi terkini
+
+      isLoading(false);
+    } catch (error) {
+      isLoading(false);
+      print('Error fetching location: $error');
     }
   }
 }

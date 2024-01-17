@@ -1,0 +1,334 @@
+{
+    "data": [
+        {
+            "id_gedung": 1,
+            "nama_gedung": "Perpustakaan POLIJE",
+            "lattitude": "-8.160116",
+            "longtitude": "113.723578",
+            "created_at": "2024-01-17T02:32:27.000000Z",
+            "updated_at": "2024-01-17T02:32:27.000000Z"
+        },
+        {
+            "id_gedung": 2,
+            "nama_gedung": "Ruang Kuliah Bersama Polije",
+            "lattitude": "-8.160195",
+            "longtitude": "113.723856",
+            "created_at": "2024-01-17T02:32:27.000000Z",
+            "updated_at": "2024-01-17T02:32:27.000000Z"
+        },
+        {
+            "id_gedung": 3,
+            "nama_gedung": "Laboratorium Ekonomi Polije",
+            "lattitude": "-8.160017",
+            "longtitude": "113.723785",
+            "created_at": "2024-01-17T02:32:27.000000Z",
+            "updated_at": "2024-01-17T02:32:27.000000Z"
+        },
+        {
+            "id_gedung": 4,
+            "nama_gedung": "Gedung Lab. Tanah POLIJE",
+            "lattitude": "-8.159784",
+            "longtitude": "113.724064",
+            "created_at": "2024-01-17T02:32:27.000000Z",
+            "updated_at": "2024-01-17T02:32:27.000000Z"
+        },
+        {
+            "id_gedung": 5,
+            "nama_gedung": "Lab PHTP",
+            "lattitude": "-8.159392",
+            "longtitude": "113.724349",
+            "created_at": "2024-01-17T02:32:27.000000Z",
+            "updated_at": "2024-01-17T02:32:27.000000Z"
+        },
+        {
+            "id_gedung": 6,
+            "nama_gedung": "Laboratorium Logam dan kayu( jurusan TP)",
+            "lattitude": "-8.156659",
+            "longtitude": "113.725220",
+            "created_at": "2024-01-17T02:32:27.000000Z",
+            "updated_at": "2024-01-17T02:32:27.000000Z"
+        },
+        {
+            "id_gedung": 7,
+            "nama_gedung": "Gedung Teknologi Pertanian Polije",
+            "lattitude": "-8.156042",
+            "longtitude": "113.725064",
+            "created_at": "2024-01-17T02:32:27.000000Z",
+            "updated_at": "2024-01-17T02:32:27.000000Z"
+        },
+        {
+            "id_gedung": 8,
+            "nama_gedung": "TEFA BAKERY SIP",
+            "lattitude": "-8.155023577439197",
+            "longtitude": "113.72706008530149",
+            "created_at": "2024-01-17T02:32:27.000000Z",
+            "updated_at": "2024-01-17T02:32:27.000000Z"
+        },
+        {
+            "id_gedung": 9,
+            "nama_gedung": "Unit Pengalengan Ikan Politeknik Negeri Jember",
+            "lattitude": "-8.155768",
+            "longtitude": "113.727034",
+            "created_at": "2024-01-17T02:32:27.000000Z",
+            "updated_at": "2024-01-17T02:32:27.000000Z"
+        },
+        {
+            "id_gedung": 10,
+            "nama_gedung": "Rotogravure Printing Converting POLIJE",
+            "lattitude": "-8.156123",
+            "longtitude": "113.726214",
+            "created_at": "2024-01-17T02:32:27.000000Z",
+            "updated_at": "2024-01-17T02:32:27.000000Z"
+        },
+        {
+            "id_gedung": 11,
+            "nama_gedung": "Unit Produksi Benih Polije",
+            "lattitude": "-8.156016",
+            "longtitude": "113.725743",
+            "created_at": "2024-01-17T02:32:27.000000Z",
+            "updated_at": "2024-01-17T02:32:27.000000Z"
+        },
+        {
+            "id_gedung": 12,
+            "nama_gedung": "GEDUNG PASCA SARJANA",
+            "lattitude": "-8.156897",
+            "longtitude": "113.722931",
+            "created_at": "2024-01-17T02:32:27.000000Z",
+            "updated_at": "2024-01-17T02:32:27.000000Z"
+        },
+        {
+            "id_gedung": 13,
+            "nama_gedung": "Gedung Jurusan Peternakan Politeknik Negeri Jember",
+            "lattitude": "-8.157400",
+            "longtitude": "113.723630",
+            "created_at": "2024-01-17T02:32:27.000000Z",
+            "updated_at": "2024-01-17T02:32:27.000000Z"
+        },
+        {
+            "id_gedung": 14,
+            "nama_gedung": "Gedung Robotika Polije",
+            "lattitude": "-8.160470",
+            "longtitude": "113.723901",
+            "created_at": "2024-01-17T02:32:27.000000Z",
+            "updated_at": "2024-01-17T02:32:27.000000Z"
+        },
+        {
+            "id_gedung": 15,
+            "nama_gedung": "Jurusan Manajemen Agribisnis POLIJE",
+            "lattitude": "-8.160376",
+            "longtitude": "113.723970",
+            "created_at": "2024-01-17T02:32:27.000000Z",
+            "updated_at": "2024-01-17T02:32:27.000000Z"
+        },
+        {
+            "id_gedung": 16,
+            "nama_gedung": "GEDUNG MNA",
+            "lattitude": "-8.160191",
+            "longtitude": "113.724192",
+            "created_at": "2024-01-17T02:32:27.000000Z",
+            "updated_at": "2024-01-17T02:32:27.000000Z"
+        },
+        {
+            "id_gedung": 17,
+            "nama_gedung": "GEDUNG PETERNAKAN",
+            "lattitude": "-8.157521",
+            "longtitude": "113.723948",
+            "created_at": "2024-01-17T02:32:27.000000Z",
+            "updated_at": "2024-01-17T02:32:27.000000Z"
+        },
+        {
+            "id_gedung": 18,
+            "nama_gedung": "Gedung Jurusan Produksi Pertanian",
+            "lattitude": "-8.158176",
+            "longtitude": "113.724364",
+            "created_at": "2024-01-17T02:32:27.000000Z",
+            "updated_at": "2024-01-17T02:32:27.000000Z"
+        },
+        {
+            "id_gedung": 19,
+            "nama_gedung": "GEDUNG TEKNIK",
+            "lattitude": "-8.157958304719116",
+            "longtitude": "113.72347923942567",
+            "created_at": "2024-01-17T02:32:27.000000Z",
+            "updated_at": "2024-01-17T02:32:27.000000Z"
+        },
+        {
+            "id_gedung": 20,
+            "nama_gedung": "Gedung Teknologi Produksi Benih",
+            "lattitude": "-8.158555",
+            "longtitude": "113.724020",
+            "created_at": "2024-01-17T02:32:27.000000Z",
+            "updated_at": "2024-01-17T02:32:27.000000Z"
+        },
+        {
+            "id_gedung": 21,
+            "nama_gedung": "Gedung Prodi Destinasi Pariwisata",
+            "lattitude": "-8.158584539376337",
+            "longtitude": "113.72363975463105",
+            "created_at": "2024-01-17T02:32:27.000000Z",
+            "updated_at": "2024-01-17T02:32:27.000000Z"
+        },
+        {
+            "id_gedung": 22,
+            "nama_gedung": "Gedung Peralatan dan Mesin Pertanian POLIJE",
+            "lattitude": "-8.158806",
+            "longtitude": "113.723297",
+            "created_at": "2024-01-17T02:32:27.000000Z",
+            "updated_at": "2024-01-17T02:32:27.000000Z"
+        },
+        {
+            "id_gedung": 23,
+            "nama_gedung": "Laboratorium Pusat Biosain",
+            "lattitude": "-8.159041",
+            "longtitude": "113.723152",
+            "created_at": "2024-01-17T02:32:27.000000Z",
+            "updated_at": "2024-01-17T02:32:27.000000Z"
+        },
+        {
+            "id_gedung": 24,
+            "nama_gedung": "Unit Layanan Pengadaan (ULP)",
+            "lattitude": "-8.158331644587081",
+            "longtitude": "113.722820339777",
+            "created_at": "2024-01-17T02:32:27.000000Z",
+            "updated_at": "2024-01-17T02:32:27.000000Z"
+        },
+        {
+            "id_gedung": 25,
+            "nama_gedung": "Gedung HMJTI",
+            "lattitude": "-8.159404",
+            "longtitude": "113.722580",
+            "created_at": "2024-01-17T02:32:27.000000Z",
+            "updated_at": "2024-01-17T02:32:27.000000Z"
+        },
+        {
+            "id_gedung": 26,
+            "nama_gedung": "Laboratorium Analisis Jurusan Teknologi Pertanian",
+            "lattitude": "-8.159424",
+            "longtitude": "113.722989",
+            "created_at": "2024-01-17T02:32:27.000000Z",
+            "updated_at": "2024-01-17T02:32:27.000000Z"
+        },
+        {
+            "id_gedung": 27,
+            "nama_gedung": "LSP POLIJE",
+            "lattitude": "-8.159706",
+            "longtitude": "113.722871",
+            "created_at": "2024-01-17T02:32:27.000000Z",
+            "updated_at": "2024-01-17T02:32:27.000000Z"
+        },
+        {
+            "id_gedung": 28,
+            "nama_gedung": "Tax Center Politeknik Negeri Jember",
+            "lattitude": "-8.160078",
+            "longtitude": "113.722752",
+            "created_at": "2024-01-17T02:32:27.000000Z",
+            "updated_at": "2024-01-17T02:32:27.000000Z"
+        },
+        {
+            "id_gedung": 29,
+            "nama_gedung": "Gedung Serbaguna Soetrisno Widjaja",
+            "lattitude": "-8.159988",
+            "longtitude": "113.722392",
+            "created_at": "2024-01-17T02:32:27.000000Z",
+            "updated_at": "2024-01-17T02:32:27.000000Z"
+        },
+        {
+            "id_gedung": 30,
+            "nama_gedung": "GEDUNG KESEHATAN",
+            "lattitude": "-8.158454319901814",
+            "longtitude": "113.72201755357489",
+            "created_at": "2024-01-17T02:32:27.000000Z",
+            "updated_at": "2024-01-17T02:32:27.000000Z"
+        },
+        {
+            "id_gedung": 31,
+            "nama_gedung": "Gudang Pendingin",
+            "lattitude": "-8.159339",
+            "longtitude": "113.722447",
+            "created_at": "2024-01-17T02:32:27.000000Z",
+            "updated_at": "2024-01-17T02:32:27.000000Z"
+        },
+        {
+            "id_gedung": 32,
+            "nama_gedung": "Asrama Mahasiswa Join Degree",
+            "lattitude": "-8.157570",
+            "longtitude": "113.722280",
+            "created_at": "2024-01-17T02:32:27.000000Z",
+            "updated_at": "2024-01-17T02:32:27.000000Z"
+        },
+        {
+            "id_gedung": 33,
+            "nama_gedung": "Gedung Jurusan TI Politeknik Negeri Jember",
+            "lattitude": "-8.157738",
+            "longtitude": "113.722858",
+            "created_at": "2024-01-17T02:32:27.000000Z",
+            "updated_at": "2024-01-17T02:32:27.000000Z"
+        },
+        {
+            "id_gedung": 34,
+            "nama_gedung": "Konsultasi Gizi , Konseling Gizi, Nutrition Care Center (NCC)",
+            "lattitude": "-8.159234",
+            "longtitude": "113.721543",
+            "created_at": "2024-01-17T02:32:27.000000Z",
+            "updated_at": "2024-01-17T02:32:27.000000Z"
+        },
+        {
+            "id_gedung": 35,
+            "nama_gedung": "Lapangan Tenis POLIJE",
+            "lattitude": "-8.159159",
+            "longtitude": "113.721223",
+            "created_at": "2024-01-17T02:32:27.000000Z",
+            "updated_at": "2024-01-17T02:32:27.000000Z"
+        },
+        {
+            "id_gedung": 36,
+            "nama_gedung": "Laboratorium Bengkel Logam dan Kayu",
+            "lattitude": "-8.160249260136785",
+            "longtitude": "113.72092267689897",
+            "created_at": "2024-01-17T02:32:27.000000Z",
+            "updated_at": "2024-01-17T02:32:27.000000Z"
+        },
+        {
+            "id_gedung": 37,
+            "nama_gedung": "GEDUNG AAA",
+            "lattitude": "-8.159934997007085",
+            "longtitude": "113.72308059611083",
+            "created_at": "2024-01-17T02:32:27.000000Z",
+            "updated_at": "2024-01-17T02:32:27.000000Z"
+        },
+        {
+            "id_gedung": 38,
+            "nama_gedung": "GEDUNG POLIKLINIK",
+            "lattitude": "-8.160524418469752",
+            "longtitude": "113.72156682439805",
+            "created_at": "2024-01-17T02:32:27.000000Z",
+            "updated_at": "2024-01-17T02:32:27.000000Z"
+        },
+        {
+            "id_gedung": 39,
+            "nama_gedung": "GEDUNG GOR 45",
+            "lattitude": "-8.160034995681048",
+            "longtitude": "113.72055705142753",
+            "created_at": "2024-01-17T02:32:27.000000Z",
+            "updated_at": "2024-01-17T02:32:27.000000Z"
+        },
+        {
+            "id_gedung": 40,
+            "nama_gedung": "GEDUNG TEFA",
+            "lattitude": "-8.155321814766864",
+            "longtitude": "113.72701170869829",
+            "created_at": "2024-01-17T02:32:27.000000Z",
+            "updated_at": "2024-01-17T02:32:27.000000Z"
+        },
+        {
+            "id_gedung": 41,
+            "nama_gedung": "Sekretariat UKM KSR PMI Unit Politeknik Negeri Jember",
+            "lattitude": "-8.160523",
+            "longtitude": "113.722032",
+            "created_at": "2024-01-17T02:32:27.000000Z",
+            "updated_at": "2024-01-17T02:32:27.000000Z"
+        }
+    ],
+    "status": true,
+    "message": "success fetch data"
+}

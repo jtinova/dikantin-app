@@ -83,7 +83,7 @@ class RiwayatController extends GetxController
         context: Get.context!,
         initialDate: selectedDate.value,
         firstDate: DateTime(2000),
-        lastDate: DateTime(2024),
+        lastDate: DateTime(2050),
         helpText: 'Pilih Tanggal Pemesanan Anda',
         cancelText: 'Batal',
         confirmText: 'Pilih');

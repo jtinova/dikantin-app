@@ -67,8 +67,6 @@ class HomeView extends GetView<HomeController> {
         MediaQuery.of(context).padding.top;
 
     final query = MediaQuery.of(context);
-    print('textscalefactor: ${query.textScaleFactor}');
-    print('devicePixelRatio: ${query.devicePixelRatio}');
     return MediaQuery(
       data: query.copyWith(
           textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15)),
@@ -114,57 +112,6 @@ class HomeView extends GetView<HomeController> {
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: mediaBody * 0.02,
-                                    ),
-                                    Container(
-                                      height: 22,
-                                      // width: 64,
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color: Color(0xFF00C2FF),
-                                              width: 1.5),
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(7))),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          InkWell(
-                                            onTap: () {
-                                              c.ngapek();
-                                            },
-                                            child: Container(
-                                              child: Text(
-                                                "Top Up",
-                                                style: GoogleFonts.poppins(
-                                                  textStyle: TextStyle(
-                                                    color: Color(0xFF00C2FF),
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Container(
-                                              child: Icon(
-                                            Icons.add_circle_rounded,
-                                            size: 15,
-                                            color: Color(0xFF00C2FF),
-                                          )),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                        ],
                                       ),
                                     ),
                                   ],

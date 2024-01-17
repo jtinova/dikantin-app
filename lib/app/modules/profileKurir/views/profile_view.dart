@@ -126,8 +126,7 @@ class ProfileKurirView extends GetView<ProfileKurirController> {
         myAppbar.preferredSize.height -
         MediaQuery.of(context).padding.top;
     final query = MediaQuery.of(context);
-    print('textscalefactor: ${query.textScaleFactor}');
-    print('devicePixelRatio: ${query.devicePixelRatio}');
+
     return MediaQuery(
       data: query.copyWith(
           textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15)),
@@ -168,9 +167,7 @@ class ProfileKurirView extends GetView<ProfileKurirController> {
                                           style: TextStyle(
                                             color: Colors.black,
                                             fontWeight: FontWeight.bold,
-                                            fontSize: textScaleFactor <= 1.15
-                                                ? 14
-                                                : 12,
+                                            fontSize: 14,
                                           ),
                                         ),
                                         Padding(
@@ -201,9 +198,7 @@ class ProfileKurirView extends GetView<ProfileKurirController> {
                                             style: TextStyle(
                                               color: Colors.black,
                                               fontWeight: FontWeight.bold,
-                                              fontSize: textScaleFactor <= 1.15
-                                                  ? 14
-                                                  : 12,
+                                              fontSize: 12,
                                             ),
                                           ),
                                         ),

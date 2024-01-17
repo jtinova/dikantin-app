@@ -208,7 +208,7 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
     String paymentMethod = isCashSelected.value
         ? "cash"
         : isPolijePaySelected.value
-            ? "polijepay"
+            ? "cash"
             : "Unknown Payment Method";
     Map<String, dynamic> detailOrderan = {
       "total_harga": totalPrice,
@@ -263,6 +263,7 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
 
       final newToken = jsonResponse['data']['token'];
       print(newToken);
+      print('c');
     } else {
       // Gagal membatalkan pesanan
       print('Gagal ambil data. Status code: ${response.statusCode}');

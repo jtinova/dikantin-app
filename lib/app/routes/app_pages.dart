@@ -6,11 +6,12 @@ import '../modules/forgotPassword/bindings/forgot_password_binding.dart';
 import '../modules/forgotPassword/views/forgot_password_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
-
 import '../modules/keranjang/bindings/keranjang_binding.dart';
 import '../modules/keranjang/views/keranjang_view.dart';
 import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
+import '../modules/maps/bindings/maps_binding.dart';
+import '../modules/maps/views/maps_view.dart';
 import '../modules/navigation/bindings/navigation_binding.dart';
 import '../modules/navigation/views/navigation_view.dart';
 import '../modules/navigationKurir/bindings/navigationKurir_binding.dart';
@@ -142,6 +143,11 @@ class AppPages {
       name: _Paths.RIWAYAT_KURIR,
       page: () => RiwayatKurirView(),
       binding: RiwayatKurirBinding(),
+    ),
+    GetPage(
+      name: _Paths.MAPS,
+      page: () =>  MapsView(selectedBuilding: '', initialSelectedValue: '', keterangan: '',),
+      binding: MapsBinding(),
     ),
   ];
 }
