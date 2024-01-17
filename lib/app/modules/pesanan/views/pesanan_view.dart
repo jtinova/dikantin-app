@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:badges/badges.dart' as badges;
 
+import '../../utils/belumbayar.dart';
 import '../controllers/pesanan_controller.dart';
 
 class PesananView extends GetView<PesananController> {
@@ -100,6 +101,31 @@ class PesananView extends GetView<PesananController> {
                 ),
               );
             })),
+            Tab(child: Obx(() {
+              return badges.Badge(
+                showBadge: (pesananController.belumBayar.isNotEmpty ?? true),
+                badgeAnimation: badges.BadgeAnimation.slide(),
+                badgeContent: Text(
+                  (pesananController.belumBayar.length ?? 0).toString(),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                  ),
+                ),
+                position: badges.BadgePosition.topEnd(top: -10, end: -15),
+                badgeStyle: badges.BadgeStyle(
+                  shape: badges.BadgeShape.circle,
+                  badgeColor: Colors.orange,
+                ),
+                child: Text(
+                  "Belum bayar",
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.black,
+                  ),
+                ),
+              );
+            })),
           ],
           labelStyle: GoogleFonts.poppins(
             textStyle: TextStyle(
@@ -122,7 +148,7 @@ class PesananView extends GetView<PesananController> {
       data: query.copyWith(
           textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15)),
       child: DefaultTabController(
-        length: 2,
+        length: 3,
         child: Scaffold(
             appBar: myAppbar,
             body: Container(
@@ -131,7 +157,7 @@ class PesananView extends GetView<PesananController> {
               ),
               child: TabBarView(
                   controller: pesananController.tabController,
-                  children: [Proses(), Kirim()]),
+                  children: [Proses(), Kirim(), belumbayar()]),
             )),
       ),
     );

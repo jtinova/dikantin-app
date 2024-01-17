@@ -26,6 +26,7 @@ abstract class Routes {
   static const RIWAYAT_KURIR = _Paths.RIWAYAT_KURIR;
   static const KANTIN = _Paths.KANTIN;
   static const MAPS = _Paths.MAPS;
+  static const ORDER_KANTIN = _Paths.ORDER_KANTIN;
 }
 
 abstract class _Paths {
@@ -53,4 +54,5 @@ abstract class _Paths {
   static const RIWAYAT_KURIR = '/riwayat-kurir';
   static const KANTIN = '/kantin';
   static const MAPS = '/maps';
+  static const ORDER_KANTIN = '/order-kantin';
 }

@@ -246,6 +246,47 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
     }
   }
 
+  Future<void> submitOrderOnline() async {
+    setLoading(true); // Menampilkan indikator loading
+    String paymentMethod = isCashSelected.value
+        ? "cash"
+        : isPolijePaySelected.value
+            ? "cash"
+            : "Unknown Payment Method";
+    Map<String, dynamic> detailOrderan = {
+      "total_harga": totalPrice,
+      "model_pembayaran": paymentMethod
+    };
+
+    try {
+      final response = await menuProvider.value.postOrderOnline(
+        cartList,
+        detailOrderan,
+        itemQuantities,
+        notesMap.toJson(), // Mengambil catatan dari notesMap
+      );
+
+      if (response.statusCode == 200) {
+        // Proses order berhasil
+        Get.snackbar("Success", "Order submitted successfully");
+        // Reset cart dan quantities atau navigasi ke halaman berikutnya
+        cartList.clear();
+        itemQuantities.clear();
+        notesMap.clear();
+        catatanController
+            .clear(); // Mengosongkan notesMap setelah order berhasil
+      } else {
+        // Proses order gagal
+        Get.snackbar("Error", "Failed to submit order: ${response.body}");
+      }
+    } catch (e) {
+      // Menangani kesalahan yang mungkin terjadi selama request
+      Get.snackbar("Error", "An error occurred: $e");
+    } finally {
+      setLoading(false); // Menutup indikator loading
+    }
+  }
+
   Future<void> ngapek() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? id_customer = prefs.getString('id_customer');

@@ -2,6 +2,7 @@
 
 import 'package:carbon_icons/carbon_icons.dart';
 import 'package:dikantin/app/modules/order/views/order_view.dart';
+import 'package:dikantin/app/modules/orderKantin/views/order_kantin_view.dart';
 import 'package:dikantin/app/modules/utils/formatDate.dart';
 import 'package:flutter/material.dart';
 
@@ -509,7 +510,32 @@ class KeranjangView extends GetView<KeranjangController> {
                           ),
                           onPressed: () {
                             if (homeController.cartList.isNotEmpty) {
-                              Get.to(() => OrderView());
+                              Get.defaultDialog(
+                                title: "Pilih Metode Pesanan",
+                                content: Column(
+                                  children: [
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        // Pilih kantin
+                                        Get.back(); // Tutup dialog
+
+                                        Get.to(() => OrderKantinView());
+                                      },
+                                      child: Text("DiKantin Aja!"),
+                                    ),
+                                    Text("Atau"),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        // Pilih online
+                                        Get.back(); // Tutup dialog
+
+                                        Get.toNamed('/order');
+                                      },
+                                      child: Text("Dianter Aja!"),
+                                    ),
+                                  ],
+                                ),
+                              );
                             } else {
                               Get.snackbar('Error', 'Your cart is empty');
                             }

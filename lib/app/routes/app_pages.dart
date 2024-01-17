@@ -20,6 +20,8 @@ import '../modules/onBoarding/bindings/on_boarding_binding.dart';
 import '../modules/onBoarding/views/on_boarding_view.dart';
 import '../modules/order/bindings/order_binding.dart';
 import '../modules/order/views/order_view.dart';
+import '../modules/orderKantin/bindings/order_kantin_binding.dart';
+import '../modules/orderKantin/views/order_kantin_view.dart';
 import '../modules/otpPage/bindings/otp_page_binding.dart';
 import '../modules/otpPage/views/otp_page_view.dart';
 import '../modules/pesanan/bindings/pesanan_binding.dart';
@@ -146,8 +148,17 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.MAPS,
-      page: () =>  MapsView(selectedBuilding: '', initialSelectedValue: '', keterangan: '',),
+      page: () => MapsView(
+        selectedBuilding: '',
+        initialSelectedValue: '',
+        keterangan: '',
+      ),
       binding: MapsBinding(),
+    ),
+    GetPage(
+      name: _Paths.ORDER_KANTIN,
+      page: () =>  OrderKantinView(),
+      binding: OrderKantinBinding(),
     ),
   ];
 }
