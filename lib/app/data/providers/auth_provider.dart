@@ -129,13 +129,12 @@ class AuthProvider extends GetxController {
 }
 
 class RegisterProvider {
-  Future<void> register(String name, String email, String phone, String address,
+  Future<void> register(String name, String email, String phone, 
       String password) async {
     final data = {
       'nama': name,
       'email': email,
       'no_telepon': phone,
-      'alamat': address,
       'password': password,
     };
 

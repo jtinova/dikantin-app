@@ -24,8 +24,7 @@ class KeranjangView extends GetView<KeranjangController> {
     double textScaleFactor = MediaQuery.of(context).textScaleFactor;
 
     final query = MediaQuery.of(context);
-    print('textscalefactor: ${query.textScaleFactor}');
-    print('devicePixelRatio: ${query.devicePixelRatio}');
+
     return MediaQuery(
       data: query.copyWith(
           textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15)),
@@ -510,7 +509,7 @@ class KeranjangView extends GetView<KeranjangController> {
                           ),
                           onPressed: () {
                             if (homeController.cartList.isNotEmpty) {
-                              Get.to(OrderView());
+                              Get.to(() => OrderView());
                             } else {
                               Get.snackbar('Error', 'Your cart is empty');
                             }

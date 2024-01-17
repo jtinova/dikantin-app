@@ -27,7 +27,7 @@ class PesananKurirView extends GetView<PesananKurirController> {
           child: Padding(
             padding: const EdgeInsets.all(10.0),
             child: Text(
-              "Pesanan Customer ",
+              "Pesanan Kurir",
               style: GoogleFonts.poppins(
                   textStyle: TextStyle(
                       fontSize: 20,
@@ -112,13 +112,12 @@ class PesananKurirView extends GetView<PesananKurirController> {
           )),
     );
     final query = MediaQuery.of(context);
-    print('textscalefactor: ${query.textScaleFactor}');
-    print('devicePixelRatio: ${query.devicePixelRatio}');
+
     return MediaQuery(
       data: query.copyWith(
           textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15)),
       child: DefaultTabController(
-        length: 3,
+        length: 2,
         child: Scaffold(
             appBar: myAppbar,
             body: Container(

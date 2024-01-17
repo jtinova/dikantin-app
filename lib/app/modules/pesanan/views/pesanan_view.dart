@@ -117,13 +117,12 @@ class PesananView extends GetView<PesananController> {
           )),
     );
     final query = MediaQuery.of(context);
-    print('textscalefactor: ${query.textScaleFactor}');
-    print('devicePixelRatio: ${query.devicePixelRatio}');
+
     return MediaQuery(
       data: query.copyWith(
           textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15)),
       child: DefaultTabController(
-        length: 3,
+        length: 2,
         child: Scaffold(
             appBar: myAppbar,
             body: Container(

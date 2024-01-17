@@ -1,3 +1,4 @@
+import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/forgot_password_controller.dart';
@@ -10,15 +11,31 @@ class ForgotPasswordView extends GetView<ForgotPasswordController> {
     final ForgotPasswordController controller =
         Get.put(ForgotPasswordController());
     final query = MediaQuery.of(context);
-    print('textscalefactor: ${query.textScaleFactor}');
-    print('devicePixelRatio: ${query.devicePixelRatio}');
+
     return MediaQuery(
       data: query.copyWith(
           textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15)),
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: Colors.white,
+          backgroundColor: Color.fromARGB(250, 250, 250, 250),
+          leading: InkWell(
+            onTap: () {
+              Get.back();
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(10)),
+                child: Icon(
+                  CarbonIcons.arrow_left,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
         ),
         body: SingleChildScrollView(
           child: Padding(
@@ -27,19 +44,15 @@ class ForgotPasswordView extends GetView<ForgotPasswordController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Forget Password',
+                  'Lupa Password',
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  "Enter your registered email below",
+                  "Masukkan email yang terdaftar di bawah ini",
                   style: TextStyle(fontSize: 15.0, color: Color(0xff9CA3AF)),
                 ),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.09,
-                ),
-                Text(
-                  'Email address',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  height: MediaQuery.of(context).size.height * 0.05,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 0, top: 10, right: 10),
@@ -49,7 +62,7 @@ class ForgotPasswordView extends GetView<ForgotPasswordController> {
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: Colors.white,
-                      labelText: "email",
+                      labelText: "Masukkan email anda",
                       hintText: "Eg: namaemail@example.com",
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),

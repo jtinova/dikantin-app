@@ -25,8 +25,7 @@ class _FavoriteState extends State<Favorite> {
     final mediaHeight =
         MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
     final query = MediaQuery.of(context);
-    print('textscalefactor: ${query.textScaleFactor}');
-    print('devicePixelRatio: ${query.devicePixelRatio}');
+
     return MediaQuery(
       data: query.copyWith(
           textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15)),

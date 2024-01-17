@@ -62,10 +62,12 @@ class ProfileProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> editAlamat({
-    required String token,
-    required String alamat,
-  }) async {
+  Future<void> editAlamat(
+      {required String token,
+      required String alamat,
+      required String lat,
+      required String long,
+      required String ket}) async {
     final url = Uri.parse(Api.updateProfile);
 
     try {
@@ -75,9 +77,8 @@ class ProfileProvider with ChangeNotifier {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
-        body: jsonEncode({
-          'alamat': alamat,
-        }),
+        body:
+            jsonEncode({'alamat': alamat, 'longitude': long, 'latitude': lat,'keterangan':ket}),
       );
 
       if (response.statusCode == 200) {
@@ -97,11 +98,11 @@ class ProfileProvider with ChangeNotifier {
           duration: Duration(seconds: 2),
         );
         print('Error status code: ${response.statusCode}');
-        print('Error response body: ${response.body}');
+        print('Error cok response body: ${response.body}');
       }
     } catch (error) {
       // Tangani kesalahan jaringan atau kesalahan lainnya
-      print('Error: $error');
+      print('Error iki: $error');
 
       if (error is http.Response) {
         // Jika kesalahan adalah respons HTTP, cetak body respons
