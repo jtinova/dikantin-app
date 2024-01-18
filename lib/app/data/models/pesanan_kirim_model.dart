@@ -77,10 +77,13 @@ class Transaksi {
   String? token;
   dynamic tokenFcm;
   String? alamat;
+  String? longitude;
+  String? latitude;
   String? email;
   String? password;
   dynamic foto;
   dynamic googleId;
+  String? keterangan;
   List<DetailTransaksi>? detailTransaksi;
 
   Transaksi(
@@ -108,10 +111,13 @@ class Transaksi {
       this.token,
       this.tokenFcm,
       this.alamat,
+      this.longitude,
+      this.latitude,
       this.email,
       this.password,
       this.foto,
       this.googleId,
+      this.keterangan,
       this.detailTransaksi});
 
   Transaksi.fromJson(Map<String, dynamic> json) {
@@ -139,10 +145,13 @@ class Transaksi {
     token = json['token'];
     tokenFcm = json['token_fcm'];
     alamat = json['alamat'];
+    longitude = json['longitude'];
+    latitude = json['latitude'];
     email = json['email'];
     password = json['password'];
     foto = json['foto'];
     googleId = json['google_id'];
+    keterangan = json['keterangan'];
     if (json['detail_transaksi'] != null) {
       detailTransaksi = <DetailTransaksi>[];
       json['detail_transaksi'].forEach((v) {

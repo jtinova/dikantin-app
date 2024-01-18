@@ -281,9 +281,43 @@ class _KonfirmasikurirState extends State<Konfirmasikurir> {
                                       ),
                                     ],
                                   ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
+                                      Expanded(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Align(
+                                              alignment: Alignment.topLeft,
+                                              child: Text(
+                                                "Catatan : ",
+                                                style: GoogleFonts.poppins(
+                                                    textStyle: TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.w300)),
+                                              ),
+                                            ),
+                                            Text(
+                                              "${orderData.transaksi!.alamat}, ${orderData.transaksi!.keterangan}" ??
+                                                  '',
+                                              style: GoogleFonts.poppins(
+                                                  textStyle: TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.w300)),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                       orderData.status
                                               .toString()
                                               .contains('Selesai')

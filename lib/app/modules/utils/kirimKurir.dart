@@ -293,13 +293,27 @@ class _KirimKurirState extends State<KirimKurir> {
                                                                   milliseconds:
                                                                       4100));
 
-                                                          final intent = AndroidIntent(
-                                                              action:
-                                                                  "action_view",
-                                                              data: Uri.encodeFull(
-                                                                  "google.navigation:q=$alamat&avoid=tf"),
-                                                              package:
-                                                                  "com.google.android.apps.maps");
+                                                          double latitude = double
+                                                              .parse(orderData
+                                                                  .transaksi!
+                                                                  .latitude
+                                                                  .toString()); // Replace with the actual latitude
+                                                          double longitude = double
+                                                              .parse(orderData
+                                                                  .transaksi!
+                                                                  .longitude
+                                                                  .toString()); // Replace with the actual longitude
+
+                                                          final intent =
+                                                              AndroidIntent(
+                                                            action:
+                                                                "action_view",
+                                                            data: Uri.encodeFull(
+                                                                "google.navigation:q=$latitude,$longitude&avoid=tf"),
+                                                            package:
+                                                                "com.google.android.apps.maps",
+                                                          );
+
                                                           intent.launch();
                                                         },
                                                         style: ElevatedButton
