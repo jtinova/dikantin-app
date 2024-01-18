@@ -1,5 +1,6 @@
 import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'package:get/get.dart';
 
@@ -186,13 +187,18 @@ class RegisterView extends GetView<RegisterController> {
                         final email = controller.emailController.text;
                         final phone = controller.phoneController.text;
                         final password = controller.passwordController.text;
-
+                        await EasyLoading.show(
+                          status: 'loading...',
+                          maskType: EasyLoadingMaskType.black,
+                        );
                         // Periksa apakah email mengandung "@student.polije.ac.id"
                         if (!email.contains("@student.polije.ac.id") &&
                             !email.contains("@polije.ac.id")) {
                           // Tampilkan pesan kesalahan jika alamat email tidak valid
                           Get.snackbar(
                               "Error", "Harus menggunakan email Polije");
+                          EasyLoading.dismiss();
+                          print('EasyLoading dismiss');
                           return;
                         }
 
@@ -200,9 +206,12 @@ class RegisterView extends GetView<RegisterController> {
                         try {
                           await controller.registerProvider
                               .register(name, email, phone, password);
-                          // Pendaftaran berhasil, tambahkan logika sesuai kebutuhan Anda
+                          EasyLoading.dismiss();
+                          print('EasyLoading dismiss');
                         } catch (e) {
                           // Penanganan kesalahan saat pendaftaran gagal
+                          EasyLoading.dismiss();
+                          print('EasyLoading dismiss');
                           print('Pendaftaran gagal: $e');
                         }
                       },

@@ -249,9 +249,9 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
   Future<void> submitOrderOnline() async {
     setLoading(true); // Menampilkan indikator loading
     String paymentMethod = isCashSelected.value
-        ? "cash"
+        ? "Cash"
         : isPolijePaySelected.value
-            ? "cash"
+            ? "Qris"
             : "Unknown Payment Method";
     Map<String, dynamic> detailOrderan = {
       "total_harga": totalPrice,

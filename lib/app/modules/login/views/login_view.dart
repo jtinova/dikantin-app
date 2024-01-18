@@ -1,5 +1,6 @@
 import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -109,12 +110,18 @@ class LoginView extends GetView<LoginController> {
                     children: [
                       GestureDetector(
                         onTap: () async {
+                          await EasyLoading.show(
+                            status: 'loading...',
+                            maskType: EasyLoadingMaskType.black,
+                          );
                           SharedPreferences sharedPreferences =
                               await SharedPreferences.getInstance();
                           String? token =
                               sharedPreferences.getString('tokenFcm');
-                          c.loginKurir(c.emailController.text,
+                          await c.loginKurir(c.emailController.text,
                               c.passwordController.text, token!);
+                          EasyLoading.dismiss();
+                          print('EasyLoading dismiss');
                         },
                         child: Text(
                           "Login sebagai kurir",
@@ -152,11 +159,17 @@ class LoginView extends GetView<LoginController> {
                         backgroundColor: Color.fromARGB(255, 55, 156, 211),
                       ),
                       onPressed: () async {
+                        await EasyLoading.show(
+                          status: 'loading...',
+                          maskType: EasyLoadingMaskType.black,
+                        );
                         SharedPreferences sharedPreferences =
                             await SharedPreferences.getInstance();
                         String? token = sharedPreferences.getString('tokenFcm');
-                        c.login(c.emailController.text,
+                        await c.login(c.emailController.text,
                             c.passwordController.text, token!);
+                        EasyLoading.dismiss();
+                        print('EasyLoading dismiss');
                       },
                       child: Text(
                         "Login",

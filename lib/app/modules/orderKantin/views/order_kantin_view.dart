@@ -1,3 +1,5 @@
+import 'package:dikantin/app/modules/keranjang/views/keranjang_view.dart';
+import 'package:dikantin/app/modules/navigation/views/navigation_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
@@ -383,9 +385,22 @@ class OrderKantinView extends GetView<OrderKantinController> {
                             await homeController.submitOrderOnline();
                             EasyLoading.dismiss();
                             print('EasyLoading dismiss');
-                            Future.delayed(const Duration(seconds: 3), () {
-                              Get.toNamed('/navigation');
-                            });
+                            Get.defaultDialog(
+                                barrierDismissible: false,
+                                title:
+                                    "Harap cek pada menu pesanan(belum bayar) untuk melakukan pembayaran di kasir dan tunjukkan QRcode",
+                                titleStyle: GoogleFonts.poppins(
+                                  textStyle: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                content: ElevatedButton(
+                                    onPressed: () {
+                                      Get.off(NavigationView());
+                                    },
+                                    child: Text('Ok')));
 
                             // Gunakan keterangan
                           } else {

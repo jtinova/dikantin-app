@@ -1,5 +1,6 @@
 import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import '../controllers/forgot_password_controller.dart';
 
@@ -111,11 +112,16 @@ class ForgotPasswordView extends GetView<ForgotPasswordController> {
                     fixedSize:
                         Size(MediaQuery.of(context).size.width * 0.9, 50),
                   ),
-                  onPressed: () {
-                    // Call the forgotPassword method from the controller
-                    controller.forgotPassword(
+                  onPressed: () async {
+                    await EasyLoading.show(
+                      status: 'loading...',
+                      maskType: EasyLoadingMaskType.black,
+                    );
+                    await controller.forgotPassword(
                       email: controller.emailController.text,
                     );
+                    EasyLoading.dismiss();
+                    print('EasyLoading dismiss');
                   },
                   child: const Text("Submit"),
                 ),

@@ -1,4 +1,5 @@
 import 'package:carbon_icons/carbon_icons.dart';
+import 'package:dikantin/app/modules/navigation/views/navigation_view.dart';
 import 'package:dikantin/app/modules/utils/formatDate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -474,6 +475,8 @@ class OrderView extends GetView<OrderController> {
                                 true) {
                               // Menampilkan snackbar jika alamat kosong
                               Get.snackbar('Error', 'Isi dulu alamat Anda');
+                              EasyLoading.dismiss();
+                              print('EasyLoading dismiss');
                             } else {
                               await orderController.getAccurateLocation();
                               // Mendapatkan latitude dan longitude dari lokasi terkini
@@ -491,7 +494,7 @@ class OrderView extends GetView<OrderController> {
                                 EasyLoading.dismiss();
                                 print('EasyLoading dismiss');
                                 Future.delayed(const Duration(seconds: 3), () {
-                                  Get.toNamed('/navigation');
+                                  Get.off(NavigationView());
                                 });
                                 // Gunakan keterangan
                               } else {

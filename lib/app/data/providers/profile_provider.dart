@@ -77,8 +77,12 @@ class ProfileProvider with ChangeNotifier {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
-        body:
-            jsonEncode({'alamat': alamat, 'longitude': long, 'latitude': lat,'keterangan':ket}),
+        body: jsonEncode({
+          'alamat': alamat,
+          'longitude': long,
+          'latitude': lat,
+          'keterangan': ket
+        }),
       );
 
       if (response.statusCode == 200) {
@@ -86,7 +90,7 @@ class ProfileProvider with ChangeNotifier {
           'Perhatian',
           'Alamat Berhasil Diubah',
           snackPosition: SnackPosition.TOP, // Menampilkan Snackbar dari atas
-          duration: Duration(seconds: 2),
+          duration: Duration(seconds: 1),
         );
       } else {
         final jsonResponse = jsonDecode(response.body);

@@ -1,12 +1,9 @@
-// import 'package:geocoding/geocoding.dart';
-// import 'package:geolocator/geolocator.dart';
 import 'package:dikantin/app/data/providers/customer_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../../data/models/profile_model.dart';
 import '../../../data/models/unit_model.dart';
 import '../../../data/providers/profile_provider.dart';
@@ -154,6 +151,17 @@ class OrderController extends GetxController {
         desiredAccuracy: LocationAccuracy.best,
       );
 
+      // Check if the location is mocked
+      if (position.isMocked) {
+        isLoading(false);
+        Get.snackbar(
+          'Error',
+          'Fake location detected',
+          backgroundColor: Colors.red,
+        );
+        return;
+      }
+
       // Menyimpan lokasi terkini
       myPosition.value = position;
 
@@ -165,4 +173,37 @@ class OrderController extends GetxController {
       print('Error fetching location: $error');
     }
   }
+
+  // Future<void> getAccurateLocation() async {
+  //   try {
+  //     isLoading(true);
+
+  //     // Check apakah lokasi dianggap asli atau palsu
+  //     bool isLocationGenuine = await TrustLocation.isMockLocation;
+
+  //     if (!isLocationGenuine) {
+  //       // Lokasi dianggap asli, lanjutkan dengan menyimpan lokasi
+  //       // Mendapatkan lokasi terkini dengan akurasi terbaik
+  //       Position position = await Geolocator.getCurrentPosition(
+  //         desiredAccuracy: LocationAccuracy.best,
+  //       );
+  //       myPosition.value = position;
+  //       // Mendapatkan alamat dari lokasi terkini
+
+  //       isLoading(false);
+  //     } else {
+  //       // Lokasi palsu, tampilkan snackbar
+  //       isLoading(false);
+  //       Get.snackbar(
+  //         'Error',
+  //         'Lokasi palsu tidak diizinkan. Harap gunakan lokasi yang sesuai.',
+  //         backgroundColor: Colors.red,
+  //         colorText: Colors.white,
+  //       );
+  //     }
+  //   } catch (error) {
+  //     isLoading(false);
+  //     print('Error fetching location: $error');
+  //   }
+  // }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'package:get/get.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
@@ -53,8 +54,14 @@ class OtpPageView extends GetView<OtpPageController> {
                 },
                 //runs when every textfield is filled
                 onSubmit: (String verificationCode) async {
+                  await EasyLoading.show(
+                    status: 'loading...',
+                    maskType: EasyLoadingMaskType.black,
+                  );
                   await c.verifyCode(verificationCode);
                   print(verificationCode);
+                  EasyLoading.dismiss();
+                  print('EasyLoading dismiss');
                 }, // end onSubmit
               ),
             ],
