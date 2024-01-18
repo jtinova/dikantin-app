@@ -1,6 +1,8 @@
 import 'package:dikantin/app/modules/fcm/fcm.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 
 class SplashController extends GetxController {
   //TODO: Implement SplashController
@@ -57,6 +59,7 @@ class SplashController extends GetxController {
       // Periksa apakah token tidak null sebelum navigasi
       if (prefs.getString('token') != null) {
         Get.offAllNamed('/navigation');
+        _determinePosition();
       } else {
         _navigateToLogin(); // Pergi ke halaman login jika token bernilai null
       }
@@ -74,6 +77,33 @@ class SplashController extends GetxController {
         _navigateToLogin(); // Pergi ke halaman login jika tokenKurir bernilai null
       }
     });
+  }
+
+  Future<Position> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location service belum aktif');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permission ditolak');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permission ditolak, gagal request permission');
+    }
+
+    return await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
   }
 
   @override
