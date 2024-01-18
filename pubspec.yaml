@@ -1,5 +1,5 @@
 name: dikantin
-version: 1.0.0+1
+version: 1.0.0+2
 publish_to: none
 description: A new Flutter project.
 environment:
@@ -11,6 +11,7 @@ dependencies:
   carbon_icons: ^0.0.1+2
   connectivity_plus: ^5.0.0
   cupertino_icons: ^1.0.2
+  dropdown_search: ^5.0.6
   firebase_core: ^2.24.0
   firebase_messaging: ^14.7.6
   flutter:
@@ -19,10 +20,11 @@ dependencies:
   flutter_launcher_icons: ^0.13.1
   flutter_local_notifications: ^14.0.0
   flutter_otp_text_field: ^1.1.1
-  geolocator: ^9.0.2
-  geocoding: ^2.0.5
+  geocoding: ^2.1.1
+  geolocator: ^10.1.0
   get: 4.6.6
   google_fonts: ^4.0.4
+  google_maps_flutter: ^2.5.1
   http: ^1.1.0
   icons_flutter: ^0.0.4
   image_picker: ^1.0.4

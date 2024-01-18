@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 
+import '../../maps/views/maps_view.dart';
 import '../controllers/profile_controller.dart';
 
 class ProfileView extends GetView<ProfileController> {
@@ -97,7 +98,10 @@ class ProfileView extends GetView<ProfileController> {
                     ),
                     onPressed: () {
                       profileController.editAlamat(
-                          alamat: profileController.addressController.text);
+                          alamat: profileController.addressController.text,
+                          long: '54647',
+                          lat: '343',
+                          ket: 'd');
                       Get.back();
                     },
                     child: Text(
@@ -141,7 +145,6 @@ class ProfileView extends GetView<ProfileController> {
             width: 40.0,
             height: 40.0,
             child: Center(
-              // Atau bisa juga menggunakan Align
               child: IconButton(
                 icon: Icon(
                   Icons.logout,
@@ -224,8 +227,7 @@ class ProfileView extends GetView<ProfileController> {
         myAppbar.preferredSize.height -
         MediaQuery.of(context).padding.top;
     final query = MediaQuery.of(context);
-    print('textscalefactor: ${query.textScaleFactor}');
-    print('devicePixelRatio: ${query.devicePixelRatio}');
+
     return MediaQuery(
       data: query.copyWith(
           textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15)),
@@ -287,7 +289,7 @@ class ProfileView extends GetView<ProfileController> {
                   child: Row(
                     children: [
                       Text(
-                        "FULL NAME",
+                        "Nama",
                         style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
@@ -388,7 +390,7 @@ class ProfileView extends GetView<ProfileController> {
                   child: Row(
                     children: [
                       Text(
-                        "Phone Number",
+                        "Nomor Telepon",
                         style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
@@ -453,7 +455,17 @@ class ProfileView extends GetView<ProfileController> {
                       Spacer(),
                       GestureDetector(
                         onTap: () {
-                          addressBottomsheet(context);
+                          // addressBottomsheet(context);
+                          Get.to(MapsView(
+                            selectedBuilding:
+                                profileController.profile.value.data?.alamat ??
+                                    '',
+                            keterangan:
+                                profileController.profile.value.data?.ket ?? '',
+                            initialSelectedValue: orderController
+                                    .unit.value.data!.first?.namaGedung ??
+                                'pilih Gedung',
+                          ));
                         },
                         child: Icon(
                           Icons.edit,
@@ -469,6 +481,7 @@ class ProfileView extends GetView<ProfileController> {
                 padding: const EdgeInsets.only(left: 30.0, right: 25, top: 10),
                 child: Obx(
                   () => TextField(
+                    readOnly: true,
                     style: TextStyle(
                       fontSize: textScaleFactor <= 1.15 ? 14 : 14,
                     ),

@@ -115,18 +115,18 @@ class ProfileController extends GetxController {
     }
   }
 
-  Future<void> editAlamat({
-    required String alamat,
-  }) async {
+  Future<void> editAlamat(
+      {required String alamat,
+      required String lat,
+      required String long,
+      required String ket}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
 
     if (token != null) {
       try {
         await provider.editAlamat(
-          token: token,
-          alamat: alamat,
-        );
+            token: token, alamat: alamat, long: long, lat: lat, ket: ket);
         await getCustomerData();
       } catch (error) {
         // Handle and print the error

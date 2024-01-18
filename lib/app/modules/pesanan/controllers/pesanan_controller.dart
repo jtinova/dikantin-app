@@ -26,7 +26,7 @@ class PesananController extends GetxController
       vsync: this,
       duration: Duration(seconds: 1),
     );
-    tabController = TabController(length: 3, vsync: this);
+    tabController = TabController(length: 2, vsync: this);
     tabController.addListener(_handleTabSelection);
 
     loadProses();

@@ -21,8 +21,7 @@ class _KonfirmasikurirState extends State<Konfirmasikurir> {
   @override
   Widget build(BuildContext context) {
     final query = MediaQuery.of(context);
-    print('textscalefactor: ${query.textScaleFactor}');
-    print('devicePixelRatio: ${query.devicePixelRatio}');
+
     return MediaQuery(
       data: query.copyWith(
           textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15)),
@@ -183,7 +182,7 @@ class _KonfirmasikurirState extends State<Konfirmasikurir> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(
+                                      SelectableText(
                                         "No. Telepon",
                                         style: GoogleFonts.poppins(
                                             textStyle: TextStyle(

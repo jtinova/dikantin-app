@@ -13,8 +13,7 @@ class RegisterView extends GetView<RegisterController> {
 
     final RegisterController c = Get.put(RegisterController());
     final query = MediaQuery.of(context);
-    print('textscalefactor: ${query.textScaleFactor}');
-    print('devicePixelRatio: ${query.devicePixelRatio}');
+
     return MediaQuery(
       data: query.copyWith(
           textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15)),
@@ -57,7 +56,7 @@ class RegisterView extends GetView<RegisterController> {
                         borderRadius: BorderRadius.circular(20.0),
                         borderSide: BorderSide(color: Colors.black),
                       ),
-                      hintText: 'Enter your name',
+                      hintText: 'Masukkan nama anda',
                       suffixIcon: Icon(
                         CarbonIcons.user_avatar,
                       ),
@@ -79,7 +78,7 @@ class RegisterView extends GetView<RegisterController> {
                         borderRadius: BorderRadius.circular(20.0),
                         borderSide: BorderSide(color: Colors.black),
                       ),
-                      hintText: 'Enter your email',
+                      hintText: 'Masukkan Email anda',
                       suffixIcon: Icon(
                         CarbonIcons.mail_all,
                       ),
@@ -104,36 +103,38 @@ class RegisterView extends GetView<RegisterController> {
                         borderRadius: BorderRadius.circular(20.0),
                         borderSide: BorderSide(color: Colors.black),
                       ),
-                      hintText: 'Enter your phone number', // Ubah teks petunjuk
+                      hintText:
+                          'Masukkan nomor telepon anda', // Ubah teks petunjuk
                       suffixIcon: Icon(
                         Icons.phone, // Mengganti ikon ke ikon telepon
                       ),
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20, right: 20, left: 20),
-                  child: TextField(
-                    style: TextStyle(
-                      fontSize: textScaleFactor <= 1.15 ? 14 : 14,
-                    ),
-                    controller: c.addressController,
-                    keyboardType: TextInputType
-                        .streetAddress, // Menentukan jenis keyboard untuk teks
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                        borderSide: BorderSide(color: Colors.black),
-                      ),
-                      hintText: 'Enter your address', // Ubah teks petunjuk
-                      suffixIcon: Icon(
-                        Icons.location_on, // Mengganti ikon ke ikon alamat
-                      ),
-                    ),
-                  ),
-                ),
+                // Padding(
+                //   padding: const EdgeInsets.only(top: 20, right: 20, left: 20),
+                //   child: TextField(
+                //     style: TextStyle(
+                //       fontSize: textScaleFactor <= 1.15 ? 14 : 14,
+                //     ),
+                //     controller: c.addressController,
+                //     keyboardType: TextInputType
+                //         .streetAddress, // Menentukan jenis keyboard untuk teks
+                //     decoration: InputDecoration(
+                //       filled: true,
+                //       fillColor: Colors.white,
+                //       border: OutlineInputBorder(
+                //         borderRadius: BorderRadius.circular(20.0),
+                //         borderSide: BorderSide(color: Colors.black),
+                //       ),
+                //       hintText:
+                //           'Masukkan alamat lengkap anda', // Ubah teks petunjuk
+                //       suffixIcon: Icon(
+                //         Icons.location_on, // Mengganti ikon ke ikon alamat
+                //       ),
+                //     ),
+                //   ),
+                // ),
                 Obx(() {
                   return Padding(
                     padding:
@@ -151,7 +152,7 @@ class RegisterView extends GetView<RegisterController> {
                           borderRadius: BorderRadius.circular(20.0),
                           borderSide: BorderSide(color: Colors.black),
                         ),
-                        hintText: 'Password',
+                        hintText: 'Masukkan password anda',
                         suffixIcon: IconButton(
                           icon: Icon(
                             c.obscureText.value
@@ -184,13 +185,21 @@ class RegisterView extends GetView<RegisterController> {
                         final name = controller.nameController.text;
                         final email = controller.emailController.text;
                         final phone = controller.phoneController.text;
-                        final address = controller.addressController.text;
                         final password = controller.passwordController.text;
+
+                        // Periksa apakah email mengandung "@student.polije.ac.id"
+                        if (!email.contains("@student.polije.ac.id") &&
+                            !email.contains("@polije.ac.id")) {
+                          // Tampilkan pesan kesalahan jika alamat email tidak valid
+                          Get.snackbar(
+                              "Error", "Harus menggunakan email Polije");
+                          return;
+                        }
 
                         // Panggil metode register dari RegisterProvider
                         try {
                           await controller.registerProvider
-                              .register(name, email, phone, address, password);
+                              .register(name, email, phone, password);
                           // Pendaftaran berhasil, tambahkan logika sesuai kebutuhan Anda
                         } catch (e) {
                           // Penanganan kesalahan saat pendaftaran gagal

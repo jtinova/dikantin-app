@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import "package:http/http.dart" as http;
 import '../models/profile_kurir_model.dart';
+import '../models/unit_model.dart';
 
 class CustomerProvider extends GetxController {
   Future<void> editAlamat(String alamat) async {
@@ -45,6 +46,19 @@ class CustomerProvider extends GetxController {
     print(response.body);
     if (response.statusCode == 200) {
       return Profile.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Gagal memuat data');
+    }
+  }
+
+  Future<Unit> getDataUnit() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final response = await http.get(
+      Uri.parse(Api.getUnit),
+    );
+    print(response.body);
+    if (response.statusCode == 200) {
+      return Unit.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Gagal memuat data');
     }

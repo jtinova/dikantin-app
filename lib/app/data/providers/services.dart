@@ -7,6 +7,7 @@ class Api {
   static const getTokenKurir = "$koneksi/validate/getTokenKurir";
   static const updateProfile = "$koneksi/validate/customerAccount";
   static const getProfile = '$koneksi/validate/profileShow';
+  static const getUnit = '$koneksi/units';
   static const getProfilekurir = '$koneksi/validate/kurirShow';
   static const updateFoto = '$koneksi/validate/imageProfile';
   static const updateFotoKurir = '$koneksi/validate/kurirProfile';

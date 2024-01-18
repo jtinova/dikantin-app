@@ -24,8 +24,7 @@ class KeranjangView extends GetView<KeranjangController> {
     double textScaleFactor = MediaQuery.of(context).textScaleFactor;
 
     final query = MediaQuery.of(context);
-    print('textscalefactor: ${query.textScaleFactor}');
-    print('devicePixelRatio: ${query.devicePixelRatio}');
+
     return MediaQuery(
       data: query.copyWith(
           textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15)),
@@ -148,11 +147,7 @@ class KeranjangView extends GetView<KeranjangController> {
                                                             .ellipsis,
                                                         menuData.nama ?? '',
                                                         style: TextStyle(
-                                                            fontSize:
-                                                                textScaleFactor <=
-                                                                        1.15
-                                                                    ? 15
-                                                                    : 12,
+                                                            fontSize: 12,
                                                             color: Colors.black,
                                                             fontWeight:
                                                                 FontWeight
@@ -181,11 +176,7 @@ class KeranjangView extends GetView<KeranjangController> {
                                                       priceAfterDiscount
                                                           .toRupiah(),
                                                       style: TextStyle(
-                                                          fontSize:
-                                                              textScaleFactor <=
-                                                                      1.15
-                                                                  ? 15
-                                                                  : 12,
+                                                          fontSize: 12,
                                                           color: Colors.black,
                                                           fontWeight:
                                                               FontWeight.w500),
@@ -200,11 +191,7 @@ class KeranjangView extends GetView<KeranjangController> {
                                                             : harga.toRupiah(),
                                                         style:
                                                             GoogleFonts.poppins(
-                                                          fontSize:
-                                                              textScaleFactor <=
-                                                                      1.15
-                                                                  ? 15
-                                                                  : 12,
+                                                          fontSize: 12,
                                                           decoration:
                                                               TextDecoration
                                                                   .lineThrough,
@@ -275,11 +262,7 @@ class KeranjangView extends GetView<KeranjangController> {
                                                                 style:
                                                                     GoogleFonts
                                                                         .poppins(
-                                                                  fontSize:
-                                                                      textScaleFactor <=
-                                                                              1.15
-                                                                          ? 15
-                                                                          : 12,
+                                                                  fontSize: 12,
                                                                 )),
                                                             Container(
                                                               decoration: BoxDecoration(
@@ -316,11 +299,7 @@ class KeranjangView extends GetView<KeranjangController> {
                                                                     .idMenu!)
                                                             .toRupiah(),
                                                         style: TextStyle(
-                                                            fontSize:
-                                                                textScaleFactor <=
-                                                                        1.15
-                                                                    ? 15
-                                                                    : 12,
+                                                            fontSize: 12,
                                                             fontWeight:
                                                                 FontWeight
                                                                     .w500),
@@ -530,7 +509,7 @@ class KeranjangView extends GetView<KeranjangController> {
                           ),
                           onPressed: () {
                             if (homeController.cartList.isNotEmpty) {
-                              Get.to(OrderView());
+                              Get.to(() => OrderView());
                             } else {
                               Get.snackbar('Error', 'Your cart is empty');
                             }
