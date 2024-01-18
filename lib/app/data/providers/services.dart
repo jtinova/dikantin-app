@@ -1,12 +1,13 @@
 class Api {
-  static const koneksi = "https://bd96-125-166-117-105.ngrok-free.app/api";
-  static const gambar = "https://bd96-125-166-117-105.ngrok-free.app/";
+  static const koneksi = "https://902f-103-182-53-71.ngrok-free.app/api";
+  static const gambar = "https://902f-103-182-53-71.ngrok-free.app/";
   static const signUp = "$koneksi/validate/register";
   static const signIn = "$koneksi/validate/login";
   static const getToken = "$koneksi/validate/getTokenCustomer";
   static const getTokenKurir = "$koneksi/validate/getTokenKurir";
   static const updateProfile = "$koneksi/validate/customerAccount";
   static const getProfile = '$koneksi/validate/profileShow';
+  static const getUnit = '$koneksi/units';
   static const getProfilekurir = '$koneksi/validate/kurirShow';
   static const updateFoto = '$koneksi/validate/imageProfile';
   static const updateFotoKurir = '$koneksi/validate/kurirProfile';
@@ -27,6 +28,8 @@ class Api {
   static const pesananKonfirmasi = "$koneksi/transaction/konfirmasi";
   static const riwayatKurir = "$koneksi/transaction/riwayatKurir";
   static const transaksi = "$koneksi/transaction";
+  static const getBelumbayar = "$koneksi/transaction/belumBayar";
+  static const transaksiPilihOnline = "$koneksi/transaction/OnlineDitempat";
   static const kurirAktif = "$koneksi/validate/editProfile";
   static const kurirLogout = "$koneksi/validate/logoutKurir";
   static const konfirmasi = "$koneksi/transaction/konfirmasiPesanan";

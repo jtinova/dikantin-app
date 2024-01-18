@@ -14,8 +14,7 @@ class LoginView extends GetView<LoginController> {
 
     final LoginController c = Get.put(LoginController());
     final query = MediaQuery.of(context);
-    print('textscalefactor: ${query.textScaleFactor}');
-    print('devicePixelRatio: ${query.devicePixelRatio}');
+
     return MediaQuery(
       data: query.copyWith(
           textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15)),
@@ -61,7 +60,7 @@ class LoginView extends GetView<LoginController> {
                         borderRadius: BorderRadius.circular(20.0),
                         borderSide: BorderSide(color: Colors.black),
                       ),
-                      hintText: 'Enter your username',
+                      hintText: 'Masukkan email anda',
                       suffixIcon: Icon(
                         CarbonIcons.user_avatar,
                       ),
@@ -84,7 +83,7 @@ class LoginView extends GetView<LoginController> {
                           borderRadius: BorderRadius.circular(20.0),
                           borderSide: BorderSide(color: Colors.black),
                         ),
-                        hintText: 'Password',
+                        hintText: 'Masukkan password anda',
                         suffixIcon: IconButton(
                           icon: Icon(
                             c.obscureText.value
@@ -130,7 +129,7 @@ class LoginView extends GetView<LoginController> {
                           Get.toNamed("/forgot-password");
                         },
                         child: Text(
-                          "Forgot Password?",
+                          "Lupa Password ?",
                           style: TextStyle(
                               fontSize: textScaleFactor <= 1.15 ? 14 : 14,
                               color: Colors.white,

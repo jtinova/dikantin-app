@@ -147,4 +147,51 @@ class MenuProvider extends GetxController {
 
     return response;
   }
+  Future<http.Response> postOrderOnline(
+      List<Datasearch> cartList,
+      Map<String, dynamic> detailOrderan,
+      Map<int, int> itemQuantities,
+      Map<int, String> itemNotes) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    var url = Uri.parse(Api.transaksiPilihOnline); // Pastikan ini adalah URL yang benar
+
+    var headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+
+    List<Map<String, dynamic>> orderanData = cartList.map((item) {
+      final int quantity = itemQuantities[item.idMenu!] ?? 1;
+      final num discountAmount = item.diskon != null
+          ? (item.harga! * item.diskon! / 100) * quantity
+          : 0;
+      final num totalPrice = (item.harga! * quantity) - discountAmount;
+      return {
+        "kode_menu": item.idMenu,
+        "qty_barang": quantity,
+        "total_harga_barang": totalPrice,
+        "catatan": itemNotes[item.idMenu!], // Menyertakan catatan
+      };
+    }).toList();
+
+    Map<String, dynamic> body = {
+      "detail_orderan": detailOrderan,
+      "orderan": orderanData,
+    };
+
+    var response = await http.post(
+      url,
+      headers: headers,
+      body: json.encode(body),
+    );
+
+    if (response.statusCode != 200) {
+      // Jika status code bukan 200, cetak body untuk debugging
+      print('Request failed with status: ${response.statusCode}.');
+      print('Response body: ${response.body}');
+    }
+
+    return response;
+  }
 }

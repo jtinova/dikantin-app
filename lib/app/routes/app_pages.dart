@@ -1,16 +1,19 @@
 import 'package:get/get.dart';
 
+import '../modules/detailBelumbayar/bindings/detail_belumbayar_binding.dart';
+import '../modules/detailBelumbayar/views/detail_belumbayar_view.dart';
 import '../modules/detailTransaksi/bindings/detail_transaksi_binding.dart';
 import '../modules/detailTransaksi/views/detail_transaksi_view.dart';
 import '../modules/forgotPassword/bindings/forgot_password_binding.dart';
 import '../modules/forgotPassword/views/forgot_password_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
-
 import '../modules/keranjang/bindings/keranjang_binding.dart';
 import '../modules/keranjang/views/keranjang_view.dart';
 import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
+import '../modules/maps/bindings/maps_binding.dart';
+import '../modules/maps/views/maps_view.dart';
 import '../modules/navigation/bindings/navigation_binding.dart';
 import '../modules/navigation/views/navigation_view.dart';
 import '../modules/navigationKurir/bindings/navigationKurir_binding.dart';
@@ -19,6 +22,8 @@ import '../modules/onBoarding/bindings/on_boarding_binding.dart';
 import '../modules/onBoarding/views/on_boarding_view.dart';
 import '../modules/order/bindings/order_binding.dart';
 import '../modules/order/views/order_view.dart';
+import '../modules/orderKantin/bindings/order_kantin_binding.dart';
+import '../modules/orderKantin/views/order_kantin_view.dart';
 import '../modules/otpPage/bindings/otp_page_binding.dart';
 import '../modules/otpPage/views/otp_page_view.dart';
 import '../modules/pesanan/bindings/pesanan_binding.dart';
@@ -142,6 +147,25 @@ class AppPages {
       name: _Paths.RIWAYAT_KURIR,
       page: () => RiwayatKurirView(),
       binding: RiwayatKurirBinding(),
+    ),
+    GetPage(
+      name: _Paths.MAPS,
+      page: () => MapsView(
+        selectedBuilding: '',
+        initialSelectedValue: '',
+        keterangan: '',
+      ),
+      binding: MapsBinding(),
+    ),
+    GetPage(
+      name: _Paths.ORDER_KANTIN,
+      page: () => OrderKantinView(),
+      binding: OrderKantinBinding(),
+    ),
+    GetPage(
+      name: _Paths.DETAIL_BELUMBAYAR,
+      page: () => const DetailBelumbayarView(),
+      binding: DetailBelumbayarBinding(),
     ),
   ];
 }

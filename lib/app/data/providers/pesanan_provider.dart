@@ -4,6 +4,7 @@ import 'package:dikantin/app/data/models/pesanan_model.dart';
 import 'package:get/get.dart';
 import "package:http/http.dart" as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import '../models/belumbayar_model.dart';
 import '../models/pesanan_kirim_model.dart';
 import 'services.dart';
 
@@ -49,6 +50,24 @@ class PesananProvider extends GetxController {
     String? token = prefs.getString('token');
     final response = await http.get(
       Uri.parse(Api.pesananDiterima),
+      headers: {
+        'Authorization':
+            'Bearer $token', // Gantilah [TOKEN] dengan token yang sesuai
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return Pesanan.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Gagal memuat data');
+    }
+  }
+
+  Future<Pesanan> belumbayar() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    final response = await http.get(
+      Uri.parse(Api.getBelumbayar),
       headers: {
         'Authorization':
             'Bearer $token', // Gantilah [TOKEN] dengan token yang sesuai

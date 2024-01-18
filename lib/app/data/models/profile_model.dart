@@ -34,6 +34,9 @@ class Data {
   String? email;
   dynamic foto;
   dynamic googleId;
+  String? ket;
+  String? latitude;
+  String? longitude;
   String? createdAt;
   String? updatedAt;
 
@@ -48,6 +51,9 @@ class Data {
       this.alamat,
       this.email,
       this.foto,
+      this.latitude,
+      this.longitude,
+      this.ket,
       this.googleId,
       this.createdAt,
       this.updatedAt});
@@ -63,6 +69,9 @@ class Data {
     alamat = json['alamat'];
     email = json['email'];
     foto = json['foto'];
+    latitude = json['latitude'];
+    longitude = json['longitude'];
+    ket = json['keterangan'];
     googleId = json['google_id'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
@@ -80,6 +89,9 @@ class Data {
     data['alamat'] = alamat;
     data['email'] = email;
     data['foto'] = foto;
+    data['latitude'] = latitude;
+    data['longitude'] = longitude;
+    data['keterangan'] = ket;
     data['google_id'] = googleId;
     data['created_at'] = createdAt;
     data['updated_at'] = updatedAt;

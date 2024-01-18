@@ -1,7 +1,5 @@
 // ignore_for_file: unused_import, unnecessary_null_comparison
 
-import 'dart:ffi';
-
 import 'package:dikantin/app/data/models/search_model.dart';
 import 'package:dikantin/app/data/providers/riwayat_provider.dart';
 // import 'package:dikantin/app/data/models/riwayat_model.dart';
@@ -83,7 +81,7 @@ class RiwayatController extends GetxController
         context: Get.context!,
         initialDate: selectedDate.value,
         firstDate: DateTime(2000),
-        lastDate: DateTime(2024),
+        lastDate: DateTime(2050),
         helpText: 'Pilih Tanggal Pemesanan Anda',
         cancelText: 'Batal',
         confirmText: 'Pilih');

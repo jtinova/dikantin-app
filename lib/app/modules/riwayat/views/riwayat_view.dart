@@ -54,8 +54,7 @@ class RiwayatView extends GetView<RiwayatController> {
     double textScaleFactor = MediaQuery.of(context).textScaleFactor;
 
     final query = MediaQuery.of(context);
-    print('textscalefactor: ${query.textScaleFactor}');
-    print('devicePixelRatio: ${query.devicePixelRatio}');
+
     return MediaQuery(
       data: query.copyWith(
           textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15)),
@@ -132,6 +131,7 @@ class RiwayatView extends GetView<RiwayatController> {
                             child: IconButton.filled(
                               padding: EdgeInsets.zero,
                               onPressed: () {
+                                print('p');
                                 riwayatController.chooseDate();
                               }, // Tambahkan baris ini untuk mengatur warna dasar
                               iconSize: mediaBody * 0.001,
@@ -335,7 +335,7 @@ class RiwayatView extends GetView<RiwayatController> {
                                         padding: EdgeInsetsDirectional.fromSTEB(
                                             4, 5, 0, 0),
                                         child: Text(
-                                          'Kantin: ${menuData.idKantin ?? ''}',
+                                          menuData.namaKantin ?? '',
                                           style: GoogleFonts.poppins(
                                               textStyle: TextStyle(
                                             color: Color(0xFF101518),

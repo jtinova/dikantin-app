@@ -22,8 +22,7 @@ class _KirimKurirState extends State<KirimKurir> {
   Widget build(BuildContext context) {
     double textScaleFactor = MediaQuery.of(context).textScaleFactor;
     final query = MediaQuery.of(context);
-    print('textscalefactor: ${query.textScaleFactor}');
-    print('devicePixelRatio: ${query.devicePixelRatio}');
+
     return MediaQuery(
       data: query.copyWith(
           textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15)),
@@ -220,6 +219,17 @@ class _KirimKurirState extends State<KirimKurir> {
                                                 fontWeight: FontWeight.bold)),
                                       ),
                                     ],
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text(
+                                    'Alamat : ${orderData.transaksi!.alamat.toString()}',
+                                    style: GoogleFonts.poppins(
+                                        textStyle: TextStyle(
+                                            fontSize: 13,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w500)),
                                   ),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,

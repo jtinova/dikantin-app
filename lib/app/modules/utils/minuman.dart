@@ -2,8 +2,10 @@ import 'package:dikantin/app/modules/home/controllers/minuman_controller.dart';
 import 'package:dikantin/app/modules/utils/formatDate.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
+import '../../data/models/search_model.dart';
 import '../../data/providers/services.dart';
 import '../home/controllers/home_controller.dart';
 
@@ -17,6 +19,113 @@ class Minuman extends StatefulWidget {
 class _MinumanState extends State<Minuman> {
   final MinumanController controller = Get.put(MinumanController());
   final HomeController homeController = Get.find<HomeController>();
+  void buildBottomSheet(Datasearch menuData, String harga) {
+    Get.bottomSheet(
+      MediaQuery(
+        data: MediaQuery.of(context).copyWith(
+            textScaleFactor:
+                MediaQuery.of(context).textScaleFactor.clamp(1.0, 1.15)),
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          color: Colors.white,
+          padding: EdgeInsets.all(16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: IconButton(
+                        icon: Icon(Icons.close, color: Colors.black, size: 25),
+                        onPressed: () {
+                          Get.back(); // Tutup BottomSheet
+                        },
+                      ),
+                    ),
+                    Container(
+                      height: MediaQuery.of(context).size.height * 0.2,
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(15)),
+                        image: DecorationImage(
+                          image: NetworkImage(
+                              Api.gambar + menuData.foto.toString()),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      menuData.nama ?? '',
+                      style: GoogleFonts.poppins(
+                        textStyle: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      menuData.namaKantin ?? '',
+                      style: GoogleFonts.poppins(
+                        textStyle: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      'Harga: ${harga}',
+                      style: GoogleFonts.poppins(
+                        textStyle: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                  ],
+                ),
+              ),
+              Align(
+                alignment: Alignment.topRight,
+                child: Container(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Tambahkan aksi yang ingin dilakukan saat tombol ditekan
+                      homeController.addToCart(
+                          menuData, homeController.catatanController.text);
+                      homeController.catatanController
+                          .clear(); // Tutup BottomSheet
+                    },
+                    child: Text(
+                      'Masukkan Keranjang',
+                      style: GoogleFonts.poppins(
+                        textStyle: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +134,7 @@ class _MinumanState extends State<Minuman> {
     final mediaHeight =
         MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
     final query = MediaQuery.of(context);
-    print('textscalefactor: ${query.textScaleFactor}');
-    print('devicePixelRatio: ${query.devicePixelRatio}');
+
     return MediaQuery(
       data: query.copyWith(
           textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15)),
@@ -147,8 +255,12 @@ class _MinumanState extends State<Minuman> {
                         itemBuilder: (BuildContext context, int index) {
                           final menuData = controller.searchResults[index];
                           final harga = menuData.harga ?? 0;
+                          final current = harga.toRupiah();
+
                           return GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              buildBottomSheet(menuData, current);
+                            },
                             child: Card(
                               clipBehavior: Clip.antiAlias,
                               elevation: 4,
@@ -193,7 +305,7 @@ class _MinumanState extends State<Minuman> {
                                             ),
                                           ),
                                           Text(
-                                            'Kantin: ${menuData.idKantin ?? ''}',
+                                            menuData.namaKantin ?? '',
                                             style: TextStyle(
                                               fontSize: 14,
                                               color: Colors.black,
