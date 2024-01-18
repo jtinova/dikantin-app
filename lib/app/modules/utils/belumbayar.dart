@@ -1,5 +1,6 @@
 // ignore_for_file: camel_case_types, prefer_typing_uninitialized_variables
 
+import 'package:dikantin/app/modules/detailBelumbayar/views/detail_belumbayar_view.dart';
 import 'package:dikantin/app/modules/utils/formatDate.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -103,7 +104,7 @@ class _belumbayarState extends State<belumbayar> {
               final totalHarga = orderData.transaksi!.totalHarga ?? 0;
               return GestureDetector(
                 onTap: () {
-                  Get.to(const DetailTransaksiView(),
+                  Get.to(const DetailBelumbayarView(),
                       arguments: orderData.transaksi?.kodeTr);
                 },
                 child: Padding(

@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 
+import '../modules/detailBelumbayar/bindings/detail_belumbayar_binding.dart';
+import '../modules/detailBelumbayar/views/detail_belumbayar_view.dart';
 import '../modules/detailTransaksi/bindings/detail_transaksi_binding.dart';
 import '../modules/detailTransaksi/views/detail_transaksi_view.dart';
 import '../modules/forgotPassword/bindings/forgot_password_binding.dart';
@@ -157,8 +159,13 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.ORDER_KANTIN,
-      page: () =>  OrderKantinView(),
+      page: () => OrderKantinView(),
       binding: OrderKantinBinding(),
+    ),
+    GetPage(
+      name: _Paths.DETAIL_BELUMBAYAR,
+      page: () => const DetailBelumbayarView(),
+      binding: DetailBelumbayarBinding(),
     ),
   ];
 }

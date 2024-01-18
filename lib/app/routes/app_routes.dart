@@ -27,6 +27,7 @@ abstract class Routes {
   static const KANTIN = _Paths.KANTIN;
   static const MAPS = _Paths.MAPS;
   static const ORDER_KANTIN = _Paths.ORDER_KANTIN;
+  static const DETAIL_BELUMBAYAR = _Paths.DETAIL_BELUMBAYAR;
 }
 
 abstract class _Paths {
@@ -55,4 +56,5 @@ abstract class _Paths {
   static const KANTIN = '/kantin';
   static const MAPS = '/maps';
   static const ORDER_KANTIN = '/order-kantin';
+  static const DETAIL_BELUMBAYAR = '/detail-belumbayar';
 }
