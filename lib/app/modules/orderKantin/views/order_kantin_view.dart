@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'package:get/get.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 import '../controllers/order_kantin_controller.dart';
 
@@ -23,6 +24,8 @@ class OrderKantinView extends GetView<OrderKantinController> {
   final HomeController homeController = Get.find<HomeController>();
   final ProfileController profileController = Get.find<ProfileController>();
   final MapsController controllerMaps = Get.put(MapsController());
+  final OrderKantinController orderKantinController =
+      Get.put(OrderKantinController());
 
   @override
   Widget build(BuildContext context) {
@@ -397,8 +400,9 @@ class OrderKantinView extends GetView<OrderKantinController> {
                                   ),
                                 ),
                                 content: ElevatedButton(
-                                    onPressed: () {
-                                      Get.off(NavigationView());
+                                    onPressed: () async {
+                                      await orderKantinController.fetchQr();
+                                      dialog();
                                     },
                                     child: Text('Ok')));
 
@@ -432,6 +436,42 @@ class OrderKantinView extends GetView<OrderKantinController> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  void dialog() {
+    Get.defaultDialog(
+      barrierDismissible: false,
+      title: 'Scan QR Code',
+      titleStyle: GoogleFonts.poppins(
+        textStyle: const TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+          color: Colors.black,
+        ),
+      ),
+      content: Column(
+        children: [
+          Container(
+            width: 240, // Set a specific width for the QR code
+            height: 240, // Set a specific height for the QR code
+            child: QrImageView(
+              data: orderKantinController.qrData.value.data.toString(),
+              version: QrVersions.auto,
+              size: 70,
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Get.off(NavigationView());
+            },
+            child: Text('Ok'),
+          )
+        ],
       ),
     );
   }

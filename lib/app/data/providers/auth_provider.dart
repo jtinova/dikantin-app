@@ -40,7 +40,7 @@ class AuthProvider extends GetxController {
       if (errorMessage == "Akun anda belum terverifikasi") {
         Get.snackbar(
           'Gagal Login !..',
-          '$errorMessage',
+          '${errorMessage}, Mohon cek email anda',
           snackPosition: SnackPosition.TOP, // Menampilkan Snackbar dari atas
           duration: Duration(seconds: 2),
         );
@@ -129,8 +129,8 @@ class AuthProvider extends GetxController {
 }
 
 class RegisterProvider {
-  Future<void> register(String name, String email, String phone, 
-      String password) async {
+  Future<void> register(
+      String name, String email, String phone, String password) async {
     final data = {
       'nama': name,
       'email': email,
@@ -199,7 +199,7 @@ class ForgotPasswordProvider with ChangeNotifier {
       if (response.statusCode == 200) {
         Get.snackbar(
           'Berhasil',
-          'Cek Email untuk Mengaktivasi',
+          'Cek Email anda untuk Mengaktivasi',
           snackPosition: SnackPosition.TOP,
           duration: Duration(seconds: 2),
         );

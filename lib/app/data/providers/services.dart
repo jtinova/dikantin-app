@@ -1,6 +1,6 @@
 class Api {
-  static const koneksi = "https://8b91-103-175-230-10.ngrok-free.app/api";
-  static const gambar = "https://8b91-103-175-230-10.ngrok-free.app/";
+  static const koneksi = "https://dikantin.com/api";
+  static const gambar = "https://dikantin.com/";
   static const signUp = "$koneksi/validate/register";
   static const signIn = "$koneksi/validate/login";
   static const getToken = "$koneksi/validate/getTokenCustomer";
@@ -34,4 +34,5 @@ class Api {
   static const kurirLogout = "$koneksi/validate/logoutKurir";
   static const konfirmasi = "$koneksi/transaction/konfirmasiPesanan";
   static const pendapatanKurir = "$koneksi/kurir/pendapatan";
+  static const tampilQr = "$koneksi/transaction/kodeTrToQrCode";
 }

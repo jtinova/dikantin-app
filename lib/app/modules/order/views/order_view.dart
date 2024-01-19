@@ -474,9 +474,9 @@ class OrderView extends GetView<OrderController> {
                                     .profile.value.data?.alamat?.isEmpty ??
                                 true) {
                               // Menampilkan snackbar jika alamat kosong
-                              Get.snackbar('Error', 'Isi dulu alamat Anda');
                               EasyLoading.dismiss();
                               print('EasyLoading dismiss');
+                              Get.snackbar('Error', 'Isi dulu alamat Anda');
                             } else {
                               await orderController.getAccurateLocation();
                               // Mendapatkan latitude dan longitude dari lokasi terkini

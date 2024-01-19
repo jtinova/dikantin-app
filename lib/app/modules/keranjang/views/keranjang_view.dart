@@ -46,6 +46,7 @@ class KeranjangView extends GetView<KeranjangController> {
           backgroundColor: Colors.white,
           leading: InkWell(
             onTap: () {
+              homeController.catatanController.clear();
               Get.back();
             },
             child: Padding(
@@ -311,6 +312,7 @@ class KeranjangView extends GetView<KeranjangController> {
                                                 SizedBox(
                                                   height: 5,
                                                 ),
+
                                                 Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.end,
@@ -521,7 +523,7 @@ class KeranjangView extends GetView<KeranjangController> {
 
                                         Get.to(() => OrderKantinView());
                                       },
-                                      child: Text("DiKantin Aja!"),
+                                      child: Text("DiKantin ?"),
                                     ),
                                     Text("Atau"),
                                     ElevatedButton(
@@ -531,7 +533,7 @@ class KeranjangView extends GetView<KeranjangController> {
 
                                         Get.toNamed('/order');
                                       },
-                                      child: Text("Dianter Aja!"),
+                                      child: Text("Dianter ?"),
                                     ),
                                   ],
                                 ),

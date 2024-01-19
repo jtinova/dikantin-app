@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
+import 'app/modules/pesanan/controllers/pesanan_controller.dart';
+import 'app/modules/pesananKurir/controllers/pesananKurir_controller.dart';
 import 'app/routes/app_pages.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
@@ -47,7 +49,13 @@ Future<void> main() async {
             (RemoteMessage message) async {
               FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
                   FlutterLocalNotificationsPlugin();
-
+              var pesananController = Get.put(PesananController());
+              var pesanankurirController = Get.put(PesananKurirController());
+              await pesananController.loadProses();
+              await pesananController.loadDikirim();
+              await pesananController.loadBelumbayar();
+              await pesanankurirController.loadUntukDikirim();
+              await pesanankurirController.loadKonfirmasi();
               const AndroidNotificationDetails androidPlatformChannelSpecifics =
                   AndroidNotificationDetails('DiPujasKantin', 'DiPujasKantin',
                       importance: Importance.max,

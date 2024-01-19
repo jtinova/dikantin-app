@@ -5,6 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../data/models/profile_model.dart';
+import '../../../data/models/qr_model.dart';
 import '../../../data/models/unit_model.dart';
 import '../../../data/providers/profile_provider.dart';
 
@@ -20,6 +21,7 @@ class OrderController extends GetxController {
   RxBool isButtonEnabled = true.obs;
   RxBool isImageUploading = false.obs;
   RxBool isLoading = true.obs;
+  Rx<Qr> qrData = Qr().obs;
 
   var myPosition = Position(
     altitudeAccuracy: 0,
@@ -119,6 +121,23 @@ class OrderController extends GetxController {
     }
   }
 
+  Future<void> fetchQr() async {
+    try {
+      isLoading(true);
+
+      // Call the fetchqr method from CustomerProvider
+      Qr result = await _customerProvider.value.fetchqr();
+
+      // Update the qr data
+      qrData(result);
+
+      isLoading(false);
+    } catch (error) {
+      isLoading(false);
+      print('Error fetching QR data: $error');
+    }
+  }
+
   Future<void> editAlamat(
       {required String alamat,
       required String lat,
@@ -173,37 +192,4 @@ class OrderController extends GetxController {
       print('Error fetching location: $error');
     }
   }
-
-  // Future<void> getAccurateLocation() async {
-  //   try {
-  //     isLoading(true);
-
-  //     // Check apakah lokasi dianggap asli atau palsu
-  //     bool isLocationGenuine = await TrustLocation.isMockLocation;
-
-  //     if (!isLocationGenuine) {
-  //       // Lokasi dianggap asli, lanjutkan dengan menyimpan lokasi
-  //       // Mendapatkan lokasi terkini dengan akurasi terbaik
-  //       Position position = await Geolocator.getCurrentPosition(
-  //         desiredAccuracy: LocationAccuracy.best,
-  //       );
-  //       myPosition.value = position;
-  //       // Mendapatkan alamat dari lokasi terkini
-
-  //       isLoading(false);
-  //     } else {
-  //       // Lokasi palsu, tampilkan snackbar
-  //       isLoading(false);
-  //       Get.snackbar(
-  //         'Error',
-  //         'Lokasi palsu tidak diizinkan. Harap gunakan lokasi yang sesuai.',
-  //         backgroundColor: Colors.red,
-  //         colorText: Colors.white,
-  //       );
-  //     }
-  //   } catch (error) {
-  //     isLoading(false);
-  //     print('Error fetching location: $error');
-  //   }
-  // }
 }

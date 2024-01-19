@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import "package:http/http.dart" as http;
 import '../models/profile_kurir_model.dart';
+import '../models/qr_model.dart';
 import '../models/unit_model.dart';
 
 class CustomerProvider extends GetxController {
@@ -77,6 +78,24 @@ class CustomerProvider extends GetxController {
     print(response.body);
     if (response.statusCode == 200) {
       return ProfileKurir.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Gagal memuat data');
+    }
+  }
+
+  Future<Qr> fetchqr() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    final response = await http.post(
+      Uri.parse(Api.tampilQr),
+      headers: {
+        'Authorization':
+            'Bearer $token', // Gantilah [TOKEN] dengan token yang sesuai
+      },
+    );
+    print(response.body);
+    if (response.statusCode == 200) {
+      return Qr.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Gagal memuat data');
     }
