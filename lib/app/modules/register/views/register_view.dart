@@ -192,15 +192,15 @@ class RegisterView extends GetView<RegisterController> {
                           maskType: EasyLoadingMaskType.black,
                         );
                         // Periksa apakah email mengandung "@student.polije.ac.id"
-                        if (!email.contains("@student.polije.ac.id") &&
-                            !email.contains("@polije.ac.id")) {
-                          // Tampilkan pesan kesalahan jika alamat email tidak valid
-                          Get.snackbar(
-                              "Error", "Harus menggunakan email Polije");
-                          EasyLoading.dismiss();
-                          print('EasyLoading dismiss');
-                          return;
-                        }
+                        // if (!email.contains("@student.polije.ac.id") &&
+                        //     !email.contains("@polije.ac.id")) {
+                        //   // Tampilkan pesan kesalahan jika alamat email tidak valid
+                        //   Get.snackbar(
+                        //       "Error", "Harus menggunakan email Polije");
+                        //   EasyLoading.dismiss();
+                        //   print('EasyLoading dismiss');
+                        //   return;
+                        // }
 
                         // Panggil metode register dari RegisterProvider
                         try {
