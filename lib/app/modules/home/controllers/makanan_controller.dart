@@ -39,7 +39,5 @@ class MakananController extends GetxController {
           false); // Set isLoading menjadi false saat pemanggilan API selesai
     }
   }
-
-
   
 }

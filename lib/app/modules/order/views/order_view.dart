@@ -21,11 +21,10 @@ class OrderView extends GetView<OrderController> {
   final ProfileController profileController = Get.find<ProfileController>();
   final OrderController orderController = Get.put(OrderController());
   final MapsController controllerMaps = Get.put(MapsController());
-
   @override
   Widget build(BuildContext context) {
     double textScaleFactor = MediaQuery.of(context).textScaleFactor;
-
+    final biayakirim = orderController.biayaData.value.data ?? 0;
     final mediaHeight =
         MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
     final query = MediaQuery.of(context);
@@ -117,7 +116,7 @@ class OrderView extends GetView<OrderController> {
                                   profileController.profile.value.data?.ket ??
                                       '',
                               initialSelectedValue: orderController
-                                      .unit.value.data?.first?.namaGedung ??
+                                      .unit.value.data?.first.namaGedung ??
                                   'pilih Gedung',
                             ));
                           },
@@ -363,7 +362,7 @@ class OrderView extends GetView<OrderController> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Total Payment',
+                            'Total',
                             style: GoogleFonts.poppins(
                               textStyle: TextStyle(
                                 fontSize: 14,
@@ -374,6 +373,62 @@ class OrderView extends GetView<OrderController> {
                           ),
                           Text(
                             homeController.totalPrice.toRupiah(),
+                            style: GoogleFonts.poppins(
+                              textStyle: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Biaya kirim',
+                            style: GoogleFonts.poppins(
+                              textStyle: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.redAccent,
+                              ),
+                            ),
+                          ),
+                          Text(
+                            '+ ${biayakirim.toRupiah()}',
+                            style: GoogleFonts.poppins(
+                              textStyle: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.redAccent,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Total Payment',
+                            style: GoogleFonts.poppins(
+                              textStyle: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          Text(
+                            homeController.totalPriceWithKurir.toRupiah(),
                             style: GoogleFonts.poppins(
                               textStyle: TextStyle(
                                 fontSize: 14,

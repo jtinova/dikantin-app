@@ -35,4 +35,6 @@ class Api {
   static const konfirmasi = "$koneksi/transaction/konfirmasiPesanan";
   static const pendapatanKurir = "$koneksi/kurir/pendapatan";
   static const tampilQr = "$koneksi/transaction/kodeTrToQrCode";
+  static const biayakurir = "$koneksi/customer/biayaKurir";
+  static const checkjam = "$koneksi/transaction/setOperationHour";
 }

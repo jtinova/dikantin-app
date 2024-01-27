@@ -4,6 +4,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../data/models/biayakurir_model.dart';
 import '../../../data/models/profile_model.dart';
 import '../../../data/models/qr_model.dart';
 import '../../../data/models/unit_model.dart';
@@ -22,6 +23,7 @@ class OrderController extends GetxController {
   RxBool isImageUploading = false.obs;
   RxBool isLoading = true.obs;
   Rx<Qr> qrData = Qr().obs;
+  Rx<Biayakurir> biayaData = Biayakurir().obs;
 
   var myPosition = Position(
     altitudeAccuracy: 0,
@@ -40,6 +42,7 @@ class OrderController extends GetxController {
     super.onInit();
     getCustomerData();
     getUnit();
+    fetchbiayakurir();
   }
 
   @override
@@ -51,26 +54,44 @@ class OrderController extends GetxController {
   void onClose() {
     super.onClose();
   }
-
   Future<void> determinePosition() async {
     bool serviceEnabled;
     LocationPermission locationPermission;
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      return Future.error("Location service belum aktif");
+      Get.snackbar(
+        "Error",
+        "Location service belum aktif",
+        snackPosition: SnackPosition.BOTTOM,
+        duration: Duration(seconds: 3),
+      );
+      throw "Location service belum aktif";
     }
 
     locationPermission = await Geolocator.checkPermission();
     if (locationPermission == LocationPermission.denied) {
       locationPermission = await Geolocator.requestPermission();
-      if (locationPermission == LocationPermission.denied)
-        return Future.error("Location Permission ditolak");
+      if (locationPermission == LocationPermission.denied) {
+        Get.snackbar(
+          "Error",
+          "Location Permission ditolak",
+          snackPosition: SnackPosition.BOTTOM,
+          duration: Duration(seconds: 3),
+        );
+        throw "Location Permission ditolak";
+      }
     }
 
-    if (locationPermission == LocationPermission.deniedForever)
-      return Future.error(
-          "Location permission ditolak, gagal request permissions");
+    if (locationPermission == LocationPermission.deniedForever) {
+      Get.snackbar(
+        "Error",
+        "Location permission ditolak, gagal request permissions",
+        snackPosition: SnackPosition.BOTTOM,
+        duration: Duration(seconds: 3),
+      );
+      throw "Location permission ditolak, gagal request permissions";
+    }
 
     Position position = await Geolocator.getCurrentPosition();
     myPosition.value = position;
@@ -135,6 +156,23 @@ class OrderController extends GetxController {
     } catch (error) {
       isLoading(false);
       print('Error fetching QR data: $error');
+    }
+  }
+
+  Future<void> fetchbiayakurir() async {
+    try {
+      isLoading(true);
+
+      // Call the fetchqr method from CustomerProvider
+      Biayakurir result = await _customerProvider.value.fetchbiayakurir();
+
+      // Update the qr data
+      biayaData(result);
+
+      isLoading(false);
+    } catch (error) {
+      isLoading(false);
+      print('Error fetching biaya kurir data: $error');
     }
   }
 

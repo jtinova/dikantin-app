@@ -147,6 +147,7 @@ class MenuProvider extends GetxController {
 
     return response;
   }
+
   Future<http.Response> postOrderOnline(
       List<Datasearch> cartList,
       Map<String, dynamic> detailOrderan,
@@ -154,7 +155,8 @@ class MenuProvider extends GetxController {
       Map<int, String> itemNotes) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
-    var url = Uri.parse(Api.transaksiPilihOnline); // Pastikan ini adalah URL yang benar
+    var url = Uri.parse(
+        Api.transaksiPilihOnline); // Pastikan ini adalah URL yang benar
 
     var headers = {
       'Content-Type': 'application/json',

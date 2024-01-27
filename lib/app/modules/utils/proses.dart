@@ -100,7 +100,7 @@ class _ProsesState extends State<Proses> {
             shrinkWrap: true,
             itemBuilder: (BuildContext context, int index) {
               final orderData = controller.pesananProses.data![index];
-              final totalHarga = orderData.transaksi!.totalHarga ?? 0;
+              final totalHarga = (orderData.transaksi?.totalHarga ?? 0);
               return GestureDetector(
                 onTap: () {
                   Get.to(DetailTransaksiView(),

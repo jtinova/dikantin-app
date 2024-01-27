@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import "package:http/http.dart" as http;
+import '../../../data/models/biayakurir_model.dart';
 import '../../../data/models/penjualan_model.dart';
 import '../../../data/models/search_model.dart';
+import '../../../data/models/waktu_model.dart';
+import '../../../data/providers/customer_provider.dart';
 import '../../../data/providers/menu_provider.dart';
 import '../../../data/providers/services.dart';
 
@@ -25,6 +28,9 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
   final isCashSelected = true.obs;
   final isPolijePaySelected = false
       .obs; // Digunakan untuk memantau apakah metode pembayaran Polije Pay dipilih
+  Rx<Biayakurir> biayaData = Biayakurir().obs;
+  Rx<waktuModel> waktuData = waktuModel().obs;
+  final _customerProvider = CustomerProvider().obs;
 
 // Menghitung total harga dari semua item di keranjang, termasuk kuantitas dan diskon
   int get totalPrice {
@@ -34,6 +40,19 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
           (itemQuantities[item.idMenu] ?? 1);
       total += itemTotal;
     }
+    return total;
+  }
+
+  int get totalPriceWithKurir {
+    int total = 0;
+    for (var item in cartList) {
+      int itemTotal = calculatePriceAfterDiscount(item) *
+          (itemQuantities[item.idMenu] ?? 1);
+      total += itemTotal;
+    }
+    // Menambahkan biaya kirim ke total harga
+    final biayakirim = biayaData.value.data ?? 0;
+    total += biayakirim;
     return total;
   }
 
@@ -75,6 +94,7 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
     fetchDataDiskon('');
     fetchDataPenjualan();
     refreshData();
+    fetchbiayakurir();
   }
 
   @override
@@ -101,22 +121,46 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
     notesMap.remove(idMenu);
   }
 
-  void addToCart(Datasearch item, String note) {
-    int idMenu = item.idMenu!;
-    // Cek apakah item sudah ada di keranjangz
-    if (!cartList.any((element) => element.idMenu == item.idMenu)) {
-      cartList.add(item);
-      itemQuantities[item.idMenu!] = 1;
-      saveNoteForMenu(item.idMenu!, catatanController.text);
-    } else {
-      addQuantity(item.idMenu!);
-    }
-    // Save or update the note for the item
-    notesMap[idMenu] = note;
+  void addToCart(Datasearch item, String note) async {
+    try {
+      int idMenu = item.idMenu!;
 
-    // Refresh itemQuantities and notesMap
-    itemQuantities.refresh();
-    notesMap.refresh();
+      // Fetch waktu data
+      waktuModel result = await _customerProvider.value.fetchWaktu();
+
+      // Check if the response status code is 200
+      if (result.code == 200) {
+        // Execute addToCart logic
+        if (!cartList.any((element) => element.idMenu == item.idMenu)) {
+          cartList.add(item);
+          itemQuantities[item.idMenu!] = 1;
+          saveNoteForMenu(item.idMenu!, catatanController.text);
+        } else {
+          addQuantity(item.idMenu!);
+        }
+        // Save or update the note for the item
+        notesMap[idMenu] = note;
+
+        // Refresh itemQuantities and notesMap
+        itemQuantities.refresh();
+        notesMap.refresh();
+      } else {
+        // Show error Snackbar if the response status code is not 200
+        Get.snackbar(
+          'Mohon maaf',
+          'Batas Pelayanan Transaksi adalah Jam 7 pagi hingga Jam 3 sore.',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.red,
+        );
+      }
+    } catch (error) {
+      Get.snackbar(
+        'Mohon maaf',
+        'Batas Pelayanan Transaksi adalah Jam 7 pagi hingga Jam 3 sore.',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.red,
+      );
+    }
   }
 
   void removeFromCart(Datasearch item) {
@@ -167,6 +211,40 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
     } finally {
       setLoading(
           false); // Set isLoading menjadi false saat pemanggilan API selesai
+    }
+  }
+
+  Future<void> fetchWaktu() async {
+    try {
+      isLoading(true);
+
+      // Call the fetchqr method from CustomerProvider
+      waktuModel result = await _customerProvider.value.fetchWaktu();
+
+      // Update the qr data
+      waktuData(result);
+
+      isLoading(false);
+    } catch (error) {
+      isLoading(false);
+      print('Error fetching biaya kurir data: $error');
+    }
+  }
+
+  Future<void> fetchbiayakurir() async {
+    try {
+      isLoading(true);
+
+      // Call the fetchqr method from CustomerProvider
+      Biayakurir result = await _customerProvider.value.fetchbiayakurir();
+
+      // Update the qr data
+      biayaData(result);
+
+      isLoading(false);
+    } catch (error) {
+      isLoading(false);
+      print('Error fetching biaya kurir data: $error');
     }
   }
 
@@ -227,8 +305,13 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
 
       if (response.statusCode == 200) {
         // Proses order berhasil
-        Get.snackbar("Success", "Order submitted successfully");
-        // Reset cart dan quantities atau navigasi ke halaman berikutnya
+        Get.snackbar(
+          'Berhasil',
+          'Terimakasih sudah order di aplikasi Dikantin',
+          colorText: Colors.white,
+          duration: Duration(seconds: 2),
+          snackPosition: SnackPosition.TOP,
+        ); // Reset cart dan quantities atau navigasi ke halaman berikutnya
         cartList.clear();
         itemQuantities.clear();
         notesMap.clear();
@@ -236,11 +319,26 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
             .clear(); // Mengosongkan notesMap setelah order berhasil
       } else {
         // Proses order gagal
-        Get.snackbar("Error", "Failed to submit order: ${response.body}");
+        // Get.snackbar("Error", "Failed to submit order: ${response.bodyBytes}");
+        Get.snackbar(
+          'Peringatan',
+          response.body,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          duration: Duration(seconds: 2),
+          snackPosition: SnackPosition.TOP,
+        );
       }
     } catch (e) {
       // Menangani kesalahan yang mungkin terjadi selama request
-      Get.snackbar("Error", "An error occurred: $e");
+      Get.snackbar(
+        'Error',
+        '"Server sedang gangguan',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        duration: Duration(seconds: 2),
+        snackPosition: SnackPosition.TOP,
+      );
     } finally {
       setLoading(false); // Menutup indikator loading
     }

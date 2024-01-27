@@ -163,9 +163,23 @@ class MapsView extends GetView<MapsController> {
                         status: 'loading...',
                         maskType: EasyLoadingMaskType.black,
                       );
+
+                      bool isLocationEnabled =
+                          await controllerMaps.isLocationServiceEnabled();
+
+                      if (!isLocationEnabled) {
+                        EasyLoading.dismiss();
+                        Get.snackbar(
+                          'Peringatan',
+                          'Mohon aktifkan layanan lokasi pada perangkat Anda',
+                          backgroundColor: Colors.red,
+                          colorText: Colors.white,
+                        );
+                        return;
+                      }
+
                       if (controllerMaps.keteranganController.text.isEmpty) {
                         EasyLoading.dismiss();
-                        print('EasyLoading dismiss');
                         Get.snackbar(
                           'Peringatan',
                           'Mohon isi keterangan',
@@ -173,41 +187,26 @@ class MapsView extends GetView<MapsController> {
                           colorText: Colors.white,
                         );
                       } else {
-                        // Mendapatkan koordinat marker dari TextField
-                        double markerLatitude = double.parse(
-                            controllerMaps.latitudeController.text);
-                        double markerLongitude = double.parse(
-                            controllerMaps.longitudeController.text);
+                        profilC.editAlamat(
+                            alamat: controllerMaps
+                                .selectedBuilding, // Gunakan nama gedung
+                            lat: controllerMaps.selectedLatitude
+                                .toString(), // Gunakan latitude
+                            long: controllerMaps.selectedLongitude
+                                .toString(), // Gunakan longitude
+                            ket: controllerMaps.keteranganController.text);
+                        await controllerMaps.determinePosition();
 
-                        // Pengecekan apakah marker berada di dalam kampus
-                        bool insideCampus = controllerMaps.isInsideCampus(
-                            LatLng(markerLatitude, markerLongitude));
-
-                        if (insideCampus) {
-                          profilC.editAlamat(
-                              alamat: controllerMaps
-                                  .selectedBuilding, // Gunakan nama gedung
-                              lat: controllerMaps.selectedLatitude
-                                  .toString(), // Gunakan latitude
-                              long: controllerMaps.selectedLongitude
-                                  .toString(), // Gunakan longitude
-                              ket: controllerMaps.keteranganController.text);
-                          EasyLoading.dismiss();
-                          print('EasyLoading dismiss');
-                          Get.back();
-
-                          // Gunakan keterangan
-                        } else {
-                          // Jika di luar kampus, tampilkan snackbar
-                          EasyLoading.dismiss();
-                          print('EasyLoading dismiss');
-                          Get.snackbar(
-                            'Gagal Menyimpan',
-                            'Lokasi diluar kampus, Mohon atur lokasi didalam kampus',
-                            backgroundColor: Colors.red,
-                            colorText: Colors.white,
-                          );
-                        }
+                        EasyLoading.dismiss();
+                        print('EasyLoading dismiss');
+                        Get.back();
+                        Get.snackbar(
+                          'Perhatian',
+                          'Alamat Berhasil Diubah',
+                          snackPosition: SnackPosition
+                              .TOP, // Menampilkan Snackbar dari atas
+                          duration: Duration(seconds: 1),
+                        );
                       }
                     },
                     child: Text('Simpan'),

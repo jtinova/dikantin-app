@@ -14,11 +14,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../data/models/search_model.dart';
 import '../../../data/providers/services.dart';
 import '../../home/controllers/home_controller.dart';
+import '../../order/controllers/order_controller.dart';
 import '../controllers/keranjang_controller.dart';
 
 class KeranjangView extends GetView<KeranjangController> {
   KeranjangView({Key? key}) : super(key: key);
   final HomeController homeController = Get.find<HomeController>();
+  final OrderController orderController = Get.find<OrderController>();
 
   @override
   Widget build(BuildContext context) {
@@ -527,11 +529,12 @@ class KeranjangView extends GetView<KeranjangController> {
                                     ),
                                     Text("Atau"),
                                     ElevatedButton(
-                                      onPressed: () {
+                                      onPressed: () async {
                                         // Pilih online
                                         Get.back(); // Tutup dialog
-
                                         Get.toNamed('/order');
+                                        await homeController.fetchbiayakurir();
+                                        await orderController.fetchbiayakurir();
                                       },
                                       child: Text("Dianter ?"),
                                     ),

@@ -38,6 +38,7 @@ class MapsController extends GetxController {
     super.onInit();
     _positionStreamSubscription?.cancel();
     addPolygon();
+    determinePosition();
   }
 
   @override
@@ -87,6 +88,10 @@ class MapsController extends GetxController {
     // When we reach here, permissions are granted and we can
     // continue accessing the position of the device.
     return await Geolocator.getCurrentPosition();
+  }
+
+  Future<bool> isLocationServiceEnabled() async {
+    return await Geolocator.isLocationServiceEnabled();
   }
 
   Future<void> startLocationStreaming() async {

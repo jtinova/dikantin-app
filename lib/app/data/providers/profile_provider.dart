@@ -86,12 +86,7 @@ class ProfileProvider with ChangeNotifier {
       );
 
       if (response.statusCode == 200) {
-        Get.snackbar(
-          'Perhatian',
-          'Alamat Berhasil Diubah',
-          snackPosition: SnackPosition.TOP, // Menampilkan Snackbar dari atas
-          duration: Duration(seconds: 1),
-        );
+        print('sukses');
       } else {
         final jsonResponse = jsonDecode(response.body);
         final errorMessage = jsonResponse['data'];
