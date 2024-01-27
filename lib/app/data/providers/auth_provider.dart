@@ -43,6 +43,7 @@ class AuthProvider extends GetxController {
           '${errorMessage}, Mohon cek email anda',
           snackPosition: SnackPosition.TOP, // Menampilkan Snackbar dari atas
           duration: Duration(seconds: 2),
+          backgroundColor: Colors.red,
         );
         throw Exception('Account not verified: $errorMessage');
       } else {
@@ -51,6 +52,7 @@ class AuthProvider extends GetxController {
           '$errorMessage',
           snackPosition: SnackPosition.TOP, // Menampilkan Snackbar dari atas
           duration: Duration(seconds: 2),
+          backgroundColor: Colors.red,
         );
         throw Exception('$errorMessage');
       }
@@ -143,12 +145,14 @@ class RegisterProvider {
       final jsonResponse = jsonDecode(response.body);
       final errorMessage = jsonResponse['data'];
 
-      if (response.statusCode == 200) {
+      if (errorMessage ==
+          'Selamat anda berhasil registrasi, Silahkan Cek Email Anda untuk aktivasi akun') {
         Get.snackbar(
           'Registrasi Berhasil',
-          'Akun anda telah dibuat',
-          snackPosition: SnackPosition.TOP, // Menampilkan Snackbar dari atas
-          duration: Duration(seconds: 2),
+          'Silahkan Cek Email Anda untuk aktivasi akun',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.white, // Menampilkan Snackbar dari atas
+          duration: Duration(seconds: 3),
         );
 
         await Future.delayed(Duration(seconds: 2));
@@ -156,10 +160,11 @@ class RegisterProvider {
         Get.offAllNamed("/login");
       } else {
         Get.snackbar(
-          'Perhatian !',
-          '$errorMessage',
+          'Registrasi Berhasil ',
+          'Silahkan Buat Laporan Ke Pihak Admin Untuk memvalidasi email anda',
           snackPosition: SnackPosition.TOP, // Menampilkan Snackbar dari atas
-          duration: Duration(seconds: 2),
+          backgroundColor: Colors.white, // Menampilkan Snackbar dari atas
+          duration: Duration(seconds: 3),
         );
         throw Exception('Registration failed ${response.body}');
       }
