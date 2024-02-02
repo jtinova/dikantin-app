@@ -1,6 +1,7 @@
 // ignore_for_file: unused_import
 
 import 'dart:convert';
+import 'package:dikantin/app/data/models/version_model.dart';
 import 'package:dikantin/app/data/providers/services.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -41,6 +42,25 @@ class MenuProvider extends GetxController {
 
     if (response.statusCode == 200) {
       return Search.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Gagal memuat data');
+    }
+  }
+
+  Future<Version> checkVersion() async {
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // String? token = prefs.getString('token');
+    final response = await http.get(
+      Uri.parse(Api.checkversion),
+      // headers: {
+      //   'Authorization':
+      //       'Bearer $token', // Gantilah [TOKEN] dengan token yang sesuai
+      // },
+    );
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      return Version.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Gagal memuat data');
     }

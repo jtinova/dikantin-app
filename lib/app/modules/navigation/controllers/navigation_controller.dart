@@ -1,18 +1,28 @@
 import 'dart:convert';
 
+import 'package:android_intent_plus/android_intent.dart';
 import 'package:dikantin/app/data/providers/services.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import "package:http/http.dart" as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../data/models/version_model.dart';
+import '../../../data/providers/menu_provider.dart';
+
 class NavigationController extends GetxController {
   //TODO: Implement NavigationController
+  final menuP = MenuProvider().obs;
+  Rx<Version> version = Version().obs;
+  final isLoading = false.obs; // Tambahkan isLoading
+
   var tabIndex = 0;
   @override
   void onInit() {
     super.onInit();
     checkToken();
+    getVersion();
+    // checkVersion();
   }
 
   @override
@@ -30,6 +40,80 @@ class NavigationController extends GetxController {
     tabIndex = index;
     update();
   }
+
+  Future<void> getVersion() async {
+    try {
+      isLoading(true);
+
+      // Call the getCustomer method from CustomerProvider
+      Version result = await menuP.value.checkVersion();
+
+      // Update the customer data
+      version(result);
+      int? versionNumber = result.data?.versionNumber;
+      String koneksi = Api.koneksi;
+      String convert = 'v${versionNumber}';
+      print(convert);
+      if (!koneksi.contains(convert)) {
+        print(' UPDATE');
+        _showLogoutDialogVersion();
+      } else {
+        print('Ga UPDATE');
+        // _showLogoutDialogVersion();
+      }
+
+      isLoading(false);
+    } catch (error) {
+      isLoading(false);
+      print('Error fetching dataprofile: $error');
+    }
+  }
+
+  // void checkVersion() async {
+  //   final data = await version.value.data?.versionNumber;
+  //   String convert = 'v${data}';
+  //   String koneksi = Api.koneksi;
+
+  //   if (!koneksi.contains(convert)) {
+  //     // Get.defaultDialog(
+  //     //   title: "Peringatan",
+  //     //   content: Column(
+  //     //     mainAxisSize: MainAxisSize.min,
+  //     //     children: [Text('Update aplikasi anda')],
+  //     //   ),
+  //     //   barrierDismissible: false,
+  //     //   actions: [
+  //     //     ElevatedButton(
+  //     //       onPressed: () async {
+  //     //         // Replace the package name with your app's package name
+  //     //         const String packageName = 'com.tefa.dikatin';
+
+  //     //         final AndroidIntent intent = AndroidIntent(
+  //     //           action: 'action_view',
+  //     //           package: packageName,
+  //     //           data:
+  //     //               'https://play.google.com/store/apps/details?id=$packageName',
+  //     //         );
+
+  //     //         // Use try-catch to handle errors when launching the intent
+  //     //         try {
+  //     //           await intent.launch();
+  //     //         } catch (e) {
+  //     //           print('Error launching Play Store intent: $e');
+  //     //         }
+  //     //       },
+  //     //       child: Text('Ok'),
+  //     //     ),
+  //     //   ],
+  //     // );
+  //     // _showLogoutDialog();
+  //     print(convert);
+
+  //     print('update');
+  //   } else {
+  //     print('Gausah update');
+  //   }
+  // }
 
   Future<void> checkToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -98,6 +182,41 @@ class NavigationController extends GetxController {
         },
         child: Text('OK'),
       ),
+    );
+  }
+
+  void _showLogoutDialogVersion() {
+    // Tampilkan dialog atau notifikasi untuk login ulang
+    Get.defaultDialog(
+      title: "Peringatan",
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [Text('Ayo Update Aplikasi Kamu!')],
+      ),
+      barrierDismissible: false,
+      actions: [
+        ElevatedButton(
+          onPressed: () async {
+            // Replace the package name with your app's package name
+            const String packageName = 'com.tefa.dikatin';
+
+            final AndroidIntent intent = AndroidIntent(
+              action: 'action_view',
+              package: packageName,
+              data:
+                  'https://play.google.com/store/apps/details?id=$packageName',
+            );
+            Get.back();
+            // Use try-catch to handle errors when launching the intent
+            try {
+              await intent.launch();
+            } catch (e) {
+              print('Error launching Play Store intent: $e');
+            }
+          },
+          child: Text('Ok'),
+        ),
+      ],
     );
   }
 }

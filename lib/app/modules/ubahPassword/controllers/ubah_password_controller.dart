@@ -50,20 +50,17 @@ class UbahPasswordController extends GetxController {
       final response = await passwordProvider.value
           .verifyNewPassword(email!, password, confirmPassword);
 
-      if (response.status.hasError) {
+      if (response.statusCode == 200) {
+        // Handle successful response
+        print('Response Data: ${response.body}');
+        await backLogin();
+        Get.snackbar('Sukses', 'Password berhasil diubah');
+      } else {
         // Handle error response
-        print('Error: ${response.statusText}');
+        print('Error: ${response.statusCode}');
         // Menampilkan pesan kesalahan dari server ke pengguna jika diperlukan
         Get.snackbar('Gagal',
             'Password baru tidak boleh sama dengan password lama. Silakan coba password yang berbeda.');
-      } else {
-        await backLogin();
-        // Handle successful response
-        print('Response Data: ${response.body}');
-
-        // Menampilkan respons body ke pengguna
-
-        Get.snackbar('Sukses', 'Password berhasil diubah');
       }
     } catch (error) {
       // Handle other errors (e.g., network error)

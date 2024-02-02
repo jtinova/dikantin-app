@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:new_version_plus/new_version_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import "package:http/http.dart" as http;
 import '../../../data/models/biayakurir_model.dart';
@@ -23,6 +24,7 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
   late Penjualan penjualan = Penjualan();
   var cartList = <Datasearch>[].obs;
   var penjualanD = <Data>[].obs;
+
   var itemQuantities = <int, int>{}.obs;
   final isLoading = false.obs; // Tambahkan isLoading
   final isCashSelected = true.obs;
@@ -91,10 +93,27 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
       vsync: this,
     );
     tabController = TabController(length: 4, vsync: this);
+
     fetchDataDiskon('');
     fetchDataPenjualan();
     refreshData();
     fetchbiayakurir();
+  
+    // Instantiate NewVersion manager object (Using GCP Console app as example)
+    final newVersion = NewVersionPlus(
+      androidId: 'com.mobile.legends',
+      // androidPlayStoreCountry: "es_ES",
+      androidHtmlReleaseNotes: true,
+    );
+
+    const simpleBehavior = true;
+
+    // if (simpleBehavior) {
+    basicStatusCheck(newVersion);
+    // }
+    // else {
+    // advancedStatusCheck(newVersion);
+    // }
   }
 
   @override
@@ -120,6 +139,43 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
   void clearNoteForMenu(int idMenu) {
     notesMap.remove(idMenu);
   }
+
+  basicStatusCheck(NewVersionPlus newVersion) async {
+    final version = await newVersion.getVersionStatus();
+    if (version != null) {
+      String release = version.releaseNotes ?? "";
+    }
+    newVersion.showAlertIfNecessary(
+      context: Get.context!,
+      launchModeVersion: LaunchModeVersion.external,
+    );
+    print('Status local: ${version!.localVersion}');
+    print('Status store: ${version!.appStoreLink}');
+    print('Status store: ${version!.storeVersion}');
+    print('Status store: ${version.releaseNotes}');
+  }
+
+  advancedStatusCheck(NewVersionPlus newVersion) async {
+    final status = await newVersion.getVersionStatus();
+    if (status != null) {
+      debugPrint(status.releaseNotes);
+      debugPrint(status.appStoreLink);
+      debugPrint(status.localVersion);
+      debugPrint(status.storeVersion);
+      debugPrint(status.canUpdate.toString());
+      newVersion.showUpdateDialog(
+        context: Get.context!,
+        versionStatus: status,
+        dialogText: 'Custom Text',
+        launchModeVersion: LaunchModeVersion.external,
+        allowDismissal: false,
+      );
+    }
+  }
+
+
+ 
+ 
 
   void addToCart(Datasearch item, String note) async {
     try {
@@ -295,53 +351,51 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
       "model_pembayaran": paymentMethod
     };
 
-    try {
-      final response = await menuProvider.value.postOrder(
-        cartList,
-        detailOrderan,
-        itemQuantities,
-        notesMap.toJson(), // Mengambil catatan dari notesMap
-      );
+    final response = await menuProvider.value.postOrder(
+      cartList,
+      detailOrderan,
+      itemQuantities,
+      notesMap.toJson(),
+    );
 
-      if (response.statusCode == 200) {
-        // Proses order berhasil
-        Get.snackbar(
-          'Berhasil',
-          'Terimakasih sudah order di aplikasi Dikantin',
-          colorText: Colors.white,
-          duration: Duration(seconds: 2),
-          snackPosition: SnackPosition.TOP,
-        ); // Reset cart dan quantities atau navigasi ke halaman berikutnya
-        cartList.clear();
-        itemQuantities.clear();
-        notesMap.clear();
-        catatanController
-            .clear(); // Mengosongkan notesMap setelah order berhasil
-      } else {
-        // Proses order gagal
-        // Get.snackbar("Error", "Failed to submit order: ${response.bodyBytes}");
-        Get.snackbar(
-          'Peringatan',
-          response.body,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-          duration: Duration(seconds: 2),
-          snackPosition: SnackPosition.TOP,
-        );
-      }
-    } catch (e) {
-      // Menangani kesalahan yang mungkin terjadi selama request
+    if (response.statusCode == 200) {
+      // Proses order berhasil
       Get.snackbar(
-        'Error',
-        '"Server sedang gangguan',
+        'Berhasil',
+        'Terimakasih sudah order di aplikasi Dikantin',
+        colorText: Colors.white,
+        duration: Duration(seconds: 2),
+        snackPosition: SnackPosition.TOP,
+      ); // Reset cart dan quantities atau navigasi ke halaman berikutnya
+      cartList.clear();
+      itemQuantities.clear();
+      notesMap.clear();
+      catatanController.clear(); // Mengosongkan notesMap setelah order berhasil
+    } else {
+      // Proses order gagal
+      // Get.snackbar("Error", "Failed to submit order: ${response.bodyBytes}");
+      Get.snackbar(
+        'Peringatan',
+        response.body,
         backgroundColor: Colors.red,
         colorText: Colors.white,
         duration: Duration(seconds: 2),
         snackPosition: SnackPosition.TOP,
       );
-    } finally {
-      setLoading(false); // Menutup indikator loading
     }
+    // } catch (e) {
+    //   // Menangani kesalahan yang mungkin terjadi selama request
+    //   Get.snackbar(
+    //     'Error',
+    //     '${e}',
+    //     backgroundColor: Colors.red,
+    //     colorText: Colors.white,
+    //     duration: Duration(seconds: 2),
+    //     snackPosition: SnackPosition.TOP,
+    //   );
+    // } finally {
+    //   setLoading(false); // Menutup indikator loading
+    // }
   }
 
   Future<void> submitOrderOnline() async {

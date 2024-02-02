@@ -413,7 +413,7 @@ class ProfileView extends GetView<ProfileController> {
                       ..text =
                           profileController.profile.value.data?.noTelepon ?? '',
                     keyboardType: TextInputType.number,
-                    maxLength: 12,
+                    maxLength: 13,
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.symmetric(
                           vertical: 10.0, horizontal: 10.0),

@@ -234,16 +234,18 @@ class ForgotPasswordProvider with ChangeNotifier {
 
 class VerificationProvider extends GetConnect {
   Future<bool> verifyCode(String kode) async {
+    final url = Uri.parse(Api.verifKode);
+
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? email = prefs.getString('email');
       print('Email: $email'); // Make sure email is not null
 
-      final response = await post(
-        Api.verifKode.toString(), // Convert Uri to String using toString()
-        {'email': email, 'kode': kode}, // Use 'body' directly
+      final response = await http.post(
+        url, // Convert Uri to String using toString()
+        body: {'email': email, 'kode': kode},
+        // Use 'body' directly
       );
-
       print('Response Code: ${response.statusCode}');
       print('Response Body: ${response.body}');
 
@@ -262,18 +264,20 @@ class VerificationProvider extends GetConnect {
 }
 
 class PasswordVerificationProvider extends GetConnect {
-  Future<Response> verifyNewPassword(
+  Future<http.Response> verifyNewPassword(
       String email, String password, String confirmPassword) async {
+    final url = Uri.parse(Api.ubahPassword);
+
     try {
-      final response = await post(
-        Api.ubahPassword, // Ganti dengan URL API yang sesuai
-        {
+      final response = await http.post(
+        url, // Convert Uri to String using toString()
+        body: {
           'email': email,
           'password': password,
           'confirmPassword': confirmPassword
         },
+        // Use 'body' directly
       );
-
       return response;
     } catch (error) {
       throw error;

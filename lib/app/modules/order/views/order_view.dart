@@ -548,8 +548,8 @@ class OrderView extends GetView<OrderController> {
                                 await homeController.submitOrder();
                                 EasyLoading.dismiss();
                                 print('EasyLoading dismiss');
-                                Future.delayed(const Duration(seconds: 3), () {
-                                  Get.off(NavigationView());
+                                Future.delayed(const Duration(seconds: 3), (){
+                                  Get.off(NavigationView()); 
                                 });
                                 // Gunakan keterangan
                               } else {

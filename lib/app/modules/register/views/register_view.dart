@@ -79,7 +79,7 @@ class RegisterView extends GetView<RegisterController> {
                         borderRadius: BorderRadius.circular(20.0),
                         borderSide: BorderSide(color: Colors.black),
                       ),
-                      hintText: 'Masukkan Email anda',
+                      hintText: 'Masukkan Polije anda',
                       suffixIcon: Icon(
                         CarbonIcons.mail_all,
                       ),
@@ -96,7 +96,7 @@ class RegisterView extends GetView<RegisterController> {
                         .phoneController, // Anda dapat mengganti controller sesuai kebutuhan
                     keyboardType: TextInputType
                         .phone, // Menentukan jenis keyboard untuk nomor telepon
-                    maxLength: 12,
+                    maxLength: 13,
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: Colors.white,
