@@ -192,13 +192,25 @@ class MapsController extends GetxController {
   }
 
   bool _pointInPolygon(LatLng point, List<LatLng> polygon) {
-    int intersectCount = 0;
-    for (int j = 0; j < polygon.length - 1; j++) {
-      if (_rayCastIntersect(point, polygon[j], polygon[j + 1])) {
-        intersectCount++;
+    bool isInside = false;
+    int i, j = polygon.length - 1;
+
+    for (i = 0; i < polygon.length; i++) {
+      if ((polygon[i].latitude < point.latitude &&
+              polygon[j].latitude >= point.latitude ||
+          polygon[j].latitude < point.latitude &&
+              polygon[i].latitude >= point.latitude)) {
+        if (polygon[i].longitude +
+                (point.latitude - polygon[i].latitude) /
+                    (polygon[j].latitude - polygon[i].latitude) *
+                    (polygon[j].longitude - polygon[i].longitude) <
+            point.longitude) {
+          isInside = !isInside;
+        }
       }
+      j = i;
     }
-    return (intersectCount % 2) == 1;
+    return isInside;
   }
 
   bool _rayCastIntersect(LatLng point, LatLng vertA, LatLng vertB) {

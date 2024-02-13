@@ -166,13 +166,13 @@ class RegisterProvider {
           backgroundColor: Colors.white, // Menampilkan Snackbar dari atas
           duration: Duration(seconds: 3),
         );
-        throw Exception('Registration failed ${response.body}');
+        // throw Exception('Registration failed ${response.body}');
       }
     } catch (e) {
       print(e);
       Get.snackbar(
         'Registrasi Gagal',
-        'Eror Saat Registrasi',
+        'Eror Saat Registrasi $e',
         snackPosition: SnackPosition.TOP,
         duration: Duration(seconds: 2),
       );

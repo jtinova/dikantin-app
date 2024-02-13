@@ -524,7 +524,7 @@ class OrderView extends GetView<OrderController> {
                             maskType: EasyLoadingMaskType.black,
                           );
                           if (homeController.cartList.isNotEmpty) {
-                            // Pengecekan apakah alamat sudah diisi atau tidak
+                            // Pengecekan apakah alamat sudah diisi atau tiadk
                             if (profileController
                                     .profile.value.data?.alamat?.isEmpty ??
                                 true) {
@@ -546,10 +546,16 @@ class OrderView extends GetView<OrderController> {
                                   LatLng(markerLatitude, markerLongitude));
                               if (insideCampus) {
                                 await homeController.submitOrder();
+                                Get.snackbar(
+                                  'Testing Sukses',
+                                  'Anda didalam lokasi',
+                                  backgroundColor: Colors.blue,
+                                  colorText: Colors.white,
+                                );
                                 EasyLoading.dismiss();
                                 print('EasyLoading dismiss');
-                                Future.delayed(const Duration(seconds: 3), (){
-                                  Get.off(NavigationView()); 
+                                Future.delayed(const Duration(seconds: 3), () {
+                                  Get.off(NavigationView());
                                 });
                                 // Gunakan keterangan
                               } else {

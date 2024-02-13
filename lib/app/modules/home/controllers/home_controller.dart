@@ -98,7 +98,7 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
     fetchDataPenjualan();
     refreshData();
     fetchbiayakurir();
-  
+
     // Instantiate NewVersion manager object (Using GCP Console app as example)
     final newVersion = NewVersionPlus(
       androidId: 'com.mobile.legends',
@@ -173,10 +173,6 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
     }
   }
 
-
- 
- 
-
   void addToCart(Datasearch item, String note) async {
     try {
       int idMenu = item.idMenu!;
@@ -212,7 +208,7 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
     } catch (error) {
       Get.snackbar(
         'Mohon maaf',
-        'Batas Pelayanan Transaksi adalah Jam 7 pagi hingga Jam 3 sore.',
+        'Batas Pelayanan .',
         snackPosition: SnackPosition.TOP,
         backgroundColor: Colors.red,
       );

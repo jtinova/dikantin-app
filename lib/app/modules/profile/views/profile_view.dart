@@ -99,9 +99,9 @@ class ProfileView extends GetView<ProfileController> {
                     onPressed: () {
                       profileController.editAlamat(
                           alamat: profileController.addressController.text,
-                          long: '54647',
-                          lat: '343',
-                          ket: 'd');
+                          long: '',
+                          lat: '',
+                          ket: '');
                       Get.back();
                     },
                     child: Text(

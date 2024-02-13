@@ -237,6 +237,10 @@ class RegisterView extends GetView<RegisterController> {
                         backgroundColor: Colors.white,
                       ),
                       onPressed: () {
+                        controller.nameController.clear();
+                        controller.emailController.clear();
+                        controller.phoneController.clear();
+                        controller.passwordController.clear();
                         Get.toNamed('/login');
                       },
                       child: Text(
