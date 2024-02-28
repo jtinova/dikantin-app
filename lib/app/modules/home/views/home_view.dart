@@ -2,9 +2,11 @@
 
 import 'package:dikantin/app/modules/navigation/controllers/navigation_controller.dart';
 import 'package:dikantin/app/modules/utils/formatDate.dart';
+import 'package:dikantin/app/modules/utils/kantin.dart';
 import 'package:dikantin/app/modules/utils/minuman.dart';
 import 'package:dikantin/app/modules/utils/favorite.dart';
 import 'package:dikantin/app/modules/utils/makanan.dart';
+import 'package:dikantin/app/modules/utils/snack.dart';
 import 'package:dikantin/app/modules/utils/semua.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -26,7 +28,7 @@ class HomeView extends GetView<HomeController> {
       actions: [
         Padding(
           padding: const EdgeInsets.only(right: 30.0),
-          child: IconButton.filledTonal(
+          child: IconButton(
             onPressed: () {
               Get.toNamed('/keranjang');
             },
@@ -69,9 +71,10 @@ class HomeView extends GetView<HomeController> {
     final query = MediaQuery.of(context);
     return MediaQuery(
       data: query.copyWith(
-          textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15)),
+          textScaler:
+              TextScaler.linear(query.textScaleFactor.clamp(1.0, 1.15))),
       child: DefaultTabController(
-        length: 4,
+        length: 6,
         child: Scaffold(
           appBar: app,
           body: Stack(
@@ -148,7 +151,7 @@ class HomeView extends GetView<HomeController> {
                             isScrollable: true,
                             indicator:
                                 DotTabIndicator(color: Color(0xFF00C2FF)),
-                            tabs: [
+                            tabs: const [
                               Tab(
                                 child: Text(
                                   "Favorit",
@@ -161,12 +164,22 @@ class HomeView extends GetView<HomeController> {
                               ),
                               Tab(
                                 child: Text(
+                                  "Kantin",
+                                ),
+                              ),
+                              Tab(
+                                child: Text(
                                   "Makanan",
                                 ),
                               ),
                               Tab(
                                 child: Text(
                                   "Minuman",
+                                ),
+                              ),
+                              Tab(
+                                child: Text(
+                                  "Snack",
                                 ),
                               ),
                             ],
@@ -191,7 +204,14 @@ class HomeView extends GetView<HomeController> {
                   },
                   body: TabBarView(
                       controller: controller.tabController,
-                      children: [Favorite(), Semua(), Makanan(), Minuman()]),
+                      children: [
+                        Favorite(),
+                        Semua(),
+                        Kantin(),
+                        Makanan(),
+                        Minuman(),
+                        Snack()
+                      ]),
                 ),
               ),
               Align(
@@ -245,7 +265,7 @@ class HomeView extends GetView<HomeController> {
                                                   ),
                                                 ),
                                               ),
-                                              Container(
+                                              SizedBox(
                                                 width: mediaWidth * 0.5,
                                                 child: Text(
                                                   "Siap mengantar pesanan ",
@@ -350,7 +370,7 @@ class DotTabIndicator extends Decoration {
   final double indicatorRadius;
   final Color color;
 
-  DotTabIndicator({
+  const DotTabIndicator({
     this.indicatorRadius = 4,
     this.color = Colors.blue,
   });
@@ -364,9 +384,7 @@ class DotTabIndicator extends Decoration {
 class _DotPainter extends BoxPainter {
   final DotTabIndicator decoration;
 
-  _DotPainter(this.decoration, VoidCallback onChanged)
-      : assert(decoration != null),
-        super(onChanged);
+  _DotPainter(this.decoration, VoidCallback onChanged) : super(onChanged);
 
   @override
   void paint(Canvas canvas, Offset offset, ImageConfiguration configuration) {

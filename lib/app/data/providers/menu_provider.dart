@@ -1,6 +1,8 @@
 // ignore_for_file: unused_import
 
 import 'dart:convert';
+import 'package:dikantin/app/data/models/kantin_model.dart';
+import 'package:dikantin/app/data/models/menu_model.dart';
 import 'package:dikantin/app/data/models/version_model.dart';
 import 'package:dikantin/app/data/providers/services.dart';
 import 'package:get/get.dart';
@@ -17,6 +19,42 @@ class MenuProvider extends GetxController {
 
     final response = await http.get(
       Uri.parse(Api.semua + keyword), // Sesuaikan URL pencarian dengan API Anda
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return Search.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Gagal melakukan pencarian');
+    }
+  }
+
+  Future<Kantin> fetchKantin() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+
+    final response = await http.get(
+      Uri.parse(Api.daftarKantin), // Sesuaikan URL pencarian dengan API Anda
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return Kantin.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Gagal melakukan pencarian');
+    }
+  }
+
+  Future<Search> fetchMenuKantin(String idKantin) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+
+    final response = await http.get(
+      Uri.parse(Api.daftarMenuKantin + idKantin),
       headers: {
         'Authorization': 'Bearer $token',
       },
@@ -71,6 +109,24 @@ class MenuProvider extends GetxController {
     String? token = prefs.getString('token');
     final response = await http.get(
       Uri.parse(Api.minuman + keyword),
+      headers: {
+        'Authorization':
+            'Bearer $token', // Gantilah [TOKEN] dengan token yang sesuai
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return Search.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Gagal memuat data');
+    }
+  }
+
+  Future<Search> searchSnack(String keyword) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    final response = await http.get(
+      Uri.parse(Api.snack + keyword),
       headers: {
         'Authorization':
             'Bearer $token', // Gantilah [TOKEN] dengan token yang sesuai
@@ -215,5 +271,23 @@ class MenuProvider extends GetxController {
     }
 
     return response;
+  }
+
+  Future<Search> searchMenuKantin(String keyword) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    final response = await http.get(
+      Uri.parse(Api.makanan + keyword),
+      headers: {
+        'Authorization':
+            'Bearer $token', // Gantilah [TOKEN] dengan token yang sesuai
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return Search.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Gagal memuat data');
+    }
   }
 }

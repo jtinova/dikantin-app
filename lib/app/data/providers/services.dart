@@ -19,6 +19,9 @@ class Api {
   static const ubahPassword = "$koneksi1/validate/confirmPassword";
   static const makanan = "$koneksi1/menu/food/";
   static const minuman = "$koneksi1/menu/drink/";
+  static const snack = "$koneksi1/menu/jajanan/";
+  static const daftarKantin = "$koneksi1/datakantin/";
+  static const daftarMenuKantin = "$koneksi1/menu/filterMenu/";
   static const diskon = "$koneksi1/menu/productWithDiscount/";
   static const penjualanHariIni = "$koneksi1/menu/productBestToday";
   static const riwayat = "$koneksi1/transaction/riwayatTransaction/";

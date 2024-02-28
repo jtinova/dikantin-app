@@ -1,21 +1,23 @@
-import 'package:dikantin/app/modules/home/controllers/home_controller.dart';
+import 'package:dikantin/app/modules/home/controllers/snack_controller.dart';
 import 'package:dikantin/app/modules/utils/formatDate.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:dikantin/app/modules/home/controllers/makanan_controller.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../data/models/search_model.dart';
 import '../../data/providers/services.dart';
+import '../home/controllers/home_controller.dart';
 
-class Makanan extends StatefulWidget {
+class Snack extends StatefulWidget {
+  const Snack({Key? key}) : super(key: key);
+
   @override
-  State<Makanan> createState() => _MakananState();
+  State<Snack> createState() => _SnackState();
 }
 
-class _MakananState extends State<Makanan> {
-  final MakananController controller = Get.put(MakananController());
+class _SnackState extends State<Snack> {
+  final SnackController controller = Get.put(SnackController());
   final HomeController homeController = Get.find<HomeController>();
   void buildBottomSheet(Datasearch menuData, String harga) {
     Get.bottomSheet(
@@ -95,7 +97,7 @@ class _MakananState extends State<Makanan> {
                 ),
               ),
               Align(
-                alignment: Alignment.bottomRight,
+                alignment: Alignment.topRight,
                 child: Container(
                   child: ElevatedButton(
                     onPressed: () {
@@ -105,16 +107,12 @@ class _MakananState extends State<Makanan> {
                       homeController.catatanController
                           .clear(); // Tutup BottomSheet
                     },
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(Colors
-                          .blue), // Mengatur warna latar belakang menjadi biru
-                    ),
                     child: Text(
                       'Masukkan Keranjang',
                       style: GoogleFonts.poppins(
                         textStyle: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.normal,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
                           color: Colors.white,
                         ),
                       ),
@@ -176,7 +174,7 @@ class _MakananState extends State<Makanan> {
                         decoration: InputDecoration.collapsed(
                           filled: true,
                           fillColor: Colors.transparent,
-                          hintText: "Mau makan apa hari ini ?",
+                          hintText: "Mau snack apa hari ini ?",
                           hintStyle: TextStyle(
                               color: Colors.grey[500], fontFamily: 'Mulish'),
                           hoverColor: Colors.transparent,

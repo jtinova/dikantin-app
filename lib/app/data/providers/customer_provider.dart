@@ -135,7 +135,9 @@ class CustomerProvider extends GetxController {
     if (response.statusCode == 200) {
       return waktuModel.fromJson(jsonDecode(response.body));
     } else {
-      throw Exception('Gagal memuat datale');
+      /* throw Exception('Gagal memuat datale'); */
+      return waktuModel.fromJson(jsonDecode(response.body));
+
     }
   }
 }

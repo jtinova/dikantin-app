@@ -15,14 +15,15 @@ class OrderController extends GetxController {
   var addressMessage = "".obs;
   var textEditingController = TextEditingController().obs;
   final ProfileProvider provider = ProfileProvider().obs();
-  final _customerProvider = CustomerProvider().obs;
   Rx<Profile> profile = Profile().obs;
   Rx<Unit> unit = Unit().obs;
   var addressController = TextEditingController();
   RxBool isButtonEnabled = true.obs;
   RxBool isImageUploading = false.obs;
+
   RxBool isLoading = true.obs;
   Rx<Qr> qrData = Qr().obs;
+  final _customerProvider = CustomerProvider().obs;
   Rx<Biayakurir> biayaData = Biayakurir().obs;
 
   var myPosition = Position(
@@ -37,9 +38,11 @@ class OrderController extends GetxController {
     speed: 0,
     speedAccuracy: 0,
   ).obs;
+
   @override
   void onInit() {
     super.onInit();
+    fetchQr();
     getCustomerData();
     getUnit();
     fetchbiayakurir();
@@ -54,6 +57,7 @@ class OrderController extends GetxController {
   void onClose() {
     super.onClose();
   }
+
   Future<void> determinePosition() async {
     bool serviceEnabled;
     LocationPermission locationPermission;

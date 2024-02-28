@@ -30,13 +30,14 @@ class KeranjangView extends GetView<KeranjangController> {
 
     return MediaQuery(
       data: query.copyWith(
-          textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15)),
+          textScaler:
+              TextScaler.linear(query.textScaleFactor.clamp(1.0, 1.15))),
       child: Scaffold(
         appBar: AppBar(
           title: Text(
             'Keranjang',
             style: GoogleFonts.poppins(
-              textStyle: TextStyle(
+              textStyle: const TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
@@ -57,7 +58,7 @@ class KeranjangView extends GetView<KeranjangController> {
                 decoration: BoxDecoration(
                     color: Colors.blue,
                     borderRadius: BorderRadius.circular(10)),
-                child: Icon(
+                child: const Icon(
                   CarbonIcons.arrow_left,
                   color: Colors.white,
                 ),
@@ -80,7 +81,7 @@ class KeranjangView extends GetView<KeranjangController> {
                       : ListView.builder(
                           itemCount: homeController.cartList.length,
                           shrinkWrap: true,
-                          physics: ScrollPhysics(),
+                          physics: const ScrollPhysics(),
                           itemBuilder: (BuildContext context, int index) {
                             final menuData = homeController.cartList[index];
                             final harga = menuData.harga ?? 0;
@@ -124,7 +125,7 @@ class KeranjangView extends GetView<KeranjangController> {
                                                 borderRadius:
                                                     BorderRadius.circular(10)),
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 10,
                                           ),
                                           Expanded(
@@ -139,18 +140,18 @@ class KeranjangView extends GetView<KeranjangController> {
                                                       MainAxisAlignment
                                                           .spaceBetween,
                                                   children: [
-                                                    Container(
+                                                    SizedBox(
                                                       width:
                                                           MediaQuery.of(context)
                                                                   .size
                                                                   .width *
-                                                              0.55,
+                                                              0.53,
                                                       child: Text(
                                                         maxLines: 1,
                                                         overflow: TextOverflow
                                                             .ellipsis,
                                                         menuData.nama ?? '',
-                                                        style: TextStyle(
+                                                        style: const TextStyle(
                                                             fontSize: 12,
                                                             color: Colors.black,
                                                             fontWeight:
@@ -179,13 +180,13 @@ class KeranjangView extends GetView<KeranjangController> {
                                                     Text(
                                                       priceAfterDiscount
                                                           .toRupiah(),
-                                                      style: TextStyle(
+                                                      style: const TextStyle(
                                                           fontSize: 12,
                                                           color: Colors.black,
                                                           fontWeight:
                                                               FontWeight.w500),
                                                     ),
-                                                    SizedBox(
+                                                    const SizedBox(
                                                       width: 10,
                                                     ),
                                                     Text(
@@ -203,7 +204,7 @@ class KeranjangView extends GetView<KeranjangController> {
                                                         )),
                                                   ],
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   height: 10,
                                                 ),
                                                 Obx(
@@ -215,7 +216,7 @@ class KeranjangView extends GetView<KeranjangController> {
                                                         MainAxisAlignment
                                                             .spaceBetween,
                                                     children: [
-                                                      Container(
+                                                      SizedBox(
                                                         width: MediaQuery.of(
                                                                     context)
                                                                 .size
@@ -228,7 +229,7 @@ class KeranjangView extends GetView<KeranjangController> {
                                                           children: [
                                                             Container(
                                                               decoration: BoxDecoration(
-                                                                  color: Color(
+                                                                  color: const Color(
                                                                       0xFFD0E0FE),
                                                                   borderRadius:
                                                                       BorderRadius
@@ -252,7 +253,8 @@ class KeranjangView extends GetView<KeranjangController> {
                                                                           menuData
                                                                               .idMenu!);
                                                                 },
-                                                                child: Icon(
+                                                                child:
+                                                                    const Icon(
                                                                   color: Colors
                                                                       .blue,
                                                                   Icons.remove,
@@ -285,7 +287,8 @@ class KeranjangView extends GetView<KeranjangController> {
                                                                   print(
                                                                       textScaleFactor);
                                                                 },
-                                                                child: Icon(
+                                                                child:
+                                                                    const Icon(
                                                                   color: Colors
                                                                       .white,
                                                                   Icons.add,
@@ -302,7 +305,7 @@ class KeranjangView extends GetView<KeranjangController> {
                                                                 menuData
                                                                     .idMenu!)
                                                             .toRupiah(),
-                                                        style: TextStyle(
+                                                        style: const TextStyle(
                                                             fontSize: 12,
                                                             fontWeight:
                                                                 FontWeight
@@ -311,7 +314,7 @@ class KeranjangView extends GetView<KeranjangController> {
                                                     ],
                                                   ),
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   height: 5,
                                                 ),
 
@@ -396,9 +399,9 @@ class KeranjangView extends GetView<KeranjangController> {
                                                                           OutlineInputBorder(
                                                                         borderRadius:
                                                                             BorderRadius.circular(20),
-                                                                        borderSide: BorderSide(
+                                                                        borderSide: const BorderSide(
                                                                             color:
-                                                                                Colors.purple,
+                                                                                Colors.blue,
                                                                             width: 1),
                                                                       ),
                                                                     ),
@@ -444,6 +447,7 @@ class KeranjangView extends GetView<KeranjangController> {
                                                                             style:
                                                                                 GoogleFonts.poppins(
                                                                               fontSize: 14,
+                                                                              textStyle: const TextStyle(color: Colors.white),
                                                                             )),
                                                                       ),
                                                                     ],
@@ -477,7 +481,7 @@ class KeranjangView extends GetView<KeranjangController> {
                 ),
               ),
             ),
-            Divider(
+            const Divider(
               height: 2,
               color: Color(0xFFEAEAEA),
               thickness: 2,
@@ -490,8 +494,8 @@ class KeranjangView extends GetView<KeranjangController> {
             // ),
             Obx(
               () => Container(
-                padding:
-                    EdgeInsets.only(bottom: 10, right: 20, left: 20, top: 10),
+                padding: const EdgeInsets.only(
+                    bottom: 10, right: 20, left: 20, top: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   // mainAxisAlignment: MainAxisAlignment.start,
@@ -519,16 +523,29 @@ class KeranjangView extends GetView<KeranjangController> {
                                 content: Column(
                                   children: [
                                     ElevatedButton(
+                                      style: ButtonStyle(
+                                        backgroundColor: MaterialStateProperty
+                                            .all<Color>(Colors
+                                                .blue), // Mengatur warna latar belakang menjadi biru
+                                      ),
                                       onPressed: () {
                                         // Pilih kantin
                                         Get.back(); // Tutup dialog
 
                                         Get.to(() => OrderKantinView());
                                       },
-                                      child: Text("DiKantin ?"),
+                                      child: const Text(
+                                        "DiKantin ?",
+                                        style: TextStyle(color: Colors.white),
+                                      ),
                                     ),
-                                    Text("Atau"),
+                                    const Text("Atau"),
                                     ElevatedButton(
+                                      style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all<Color>(
+                                                Colors.blue),
+                                      ),
                                       onPressed: () async {
                                         // Pilih online
                                         Get.back(); // Tutup dialog
@@ -536,7 +553,10 @@ class KeranjangView extends GetView<KeranjangController> {
                                         await homeController.fetchbiayakurir();
                                         await orderController.fetchbiayakurir();
                                       },
-                                      child: Text("Dianter ?"),
+                                      child: const Text(
+                                        "Dianter ?",
+                                        style: TextStyle(color: Colors.white),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -547,7 +567,9 @@ class KeranjangView extends GetView<KeranjangController> {
                           },
                           child: Text("Pesan Sekarang",
                               style: GoogleFonts.poppins(
-                                  fontSize: 14, fontWeight: FontWeight.w500)),
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500)),
                         ),
                       ],
                     ),

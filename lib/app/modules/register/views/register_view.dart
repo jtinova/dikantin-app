@@ -17,11 +17,12 @@ class RegisterView extends GetView<RegisterController> {
 
     return MediaQuery(
       data: query.copyWith(
-          textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15)),
+          textScaler:
+              TextScaler.linear(query.textScaleFactor.clamp(1.0, 1.15))),
       child: Scaffold(
         body: Container(
           height: MediaQuery.of(context).size.height,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             image: DecorationImage(
               image: AssetImage(
                   'assets/bg.png'), // Ganti dengan path gambar latar belakang Anda
@@ -55,10 +56,10 @@ class RegisterView extends GetView<RegisterController> {
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20.0),
-                        borderSide: BorderSide(color: Colors.black),
+                        borderSide: const BorderSide(color: Colors.black),
                       ),
                       hintText: 'Masukkan nama anda',
-                      suffixIcon: Icon(
+                      suffixIcon: const Icon(
                         CarbonIcons.user_avatar,
                       ),
                     ),
@@ -77,10 +78,10 @@ class RegisterView extends GetView<RegisterController> {
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20.0),
-                        borderSide: BorderSide(color: Colors.black),
+                        borderSide: const BorderSide(color: Colors.black),
                       ),
-                      hintText: 'Masukkan Polije anda',
-                      suffixIcon: Icon(
+                      hintText: 'Masukkan email Polije anda',
+                      suffixIcon: const Icon(
                         CarbonIcons.mail_all,
                       ),
                     ),
@@ -102,11 +103,11 @@ class RegisterView extends GetView<RegisterController> {
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20.0),
-                        borderSide: BorderSide(color: Colors.black),
+                        borderSide: const BorderSide(color: Colors.black),
                       ),
                       hintText:
                           'Masukkan nomor telepon anda', // Ubah teks petunjuk
-                      suffixIcon: Icon(
+                      suffixIcon: const Icon(
                         Icons.phone, // Mengganti ikon ke ikon telepon
                       ),
                     ),
@@ -151,7 +152,7 @@ class RegisterView extends GetView<RegisterController> {
                         fillColor: Colors.white,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20.0),
-                          borderSide: BorderSide(color: Colors.black),
+                          borderSide: const BorderSide(color: Colors.black),
                         ),
                         hintText: 'Masukkan password anda',
                         suffixIcon: IconButton(
@@ -179,7 +180,8 @@ class RegisterView extends GetView<RegisterController> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30.0),
                         ),
-                        backgroundColor: Color.fromARGB(255, 55, 156, 211),
+                        backgroundColor:
+                            const Color.fromARGB(255, 55, 156, 211),
                       ),
                       onPressed: () async {
                         // Ambil data dari controller

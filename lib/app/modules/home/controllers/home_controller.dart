@@ -58,6 +58,8 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
     return total;
   }
 
+  late int nominalUserBayar;
+
   int get countc => cartList.length;
 
   int get count {
@@ -86,13 +88,13 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
     super.onInit();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 1),
+      duration: const Duration(seconds: 1),
     );
     animationController = AnimationController(
-      duration: Duration(milliseconds: 500), // Sesuaikan durasi animasi
+      duration: const Duration(milliseconds: 500), // Sesuaikan durasi animasi
       vsync: this,
     );
-    tabController = TabController(length: 4, vsync: this);
+    tabController = TabController(length: 6, vsync: this);
 
     fetchDataDiskon('');
     fetchDataPenjualan();
@@ -150,8 +152,8 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
       launchModeVersion: LaunchModeVersion.external,
     );
     print('Status local: ${version!.localVersion}');
-    print('Status store: ${version!.appStoreLink}');
-    print('Status store: ${version!.storeVersion}');
+    print('Status store: ${version.appStoreLink}');
+    print('Status store: ${version.storeVersion}');
     print('Status store: ${version.releaseNotes}');
   }
 
@@ -200,7 +202,7 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
         // Show error Snackbar if the response status code is not 200
         Get.snackbar(
           'Mohon maaf',
-          'Batas Pelayanan Transaksi adalah Jam 7 pagi hingga Jam 3 sore.',
+          result.data.toString(),
           snackPosition: SnackPosition.TOP,
           backgroundColor: Colors.red,
         );
@@ -338,12 +340,20 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
     String paymentMethod = isCashSelected.value
         ? "cash"
         : isPolijePaySelected.value
-            ? "cash"
+            ? "qris"
             : "Unknown Payment Method";
+
+    int totalBayar;
+    if (paymentMethod == "cash") {
+      totalBayar = nominalUserBayar;
+    } else {
+      totalBayar = totalPriceWithKurir;
+    }
+
     Map<String, dynamic> detailOrderan = {
-      "total_harga": totalPrice,
-      "total_bayar": totalPrice,
-      "kembalian": 0,
+      "total_harga": totalPriceWithKurir,
+      "total_bayar": totalBayar,
+      "kembalian": totalPriceWithKurir - totalBayar,
       "model_pembayaran": paymentMethod
     };
 
@@ -360,7 +370,7 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
         'Berhasil',
         'Terimakasih sudah order di aplikasi Dikantin',
         colorText: Colors.white,
-        duration: Duration(seconds: 2),
+        duration: const Duration(seconds: 2),
         snackPosition: SnackPosition.TOP,
       ); // Reset cart dan quantities atau navigasi ke halaman berikutnya
       cartList.clear();
@@ -375,18 +385,18 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
         response.body,
         backgroundColor: Colors.red,
         colorText: Colors.white,
-        duration: Duration(seconds: 2),
+        duration: const Duration(seconds: 2),
         snackPosition: SnackPosition.TOP,
       );
     }
     // } catch (e) {
     //   // Menangani kesalahan yang mungkin terjadi selama request
     //   Get.snackbar(
-    //     'Error',
+    //     'Error',D
     //     '${e}',
     //     backgroundColor: Colors.red,
     //     colorText: Colors.white,
-    //     duration: Duration(seconds: 2),
+    //     duration: uration(seconds: 2),
     //     snackPosition: SnackPosition.TOP,
     //   );
     // } finally {
@@ -437,12 +447,12 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
 
   Future<void> ngapek() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? id_customer = prefs.getString('id_customer');
+    String? idCustomer = prefs.getString('id_customer');
 
     final response = await http.post(
       Uri.parse(Api.getToken),
       body: {
-        'id_customer': id_customer, // Ganti dengan informasi unik dari pengguna
+        'id_customer': idCustomer, // Ganti dengan informasi unik dari pengguna
       },
     );
 

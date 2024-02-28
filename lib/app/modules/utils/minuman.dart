@@ -107,6 +107,10 @@ class _MinumanState extends State<Minuman> {
                       homeController.catatanController
                           .clear(); // Tutup BottomSheet
                     },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(Colors
+                          .blue), // Mengatur warna latar belakang menjadi biru
+                    ),
                     child: Text(
                       'Masukkan Keranjang',
                       style: GoogleFonts.poppins(

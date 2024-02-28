@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:dikantin/app/Theme/color_schemes.g.dart';
 import 'package:dikantin/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -36,6 +37,8 @@ Future<void> main() async {
       debugShowCheckedModeBanner: false,
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
+      theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
+      darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
       initialBinding: BindingsBuilder(
         () async {
           // final fmcToken = await messaging.getToken();

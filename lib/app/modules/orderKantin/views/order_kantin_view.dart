@@ -1,50 +1,42 @@
-import 'package:dikantin/app/modules/keranjang/views/keranjang_view.dart';
-import 'package:dikantin/app/modules/navigation/views/navigation_view.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
-
-import 'package:get/get.dart';
-import 'package:qr_flutter/qr_flutter.dart';
-
-import '../controllers/order_kantin_controller.dart';
-
-import 'package:carbon_icons/carbon_icons.dart';
+import 'package:dikantin/app/modules/navigation/views/navigation_view.dart';
 import 'package:dikantin/app/modules/utils/formatDate.dart';
-
-import 'package:google_fonts/google_fonts.dart';
-import 'package:lottie/lottie.dart';
-
 import '../../../data/providers/services.dart';
 import '../../home/controllers/home_controller.dart';
 import '../../maps/controllers/maps_controller.dart';
 import '../../profile/controllers/profile_controller.dart';
+import '../controllers/order_kantin_controller.dart';
+
+import 'package:get/get.dart';
+import 'package:carbon_icons/carbon_icons.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:lottie/lottie.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 class OrderKantinView extends GetView<OrderKantinController> {
   OrderKantinView({Key? key}) : super(key: key);
+
   final HomeController homeController = Get.find<HomeController>();
   final ProfileController profileController = Get.find<ProfileController>();
   final MapsController controllerMaps = Get.put(MapsController());
-  final OrderKantinController orderKantinController =
-      Get.put(OrderKantinController());
+  final OrderKantinController orderKantinController =  Get.put(OrderKantinController());
 
   @override
   Widget build(BuildContext context) {
     double textScaleFactor = MediaQuery.of(context).textScaleFactor;
-
-    final mediaHeight =
-        MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
+    final mediaHeight = MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
     final query = MediaQuery.of(context);
 
     return MediaQuery(
-      data: query.copyWith(
-          textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15)),
+      data: query.copyWith(textScaler:TextScaler.linear(query.textScaleFactor.clamp(1.0, 1.15))),
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
           title: Text(
             'Order',
             style: GoogleFonts.poppins(
-              textStyle: TextStyle(
+              textStyle: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
@@ -63,7 +55,7 @@ class OrderKantinView extends GetView<OrderKantinController> {
                 decoration: BoxDecoration(
                     color: Colors.blue,
                     borderRadius: BorderRadius.circular(10)),
-                child: Icon(
+                child: const Icon(
                   CarbonIcons.arrow_left,
                   color: Colors.white,
                 ),
@@ -82,7 +74,7 @@ class OrderKantinView extends GetView<OrderKantinController> {
                   child: Obx(
                     () => homeController.cartList.isEmpty
                         ? Center(
-                            child: Container(
+                            child: SizedBox(
                               height: mediaHeight * 0.33,
                               child: Column(
                                 children: [
@@ -118,7 +110,7 @@ class OrderKantinView extends GetView<OrderKantinController> {
                         : ListView.builder(
                             itemCount: homeController.cartList.length,
                             shrinkWrap: true,
-                            physics: ScrollPhysics(),
+                            physics: const ScrollPhysics(),
                             itemBuilder: (BuildContext context, int index) {
                               final menuData = homeController.cartList[index];
                               final harga = menuData.harga ?? 0;
@@ -161,29 +153,29 @@ class OrderKantinView extends GetView<OrderKantinController> {
                                                 borderRadius:
                                                     BorderRadius.circular(10)),
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 10,
                                           ),
                                           Expanded(
                                             child: Column(
                                               children: [
-                                                SizedBox(
+                                                const SizedBox(
                                                   height: 5,
                                                 ),
                                                 Row(
                                                   children: [
-                                                    Container(
+                                                    SizedBox(
                                                       width:
                                                           MediaQuery.of(context)
                                                                   .size
                                                                   .width *
-                                                              0.65,
+                                                              0.60,
                                                       child: Text(
                                                         maxLines: 1,
                                                         overflow: TextOverflow
                                                             .ellipsis,
                                                         menuData.nama ?? '',
-                                                        style: TextStyle(
+                                                        style: const TextStyle(
                                                             fontSize: 12,
                                                             color: Colors.black,
                                                             fontWeight:
@@ -193,7 +185,7 @@ class OrderKantinView extends GetView<OrderKantinController> {
                                                     ),
                                                   ],
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   height: 5,
                                                 ),
                                                 Row(
@@ -201,7 +193,7 @@ class OrderKantinView extends GetView<OrderKantinController> {
                                                       MainAxisAlignment
                                                           .spaceBetween,
                                                   children: [
-                                                    Container(
+                                                    SizedBox(
                                                       width:
                                                           MediaQuery.of(context)
                                                                   .size
@@ -215,7 +207,7 @@ class OrderKantinView extends GetView<OrderKantinController> {
                                                           Text(
                                                             priceAfterDiscount
                                                                 .toRupiah(),
-                                                            style: TextStyle(
+                                                            style: const TextStyle(
                                                                 fontSize: 12,
                                                                 color: Colors
                                                                     .black,
@@ -225,7 +217,7 @@ class OrderKantinView extends GetView<OrderKantinController> {
                                                           ),
                                                           Text(
                                                             "* ${quantity.toString()}",
-                                                            style: TextStyle(
+                                                            style: const TextStyle(
                                                                 fontSize: 12,
                                                                 color: Colors
                                                                     .black,
@@ -241,7 +233,7 @@ class OrderKantinView extends GetView<OrderKantinController> {
                                                           .calculateSubtotal(
                                                               menuData.idMenu!)
                                                           .toRupiah(),
-                                                      style: TextStyle(
+                                                      style: const TextStyle(
                                                           fontSize: 12,
                                                           color: Colors.black,
                                                           fontWeight:
@@ -263,14 +255,14 @@ class OrderKantinView extends GetView<OrderKantinController> {
                   ),
                 ),
               ),
-              Divider(
+              const Divider(
                 indent: 10,
                 endIndent: 10,
                 thickness: 1.0,
                 color: Colors.grey,
               ),
               Container(
-                padding: EdgeInsets.all(5),
+                padding: const EdgeInsets.all(5),
                 child: Obx(
                   () => Column(
                     children: [
@@ -280,7 +272,7 @@ class OrderKantinView extends GetView<OrderKantinController> {
                           Text(
                             'Total Payment',
                             style: GoogleFonts.poppins(
-                              textStyle: TextStyle(
+                              textStyle: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black,
@@ -290,7 +282,7 @@ class OrderKantinView extends GetView<OrderKantinController> {
                           Text(
                             homeController.totalPrice.toRupiah(),
                             style: GoogleFonts.poppins(
-                              textStyle: TextStyle(
+                              textStyle: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black,
@@ -299,7 +291,7 @@ class OrderKantinView extends GetView<OrderKantinController> {
                           ),
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 5,
                       ),
                       InkWell(
@@ -321,16 +313,16 @@ class OrderKantinView extends GetView<OrderKantinController> {
                                         ? Colors.blue
                                         : Colors.blue,
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 10,
                                   ),
                                   FittedBox(
                                     alignment: Alignment.center,
                                     child: Container(
-                                      padding: EdgeInsets.only(
+                                      padding: const EdgeInsets.only(
                                           left: 7, right: 7, top: 2, bottom: 2),
                                       decoration: BoxDecoration(
-                                          color: Color(0xFFD0E0FE),
+                                          color: const Color(0xFFD0E0FE),
                                           borderRadius:
                                               BorderRadius.circular(5)),
                                       child: Text(
@@ -338,7 +330,7 @@ class OrderKantinView extends GetView<OrderKantinController> {
                                             ? 'Cash '
                                             : 'Qris',
                                         style: GoogleFonts.poppins(
-                                          textStyle: TextStyle(
+                                          textStyle: const TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.normal,
                                             color: Colors.blue,
@@ -347,7 +339,7 @@ class OrderKantinView extends GetView<OrderKantinController> {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 10,
                                   ),
                                 ],
@@ -355,9 +347,9 @@ class OrderKantinView extends GetView<OrderKantinController> {
                             ),
                             Container(
                               decoration: BoxDecoration(
-                                  color: Color(0xFFD0E0FE),
+                                  color: const Color(0xFFD0E0FE),
                                   borderRadius: BorderRadius.circular(10)),
-                              child: Icon(
+                              child: const Icon(
                                 CarbonIcons.overflow_menu_horizontal,
                                 size: 24.0,
                                 color: Colors.blue,
@@ -366,12 +358,12 @@ class OrderKantinView extends GetView<OrderKantinController> {
                           ],
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF2579FD),
+                          backgroundColor: const Color(0xFF2579FD),
                           fixedSize: Size(
                               MediaQuery.of(context).size.width * 0.70, 50),
                           shape: RoundedRectangleBorder(
@@ -404,7 +396,7 @@ class OrderKantinView extends GetView<OrderKantinController> {
                                       await orderKantinController.fetchQr();
                                       dialog();
                                     },
-                                    child: Text('Ok')));
+                                    child: const Text('Ok')));
 
                             // Gunakan keterangan
                           } else {
@@ -421,7 +413,7 @@ class OrderKantinView extends GetView<OrderKantinController> {
                         child: Text(
                           'Pesan',
                           style: GoogleFonts.poppins(
-                            textStyle: TextStyle(
+                            textStyle: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
@@ -453,7 +445,7 @@ class OrderKantinView extends GetView<OrderKantinController> {
       ),
       content: Column(
         children: [
-          Container(
+          SizedBox(
             width: 240, // Set a specific width for the QR code
             height: 240, // Set a specific height for the QR code
             child: QrImageView(
@@ -462,14 +454,14 @@ class OrderKantinView extends GetView<OrderKantinController> {
               size: 70,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           ElevatedButton(
             onPressed: () {
               Get.off(NavigationView());
             },
-            child: Text('Ok'),
+            child: const Text('Ok'),
           )
         ],
       ),
@@ -494,7 +486,7 @@ class OrderKantinView extends GetView<OrderKantinController> {
               },
               child: Container(
                 //
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 height: 60,
                 decoration: BoxDecoration(
                   // color: Colors.orange,
@@ -505,7 +497,7 @@ class OrderKantinView extends GetView<OrderKantinController> {
                         : Colors.grey,
                   ),
 
-                  borderRadius: BorderRadius.all(
+                  borderRadius: const BorderRadius.all(
                     Radius.circular(
                       10,
                     ),
@@ -529,20 +521,20 @@ class OrderKantinView extends GetView<OrderKantinController> {
                               : Colors.white,
                           borderRadius: BorderRadius.circular(50)),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 20,
                     ),
                     const Icon(
                       CarbonIcons.money,
                       size: 35,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 20,
                     ),
                     Text(
                       'Cash',
                       style: GoogleFonts.poppins(
-                        textStyle: TextStyle(
+                        textStyle: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w500,
                           color: Colors.black,
@@ -553,7 +545,7 @@ class OrderKantinView extends GetView<OrderKantinController> {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             InkWell(
@@ -564,7 +556,7 @@ class OrderKantinView extends GetView<OrderKantinController> {
                 Get.back();
               },
               child: Container(
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 height: 60,
                 decoration: BoxDecoration(
                   // color: Colors.orange,
@@ -575,7 +567,7 @@ class OrderKantinView extends GetView<OrderKantinController> {
                         : Colors.grey,
                   ),
 
-                  borderRadius: BorderRadius.all(
+                  borderRadius: const BorderRadius.all(
                     Radius.circular(
                       10,
                     ),
@@ -598,20 +590,20 @@ class OrderKantinView extends GetView<OrderKantinController> {
                               : Colors.white,
                           borderRadius: BorderRadius.circular(50)),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 20,
                     ),
                     const Icon(
                       CarbonIcons.wallet,
                       size: 35,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 20,
                     ),
                     Text(
                       'Qris',
                       style: GoogleFonts.poppins(
-                        textStyle: TextStyle(
+                        textStyle: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w500,
                           color: Colors.black,
