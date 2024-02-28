@@ -22,8 +22,7 @@ class _FavoriteState extends State<Favorite> {
     Get.bottomSheet(
       MediaQuery(
         data: MediaQuery.of(context).copyWith(
-            textScaler: TextScaler.linear(
-                MediaQuery.of(context).textScaleFactor.clamp(1.0, 1.15))),
+        textScaleFactor: MediaQuery.of(context).textScaleFactor.clamp(1.0, 1.15),),
         child: Container(
           height: MediaQuery.of(context).size.height,
           color: Colors.white,
@@ -133,8 +132,7 @@ class _FavoriteState extends State<Favorite> {
 
     return MediaQuery(
       data: query.copyWith(
-          textScaler:
-              TextScaler.linear(query.textScaleFactor.clamp(1.0, 1.15))),
+        textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15),),
       child: RefreshIndicator(
         onRefresh: () async {
           await homeController.refreshData();

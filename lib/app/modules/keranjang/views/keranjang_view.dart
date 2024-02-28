@@ -30,8 +30,7 @@ class KeranjangView extends GetView<KeranjangController> {
 
     return MediaQuery(
       data: query.copyWith(
-          textScaler:
-              TextScaler.linear(query.textScaleFactor.clamp(1.0, 1.15))),
+      textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15),),
       child: Scaffold(
         appBar: AppBar(
           title: Text(

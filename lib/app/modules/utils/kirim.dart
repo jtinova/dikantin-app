@@ -27,8 +27,7 @@ class _KirimState extends State<Kirim> {
 
     return MediaQuery(
       data: query.copyWith(
-          textScaler:
-              TextScaler.linear(query.textScaleFactor.clamp(1.0, 1.15))),
+      textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15),),
       child: Scaffold(
         body: RefreshIndicator(
           onRefresh: () async => await controller.loadDikirim(),
