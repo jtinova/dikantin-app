@@ -581,14 +581,14 @@ class OrderView extends GetView<OrderController> {
                                         onPressed: () async {
                                           if (homeController.nominalUserBayar <=
                                               0) {
-                                            Get.snackbar('Error',
+                                            Get.snackbar('Kesalahan',
                                                 'Nominal bayar harus lebih dari 0');
                                             return;
                                           } else if (homeController
                                                   .nominalUserBayar <
                                               homeController
                                                   .totalPriceWithKurir) {
-                                            Get.snackbar('Error',
+                                            Get.snackbar('Kesalahan',
                                                 'Nominal bayar harus sama atau lebih dari total pembayaran');
                                             return;
                                           }
