@@ -555,63 +555,109 @@ class OrderView extends GetView<OrderController> {
                                 EasyLoading.dismiss();
                                 showDialog(
                                   context: context,
-                                  builder: (context) => AlertDialog(
-                                    title: const Text(
-                                      'Tulis Jumlah Uang Anda',
-                                      style: TextStyle(fontSize: 16),
+                                  builder: (context) => Dialog(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
                                     ),
-                                    content: TextFormField(
-                                      decoration: const InputDecoration(
-                                        labelText: 'Nominal',
-                                        hintText:
-                                            'Masukkan nominal jumlah pembayaran anda',
-                                        border: OutlineInputBorder(),
-                                        prefixText: 'Rp ',
+                                    child: Container(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.stretch,
+                                        children: [
+                                          const Text(
+                                            'Nominal Bayar',
+                                            style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                          const SizedBox(height: 16),
+                                          Text(
+                                            'Masukkan nominal jumlah uang anda agar mempermudah kurir menyiapkan kembalian',
+                                            style: GoogleFonts.poppins(
+                                              fontSize: 12,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                          const SizedBox(height: 16),
+                                          TextFormField(
+                                            initialValue: homeController
+                                                .totalPriceWithKurir
+                                                .toString(),
+                                            decoration: InputDecoration(
+                                              labelText: 'Nominal Bayar',
+                                              hintText:
+                                                  'Masukkan nominal jumlah pembayaran anda',
+                                              prefixText: 'Rp ',
+                                              border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                              ),
+                                            ),
+                                            keyboardType: TextInputType.number,
+                                            onChanged: (value) {
+                                              homeController.nominalUserBayar =
+                                                  int.tryParse(value) ?? 0;
+                                            },
+                                          ),
+                                          const SizedBox(height: 16),
+                                          ElevatedButton(
+                                            onPressed: () async {
+                                              if (homeController
+                                                      .nominalUserBayar <=
+                                                  0) {
+                                                Get.snackbar('Kesalahan',
+                                                    'Nominal bayar harus lebih dari 0');
+                                                return;
+                                              } else if (homeController
+                                                      .nominalUserBayar <
+                                                  homeController
+                                                      .totalPriceWithKurir) {
+                                                Get.snackbar('Kesalahan',
+                                                    'Nominal bayar harus sama atau lebih dari total pembayaran');
+                                                return;
+                                              }
+                                              Navigator.of(context).pop();
+                                              await homeController
+                                                  .submitOrder();
+                                              Get.snackbar(
+                                                'Pesanan berhasil',
+                                                'Harap cek pada menu pesanan diproses serta lakukan pembayaran di kurir',
+                                                backgroundColor: Colors.blue,
+                                                colorText: Colors.white,
+                                              );
+                                              EasyLoading.dismiss();
+                                              print('EasyLoading dismiss');
+                                              Future.delayed(
+                                                  const Duration(seconds: 3),
+                                                  () {
+                                                Get.off(NavigationView());
+                                              });
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.blue,
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 12),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                              ),
+                                            ),
+                                            child: const Text(
+                                              'OK',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      keyboardType: TextInputType.number,
-                                      onChanged: (value) {
-                                        // Di sini Anda bisa mengupdate state atau menyimpan nilai nominal
-                                        // Misalnya: homeController.updateNominal(value);
-                                        homeController.nominalUserBayar =
-                                            int.tryParse(value) ?? 0;
-                                      },
                                     ),
-                                    actions: [
-                                      ElevatedButton(
-                                        onPressed: () async {
-                                          if (homeController.nominalUserBayar <=
-                                              0) {
-                                            Get.snackbar('Kesalahan',
-                                                'Nominal bayar harus lebih dari 0');
-                                            return;
-                                          } else if (homeController
-                                                  .nominalUserBayar <
-                                              homeController
-                                                  .totalPriceWithKurir) {
-                                            Get.snackbar('Kesalahan',
-                                                'Nominal bayar harus sama atau lebih dari total pembayaran');
-                                            return;
-                                          }
-                                          Navigator.of(context).pop();
-                                          await homeController.submitOrder();
-                                          Get.snackbar(
-                                            'Pesanan berhasil',
-                                            'Harap cek pada menu pesanan diproses serta lakukan pembayaran di kurir',
-                                            backgroundColor: Colors.blue,
-                                            colorText: Colors.white,
-                                          );
-                                          EasyLoading.dismiss();
-                                          print('EasyLoading dismiss');
-                                          Future.delayed(
-                                              const Duration(seconds: 3), () {
-                                            Get.off(NavigationView());
-                                          });
-                                        },
-                                        child: const Text('OK'),
-                                      ),
-                                    ],
                                   ),
                                 );
+
                                 // Gunakan keterangan
                               } else {
                                 EasyLoading.dismiss();

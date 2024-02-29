@@ -58,7 +58,7 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
     return total;
   }
 
-  late int nominalUserBayar;
+  late int nominalUserBayar = totalPriceWithKurir;
 
   int get countc => cartList.length;
 
@@ -116,11 +116,6 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
     // else {
     // advancedStatusCheck(newVersion);
     // }
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
   }
 
   @override
@@ -344,7 +339,7 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
             : "Unknown Payment Method";
 
     int totalBayar;
-    
+
     if (paymentMethod == "cash") {
       totalBayar = nominalUserBayar;
     } else {
