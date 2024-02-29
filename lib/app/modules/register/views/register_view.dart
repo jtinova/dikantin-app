@@ -220,6 +220,7 @@ class RegisterView extends GetView<RegisterController> {
                         "Register",
                         style: TextStyle(
                           fontSize: textScaleFactor <= 1.15 ? 14 : 14,
+                          color: Colors.white,
                         ),
                       ),
                     ),

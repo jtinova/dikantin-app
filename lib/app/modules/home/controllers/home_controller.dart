@@ -344,6 +344,7 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
             : "Unknown Payment Method";
 
     int totalBayar;
+    
     if (paymentMethod == "cash") {
       totalBayar = nominalUserBayar;
     } else {

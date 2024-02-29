@@ -23,8 +23,7 @@ class _SnackState extends State<Snack> {
     Get.bottomSheet(
       MediaQuery(
         data: MediaQuery.of(context).copyWith(
-            textScaleFactor:
-                MediaQuery.of(context).textScaleFactor.clamp(1.0, 1.15)),
+            textScaler: TextScaler.linear(MediaQuery.of(context).textScaleFactor.clamp(1.0, 1.15))),
         child: Container(
           height: MediaQuery.of(context).size.height,
           color: Colors.white,

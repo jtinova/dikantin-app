@@ -183,7 +183,7 @@ class ProfileView extends GetView<ProfileController> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               ElevatedButton(
-                                child: Text('Ya'),
+                                child: Text('Ya', style: TextStyle(color: Colors.white),),
                                 onPressed: () {
                                   profileController.logout();
                                 },

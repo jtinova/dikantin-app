@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:dikantin/app/data/models/search_model.dart';
 import 'package:dikantin/app/modules/utils/formatDate.dart';
 import 'package:flutter/material.dart';

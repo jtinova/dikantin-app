@@ -30,7 +30,8 @@ class _ProsesState extends State<Proses> {
 
     return MediaQuery(
       data: query.copyWith(
-          textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15)),
+          textScaler:
+              TextScaler.linear(query.textScaleFactor.clamp(1.0, 1.15))),
       child: RefreshIndicator(
         onRefresh: () async => await controller.loadProses(),
         child: CustomScrollView(
@@ -61,10 +62,10 @@ class _ProsesState extends State<Proses> {
             highlightColor: Color(highlightColorHex),
             child: Padding(
               padding: const EdgeInsets.all(10),
-              child: Container(
+              child: SizedBox(
                 height: mediaHeight,
                 child: ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: 5,
                     itemBuilder: (BuildContext context, index) {
@@ -87,7 +88,7 @@ class _ProsesState extends State<Proses> {
             ),
           );
         } else if (controller.pesananProses.data?.isEmpty ?? true) {
-          return Container(
+          return SizedBox(
             height: mediaHeight * 0.25,
             child: Center(
               child: Lottie.asset('assets/notList.json', repeat: true),
@@ -96,14 +97,14 @@ class _ProsesState extends State<Proses> {
         } else {
           return ListView.builder(
             itemCount: controller.pesananProses.data!.length,
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemBuilder: (BuildContext context, int index) {
               final orderData = controller.pesananProses.data![index];
               final totalHarga = (orderData.transaksi?.totalHarga ?? 0);
               return GestureDetector(
                 onTap: () {
-                  Get.to(DetailTransaksiView(),
+                  Get.to(const DetailTransaksiView(),
                       arguments: orderData.transaksi?.kodeTr);
                 },
                 child: Padding(
@@ -133,12 +134,13 @@ class _ProsesState extends State<Proses> {
                                                   .profile.value.data!.foto!
                                                   .toString(),
                                         ) as ImageProvider<Object>
-                                      : AssetImage("assets/logo_dikantin.png"),
+                                      : const AssetImage(
+                                          "assets/logo_dikantin.png"),
                             ),
                             title: Text(
                               "#${orderData.transaksi!.kodeTr.toString()}",
                               style: GoogleFonts.poppins(
-                                  textStyle: TextStyle(
+                                  textStyle: const TextStyle(
                                       fontSize: 14,
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold)),
@@ -146,13 +148,13 @@ class _ProsesState extends State<Proses> {
                             subtitle: Text(
                               orderData.transaksi!.tanggal.toString(),
                               style: GoogleFonts.poppins(
-                                  textStyle: TextStyle(
+                                  textStyle: const TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.normal)),
                             ),
                           ),
                           Container(
-                            padding: EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(10),
                             // color: Colors.blue,
                             child: Column(
                                 mainAxisAlignment:
@@ -165,7 +167,7 @@ class _ProsesState extends State<Proses> {
                                       Text(
                                         "Total Menu",
                                         style: GoogleFonts.poppins(
-                                            textStyle: TextStyle(
+                                            textStyle: const TextStyle(
                                                 fontSize: 14,
                                                 color: Colors.black,
                                                 fontWeight: FontWeight.normal)),
@@ -173,7 +175,7 @@ class _ProsesState extends State<Proses> {
                                       Text(
                                         "${orderData.transaksi!.detailTransaksi!.length.toString()} menu",
                                         style: GoogleFonts.poppins(
-                                            textStyle: TextStyle(
+                                            textStyle: const TextStyle(
                                                 fontSize: 14,
                                                 color: Colors.black,
                                                 fontWeight: FontWeight.bold)),
@@ -187,7 +189,7 @@ class _ProsesState extends State<Proses> {
                                       Text(
                                         "Total",
                                         style: GoogleFonts.poppins(
-                                            textStyle: TextStyle(
+                                            textStyle: const TextStyle(
                                                 fontSize: 14,
                                                 color: Colors.black,
                                                 fontWeight: FontWeight.normal)),
@@ -195,7 +197,7 @@ class _ProsesState extends State<Proses> {
                                       Text(
                                         totalHarga.toRupiah(),
                                         style: GoogleFonts.poppins(
-                                            textStyle: TextStyle(
+                                            textStyle: const TextStyle(
                                                 fontSize: 14,
                                                 color: Colors.black,
                                                 fontWeight: FontWeight.bold)),
@@ -218,7 +220,7 @@ class _ProsesState extends State<Proses> {
                                             ? ''
                                             : orderData.status.toString(),
                                         style: GoogleFonts.poppins(
-                                            textStyle: TextStyle(
+                                            textStyle: const TextStyle(
                                                 fontSize: 14,
                                                 color: Colors.red,
                                                 fontWeight: FontWeight.bold)),

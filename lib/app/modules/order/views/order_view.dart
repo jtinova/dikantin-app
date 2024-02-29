@@ -34,7 +34,8 @@ class OrderView extends GetView<OrderController> {
 
     return MediaQuery(
       data: query.copyWith(
-        textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15),),
+        textScaler: TextScaler.linear(query.textScaleFactor.clamp(1.0, 1.15)),
+      ),
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
@@ -551,18 +552,21 @@ class OrderView extends GetView<OrderController> {
                                 LatLng(markerLatitude, markerLongitude),
                               );
                               if (insideCampus) {
+                                EasyLoading.dismiss();
                                 showDialog(
                                   context: context,
                                   builder: (context) => AlertDialog(
                                     title: const Text(
-                                      'Nominal uang yang akan dibayarkan',
+                                      'Tulis Jumlah Uang Anda',
                                       style: TextStyle(fontSize: 16),
                                     ),
                                     content: TextFormField(
                                       decoration: const InputDecoration(
                                         labelText: 'Nominal',
-                                        hintText: 'Masukkan nominal uang',
+                                        hintText:
+                                            'Masukkan nominal jumlah pembayaran anda',
                                         border: OutlineInputBorder(),
+                                        prefixText: 'Rp ',
                                       ),
                                       keyboardType: TextInputType.number,
                                       onChanged: (value) {
@@ -579,6 +583,13 @@ class OrderView extends GetView<OrderController> {
                                               0) {
                                             Get.snackbar('Error',
                                                 'Nominal bayar harus lebih dari 0');
+                                            return;
+                                          } else if (homeController
+                                                  .nominalUserBayar <
+                                              homeController
+                                                  .totalPriceWithKurir) {
+                                            Get.snackbar('Error',
+                                                'Nominal bayar harus sama atau lebih dari total pembayaran');
                                             return;
                                           }
                                           Navigator.of(context).pop();
