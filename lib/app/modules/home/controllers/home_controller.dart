@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import "package:http/http.dart" as http;
 import '../../../data/models/biayakurir_model.dart';
 import '../../../data/models/penjualan_model.dart';
+import '../../../data/models/recommendation_model.dart';
 import '../../../data/models/search_model.dart';
 import '../../../data/models/waktu_model.dart';
 import '../../../data/providers/customer_provider.dart';
@@ -22,8 +23,10 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
   final searchResults = <Datasearch>[].obs;
   final menuProvider = MenuProvider().obs;
   late Penjualan penjualan = Penjualan();
+  late Recommendation rekomendasi = Recommendation();
   var cartList = <Datasearch>[].obs;
   var penjualanD = <Data>[].obs;
+  var rekomendasiD = <DataRekomendasi>[].obs;
 
   var itemQuantities = <int, int>{}.obs;
   final isLoading = false.obs; // Tambahkan isLoading
@@ -98,6 +101,7 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
 
     fetchDataDiskon('');
     fetchDataPenjualan();
+    fetchRecommedationMenu();
     refreshData();
     fetchbiayakurir();
 
@@ -321,9 +325,23 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
     }
   }
 
+  Future<void> fetchRecommedationMenu() async {
+    try {
+      isLoading(true);
+      final result = await menuProvider.value.fetchDataRecommendationMenu();
+      rekomendasi = result;
+      rekomendasiD.assignAll(result.data!);
+      isLoading(false);
+    } catch (error) {
+      isLoading(false);
+      print('Error fetching data: $error');
+    }
+  }
+
   Future<void> refreshData() async {
     await fetchDataDiskon('');
     await fetchDataPenjualan();
+    await fetchRecommedationMenu();
   }
 
   void setCartList(List<Datasearch> updatedCartList) {

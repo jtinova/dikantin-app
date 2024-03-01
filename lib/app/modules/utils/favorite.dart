@@ -22,7 +22,9 @@ class _FavoriteState extends State<Favorite> {
     Get.bottomSheet(
       MediaQuery(
         data: MediaQuery.of(context).copyWith(
-        textScaleFactor: MediaQuery.of(context).textScaleFactor.clamp(1.0, 1.15),),
+          textScaler: TextScaler.linear(
+              MediaQuery.of(context).textScaleFactor.clamp(1.0, 1.15)),
+        ),
         child: Container(
           height: MediaQuery.of(context).size.height,
           color: Colors.white,
@@ -132,7 +134,8 @@ class _FavoriteState extends State<Favorite> {
 
     return MediaQuery(
       data: query.copyWith(
-        textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15),),
+        textScaler: TextScaler.linear(query.textScaleFactor.clamp(1.0, 1.15)),
+      ),
       child: RefreshIndicator(
         onRefresh: () async {
           await homeController.refreshData();
@@ -217,7 +220,7 @@ class _FavoriteState extends State<Favorite> {
                         ),
                       ),
                     );
-                  } else if (homeController.penjualan.data?.isEmpty ?? true) {
+                  } else if (homeController.rekomendasi.data?.isEmpty ?? true) {
                     return SizedBox(
                         height: mediaHeight * 0.25,
                         child: Center(
@@ -229,29 +232,20 @@ class _FavoriteState extends State<Favorite> {
                       height: 275,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
-                        itemCount: homeController.penjualan.data?.length ?? 0,
+                        itemCount: homeController.rekomendasi.data?.length ?? 0,
                         reverse: true,
                         shrinkWrap: true,
                         physics: const ScrollPhysics(),
                         itemBuilder: (context, index) {
-                          final dataPenjualan =
-                              homeController.penjualan.data![index];
-                          final String kategori =
-                              (dataPenjualan.kategori ?? '').toLowerCase();
-                          final String kategoriPesan =
-                              kategori == 'makanan' ? 'Porsi' : 'Pcs';
-                          final int harga = dataPenjualan.harga ?? 0;
+                          final dataRekomendasi =
+                              homeController.rekomendasi.data![index];
+                          final int harga = dataRekomendasi.hargaMenu ?? 0;
                           final String current = harga.toRupiah();
                           final menuData = Datasearch(
-                            idMenu: dataPenjualan.idMenu,
-                            nama: dataPenjualan.nama,
-                            harga: dataPenjualan.harga,
-                            foto: dataPenjualan.foto,
-                            statusStok: dataPenjualan.statusStok,
-                            kategori: dataPenjualan.kategori,
-                            idKantin: dataPenjualan.idKantin,
-                            diskon: dataPenjualan.diskon,
-                            penjualanHariIni: dataPenjualan.penjualanHariIni,
+                            idMenu: dataRekomendasi.idMenu,
+                            nama: dataRekomendasi.namaMenu,
+                            harga: dataRekomendasi.hargaMenu,
+                            foto: dataRekomendasi.foto,
                           );
 
                           return GestureDetector(
