@@ -233,7 +233,6 @@ class _FavoriteState extends State<Favorite> {
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: homeController.rekomendasi.data?.length ?? 0,
-                        reverse: true,
                         shrinkWrap: true,
                         physics: const ScrollPhysics(),
                         itemBuilder: (context, index) {
@@ -245,6 +244,7 @@ class _FavoriteState extends State<Favorite> {
                             idMenu: dataRekomendasi.idMenu,
                             nama: dataRekomendasi.namaMenu,
                             harga: dataRekomendasi.hargaMenu,
+                            namaKantin: dataRekomendasi.namaKantin,
                             foto: dataRekomendasi.foto,
                           );
 
@@ -304,7 +304,7 @@ class _FavoriteState extends State<Favorite> {
                                               ),
                                             ),
                                             Text(
-                                              'Kantin ${menuData.idKantin}',
+                                              menuData.namaKantin ?? '',
                                               style: const TextStyle(
                                                 fontSize: 14,
                                                 color: Colors.black,
