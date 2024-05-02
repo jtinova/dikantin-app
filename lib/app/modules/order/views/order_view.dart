@@ -23,6 +23,7 @@ class OrderView extends GetView<OrderController> {
   final ProfileController profileController = Get.find<ProfileController>();
   final OrderController orderController = Get.put(OrderController());
   final MapsController controllerMaps = Get.put(MapsController());
+  BigInt _nominalUserBayar = BigInt.zero;
 
   @override
   Widget build(BuildContext context) {
@@ -34,8 +35,7 @@ class OrderView extends GetView<OrderController> {
 
     return MediaQuery(
       data: query.copyWith(
-          textScaler:
-              TextScaler.linear(query.textScaleFactor.clamp(1.0, 1.15))),
+          textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15)),
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
@@ -552,6 +552,7 @@ class OrderView extends GetView<OrderController> {
                                 LatLng(markerLatitude, markerLongitude),
                               );
                               if (insideCampus) {
+                                EasyLoading.dismiss();
                                 showDialog(
                                   context: context,
                                   builder: (context) => AlertDialog(
@@ -560,6 +561,7 @@ class OrderView extends GetView<OrderController> {
                                       style: TextStyle(fontSize: 16),
                                     ),
                                     content: TextFormField(
+                                      controller: homeController.nameController,
                                       decoration: const InputDecoration(
                                         labelText: 'Nominal',
                                         hintText: 'Masukkan nominal uang',
@@ -567,10 +569,21 @@ class OrderView extends GetView<OrderController> {
                                       ),
                                       keyboardType: TextInputType.number,
                                       onChanged: (value) {
-                                        // Di sini Anda bisa mengupdate state atau menyimpan nilai nominal
-                                        // Misalnya: homeController.updateNominal(value);
-                                        homeController.nominalUserBayar =
-                                            int.tryParse(value) ?? 0;
+                                        try {
+                                          _nominalUserBayar = BigInt.parse(
+                                              value.replaceAll(',', ''));
+// Remove commas and prefix
+                                        } catch (e) {
+                                          // Handle potential parsing errors (e.g., invalid input)
+                                          print('Error parsing input: $e');
+                                          _nominalUserBayar = 0;
+                                          homeController.nameController.text =
+                                              ''; // Clear the text field
+                                        }
+
+                                        // Update the displayed formatted value
+                                        homeController.nameController
+                                          ..text = _nominalUserBayar.toRupiah();
                                       },
                                     ),
                                     actions: [
@@ -722,11 +735,10 @@ class OrderView extends GetView<OrderController> {
                       width: 30,
                       decoration: BoxDecoration(
                           border: Border.all(
-                            width: 2,
-                            color: homeController.isCashSelected.value
-                                ? Colors.blue
-                                : Colors.grey,
-                          ),
+                              width: 2,
+                              color: homeController.isCashSelected.value
+                                  ? Colors.blue
+                                  : Colors.grey),
                           color: homeController.isCashSelected.value
                               ? Colors.blue
                               : Colors.white,

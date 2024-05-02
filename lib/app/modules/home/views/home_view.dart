@@ -71,8 +71,7 @@ class HomeView extends GetView<HomeController> {
     final query = MediaQuery.of(context);
     return MediaQuery(
       data: query.copyWith(
-          textScaler:
-              TextScaler.linear(query.textScaleFactor.clamp(1.0, 1.15))),
+          textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15)),
       child: DefaultTabController(
         length: 6,
         child: Scaffold(

@@ -15,6 +15,7 @@ import '../../../data/providers/services.dart';
 
 class HomeController extends GetxController with GetTickerProviderStateMixin {
   final TextEditingController catatanController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
   final notesMap = <int, String>{}.obs;
   late AnimationController animationController;
   late AnimationController _controller;
@@ -183,7 +184,7 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
       waktuModel result = await _customerProvider.value.fetchWaktu();
 
       // Check if the response status code is 200
-      if (result.code == 200) {
+      // if (result.code == 200) {
         // Execute addToCart logic
         if (!cartList.any((element) => element.idMenu == item.idMenu)) {
           cartList.add(item);
@@ -198,15 +199,15 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
         // Refresh itemQuantities and notesMap
         itemQuantities.refresh();
         notesMap.refresh();
-      } else {
-        // Show error Snackbar if the response status code is not 200
-        Get.snackbar(
-          'Mohon maaf',
-          result.data.toString(),
-          snackPosition: SnackPosition.TOP,
-          backgroundColor: Colors.red,
-        );
-      }
+      // } else {
+      //   // Show error Snackbar if the response status code is not 200
+      //   Get.snackbar(
+      //     'Mohon maaf',
+      //     result.data.toString(),
+      //     snackPosition: SnackPosition.TOP,
+      //     backgroundColor: Colors.red,
+      //   );
+      // }
     } catch (error) {
       Get.snackbar(
         'Mohon maaf',

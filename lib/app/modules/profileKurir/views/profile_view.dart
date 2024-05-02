@@ -58,7 +58,7 @@ class ProfileKurirView extends GetView<ProfileKurirController> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Lottie.asset(
-                              "assets/Animation_logout.json", // Ganti dengan nama file Lottie Anda
+                              "assets/Animation_logout.json", 
                               width: 100.0,
                               height: 100.0,
                               fit: BoxFit.cover,

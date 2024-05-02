@@ -20,16 +20,19 @@ class OrderKantinView extends GetView<OrderKantinController> {
   final HomeController homeController = Get.find<HomeController>();
   final ProfileController profileController = Get.find<ProfileController>();
   final MapsController controllerMaps = Get.put(MapsController());
-  final OrderKantinController orderKantinController =  Get.put(OrderKantinController());
+  final OrderKantinController orderKantinController =
+      Get.put(OrderKantinController());
 
   @override
   Widget build(BuildContext context) {
     double textScaleFactor = MediaQuery.of(context).textScaleFactor;
-    final mediaHeight = MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
+    final mediaHeight =
+        MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
     final query = MediaQuery.of(context);
 
     return MediaQuery(
-      data: query.copyWith(textScaler:TextScaler.linear(query.textScaleFactor.clamp(1.0, 1.15))),
+      data: query.copyWith(
+          textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15)),
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,

@@ -55,18 +55,7 @@ class LoginController extends GetxController {
   Future<void> login(String username, String password, String fcmtoken) async {
     try {
       // Periksa status koneksi sebelum melakukan login
-      if (!connectivityHelper.hasConnection.value) {
-        // Tampilkan Snackbar bahwa tidak ada koneksi
-        Get.snackbar(
-          'Koneksi Eror',
-          'Cek Koneksi Internet anda',
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-          duration: Duration(seconds: 2),
-          snackPosition: SnackPosition.BOTTOM,
-        );
-        return;
-      }
+    
       isLoading.value = true;
       final response =
           await loginProvider.value.login(username, password, fcmtoken);

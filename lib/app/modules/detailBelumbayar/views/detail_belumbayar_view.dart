@@ -1,536 +1,247 @@
-import '../controllers/detail_belumbayar_controller.dart';
-
-import 'package:carbon_icons/carbon_icons.dart';
-import 'package:dikantin/app/modules/utils/formatDate.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'package:get/get.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:qr_flutter/qr_flutter.dart';
+import 'package:get/get.dart';
+import 'package:mapbox_gl/mapbox_gl.dart';
+import 'package:pengantarfrontend/app/modules/done/views/done_view.dart';
+import 'package:pengantarfrontend/app/modules/mapsviewer/views/dashline.dart';
+import '../controllers/mapsviewer_controller.dart';
+import 'package:draggable_bottom_sheet/draggable_bottom_sheet.dart';
 
-import '../../../data/providers/services.dart';
-import '../../pesanan/controllers/pesanan_controller.dart';
-
-// ignore_for_file: camel_case_types, prefer_typing_uninitialized_variables
-
-class DetailBelumbayarView extends GetView<DetailBelumbayarController> {
-  const DetailBelumbayarView({Key? key}) : super(key: key);
+class MapsviewerView extends GetView<MapsviewerController> {
+  MapsviewerView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    double textScaleFactor = MediaQuery.of(context).textScaleFactor;
-
-    final orderId = Get.arguments as String?;
-    final orderData =
-        Get.find<PesananController>().findOrderById(orderId ?? '');
-
-    if (orderData == null) {
-      return const Scaffold(
-        body: Center(
-          child: Text('Pesanan tidak ditemukan'),
-        ),
-      );
-    }
-
-    final transaksi = orderData.transaksi;
-    final totalBayar = transaksi!.totalBayar ?? 0;
-    final totalHarga = transaksi!.totalHarga ?? 0;
-    final detailTransaksiList = transaksi?.detailTransaksi ?? [];
-    final query = MediaQuery.of(context);
-    return MediaQuery(
-      data: query.copyWith(
-          textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15)),
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Detail Pesanan Saya',
-            style: GoogleFonts.poppins(
-              textStyle: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-                color: Colors.black,
-              ),
-            ),
+    return MaterialApp(
+      home: Builder(builder: (context) {
+        return Scaffold(
+          body: DraggableBottomSheet(
+            barrierDismissible: true,
+            minExtent: 200,
+            useSafeArea: true,
+            curve: Curves.easeIn,
+            previewWidget: _previewWidget(context),
+            expandedWidget: _expandedWidget(context),
+            backgroundWidget: _backgroundWidget(context),
+            maxExtent: MediaQuery.of(context).size.height * 0.84,
+            onDragging: (pos) {},
           ),
-          centerTitle: true,
-          elevation: 0.0,
-          backgroundColor: Colors.white,
-          leading: InkWell(
-            onTap: () {
-              Get.back();
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Container(
-                decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(10)),
-                child: const Icon(
-                  CarbonIcons.arrow_left,
-                  color: Colors.white,
-                ),
-              ),
+        );
+      }),
+    );
+  }
+
+  Widget _backgroundWidget(BuildContext context) {
+    final accessToken = controller.getAccessToken();
+    final initialLatitude = controller.getInitialLatitude();
+    final initialLongitude = controller.getInitialLongitude();
+    final initialBoundSW = controller.getInitialBoundSW();
+    final initialBoundNE = controller.getInitialBoundNE();
+    return Scaffold(
+      body: Center(
+        child: Container(
+          child: MapboxMap(
+            accessToken: accessToken,
+            initialCameraPosition: CameraPosition(
+              target: LatLng(initialLatitude, initialLongitude),
+              zoom: 16,
             ),
-          ),
-        ),
-        body: SingleChildScrollView(
-          child: Container(
-            padding: const EdgeInsets.all(10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Container(
-                  // height: MediaQuery.of(context).size.height * 0.65,
-                  width: MediaQuery.of(context).size.width,
-                  child: Card(
-                    color: Colors.white,
-                    elevation: 8,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Detail Pesanan',
-                            style: GoogleFonts.poppins(
-                              textStyle: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                          Divider(
-                            color: Colors.grey[300],
-                            thickness: 1,
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                'Nomor Pesanan :',
-                                style: GoogleFonts.poppins(
-                                  textStyle: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                '#${transaksi!.kodeTr}',
-                                style: GoogleFonts.poppins(
-                                  textStyle: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                'Waktu Pemesanan :',
-                                style: GoogleFonts.poppins(
-                                  textStyle: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                transaksi.tanggal.toString(),
-                                style: GoogleFonts.poppins(
-                                  textStyle: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Container(
-                            // height: MediaQuery.of(context).size.height * 0.38,
-                            child: ListView.builder(
-                              shrinkWrap: true, // Tambahkan baris ini
-                              itemCount: detailTransaksiList.length,
-                              physics:
-                                  const NeverScrollableScrollPhysics(), // Nonaktifkan pengguliran
-                              itemBuilder: (BuildContext context, int index) {
-                                final detailTransaksi =
-                                    detailTransaksiList[index];
-                                final menuData = detailTransaksi.menu;
-                                final harga = menuData?.harga ?? 0;
-                                return Padding(
-                                  padding: const EdgeInsets.only(top: 5),
-                                  child: Card(
-                                    color: Colors.white,
-                                    elevation: 2,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              height: 80,
-                                              width: 80,
-                                              alignment: Alignment.topLeft,
-                                              decoration: BoxDecoration(
-                                                  image: DecorationImage(
-                                                    image: NetworkImage(
-                                                        Api.gambar +
-                                                            detailTransaksi
-                                                                .menu!.foto
-                                                                .toString()),
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10)),
-                                            ),
-                                            const SizedBox(
-                                              width: 10,
-                                            ),
-                                            Expanded(
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    detailTransaksi.menu!.nama
-                                                        .toString(),
-                                                    style: TextStyle(
-                                                        fontSize: 12,
-                                                        color: Colors.black,
-                                                        fontWeight:
-                                                            FontWeight.w500),
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 5,
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            right: 10),
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Text(
-                                                          "Kantin: ${detailTransaksi.menu!.idKantin.toString()}",
-                                                          style: TextStyle(
-                                                              fontSize: 12,
-                                                              color:
-                                                                  Colors.grey,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500),
-                                                        ),
-                                                        // Text(
-                                                        //   detailTransaksi
-                                                        //           .statusKonfirm
-                                                        //           .toString()
-                                                        //           .contains(
-                                                        //               "null")
-                                                        //       ? ""
-                                                        //       : detailTransaksi
-                                                        //           .statusKonfirm
-                                                        //           .toString(),
-                                                        //   style: TextStyle(
-                                                        //       fontSize: 12,
-                                                        //       color:
-                                                        //           Colors.grey,
-                                                        //       fontWeight:
-                                                        //           FontWeight
-                                                        //               .w500),
-                                                        // ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 5,
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            right: 10),
-                                                    child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        children: [
-                                                          Text(
-                                                            harga.toRupiah(),
-                                                            style: TextStyle(
-                                                                fontSize: 12,
-                                                                color: Colors
-                                                                    .black,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500),
-                                                          ),
-                                                          Text(
-                                                            "* ${detailTransaksi.qTY.toString()}",
-                                                            style: TextStyle(
-                                                                fontSize: 12,
-                                                                color: Colors
-                                                                    .black,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500),
-                                                          ),
-                                                        ]),
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 10),
-                            child: Container(
-                              // color: Colors.amber,
-                              padding: const EdgeInsets.all(2),
-                              height: MediaQuery.of(context).size.height * 0.09,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  QrImageView(
-                                    data: transaksi!.kodeTr.toString(),
-                                    version: QrVersions.auto,
-                                    size: 75,
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        'Note :',
-                                        style: GoogleFonts.poppins(
-                                          textStyle: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                      ),
-                                      Text(
-                                        'Tunjukkan kode barcode di sebelah \nkepada kurir jika makanan sampai ',
-                                        style: GoogleFonts.poppins(
-                                          textStyle: TextStyle(
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10),
-                  child: Container(
-                    child: Card(
-                      color: Colors.white,
-                      elevation: 10,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.all(15),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Informasi Pembayaran',
-                              style: GoogleFonts.poppins(
-                                textStyle: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                            Divider(
-                              color: Colors.grey[300],
-                              thickness: 1,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Metode Pembayaran  :',
-                                  style: GoogleFonts.poppins(
-                                    textStyle: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                                Text(
-                                  transaksi!.modelPembayaran.toString(),
-                                  style: GoogleFonts.poppins(
-                                    textStyle: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Total :',
-                                  style: GoogleFonts.poppins(
-                                    textStyle: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                                Text(
-                                  totalHarga.toRupiah(),
-                                  style: GoogleFonts.poppins(
-                                    textStyle: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Diskon :',
-                                  style: GoogleFonts.poppins(
-                                    textStyle: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                                Text(
-                                  'Rp 0',
-                                  style: GoogleFonts.poppins(
-                                    textStyle: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Kembalian :',
-                                  style: GoogleFonts.poppins(
-                                    textStyle: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                                Text(
-                                  'Rp 0',
-                                  style: GoogleFonts.poppins(
-                                    textStyle: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Total bayar :',
-                                  style: GoogleFonts.poppins(
-                                    textStyle: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                                Text(
-                                  totalHarga.toRupiah(),
-                                  style: GoogleFonts.poppins(
-                                    textStyle: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            myLocationEnabled: true,
+            myLocationRenderMode: MyLocationRenderMode.NORMAL,
+            myLocationTrackingMode: MyLocationTrackingMode.TrackingGPS,
+            minMaxZoomPreference: const MinMaxZoomPreference(10, 18),
           ),
         ),
       ),
     );
   }
+
+  Widget _previewWidget(BuildContext context) {
+    return Container(
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.of(context).size.height *
+            0.5, // Meningkatkan nilai maxHeight
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
+      ),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 10, bottom: 5),
+            child: SizedBox(
+              width: 60,
+              child: InkWell(
+                onTap: () {
+                  _expandedWidget(context);
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    color: Color(0xFFBEBEBE),
+                  ),
+                  height: 6,
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 20.0, top: 10, bottom: 10),
+            child: Container(
+              child: Row(
+                children: [
+                  Text(
+                    "Pesanan Untuk Diantar ",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w100,
+                    ),
+                  ),
+                  const Icon(
+                    Icons.arrow_forward_ios_sharp,
+                    size: 20.0,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Stack(
+            children: [
+              Positioned(
+                left: 30,
+                top: 42,
+                bottom: 42,
+                child: DashedLineDivider(
+                  height: 1,
+                  color: Colors.black,
+                  dashLength: 4,
+                  dashGap: 3,
+                ),
+              ),
+              Column(
+                children: [
+                  ListTile(
+                    leading: Image.asset(
+                      "assets/icon/time.png",
+                      width: 30.0,
+                      height: 30.0,
+                      fit: BoxFit.contain,
+                    ),
+                    title: Text(
+                      'Kantin Sehat FKG | Gedung FKG',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontFamily: 'BeVietnamPro',
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    subtitleTextStyle: TextStyle(
+                      color: Colors.black,
+                    ),
+                    subtitle: Text(
+                      'Lokasi Kantin | Perkiraan kamu sampai: 13.43 WIB',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontFamily: 'BeVietnamPro',
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    trailing: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        minimumSize: Size(90, 30),
+                        backgroundColor: Colors.amber,
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                      ),
+                      onPressed: () {
+                        Get.to(DoneView());
+                      },
+                      child: Text(
+                        "Diambil",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: 'BeVietnamPro',
+                        ),
+                      ),
+                    ),
+                  ),
+                  ListTile(
+                    leading: Image.asset(
+                      "assets/icon/maps.png",
+                      width: 30.0,
+                      height: 30.0,
+                      fit: BoxFit.contain,
+                    ),
+                    title: Text(
+                      'Mala Komalasari | Gedung A',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontFamily: 'BeVietnamPro',
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    subtitleTextStyle: TextStyle(
+                      color: Colors.black,
+                    ),
+                    subtitle: Text(
+                      'Konsumen | Perkiraan kamu sampai: 13.47 WIB',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontFamily: 'BeVietnamPro',
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _expandedWidget(BuildContext context) {
+    List categories = [
+      {
+        "name": "Nasi Katsu",
+        "qty": "2x",
+        "price": "Rp 35.000",
+        "image": "assets/nasi_katsu.jpeg"
+      },
+      {
+        "name": "Es pisang ijo",
+        "qty": "1x",
+        "price": "Rp 12.500",
+        "image": "assets/espisangijo.png"
+      },
+      {
+        "name": "Es teh manis",
+        "qty": "1x",
+        "price": "Rp 7.500",
+        "image": "assets/esteh.png"
+      },
+    ];
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
+      ),
+     
+         
+    );
+  }
 }
+
