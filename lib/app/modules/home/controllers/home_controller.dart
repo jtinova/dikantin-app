@@ -365,9 +365,9 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
     }
 
     Map<String, dynamic> detailOrderan = {
-      "total_harga": totalPriceWithKurir,
+      "total_harga": totalPrice,
       "total_bayar": totalBayar,
-      "kembalian": totalPriceWithKurir - totalBayar,
+      "kembalian": totalBayar - totalPriceWithKurir,
       "model_pembayaran": paymentMethod
     };
 

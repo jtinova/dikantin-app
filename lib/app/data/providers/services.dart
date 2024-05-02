@@ -43,4 +43,5 @@ class Api {
   static const biayakurir = "$koneksi1/customer/biayaKurir";
   static const checkjam = "$koneksi1/transaction/setOperationHour";
   static const checkversion = "$koneksi1/version";
+  static const productCancellation = "$koneksi1/cancelled/transaksi?";
 }

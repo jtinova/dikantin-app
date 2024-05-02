@@ -30,7 +30,8 @@ class _belumbayarState extends State<belumbayar> {
 
     return MediaQuery(
       data: query.copyWith(
-          textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15)),
+          textScaler:
+              TextScaler.linear(query.textScaleFactor.clamp(1.0, 1.15))),
       child: Scaffold(
         body: RefreshIndicator(
           onRefresh: () async => await controller.loadBelumbayar(),
@@ -51,19 +52,19 @@ class _belumbayarState extends State<belumbayar> {
   Widget content(BuildContext context) {
     double textScaleFactor = MediaQuery.of(context).textScaleFactor;
 
-    final baseColorHex = 0xFFE0E0E0;
-    final highlightColorHex = 0xFFC0C0C0;
+    const baseColorHex = 0xFFE0E0E0;
+    const highlightColorHex = 0xFFC0C0C0;
     final mediaHeight =
         MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
     return Container(
       child: Obx(() {
         if (controller.isLoading.value) {
           return Shimmer.fromColors(
-            baseColor: Color(baseColorHex),
-            highlightColor: Color(highlightColorHex),
+            baseColor: const Color(baseColorHex),
+            highlightColor: const Color(highlightColorHex),
             child: Padding(
               padding: const EdgeInsets.all(10),
-              child: Container(
+              child: SizedBox(
                 height: mediaHeight,
                 child: ListView.builder(
                     itemCount: 5,
@@ -89,7 +90,7 @@ class _belumbayarState extends State<belumbayar> {
             ),
           );
         } else if (controller.belumbayar.data?.isEmpty ?? true) {
-          return Container(
+          return SizedBox(
               height: mediaHeight * 0.40,
               child: Center(
                 child: Lottie.asset('assets/notList.json', repeat: true),
@@ -102,6 +103,8 @@ class _belumbayarState extends State<belumbayar> {
             itemBuilder: (BuildContext context, int index) {
               final orderData = controller.belumbayar.data![index];
               final totalHarga = orderData.transaksi!.totalHarga ?? 0;
+              final totalKurir = orderData.transaksi!.totalKurir ?? 0;
+              final total = totalHarga + totalKurir;
               return GestureDetector(
                 onTap: () {
                   Get.to(const DetailBelumbayarView(),
@@ -131,12 +134,13 @@ class _belumbayarState extends State<belumbayar> {
                                                   .profile.value.data!.foto!
                                                   .toString(),
                                         ) as ImageProvider<Object>
-                                      : AssetImage("assets/logo_dikantin.png"),
+                                      : const AssetImage(
+                                          "assets/logo_dikantin.png"),
                             ),
                             title: Text(
                               "#${orderData.transaksi!.kodeTr.toString()}",
                               style: GoogleFonts.poppins(
-                                  textStyle: TextStyle(
+                                  textStyle: const TextStyle(
                                       fontSize: 14,
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold)),
@@ -144,7 +148,7 @@ class _belumbayarState extends State<belumbayar> {
                             subtitle: Text(
                               orderData.transaksi!.tanggal.toString(),
                               style: GoogleFonts.poppins(
-                                  textStyle: TextStyle(
+                                  textStyle: const TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.normal)),
                             ),
@@ -163,7 +167,7 @@ class _belumbayarState extends State<belumbayar> {
                                       Text(
                                         "Total Menu",
                                         style: GoogleFonts.poppins(
-                                            textStyle: TextStyle(
+                                            textStyle: const TextStyle(
                                                 fontSize: 14,
                                                 color: Colors.black,
                                                 fontWeight: FontWeight.normal)),
@@ -171,7 +175,7 @@ class _belumbayarState extends State<belumbayar> {
                                       Text(
                                         "${orderData.transaksi!.detailTransaksi!.length.toString()} menu",
                                         style: GoogleFonts.poppins(
-                                            textStyle: TextStyle(
+                                            textStyle: const TextStyle(
                                                 fontSize: 14,
                                                 color: Colors.black,
                                                 fontWeight: FontWeight.bold)),
@@ -186,17 +190,42 @@ class _belumbayarState extends State<belumbayar> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        "Total",
+                                        "Biaya pengiriman",
                                         style: GoogleFonts.poppins(
-                                            textStyle: TextStyle(
+                                            textStyle: const TextStyle(
                                                 fontSize: 14,
                                                 color: Colors.black,
                                                 fontWeight: FontWeight.normal)),
                                       ),
                                       Text(
-                                        totalHarga.toRupiah(),
+                                        totalKurir.toRupiah(),
                                         style: GoogleFonts.poppins(
-                                            textStyle: TextStyle(
+                                            textStyle: const TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold)),
+                                      )
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Total",
+                                        style: GoogleFonts.poppins(
+                                            textStyle: const TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.normal)),
+                                      ),
+                                      Text(
+                                        total.toRupiah(),
+                                        style: GoogleFonts.poppins(
+                                            textStyle: const TextStyle(
                                                 fontSize: 14,
                                                 color: Colors.black,
                                                 fontWeight: FontWeight.bold)),
