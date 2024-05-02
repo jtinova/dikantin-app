@@ -164,7 +164,6 @@ class DetailBelumbayarView extends GetView<DetailBelumbayarController> {
                             ],
                           ),
                           Container(
-                            // height: MediaQuery.of(context).size.height * 0.38,
                             child: ListView.builder(
                               shrinkWrap: true, // Tambahkan baris ini
                               itemCount: detailTransaksiList.length,
