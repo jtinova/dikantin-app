@@ -1,4 +1,5 @@
 import 'package:carbon_icons/carbon_icons.dart';
+import 'package:dikantin/app/modules/detailTransaksi/controllers/detail_transaksi_controller.dart';
 import 'package:dikantin/app/modules/utils/formatDate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_launcher_icons/xml_templates.dart';
@@ -9,14 +10,10 @@ import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../../data/providers/services.dart';
 import '../../pesanan/controllers/pesanan_controller.dart';
-import '../controllers/detail_transaksi_controller.dart';
 
-// ignore_for_file: camel_case_types, prefer_typing_uninitialized_variables
 
 class DetailTransaksiView extends GetView<DetailTransaksiController> {
   DetailTransaksiView({Key? key}) : super(key: key);
-  @override
-  final DetailTransaksiController controller = Get.find<DetailTransaksiController>();
 
   @override
   Widget build(BuildContext context) {
@@ -346,7 +343,7 @@ class DetailTransaksiView extends GetView<DetailTransaksiController> {
                                                         ? ""
                                                         : detailTransaksi
                                                             .statusKonfirm
-                                                            .toString(),
+                                                            .toString().toUpperCase(),
                                                     style: GoogleFonts.poppins(
                                                       textStyle: const TextStyle(
                                                         fontSize: 14,
