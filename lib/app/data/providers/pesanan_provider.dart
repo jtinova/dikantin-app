@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:dikantin/app/data/models/cancel_model.dart';
 import 'package:dikantin/app/data/models/pendapatanKurir_model.dart';
 import 'package:dikantin/app/data/models/pesanan_model.dart';
 import 'package:get/get.dart';
@@ -238,6 +239,38 @@ class PesananProvider extends GetxController {
       return PendapatanKurir.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Gagal memuat data');
+    }
+  }
+
+  Future<ProductCancellation> productCancellation(String kodeTr, String kodeMenu) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+
+    final String urlData =
+        "${Api.productCancellation}kode_tr=$kodeTr&kode_menu=$kodeMenu";
+
+    final response = await http.post(
+      Uri.parse(urlData),
+      headers: {
+        'Authorization':
+            'Bearer $token', // Gantilah [TOKEN] dengan token yang sesuai
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final value = ProductCancellation.fromJson(jsonDecode(response.body));
+      if (value.kode == 1) {
+        print('Pesanan berhasil dibatalkan');
+        return value;
+      }
+      
+      print('Gagal membatalkan pesanan. Status code: ${response.body}');
+      return value;
+    } else {
+      // Gagal membatalkan pesanan
+      final value = ProductCancellation.fromJson(jsonDecode(response.body));
+      print('Gagal membatalkan pesanan. Status code: ${response.statusCode}');
+      return value;
     }
   }
 }

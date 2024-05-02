@@ -1,4 +1,5 @@
 import 'package:carbon_icons/carbon_icons.dart';
+import 'package:dikantin/app/modules/detailTransaksi/controllers/detail_transaksi_controller.dart';
 import 'package:dikantin/app/modules/utils/formatDate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_launcher_icons/xml_templates.dart';
@@ -9,12 +10,11 @@ import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../../data/providers/services.dart';
 import '../../pesanan/controllers/pesanan_controller.dart';
-import '../controllers/detail_transaksi_controller.dart';
 
-// ignore_for_file: camel_case_types, prefer_typing_uninitialized_variables
 
 class DetailTransaksiView extends GetView<DetailTransaksiController> {
-  const DetailTransaksiView({Key? key}) : super(key: key);
+  DetailTransaksiView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     double textScaleFactor = MediaQuery.of(context).textScaleFactor;
@@ -33,11 +33,12 @@ class DetailTransaksiView extends GetView<DetailTransaksiController> {
 
     final transaksi = orderData.transaksi;
     final totalBayar = transaksi!.totalBayar ?? 0;
-    final detailTransaksiList = transaksi?.detailTransaksi ?? [];
+    final detailTransaksiList = transaksi.detailTransaksi ?? [];
     final query = MediaQuery.of(context);
     return MediaQuery(
       data: query.copyWith(
-          textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15)),
+          textScaler:
+              TextScaler.linear(query.textScaleFactor.clamp(1.0, 1.15))),
       child: Scaffold(
         appBar: AppBar(
           title: Text(
@@ -77,12 +78,93 @@ class DetailTransaksiView extends GetView<DetailTransaksiController> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Container(
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: Card(
+                    color: Colors.white,
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 20, horizontal: 16),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Nomor Pesanan",
+                                        style: GoogleFonts.poppins(
+                                          textStyle: const TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ),
+                                      Text(
+                                        "Waktu Pemesanan",
+                                        style: GoogleFonts.poppins(
+                                          textStyle: const TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    '#${transaksi.kodeTr}',
+                                    style: GoogleFonts.poppins(
+                                      textStyle: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    transaksi.tanggal.toString(),
+                                    style: GoogleFonts.poppins(
+                                      textStyle: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                SizedBox(
                   // height: MediaQuery.of(context).size.height * 0.65,
                   width: MediaQuery.of(context).size.width,
                   child: Card(
                     color: Colors.white,
-                    elevation: 8,
+                    elevation: 2,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
@@ -92,126 +174,150 @@ class DetailTransaksiView extends GetView<DetailTransaksiController> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Detail Pesanan',
+                            'Pesanan',
                             style: GoogleFonts.poppins(
                               textStyle: const TextStyle(
                                 fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w500,
                                 color: Colors.black,
                               ),
                             ),
                           ),
-                          Divider(
-                            color: Colors.grey[300],
-                            thickness: 1,
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                'Nomor Pesanan :',
-                                style: GoogleFonts.poppins(
-                                  textStyle: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                '#${transaksi!.kodeTr}',
-                                style: GoogleFonts.poppins(
-                                  textStyle: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
                           const SizedBox(
-                            height: 5,
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                'Waktu Pemesanan :',
-                                style: GoogleFonts.poppins(
-                                  textStyle: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                transaksi.tanggal.toString(),
-                                style: GoogleFonts.poppins(
-                                  textStyle: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                            ],
+                            height: 10,
                           ),
                           Container(
-                            // height: MediaQuery.of(context).size.height * 0.38,
                             child: ListView.builder(
-                              shrinkWrap: true, // Tambahkan baris ini
+                              shrinkWrap: true,
                               itemCount: detailTransaksiList.length,
-                              physics:
-                                  const NeverScrollableScrollPhysics(), // Nonaktifkan pengguliran
+                              physics: const NeverScrollableScrollPhysics(),
                               itemBuilder: (BuildContext context, int index) {
                                 final detailTransaksi =
                                     detailTransaksiList[index];
                                 final menuData = detailTransaksi.menu;
                                 final harga = menuData?.harga ?? 0;
                                 return Padding(
-                                  padding: const EdgeInsets.only(top: 5),
-                                  child: Card(
-                                    color: Colors.white,
-                                    elevation: 2,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              height: 80,
-                                              width: 80,
-                                              alignment: Alignment.topLeft,
-                                              decoration: BoxDecoration(
-                                                  image: DecorationImage(
-                                                    image: NetworkImage(
-                                                        Api.gambar +
-                                                            detailTransaksi
-                                                                .menu!.foto
-                                                                .toString()),
-                                                    fit: BoxFit.cover,
+                                  padding: const EdgeInsets.only(
+                                      top: 8, bottom: 8.0),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            height: 75,
+                                            width: 75,
+                                            alignment: Alignment.topLeft,
+                                            decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                image: NetworkImage(Api.gambar +
+                                                    detailTransaksi.menu!.foto
+                                                        .toString()),
+                                                fit: BoxFit.cover,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            width: 10,
+                                          ),
+                                          Expanded(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  detailTransaksi.menu!.nama
+                                                      .toString(),
+                                                  style: GoogleFonts.poppins(
+                                                    textStyle: const TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color: Colors.black,
+                                                    ),
                                                   ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10)),
+                                                ),
+                                                const SizedBox(
+                                                  height: 4,
+                                                ),
+                                                Text(
+                                                  "Kantin: ${detailTransaksi.menu!.idKantin.toString()}",
+                                                  style: GoogleFonts.poppins(
+                                                    textStyle: TextStyle(
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color:
+                                                          Colors.grey.shade900,
+                                                    ),
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  height: 4,
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 10),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Text(
+                                                        harga.toRupiah(),
+                                                        style:
+                                                            GoogleFonts.poppins(
+                                                          textStyle:
+                                                              const TextStyle(
+                                                            fontSize: 14,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            color: Colors.black,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        "* ${detailTransaksi.qTY.toString()}",
+                                                        style:
+                                                            GoogleFonts.poppins(
+                                                          textStyle:
+                                                              const TextStyle(
+                                                            fontSize: 14,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            color: Colors.black,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                            const SizedBox(
-                                              width: 10,
-                                            ),
-                                            Expanded(
+                                          )
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        height: 8,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Expanded(
+                                            child: Padding(
+                                              padding: const EdgeInsets.symmetric(vertical: 8),
                                               child: Column(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.start,
@@ -219,98 +325,49 @@ class DetailTransaksiView extends GetView<DetailTransaksiController> {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    detailTransaksi.menu!.nama
-                                                        .toString(),
-                                                    style: TextStyle(
+                                                    "Status Pesanan :",
+                                                    style: GoogleFonts.poppins(
+                                                      textStyle: const TextStyle(
                                                         fontSize: 12,
-                                                        color: Colors.black,
                                                         fontWeight:
-                                                            FontWeight.w500),
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 5,
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            right: 10),
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Text(
-                                                          "Kantin: ${detailTransaksi.menu!.idKantin.toString()}",
-                                                          style: TextStyle(
-                                                              fontSize: 12,
-                                                              color:
-                                                                  Colors.grey,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500),
-                                                        ),
-                                                        Text(
-                                                          detailTransaksi
-                                                                  .statusKonfirm
-                                                                  .toString()
-                                                                  .contains(
-                                                                      "null")
-                                                              ? ""
-                                                              : detailTransaksi
-                                                                  .statusKonfirm
-                                                                  .toString(),
-                                                          style: TextStyle(
-                                                              fontSize: 12,
-                                                              color:
-                                                                  Colors.grey,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500),
-                                                        ),
-                                                      ],
+                                                            FontWeight.w400,
+                                                        color: Colors.black,
+                                                      ),
                                                     ),
+                                                    textAlign: TextAlign.start,
                                                   ),
-                                                  const SizedBox(
-                                                    height: 5,
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            right: 10),
-                                                    child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        children: [
-                                                          Text(
-                                                            harga.toRupiah(),
-                                                            style: TextStyle(
-                                                                fontSize: 12,
-                                                                color: Colors
-                                                                    .black,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500),
-                                                          ),
-                                                          Text(
-                                                            "* ${detailTransaksi.qTY.toString()}",
-                                                            style: TextStyle(
-                                                                fontSize: 12,
-                                                                color: Colors
-                                                                    .black,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500),
-                                                          ),
-                                                        ]),
+                                                  Text(
+                                                    detailTransaksi.statusKonfirm
+                                                            .toString()
+                                                            .contains("null")
+                                                        ? ""
+                                                        : detailTransaksi
+                                                            .statusKonfirm
+                                                            .toString().toUpperCase(),
+                                                    style: GoogleFonts.poppins(
+                                                      textStyle: const TextStyle(
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        color: Colors.black,
+                                                      ),
+                                                    ),
+                                                    textAlign: TextAlign.start,
                                                   ),
                                                 ],
                                               ),
-                                            )
-                                          ],
-                                        ),
-                                      ],
-                                    ),
+                                            ),
+                                          ),
+                                          if (detailTransaksi.statusKonfirm ==
+                                              "menunggu")
+                                            const buttonCancelOrder()
+                                        ],
+                                      ),
+                                      Divider(
+                                        color: Colors.grey[300],
+                                        thickness: 1,
+                                      ),
+                                    ],
                                   ),
                                 );
                               },
@@ -326,7 +383,7 @@ class DetailTransaksiView extends GetView<DetailTransaksiController> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   QrImageView(
-                                    data: transaksi!.kodeTr.toString(),
+                                    data: transaksi.kodeTr.toString(),
                                     version: QrVersions.auto,
                                     size: 75,
                                   ),
@@ -338,7 +395,7 @@ class DetailTransaksiView extends GetView<DetailTransaksiController> {
                                       Text(
                                         'Note :',
                                         style: GoogleFonts.poppins(
-                                          textStyle: TextStyle(
+                                          textStyle: const TextStyle(
                                             fontSize: 12,
                                             fontWeight: FontWeight.w600,
                                             color: Colors.black,
@@ -348,7 +405,7 @@ class DetailTransaksiView extends GetView<DetailTransaksiController> {
                                       Text(
                                         'Tunjukkan kode barcode di sebelah \nkepada kurir jika makanan sampai ',
                                         style: GoogleFonts.poppins(
-                                          textStyle: TextStyle(
+                                          textStyle: const TextStyle(
                                             fontSize: 10,
                                             fontWeight: FontWeight.w600,
                                             color: Colors.black,
@@ -371,28 +428,27 @@ class DetailTransaksiView extends GetView<DetailTransaksiController> {
                   child: Container(
                     child: Card(
                       color: Colors.white,
-                      elevation: 10,
+                      elevation: 2,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       child: Padding(
-                        padding: EdgeInsets.all(15),
+                        padding: const EdgeInsets.all(15),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               'Informasi Pembayaran',
                               style: GoogleFonts.poppins(
-                                textStyle: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
+                                textStyle: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
                                   color: Colors.black,
                                 ),
                               ),
                             ),
-                            Divider(
-                              color: Colors.grey[300],
-                              thickness: 1,
+                            const SizedBox(
+                              height: 16,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -400,17 +456,17 @@ class DetailTransaksiView extends GetView<DetailTransaksiController> {
                                 Text(
                                   'Metode Pembayaran  :',
                                   style: GoogleFonts.poppins(
-                                    textStyle: TextStyle(
+                                    textStyle: const TextStyle(
                                       fontSize: 12,
-                                      fontWeight: FontWeight.w500,
+                                      fontWeight: FontWeight.w400,
                                       color: Colors.black,
                                     ),
                                   ),
                                 ),
                                 Text(
-                                  transaksi!.modelPembayaran.toString(),
+                                  transaksi.modelPembayaran.toString(),
                                   style: GoogleFonts.poppins(
-                                    textStyle: TextStyle(
+                                    textStyle: const TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w500,
                                       color: Colors.black,
@@ -425,9 +481,9 @@ class DetailTransaksiView extends GetView<DetailTransaksiController> {
                                 Text(
                                   'Total :',
                                   style: GoogleFonts.poppins(
-                                    textStyle: TextStyle(
+                                    textStyle: const TextStyle(
                                       fontSize: 12,
-                                      fontWeight: FontWeight.w500,
+                                      fontWeight: FontWeight.w400,
                                       color: Colors.black,
                                     ),
                                   ),
@@ -435,7 +491,7 @@ class DetailTransaksiView extends GetView<DetailTransaksiController> {
                                 Text(
                                   totalBayar.toRupiah(),
                                   style: GoogleFonts.poppins(
-                                    textStyle: TextStyle(
+                                    textStyle: const TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w500,
                                       color: Colors.black,
@@ -450,9 +506,9 @@ class DetailTransaksiView extends GetView<DetailTransaksiController> {
                                 Text(
                                   'Diskon :',
                                   style: GoogleFonts.poppins(
-                                    textStyle: TextStyle(
+                                    textStyle: const TextStyle(
                                       fontSize: 12,
-                                      fontWeight: FontWeight.w500,
+                                      fontWeight: FontWeight.w400,
                                       color: Colors.black,
                                     ),
                                   ),
@@ -460,7 +516,7 @@ class DetailTransaksiView extends GetView<DetailTransaksiController> {
                                 Text(
                                   'Rp 0',
                                   style: GoogleFonts.poppins(
-                                    textStyle: TextStyle(
+                                    textStyle: const TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w500,
                                       color: Colors.black,
@@ -475,9 +531,9 @@ class DetailTransaksiView extends GetView<DetailTransaksiController> {
                                 Text(
                                   'Kembalian :',
                                   style: GoogleFonts.poppins(
-                                    textStyle: TextStyle(
+                                    textStyle: const TextStyle(
                                       fontSize: 12,
-                                      fontWeight: FontWeight.w500,
+                                      fontWeight: FontWeight.w400,
                                       color: Colors.black,
                                     ),
                                   ),
@@ -485,7 +541,7 @@ class DetailTransaksiView extends GetView<DetailTransaksiController> {
                                 Text(
                                   'Rp 0',
                                   style: GoogleFonts.poppins(
-                                    textStyle: TextStyle(
+                                    textStyle: const TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w500,
                                       color: Colors.black,
@@ -494,14 +550,18 @@ class DetailTransaksiView extends GetView<DetailTransaksiController> {
                                 ),
                               ],
                             ),
+                            Divider(
+                              color: Colors.grey[300],
+                              thickness: 1,
+                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
                                   'Total bayar :',
                                   style: GoogleFonts.poppins(
-                                    textStyle: TextStyle(
-                                      fontSize: 12,
+                                    textStyle: const TextStyle(
+                                      fontSize: 16,
                                       fontWeight: FontWeight.w500,
                                       color: Colors.black,
                                     ),
@@ -510,9 +570,9 @@ class DetailTransaksiView extends GetView<DetailTransaksiController> {
                                 Text(
                                   totalBayar.toRupiah(),
                                   style: GoogleFonts.poppins(
-                                    textStyle: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
+                                    textStyle: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
                                       color: Colors.black,
                                     ),
                                   ),
@@ -527,6 +587,87 @@ class DetailTransaksiView extends GetView<DetailTransaksiController> {
                 ),
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class buttonCancelOrder extends StatelessWidget {
+  const buttonCancelOrder({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text(
+                "Konfirmasi",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+              content: const Text(
+                "Apakah Anda yakin ingin membatalkan produk ini?",
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text(
+                    "Tidak",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    // Lakukan aksi pembatalan produk di sini
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text(
+                    "Ya",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.red,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.red,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+      ),
+      child: Text(
+        'Batalkan',
+        style: GoogleFonts.poppins(
+          textStyle: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
           ),
         ),
       ),

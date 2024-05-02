@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_declarations
 
+import 'package:dikantin/app/data/models/pesanan_model.dart';
 import 'package:dikantin/app/modules/pesanan/controllers/pesanan_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -104,7 +105,7 @@ class _ProsesState extends State<Proses> {
               final totalHarga = (orderData.transaksi?.totalHarga ?? 0);
               return GestureDetector(
                 onTap: () {
-                  Get.to(const DetailTransaksiView(),
+                  Get.to(DetailTransaksiView(),
                       arguments: orderData.transaksi?.kodeTr);
                 },
                 child: Padding(

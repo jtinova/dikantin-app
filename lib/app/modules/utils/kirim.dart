@@ -27,7 +27,8 @@ class _KirimState extends State<Kirim> {
 
     return MediaQuery(
       data: query.copyWith(
-      textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15),),
+        textScaler: TextScaler.linear(query.textScaleFactor.clamp(1.0, 1.15)),
+      ),
       child: Scaffold(
         body: RefreshIndicator(
           onRefresh: () async => await controller.loadDikirim(),
@@ -101,7 +102,7 @@ class _KirimState extends State<Kirim> {
               final totalHarga = orderData.transaksi!.totalHarga ?? 0;
               return GestureDetector(
                 onTap: () {
-                  Get.to(const DetailTransaksiView(),
+                  Get.to(DetailTransaksiView(),
                       arguments: orderData.transaksi?.kodeTr);
                 },
                 child: Padding(
