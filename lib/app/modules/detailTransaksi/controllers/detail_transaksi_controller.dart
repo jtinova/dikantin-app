@@ -9,11 +9,19 @@ class DetailTransaksiController extends GetxController {
   final isLoading = true.obs; // Define RxBool for loading state
   final pesananProvider = PesananProvider().obs; // Instantiate your provider
   late ProductCancellation statusProductCancel = ProductCancellation();
-  var detailOrder = <DetailTransaksi>[].obs;
+  late Pesanan pesananProses = Pesanan();
+  late Pesanan pesananDikirim = Pesanan();
+  late Pesanan pesananDiterima = Pesanan();
+  late Pesanan belumbayar = Pesanan();
+  var orderProses = <DataPesanan>[].obs;
+  var orderDikirim = <DataPesanan>[].obs;
+  var orderDiterima = <DataPesanan>[].obs;
+  var belumBayar = <DataPesanan>[].obs;
 
   @override
   void onInit() {
     super.onInit();
+    refreshData();
   }
 
   @override
@@ -35,9 +43,7 @@ class DetailTransaksiController extends GetxController {
       await pesananProvider.value.productCancellation(kodeTr, kodeMenu);
       // Refresh data setelah pembatalan pesanan berhasil
       update();
-
-      // loadDikirim();
-      // loadDiterima();
+      loadProses();
       isLoading(false);
     } catch (error) {
       isLoading(false);
@@ -45,4 +51,45 @@ class DetailTransaksiController extends GetxController {
     }
   }
 
+  DataPesanan? findOrderById(String orderId) {
+    // Cari pesanan di setiap kategori (proses, dikirim, diterima)
+    final orderProsesById = orderProses
+        .firstWhereOrNull((order) => order.transaksi?.kodeTr == orderId);
+    if (orderProsesById != null) {
+      return orderProsesById;
+    }
+
+    final orderDikirimById = orderDikirim
+        .firstWhereOrNull((order) => order.transaksi?.kodeTr == orderId);
+    if (orderDikirimById != null) {
+      return orderDikirimById;
+    }
+
+    final orderDiterimaById = orderDiterima
+        .firstWhereOrNull((order) => order.transaksi?.kodeTr == orderId);
+    if (orderDiterimaById != null) {
+      return orderDiterimaById;
+    }
+    final belumbayarById = belumBayar
+        .firstWhereOrNull((order) => order.transaksi?.kodeTr == orderId);
+    if (belumbayarById != null) {
+      return belumbayarById;
+    }
+    return null; // Return null jika pesanan tidak ditemukan
+  }
+
+  Future<void> loadProses() async {
+    try {
+      isLoading(true);
+      final result = await pesananProvider.value.proses();
+      pesananProses = result;
+      orderProses.assignAll(result.data!);
+      update(); // Memanggil update() untuk memperbarui widget
+
+      isLoading(false);
+    } catch (error) {
+      isLoading(false);
+      print('Error fetching data: $error');
+    }
+  }
 }

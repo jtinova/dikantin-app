@@ -118,6 +118,8 @@ class _belumbayarState extends State<belumbayar> {
                         borderRadius: BorderRadius.circular(
                             10.0), // Sesuaikan dengan radius yang diinginkan
                       ),
+                      key: ValueKey(
+                        orderData.transaksi?.kodeTr), // Gunakan key unik
                       elevation: 5,
                       // color: Colors.red,
                       child: Column(

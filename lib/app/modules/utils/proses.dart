@@ -103,15 +103,21 @@ class _ProsesState extends State<Proses> {
             itemBuilder: (BuildContext context, int index) {
               final orderData = controller.pesananProses.data![index];
               final totalHarga = (orderData.transaksi?.totalHarga ?? 0);
-              return GestureDetector(
-                onTap: () {
-                  Get.to(DetailTransaksiView(),
-                      arguments: orderData.transaksi?.kodeTr);
-                },
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      top: 10, left: 10, right: 10, bottom: 5),
-                  child: Card(
+
+              // Filter pesanan dengan detail transaksi tidak kosong
+              if (orderData.transaksi!.detailTransaksi!.isEmpty) {
+                return Container();
+              } else {
+                // Jika detail_transaksi kosong, return Container kosong
+                return GestureDetector(
+                  onTap: () {
+                    Get.to(const DetailTransaksiView(),
+                        arguments: orderData.transaksi?.kodeTr);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        top: 10, left: 10, right: 10, bottom: 5),
+                    child: Card(
                       color: Colors.white,
                       key: ValueKey(
                           orderData.transaksi?.kodeTr), // Gunakan key unik
@@ -120,7 +126,6 @@ class _ProsesState extends State<Proses> {
                             10.0), // Sesuaikan dengan radius yang diinginkan
                       ),
                       elevation: 5,
-                      // color: Colors.red,
                       child: Column(
                         children: [
                           ListTile(
@@ -128,7 +133,6 @@ class _ProsesState extends State<Proses> {
                               backgroundImage:
                                   profileController.profile.value.data?.foto !=
                                           null
-                                      // ignore: dead_code
                                       ? NetworkImage(
                                           Api.gambar +
                                               profileController
@@ -156,7 +160,6 @@ class _ProsesState extends State<Proses> {
                           ),
                           Container(
                             padding: const EdgeInsets.all(10),
-                            // color: Colors.blue,
                             child: Column(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
@@ -231,9 +234,11 @@ class _ProsesState extends State<Proses> {
                                 ]),
                           )
                         ],
-                      )),
-                ),
-              );
+                      ),
+                    ),
+                  ),
+                );
+              }
             },
           );
         }
