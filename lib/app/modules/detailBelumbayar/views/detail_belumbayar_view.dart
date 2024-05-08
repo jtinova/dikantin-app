@@ -1,3 +1,4 @@
+import '../../../data/models/pesananProses.dart';
 import '../controllers/detail_belumbayar_controller.dart';
 
 import 'package:carbon_icons/carbon_icons.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import '../../../data/providers/services.dart';
 import '../../pesanan/controllers/pesanan_controller.dart';
@@ -30,7 +32,8 @@ class DetailBelumbayarView extends GetView<DetailBelumbayarController> {
         ),
       );
     }
-
+    final DetailBelumbayarController controller =
+        Get.put(DetailBelumbayarController());
     final transaksi = orderData.transaksi;
     final totalBayar = transaksi!.totalBayar ?? 0;
     final totalHarga = transaksi.totalHarga ?? 0;
@@ -439,82 +442,8 @@ class DetailBelumbayarView extends GetView<DetailBelumbayarController> {
                                             ),
                                           ),
                                           const SizedBox(width: 10),
-                                          ElevatedButton(
-                                            onPressed: () {
-                                              showDialog(
-                                                context: context,
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return AlertDialog(
-                                                    title: const Text(
-                                                      "Konfirmasi",
-                                                      style: TextStyle(
-                                                        fontSize: 18,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.black,
-                                                      ),
-                                                    ),
-                                                    content: const Text(
-                                                      "Apakah Anda yakin ingin membatalkan produk ini?",
-                                                      style: TextStyle(
-                                                        fontSize: 16,
-                                                        color: Colors.black,
-                                                      ),
-                                                    ),
-                                                    actions: [
-                                                      TextButton(
-                                                        onPressed: () {
-                                                          Navigator.of(context)
-                                                              .pop();
-                                                        },
-                                                        child: const Text(
-                                                          "Tidak",
-                                                          style: TextStyle(
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color: Colors.grey,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      TextButton(
-                                                        onPressed: () {
-                                                          // Lakukan aksi pembatalan produk di sini
-                                                          Navigator.of(context)
-                                                              .pop();
-                                                        },
-                                                        child: const Text(
-                                                          "Ya",
-                                                          style: TextStyle(
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color: Colors.red,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  );
-                                                },
-                                              );
-                                            },
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: Colors.red,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(8.0),
-                                              ),
-                                            ),
-                                            child: const Text(
-                                              'Batalkan',
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
+                                          /* buttonCancel(context, controller,
+                                              transaksi, detailTransaksi) */
                                         ],
                                       ),
                                       Divider(
@@ -741,6 +670,92 @@ class DetailBelumbayarView extends GetView<DetailBelumbayarController> {
                 ),
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  ElevatedButton buttonCancel(
+      BuildContext context,
+      DetailBelumbayarController controller,
+      Transaksi transaksi,
+      DetailTransaksi detailTransaksi) {
+    return ElevatedButton(
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text(
+                "Konfirmasi",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+              content: const Text(
+                "Apakah Anda yakin ingin membatalkan produk ini?",
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text(
+                    "Tidak",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    // Lakukan aksi pembatalan produk di sini
+                    await EasyLoading.show(
+                      status: 'loading...',
+                      maskType: EasyLoadingMaskType.black,
+                    );
+                    controller.cancelProduct(transaksi.kodeTr.toString(),
+                        detailTransaksi.kodeMenu.toString());
+                    EasyLoading.dismiss();
+                    Navigator.of(context).pop();
+                    Get.snackbar('Success', 'Berhasil dibatalkan');
+                  },
+                  child: const Text(
+                    "Ya",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.red,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.red,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+      ),
+      child: Text(
+        'Batalkan',
+        style: GoogleFonts.poppins(
+          textStyle: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
           ),
         ),
       ),

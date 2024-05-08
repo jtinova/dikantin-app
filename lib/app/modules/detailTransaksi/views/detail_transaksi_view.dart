@@ -1,7 +1,9 @@
 import 'package:carbon_icons/carbon_icons.dart';
+import 'package:dikantin/app/data/models/pesanan_model.dart';
 import 'package:dikantin/app/modules/detailTransaksi/controllers/detail_transaksi_controller.dart';
 import 'package:dikantin/app/modules/utils/formatDate.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_launcher_icons/xml_templates.dart';
 
 import 'package:get/get.dart';
@@ -11,9 +13,8 @@ import 'package:qr_flutter/qr_flutter.dart';
 import '../../../data/providers/services.dart';
 import '../../pesanan/controllers/pesanan_controller.dart';
 
-
 class DetailTransaksiView extends GetView<DetailTransaksiController> {
-  DetailTransaksiView({Key? key}) : super(key: key);
+  const DetailTransaksiView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +31,8 @@ class DetailTransaksiView extends GetView<DetailTransaksiController> {
         ),
       );
     }
-
+    final DetailTransaksiController controller =
+        Get.put(DetailTransaksiController());
     final transaksi = orderData.transaksi;
     final totalBayar = transaksi!.totalBayar ?? 0;
     final detailTransaksiList = transaksi.detailTransaksi ?? [];
@@ -196,6 +198,11 @@ class DetailTransaksiView extends GetView<DetailTransaksiController> {
                                     detailTransaksiList[index];
                                 final menuData = detailTransaksi.menu;
                                 final harga = menuData?.harga ?? 0;
+                                /* if (detailTransaksi) {
+                                  
+                                } else {
+                                  
+                                } */
                                 return Padding(
                                   padding: const EdgeInsets.only(
                                       top: 8, bottom: 8.0),
@@ -317,7 +324,9 @@ class DetailTransaksiView extends GetView<DetailTransaksiController> {
                                         children: [
                                           Expanded(
                                             child: Padding(
-                                              padding: const EdgeInsets.symmetric(vertical: 8),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 8),
                                               child: Column(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.start,
@@ -327,7 +336,8 @@ class DetailTransaksiView extends GetView<DetailTransaksiController> {
                                                   Text(
                                                     "Status Pesanan :",
                                                     style: GoogleFonts.poppins(
-                                                      textStyle: const TextStyle(
+                                                      textStyle:
+                                                          const TextStyle(
                                                         fontSize: 12,
                                                         fontWeight:
                                                             FontWeight.w400,
@@ -337,15 +347,18 @@ class DetailTransaksiView extends GetView<DetailTransaksiController> {
                                                     textAlign: TextAlign.start,
                                                   ),
                                                   Text(
-                                                    detailTransaksi.statusKonfirm
+                                                    detailTransaksi
+                                                            .statusKonfirm
                                                             .toString()
                                                             .contains("null")
                                                         ? ""
                                                         : detailTransaksi
                                                             .statusKonfirm
-                                                            .toString().toUpperCase(),
+                                                            .toString()
+                                                            .toUpperCase(),
                                                     style: GoogleFonts.poppins(
-                                                      textStyle: const TextStyle(
+                                                      textStyle:
+                                                          const TextStyle(
                                                         fontSize: 14,
                                                         fontWeight:
                                                             FontWeight.w600,
@@ -360,7 +373,8 @@ class DetailTransaksiView extends GetView<DetailTransaksiController> {
                                           ),
                                           if (detailTransaksi.statusKonfirm ==
                                               "menunggu")
-                                            const buttonCancelOrder()
+                                            buttonCancel(context, controller,
+                                                transaksi, detailTransaksi),
                                         ],
                                       ),
                                       Divider(
@@ -592,15 +606,12 @@ class DetailTransaksiView extends GetView<DetailTransaksiController> {
       ),
     );
   }
-}
 
-class buttonCancelOrder extends StatelessWidget {
-  const buttonCancelOrder({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
+  ElevatedButton buttonCancel(
+      BuildContext context,
+      DetailTransaksiController controller,
+      Transaksi transaksi,
+      DetailTransaksi detailTransaksi) {
     return ElevatedButton(
       onPressed: () {
         showDialog(
@@ -637,9 +648,17 @@ class buttonCancelOrder extends StatelessWidget {
                   ),
                 ),
                 TextButton(
-                  onPressed: () {
+                  onPressed: () async {
                     // Lakukan aksi pembatalan produk di sini
+                    await EasyLoading.show(
+                      status: 'loading...',
+                      maskType: EasyLoadingMaskType.black,
+                    );
+                    controller.cancelProduct(transaksi.kodeTr.toString(),
+                        detailTransaksi.kodeMenu.toString());
+                    EasyLoading.dismiss();
                     Navigator.of(context).pop();
+                    Get.snackbar('Success', 'Berhasil dibatalkan');
                   },
                   child: const Text(
                     "Ya",
