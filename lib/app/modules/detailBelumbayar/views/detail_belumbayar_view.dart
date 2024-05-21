@@ -13,8 +13,6 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import '../../../data/providers/services.dart';
 import '../../pesanan/controllers/pesanan_controller.dart';
 
-// ignore_for_file: camel_case_types, prefer_typing_uninitialized_variables
-
 class DetailBelumbayarView extends GetView<DetailBelumbayarController> {
   const DetailBelumbayarView({Key? key}) : super(key: key);
   @override
@@ -34,10 +32,11 @@ class DetailBelumbayarView extends GetView<DetailBelumbayarController> {
     }
     final DetailBelumbayarController controller =
         Get.put(DetailBelumbayarController());
-    final transaksi = orderData.transaksi;
-    final totalBayar = transaksi!.totalBayar ?? 0;
-    final totalHarga = transaksi.totalHarga ?? 0;
-    final detailTransaksiList = transaksi.detailTransaksi ?? [];
+        final transaksi = orderData.transaksi;
+        final totalHarga = transaksi!.totalHarga ?? 0;
+        final totalBayar = transaksi.totalBayar ?? 0;
+        final kembalian = transaksi.kembalian ?? 0;
+        final detailTransaksiList = transaksi.detailTransaksi ?? [];
     final query = MediaQuery.of(context);
     return MediaQuery(
       data: query.copyWith(
@@ -100,42 +99,28 @@ class DetailBelumbayarView extends GetView<DetailBelumbayarController> {
                             children: [
                               Row(
                                 children: [
-                                  Container(
-                                    height: 40,
-                                    width: 40,
-                                    margin: const EdgeInsets.only(right: 10),
-                                    decoration: const BoxDecoration(
-                                        color: Colors.blue,
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(20))),
-                                    child: const Icon(
-                                      Icons.money_off,
-                                      size: 20,
-                                      color: Colors.white,
-                                    ),
-                                  ),
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        "Dikantin",
+                                        "Nomor Pesanan",
                                         style: GoogleFonts.poppins(
                                           textStyle: const TextStyle(
-                                            fontSize: 16,
+                                            fontSize: 14,
                                             fontWeight: FontWeight.w500,
                                             color: Colors.black,
                                           ),
                                         ),
                                       ),
                                       Text(
-                                        "Belum Bayar",
+                                        "Waktu Pemesanan",
                                         style: GoogleFonts.poppins(
                                           textStyle: const TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.red,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400,
+                                            color: Colors.black,
                                           ),
                                         ),
                                       ),
@@ -168,66 +153,6 @@ class DetailBelumbayarView extends GetView<DetailBelumbayarController> {
                                     ),
                                   ),
                                 ],
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: Card(
-                    color: Colors.white,
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 20, horizontal: 16),
-                      child: Row(
-                        children: [
-                          Container(
-                            height: 40,
-                            width: 40,
-                            margin: const EdgeInsets.only(right: 10),
-                            decoration: const BoxDecoration(
-                                color: Colors.blue,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20))),
-                            child: const Icon(
-                              Icons.location_on_outlined,
-                              size: 20,
-                              color: Colors.white,
-                            ),
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Silahkan ambil di",
-                                style: GoogleFonts.poppins(
-                                  textStyle: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w400,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                "Kasir kantin utama",
-                                style: GoogleFonts.poppins(
-                                  textStyle: const TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black,
-                                  ),
-                                ),
                               ),
                             ],
                           ),
@@ -274,6 +199,11 @@ class DetailBelumbayarView extends GetView<DetailBelumbayarController> {
                                     detailTransaksiList[index];
                                 final menuData = detailTransaksi.menu;
                                 final harga = menuData?.harga ?? 0;
+                                /* if (detailTransaksi) {
+                                  
+                                } else {
+                                  
+                                } */
                                 return Padding(
                                   padding: const EdgeInsets.only(
                                       top: 8, bottom: 8.0),
@@ -328,28 +258,20 @@ class DetailBelumbayarView extends GetView<DetailBelumbayarController> {
                                                 const SizedBox(
                                                   height: 4,
                                                 ),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Text(
-                                                      "Kantin: ${detailTransaksi.menu!.idKantin.toString()}",
-                                                      style:
-                                                          GoogleFonts.poppins(
-                                                        textStyle: TextStyle(
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          color: Colors
-                                                              .grey.shade900,
-                                                        ),
-                                                      ),
+                                                Text(
+                                                  "Kantin: ${detailTransaksi.menu!.idKantin.toString()}",
+                                                  style: GoogleFonts.poppins(
+                                                    textStyle: TextStyle(
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color:
+                                                          Colors.grey.shade900,
                                                     ),
-                                                  ],
+                                                  ),
                                                 ),
                                                 const SizedBox(
-                                                  height: 5,
+                                                  height: 4,
                                                 ),
                                                 Padding(
                                                   padding:
@@ -395,55 +317,143 @@ class DetailBelumbayarView extends GetView<DetailBelumbayarController> {
                                         ],
                                       ),
                                       const SizedBox(
-                                        height: 10,
+                                        height: 8,
                                       ),
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         children: [
                                           Expanded(
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  "Status Pesanan :",
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 8),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    "Status Pesanan :",
+                                                    style: GoogleFonts.poppins(
+                                                      textStyle:
+                                                          const TextStyle(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color: Colors.black,
+                                                      ),
+                                                    ),
+                                                    textAlign: TextAlign.start,
+                                                  ),
+                                                  Text(
+                                                    detailTransaksi
+                                                            .statusKonfirm
+                                                            .toString()
+                                                            .contains("null")
+                                                        ? ""
+                                                        : detailTransaksi
+                                                            .statusKonfirm
+                                                            .toString()
+                                                            .toUpperCase(),
+                                                    style: GoogleFonts.poppins(
+                                                      textStyle:
+                                                          const TextStyle(
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        color: Colors.black,
+                                                      ),
+                                                    ),
+                                                    textAlign: TextAlign.start,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          if (detailTransaksi.statusKonfirm ==
+                                              "menunggu")
+                                              ElevatedButton(
+                                                onPressed: () {
+                                                  showDialog(
+                                                    context: context,
+                                                    builder: (BuildContext context) {
+                                                      return AlertDialog(
+                                                        title: const Text(
+                                                          "Konfirmasi",
+                                                          style: TextStyle(
+                                                            fontSize: 18,
+                                                            fontWeight: FontWeight.bold,
+                                                            color: Colors.black,
+                                                          ),
+                                                        ),
+                                                        content: const Text(
+                                                          "Apakah Anda yakin ingin membatalkan produk ini?",
+                                                          style: TextStyle(
+                                                            fontSize: 16,
+                                                            color: Colors.black,
+                                                          ),
+                                                        ),
+                                                        actions: [
+                                                          TextButton(
+                                                            onPressed: () {
+                                                              Navigator.of(context).pop();
+                                                            },
+                                                            child: const Text(
+                                                              "Tidak",
+                                                              style: TextStyle(
+                                                                fontSize: 16,
+                                                                fontWeight: FontWeight.bold,
+                                                                color: Colors.grey,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          TextButton(
+                                                            onPressed: () async {
+                                                              // Lakukan aksi pembatalan produk di sini
+                                                              await EasyLoading.show(
+                                                                status: 'loading...',
+                                                                maskType: EasyLoadingMaskType.black,
+                                                              );
+                                                              controller.cancelProduct(transaksi.kodeTr.toString(),
+                                                                  detailTransaksi.kodeMenu.toString());
+                                                              EasyLoading.dismiss();
+                                                              refreshData();
+                                                              Navigator.of(context).pop();
+                                                              Get.snackbar('Success', 'Berhasil dibatalkan');
+                                                            },
+                                                            child: const Text(
+                                                              "Ya",
+                                                              style: TextStyle(
+                                                                fontSize: 16,
+                                                                fontWeight: FontWeight.bold,
+                                                                color: Colors.red,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      );
+                                                    },
+                                                  );
+                                                },
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor: Colors.red,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(8.0),
+                                                  ),
+                                                ),
+                                                child: Text(
+                                                  'Batalkan',
                                                   style: GoogleFonts.poppins(
                                                     textStyle: const TextStyle(
                                                       fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color: Colors.black,
+                                                      fontWeight: FontWeight.w600,
+                                                      color: Colors.white,
                                                     ),
                                                   ),
-                                                  textAlign: TextAlign.start,
                                                 ),
-                                                Text(
-                                                  detailTransaksi.statusKonfirm
-                                                          .toString()
-                                                          .contains("null")
-                                                      ? ""
-                                                      : detailTransaksi
-                                                          .statusKonfirm
-                                                          .toString(),
-                                                  style: GoogleFonts.poppins(
-                                                    textStyle: const TextStyle(
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      color: Colors.black,
-                                                    ),
-                                                  ),
-                                                  textAlign: TextAlign.start,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          const SizedBox(width: 10),
-                                          /* buttonCancel(context, controller,
-                                              transaksi, detailTransaksi) */
+                                              )
                                         ],
                                       ),
                                       Divider(
@@ -562,6 +572,33 @@ class DetailBelumbayarView extends GetView<DetailBelumbayarController> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
+                                  'Ongkir :',
+                                  style: GoogleFonts.poppins(
+                                    textStyle: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  transaksi.totalKurir == null
+                                      ? 'Rp 0'
+                                      : transaksi.totalKurir!.toRupiah(),
+                                  style: GoogleFonts.poppins(
+                                    textStyle: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
                                   'Total :',
                                   style: GoogleFonts.poppins(
                                     textStyle: const TextStyle(
@@ -573,6 +610,31 @@ class DetailBelumbayarView extends GetView<DetailBelumbayarController> {
                                 ),
                                 Text(
                                   totalHarga.toRupiah(),
+                                  style: GoogleFonts.poppins(
+                                    textStyle: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Nominal Uang Pembeli :',
+                                  style: GoogleFonts.poppins(
+                                    textStyle: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  totalBayar.toRupiah(),
                                   style: GoogleFonts.poppins(
                                     textStyle: const TextStyle(
                                       fontSize: 12,
@@ -622,7 +684,7 @@ class DetailBelumbayarView extends GetView<DetailBelumbayarController> {
                                   ),
                                 ),
                                 Text(
-                                  'Rp 0',
+                                  kembalian.toRupiah(),
                                   style: GoogleFonts.poppins(
                                     textStyle: const TextStyle(
                                       fontSize: 12,
@@ -675,90 +737,10 @@ class DetailBelumbayarView extends GetView<DetailBelumbayarController> {
       ),
     );
   }
+}
 
-  ElevatedButton buttonCancel(
-      BuildContext context,
-      DetailBelumbayarController controller,
-      Transaksi transaksi,
-      DetailTransaksi detailTransaksi) {
-    return ElevatedButton(
-      onPressed: () {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text(
-                "Konfirmasi",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-              content: const Text(
-                "Apakah Anda yakin ingin membatalkan produk ini?",
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.black,
-                ),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text(
-                    "Tidak",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey,
-                    ),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () async {
-                    // Lakukan aksi pembatalan produk di sini
-                    await EasyLoading.show(
-                      status: 'loading...',
-                      maskType: EasyLoadingMaskType.black,
-                    );
-                    controller.cancelProduct(transaksi.kodeTr.toString(),
-                        detailTransaksi.kodeMenu.toString());
-                    EasyLoading.dismiss();
-                    Navigator.of(context).pop();
-                    Get.snackbar('Success', 'Berhasil dibatalkan');
-                  },
-                  child: const Text(
-                    "Ya",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.red,
-                    ),
-                  ),
-                ),
-              ],
-            );
-          },
-        );
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.red,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-      ),
-      child: Text(
-        'Batalkan',
-        style: GoogleFonts.poppins(
-          textStyle: const TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
-          ),
-        ),
-      ),
-    );
-  }
+void refreshData() {
+// Menggunakan setState untuk merefresh tampilan setelah produk dibatalkan
+Get.find<PesananController>().refreshPesanan();
+Get.back();
 }

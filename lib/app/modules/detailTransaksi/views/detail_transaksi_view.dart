@@ -34,7 +34,9 @@ class DetailTransaksiView extends GetView<DetailTransaksiController> {
     final DetailTransaksiController controller =
         Get.put(DetailTransaksiController());
     final transaksi = orderData.transaksi;
-    final totalBayar = transaksi!.totalBayar ?? 0;
+    final totalHarga = transaksi!.totalHarga ?? 0;
+    final totalBayar = transaksi.totalBayar ?? 0;
+    final kembalian = transaksi.kembalian ?? 0;
     final detailTransaksiList = transaksi.detailTransaksi ?? [];
     final query = MediaQuery.of(context);
     return MediaQuery(
@@ -493,7 +495,59 @@ class DetailTransaksiView extends GetView<DetailTransaksiController> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
+                                  'Ongkir :',
+                                  style: GoogleFonts.poppins(
+                                    textStyle: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  transaksi.totalKurir == null
+                                      ? 'Rp 0'
+                                      : transaksi.totalKurir!.toRupiah(),
+                                  style: GoogleFonts.poppins(
+                                    textStyle: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
                                   'Total :',
+                                  style: GoogleFonts.poppins(
+                                    textStyle: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  totalHarga.toRupiah(),
+                                  style: GoogleFonts.poppins(
+                                    textStyle: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Nominal Uang Pembeli :',
                                   style: GoogleFonts.poppins(
                                     textStyle: const TextStyle(
                                       fontSize: 12,
@@ -553,7 +607,7 @@ class DetailTransaksiView extends GetView<DetailTransaksiController> {
                                   ),
                                 ),
                                 Text(
-                                  'Rp 0',
+                                  kembalian.toRupiah(),
                                   style: GoogleFonts.poppins(
                                     textStyle: const TextStyle(
                                       fontSize: 12,
@@ -582,7 +636,7 @@ class DetailTransaksiView extends GetView<DetailTransaksiController> {
                                   ),
                                 ),
                                 Text(
-                                  totalBayar.toRupiah(),
+                                  totalHarga.toRupiah(),
                                   style: GoogleFonts.poppins(
                                     textStyle: const TextStyle(
                                       fontSize: 16,
@@ -657,6 +711,7 @@ class DetailTransaksiView extends GetView<DetailTransaksiController> {
                     controller.cancelProduct(transaksi.kodeTr.toString(),
                         detailTransaksi.kodeMenu.toString());
                     EasyLoading.dismiss();
+                    refreshData();
                     Navigator.of(context).pop();
                     Get.snackbar('Success', 'Berhasil dibatalkan');
                   },
@@ -692,4 +747,10 @@ class DetailTransaksiView extends GetView<DetailTransaksiController> {
       ),
     );
   }
+}
+
+void refreshData() {
+  // Menggunakan setState untuk merefresh tampilan setelah produk dibatalkan
+  Get.find<PesananController>().refreshPesanan();
+  Get.back();
 }

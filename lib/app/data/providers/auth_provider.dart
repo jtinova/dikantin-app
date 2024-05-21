@@ -6,8 +6,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert'; // Import for JSON decoding
 
 class AuthProvider extends GetxController {
-  static const String baseUrl =
-      'https://6d8e-103-109-209-254.ngrok-free.app/api';
+  static const String baseUrl = 'https://dikantin.com/api';
 
   Future<http.Response> login(
       String username, String password, String tokenfcm) async {

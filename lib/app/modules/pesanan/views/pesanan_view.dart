@@ -52,11 +52,14 @@ class PesananView extends GetView<PesananController> {
           controller: pesananController.tabController,
           tabs: [
             Tab(child: Obx(() {
+              final pesananProses = controller.pesananProses.data ?? [];
+              final jumlahTransaksi = pesananProses.where((pesanan) => pesanan.transaksi!.detailTransaksi!.isNotEmpty).length;
+    
               return badges.Badge(
                 showBadge: (pesananController.orderProses.isNotEmpty ?? true),
                 badgeAnimation: badges.BadgeAnimation.slide(),
                 badgeContent: Text(
-                  (pesananController.orderProses.length ?? 0).toString(),
+                  jumlahTransaksi.toString(),
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 10,

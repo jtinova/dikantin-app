@@ -620,6 +620,10 @@ class OrderView extends GetView<OrderController> {
                                                 return;
                                               }
                                               Navigator.of(context).pop();
+                                              await EasyLoading.show(
+                                                status: 'loading...',
+                                                maskType: EasyLoadingMaskType.black,
+                                              );
                                               await homeController
                                                   .submitOrder();
                                               Get.snackbar(
