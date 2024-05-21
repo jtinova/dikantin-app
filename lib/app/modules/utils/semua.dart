@@ -24,8 +24,7 @@ class _SemuaState extends State<Semua> {
     Get.bottomSheet(
       MediaQuery(
         data: MediaQuery.of(context).copyWith(
-            textScaleFactor:
-                MediaQuery.of(context).textScaleFactor.clamp(1.0, 1.15)),
+            textScaler: TextScaler.linear(MediaQuery.of(context).textScaleFactor.clamp(1.0, 1.15))),
         child: Container(
           height: MediaQuery.of(context).size.height,
           color: Colors.white,
@@ -107,6 +106,10 @@ class _SemuaState extends State<Semua> {
                     homeController.catatanController
                         .clear(); // Tutup BottomSheet
                   },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(Colors
+                        .blue), // Mengatur warna latar belakang menjadi biru
+                  ),
                   child: Text(
                     'Masukkan Keranjang',
                     style: GoogleFonts.poppins(
@@ -260,12 +263,12 @@ class _SemuaState extends State<Semua> {
                               buildBottomSheet(menuData, current);
                             },
                             child: Card(
+                              color: Colors.white,
                               clipBehavior: Clip.antiAlias,
                               elevation: 4,
-                              shape: RoundedRectangleBorder(
+                              shape: const RoundedRectangleBorder(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10)),
-                                side: BorderSide(color: Colors.grey.shade200),
                               ),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -293,7 +296,7 @@ class _SemuaState extends State<Semua> {
                                             MainAxisAlignment.spaceEvenly,
                                         children: [
                                           Text(
-                                            maxLines: 3,
+                                            maxLines: 2,
                                             overflow: TextOverflow.ellipsis,
                                             menuData.nama ?? '',
                                             style: TextStyle(

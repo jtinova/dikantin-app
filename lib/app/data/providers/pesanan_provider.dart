@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'package:dikantin/app/data/models/cancel_model.dart';
 import 'package:dikantin/app/data/models/pendapatanKurir_model.dart';
 import 'package:dikantin/app/data/models/pesanan_model.dart';
 import 'package:get/get.dart';
 import "package:http/http.dart" as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import '../models/belumbayar_model.dart';
 import '../models/pesanan_kirim_model.dart';
 import 'services.dart';
 
@@ -62,13 +64,31 @@ class PesananProvider extends GetxController {
     }
   }
 
+  Future<Pesanan> belumbayar() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    final response = await http.get(
+      Uri.parse(Api.getBelumbayar),
+      headers: {
+        'Authorization':
+            'Bearer $token', // Gantilah [TOKEN] dengan token yang sesuai
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return Pesanan.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Gagal memuat data');
+    }
+  }
+
   Future<void> batalkanPesanan(String kodeTr) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? id_customer = prefs.getString('id_customer');
-    print('Ini:${id_customer}');
+    String? idCustomer = prefs.getString('id_customer');
+    print('Ini:$idCustomer');
     final Map<String, String> postData = {
       "kode": "0",
-      "customer": id_customer.toString(), // sesuaikan dengan kantin yang login
+      "customer": idCustomer.toString(), // sesuaikan dengan kantin yang login
       "kode_tr": kodeTr,
     };
 
@@ -92,11 +112,11 @@ class PesananProvider extends GetxController {
 
   Future<void> acceptPesanan(String kodeTr) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? id_kurir = prefs.getString('tokenKurir');
-    print('Ini:${id_kurir}');
+    String? idKurir = prefs.getString('tokenKurir');
+    print('Ini:$idKurir');
     final Map<String, String> postData = {
       "kode": "3",
-      "kurir": id_kurir.toString(), // sesuaikan dengan kantin yang login
+      "kurir": idKurir.toString(), // sesuaikan dengan kantin yang login
       "kode_tr": kodeTr,
     };
 
@@ -104,7 +124,7 @@ class PesananProvider extends GetxController {
       Uri.parse(Api.konfirmasi),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $id_kurir',
+        'Authorization': 'Bearer $idKurir',
       },
       body: jsonEncode(postData),
     );
@@ -121,11 +141,11 @@ class PesananProvider extends GetxController {
 
   Future<void> konfirKurir(String kodeTr, String bukti) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? id_kurir = prefs.getString('tokenKurir');
-    print('Ini:${id_kurir}');
+    String? idKurir = prefs.getString('tokenKurir');
+    print('Ini:$idKurir');
     final Map<String, String> postData = {
       "kode": "4",
-      "kurir": id_kurir.toString(), // sesuaikan dengan kantin yang login
+      "kurir": idKurir.toString(), // sesuaikan dengan kantin yang login
       "kode_tr": kodeTr,
       "bukti_pengiriman": bukti
     };
@@ -134,7 +154,7 @@ class PesananProvider extends GetxController {
       Uri.parse(Api.konfirmasi),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $id_kurir',
+        'Authorization': 'Bearer $idKurir',
       },
       body: jsonEncode(postData),
     );
@@ -181,6 +201,7 @@ class PesananProvider extends GetxController {
     if (response.statusCode == 200) {
       return PesananKirim.fromJson(jsonDecode(response.body));
     } else {
+      print(response.body.toString());
       throw Exception('Gagal memuat data');
     }
   }
@@ -219,6 +240,40 @@ class PesananProvider extends GetxController {
       return PendapatanKurir.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Gagal memuat data');
+    }
+  }
+
+  Future<ProductCancellation> productCancellation(
+      String kodeTr, String kodeMenu) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+
+    final String urlData =
+        "${Api.productCancellation}kode_tr=$kodeTr&kode_menu=$kodeMenu";
+
+    final response = await http.post(
+      Uri.parse(urlData),
+      headers: {
+        'Authorization':
+            'Bearer $token', // Gantilah [TOKEN] dengan token yang sesuai
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final value = ProductCancellation.fromJson(jsonDecode(response.body));
+      if (value.kode == 1) {
+        print('Pesanan berhasil dibatalkan');
+        print(value.status.toString());
+        return value;
+      }
+
+      print('Gagal membatalkan pesanan. Status code: ${response.body}');
+      return value;
+    } else {
+      // Gagal membatalkan pesanan
+      final value = ProductCancellation.fromJson(jsonDecode(response.body));
+      print('Gagal membatalkan pesanan. Status code: ${response.statusCode}');
+      return value;
     }
   }
 }

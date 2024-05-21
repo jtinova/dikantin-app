@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:dikantin/app/Theme/color_schemes.g.dart';
 import 'package:dikantin/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -6,7 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
+import 'app/modules/pesanan/controllers/pesanan_controller.dart';
+import 'app/modules/pesananKurir/controllers/pesananKurir_controller.dart';
 import 'app/routes/app_pages.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -29,9 +33,11 @@ Future<void> main() async {
   ]);
   runApp(
     GetMaterialApp(
+      builder: EasyLoading.init(),
       debugShowCheckedModeBanner: false,
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
+      theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
       initialBinding: BindingsBuilder(
         () async {
           // final fmcToken = await messaging.getToken();
@@ -45,7 +51,13 @@ Future<void> main() async {
             (RemoteMessage message) async {
               FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
                   FlutterLocalNotificationsPlugin();
-
+              var pesananController = Get.put(PesananController());
+              var pesanankurirController = Get.put(PesananKurirController());
+              await pesananController.loadProses();
+              await pesananController.loadDikirim();
+              await pesananController.loadBelumbayar();
+              await pesanankurirController.loadUntukDikirim();
+              await pesanankurirController.loadKonfirmasi();
               const AndroidNotificationDetails androidPlatformChannelSpecifics =
                   AndroidNotificationDetails('DiPujasKantin', 'DiPujasKantin',
                       importance: Importance.max,
@@ -67,6 +79,23 @@ Future<void> main() async {
       ),
     ),
   );
+  configLoading();
+}
+
+void configLoading() {
+  EasyLoading.instance
+    ..displayDuration = const Duration(milliseconds: 2000)
+    ..indicatorType = EasyLoadingIndicatorType.fadingCircle
+    ..loadingStyle = EasyLoadingStyle.dark
+    ..indicatorSize = 45.0
+    ..radius = 10.0
+    ..progressColor = Colors.yellow
+    ..backgroundColor = Colors.green
+    ..indicatorColor = Colors.yellow
+    ..textColor = Colors.yellow
+    ..maskColor = Colors.blue.withOpacity(0.5)
+    ..userInteractions = true
+    ..dismissOnTap = false;
 }
 
 class MyHttpOverrides extends HttpOverrides {

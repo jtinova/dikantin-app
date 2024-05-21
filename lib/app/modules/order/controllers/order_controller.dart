@@ -1,13 +1,12 @@
-// import 'package:geocoding/geocoding.dart';
-// import 'package:geolocator/geolocator.dart';
 import 'package:dikantin/app/data/providers/customer_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import '../../../data/models/biayakurir_model.dart';
 import '../../../data/models/profile_model.dart';
+import '../../../data/models/qr_model.dart';
 import '../../../data/models/unit_model.dart';
 import '../../../data/providers/profile_provider.dart';
 
@@ -16,13 +15,16 @@ class OrderController extends GetxController {
   var addressMessage = "".obs;
   var textEditingController = TextEditingController().obs;
   final ProfileProvider provider = ProfileProvider().obs();
-  final _customerProvider = CustomerProvider().obs;
   Rx<Profile> profile = Profile().obs;
   Rx<Unit> unit = Unit().obs;
   var addressController = TextEditingController();
   RxBool isButtonEnabled = true.obs;
   RxBool isImageUploading = false.obs;
+
   RxBool isLoading = true.obs;
+  Rx<Qr> qrData = Qr().obs;
+  final _customerProvider = CustomerProvider().obs;
+  Rx<Biayakurir> biayaData = Biayakurir().obs;
 
   var myPosition = Position(
     altitudeAccuracy: 0,
@@ -36,11 +38,14 @@ class OrderController extends GetxController {
     speed: 0,
     speedAccuracy: 0,
   ).obs;
+
   @override
   void onInit() {
     super.onInit();
+    fetchQr();
     getCustomerData();
     getUnit();
+    fetchbiayakurir();
   }
 
   @override
@@ -59,19 +64,38 @@ class OrderController extends GetxController {
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      return Future.error("Location service belum aktif");
+      Get.snackbar(
+        "Error",
+        "Location service belum aktif",
+        snackPosition: SnackPosition.BOTTOM,
+        duration: Duration(seconds: 3),
+      );
+      throw "Location service belum aktif";
     }
 
     locationPermission = await Geolocator.checkPermission();
     if (locationPermission == LocationPermission.denied) {
       locationPermission = await Geolocator.requestPermission();
-      if (locationPermission == LocationPermission.denied)
-        return Future.error("Location Permission ditolak");
+      if (locationPermission == LocationPermission.denied) {
+        Get.snackbar(
+          "Error",
+          "Location Permission ditolak",
+          snackPosition: SnackPosition.BOTTOM,
+          duration: Duration(seconds: 3),
+        );
+        throw "Location Permission ditolak";
+      }
     }
 
-    if (locationPermission == LocationPermission.deniedForever)
-      return Future.error(
-          "Location permission ditolak, gagal request permissions");
+    if (locationPermission == LocationPermission.deniedForever) {
+      Get.snackbar(
+        "Error",
+        "Location permission ditolak, gagal request permissions",
+        snackPosition: SnackPosition.BOTTOM,
+        duration: Duration(seconds: 3),
+      );
+      throw "Location permission ditolak, gagal request permissions";
+    }
 
     Position position = await Geolocator.getCurrentPosition();
     myPosition.value = position;
@@ -122,6 +146,40 @@ class OrderController extends GetxController {
     }
   }
 
+  Future<void> fetchQr() async {
+    try {
+      isLoading(true);
+
+      // Call the fetchqr method from CustomerProvider
+      Qr result = await _customerProvider.value.fetchqr();
+
+      // Update the qr data
+      qrData(result);
+
+      isLoading(false);
+    } catch (error) {
+      isLoading(false);
+      print('Error fetching QR data: $error');
+    }
+  }
+
+  Future<void> fetchbiayakurir() async {
+    try {
+      isLoading(true);
+
+      // Call the fetchqr method from CustomerProvider
+      Biayakurir result = await _customerProvider.value.fetchbiayakurir();
+
+      // Update the qr data
+      biayaData(result);
+
+      isLoading(false);
+    } catch (error) {
+      isLoading(false);
+      print('Error fetching biaya kurir data: $error');
+    }
+  }
+
   Future<void> editAlamat(
       {required String alamat,
       required String lat,
@@ -153,6 +211,17 @@ class OrderController extends GetxController {
       Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.best,
       );
+
+      // Check if the location is mocked
+      if (position.isMocked) {
+        isLoading(false);
+        Get.snackbar(
+          'Error',
+          'Fake location detected',
+          backgroundColor: Colors.red,
+        );
+        return;
+      }
 
       // Menyimpan lokasi terkini
       myPosition.value = position;

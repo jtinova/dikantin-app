@@ -1,0 +1,144 @@
+{
+    "data": [
+        {
+            "kode_tr": "TRDKN4058",
+            "status_konfirm": null,
+            "status_pesanan": null,
+            "tanggal": "2024-01-18 00:21:40",
+            "id_customer": "CUST98273",
+            "id_kurir": null,
+            "id_kasir": null,
+            "total_bayar": 0,
+            "total_harga": 10000,
+            "kembalian": 0,
+            "status_pengiriman": null,
+            "bukti_pengiriman": null,
+            "no_meja": null,
+            "model_pembayaran": "cash",
+            "expired_at": "2024-01-18 00:22:40",
+            "total_biaya_kurir": null,
+            "created_at": "2024-01-17T17:21:40.000000Z",
+            "updated_at": "2024-01-17T17:21:40.000000Z",
+            "detail_transaksi": [
+                {
+                    "kode_tr": "TRDKN4058",
+                    "QTY": 1,
+                    "subtotal_bayar": 10000,
+                    "subtotal_hargapokok": 9000,
+                    "kode_menu": 35,
+                    "catatan": null,
+                    "status_konfirm": "menunggu",
+                    "created_at": "2024-01-17T17:21:40.000000Z",
+                    "updated_at": "2024-01-17T17:21:40.000000Z",
+                    "menu": {
+                        "id_menu": 35,
+                        "nama": "Tahu Lontong",
+                        "harga": 10000,
+                        "harga_pokok": 9000,
+                        "foto": "menu/cmXBQx5bSTgmkjfcUbGSwUhqY10YVAkCeI79n82F.png",
+                        "status_stok": "ada",
+                        "kategori": "makanan",
+                        "id_kantin": 2,
+                        "diskon": null,
+                        "created_at": "2023-05-03 11:16:44",
+                        "updated_at": "2023-05-08 23:22:25"
+                    }
+                }
+            ]
+        },
+        {
+            "kode_tr": "TRDKN1353",
+            "status_konfirm": null,
+            "status_pesanan": null,
+            "tanggal": "2024-01-18 00:06:47",
+            "id_customer": "CUST98273",
+            "id_kurir": null,
+            "id_kasir": null,
+            "total_bayar": 0,
+            "total_harga": 15000,
+            "kembalian": 0,
+            "status_pengiriman": null,
+            "bukti_pengiriman": null,
+            "no_meja": null,
+            "model_pembayaran": "cash",
+            "expired_at": "2024-01-18 00:07:47",
+            "total_biaya_kurir": null,
+            "created_at": "2024-01-17T17:06:47.000000Z",
+            "updated_at": "2024-01-17T17:06:47.000000Z",
+            "detail_transaksi": [
+                {
+                    "kode_tr": "TRDKN1353",
+                    "QTY": 3,
+                    "subtotal_bayar": 15000,
+                    "subtotal_hargapokok": 12000,
+                    "kode_menu": 10,
+                    "catatan": null,
+                    "status_konfirm": "menunggu",
+                    "created_at": "2024-01-17T17:06:47.000000Z",
+                    "updated_at": "2024-01-17T17:06:47.000000Z",
+                    "menu": {
+                        "id_menu": 10,
+                        "nama": "Gado-gado",
+                        "harga": 5000,
+                        "harga_pokok": 4000,
+                        "foto": "menu/MU1qcs3g6pNoNfhZmhspeOQEylRXU4Nl3Ki8DNJu.png",
+                        "status_stok": "ada",
+                        "kategori": "makanan",
+                        "id_kantin": 3,
+                        "diskon": null,
+                        "created_at": "2023-04-14 08:45:50",
+                        "updated_at": "2023-05-02 13:32:03"
+                    }
+                }
+            ]
+        },
+        {
+            "kode_tr": "TRDKN1654",
+            "status_konfirm": null,
+            "status_pesanan": null,
+            "tanggal": "2024-01-17 23:56:45",
+            "id_customer": "CUST98273",
+            "id_kurir": null,
+            "id_kasir": null,
+            "total_bayar": 0,
+            "total_harga": 3000,
+            "kembalian": 0,
+            "status_pengiriman": null,
+            "bukti_pengiriman": null,
+            "no_meja": null,
+            "model_pembayaran": "cash",
+            "expired_at": "2024-01-17 23:57:45",
+            "total_biaya_kurir": null,
+            "created_at": "2024-01-17T16:56:45.000000Z",
+            "updated_at": "2024-01-17T16:56:45.000000Z",
+            "detail_transaksi": [
+                {
+                    "kode_tr": "TRDKN1654",
+                    "QTY": 1,
+                    "subtotal_bayar": 3000,
+                    "subtotal_hargapokok": 2500,
+                    "kode_menu": 33,
+                    "catatan": null,
+                    "status_konfirm": "menunggu",
+                    "created_at": "2024-01-17T16:56:45.000000Z",
+                    "updated_at": "2024-01-17T16:56:45.000000Z",
+                    "menu": {
+                        "id_menu": 33,
+                        "nama": "Teh Hangat",
+                        "harga": 3000,
+                        "harga_pokok": 2500,
+                        "foto": "menu/WbNsQ08nNi8zYRVpXougeZSeJOpVQHIpKGGD2Hnt.png",
+                        "status_stok": "ada",
+                        "kategori": "minuman",
+                        "id_kantin": 6,
+                        "diskon": null,
+                        "created_at": "2023-05-03 11:10:59",
+                        "updated_at": "2023-05-03 11:11:22"
+                    }
+                }
+            ]
+        }
+    ],
+    "code": 200,
+    "status":true
+}

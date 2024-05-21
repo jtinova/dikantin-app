@@ -38,6 +38,7 @@ class MapsController extends GetxController {
     super.onInit();
     _positionStreamSubscription?.cancel();
     addPolygon();
+    determinePosition();
   }
 
   @override
@@ -87,6 +88,10 @@ class MapsController extends GetxController {
     // When we reach here, permissions are granted and we can
     // continue accessing the position of the device.
     return await Geolocator.getCurrentPosition();
+  }
+
+  Future<bool> isLocationServiceEnabled() async {
+    return await Geolocator.isLocationServiceEnabled();
   }
 
   Future<void> startLocationStreaming() async {
@@ -187,13 +192,25 @@ class MapsController extends GetxController {
   }
 
   bool _pointInPolygon(LatLng point, List<LatLng> polygon) {
-    int intersectCount = 0;
-    for (int j = 0; j < polygon.length - 1; j++) {
-      if (_rayCastIntersect(point, polygon[j], polygon[j + 1])) {
-        intersectCount++;
+    bool isInside = false;
+    int i, j = polygon.length - 1;
+
+    for (i = 0; i < polygon.length; i++) {
+      if ((polygon[i].latitude < point.latitude &&
+              polygon[j].latitude >= point.latitude ||
+          polygon[j].latitude < point.latitude &&
+              polygon[i].latitude >= point.latitude)) {
+        if (polygon[i].longitude +
+                (point.latitude - polygon[i].latitude) /
+                    (polygon[j].latitude - polygon[i].latitude) *
+                    (polygon[j].longitude - polygon[i].longitude) <
+            point.longitude) {
+          isInside = !isInside;
+        }
       }
+      j = i;
     }
-    return (intersectCount % 2) == 1;
+    return isInside;
   }
 
   bool _rayCastIntersect(LatLng point, LatLng vertA, LatLng vertB) {

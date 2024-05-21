@@ -182,7 +182,7 @@ class _KonfirmasikurirState extends State<Konfirmasikurir> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      SelectableText(
+                                      Text(
                                         "No. Telepon",
                                         style: GoogleFonts.poppins(
                                             textStyle: TextStyle(
@@ -190,7 +190,7 @@ class _KonfirmasikurirState extends State<Konfirmasikurir> {
                                                 color: Colors.black,
                                                 fontWeight: FontWeight.normal)),
                                       ),
-                                      Text(
+                                      SelectableText(
                                         orderData.transaksi!.noTelepon ?? '',
                                         style: GoogleFonts.poppins(
                                             textStyle: TextStyle(

@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../data/models/version_model.dart';
 import '../../../data/providers/authKurir_provider.dart';
+import '../../../data/providers/menu_provider.dart';
 import '../../../repository/ConnectivityHelper..dart';
 import '../../fcm/fcm.dart';
 
@@ -11,6 +13,8 @@ class LoginController extends GetxController {
   final count = 0.obs;
   final loginProvider = AuthProvider().obs;
   final loginKurirProvider = AuthKurirProvider().obs;
+  final menuP = MenuProvider().obs;
+  Rx<Version> version = Version().obs;
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -46,6 +50,7 @@ class LoginController extends GetxController {
   void toggleObscureText() {
     obscureText.value = !obscureText.value;
   }
+
 
   Future<void> login(String username, String password, String fcmtoken) async {
     try {

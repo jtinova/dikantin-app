@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_declarations
 
+import 'package:dikantin/app/data/models/pesanan_model.dart';
 import 'package:dikantin/app/modules/pesanan/controllers/pesanan_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -30,7 +31,8 @@ class _ProsesState extends State<Proses> {
 
     return MediaQuery(
       data: query.copyWith(
-          textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15)),
+          textScaler:
+              TextScaler.linear(query.textScaleFactor.clamp(1.0, 1.15))),
       child: RefreshIndicator(
         onRefresh: () async => await controller.loadProses(),
         child: CustomScrollView(
@@ -61,10 +63,10 @@ class _ProsesState extends State<Proses> {
             highlightColor: Color(highlightColorHex),
             child: Padding(
               padding: const EdgeInsets.all(10),
-              child: Container(
+              child: SizedBox(
                 height: mediaHeight,
                 child: ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: 5,
                     itemBuilder: (BuildContext context, index) {
@@ -87,7 +89,7 @@ class _ProsesState extends State<Proses> {
             ),
           );
         } else if (controller.pesananProses.data?.isEmpty ?? true) {
-          return Container(
+          return SizedBox(
             height: mediaHeight * 0.25,
             child: Center(
               child: Lottie.asset('assets/notList.json', repeat: true),
@@ -96,20 +98,26 @@ class _ProsesState extends State<Proses> {
         } else {
           return ListView.builder(
             itemCount: controller.pesananProses.data!.length,
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemBuilder: (BuildContext context, int index) {
               final orderData = controller.pesananProses.data![index];
-              final totalHarga = orderData.transaksi!.totalHarga ?? 0;
-              return GestureDetector(
-                onTap: () {
-                  Get.to(DetailTransaksiView(),
-                      arguments: orderData.transaksi?.kodeTr);
-                },
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      top: 10, left: 10, right: 10, bottom: 5),
-                  child: Card(
+              final totalHarga = (orderData.transaksi?.totalHarga ?? 0);
+
+              // Filter pesanan dengan detail transaksi tidak kosong
+              if (orderData.transaksi!.detailTransaksi!.isEmpty) {
+                return Container();
+              } else {
+                // Jika detail_transaksi kosong, return Container kosong
+                return GestureDetector(
+                  onTap: () {
+                    Get.to(const DetailTransaksiView(),
+                        arguments: orderData.transaksi?.kodeTr);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        top: 10, left: 10, right: 10, bottom: 5),
+                    child: Card(
                       color: Colors.white,
                       key: ValueKey(
                           orderData.transaksi?.kodeTr), // Gunakan key unik
@@ -118,7 +126,6 @@ class _ProsesState extends State<Proses> {
                             10.0), // Sesuaikan dengan radius yang diinginkan
                       ),
                       elevation: 5,
-                      // color: Colors.red,
                       child: Column(
                         children: [
                           ListTile(
@@ -126,19 +133,19 @@ class _ProsesState extends State<Proses> {
                               backgroundImage:
                                   profileController.profile.value.data?.foto !=
                                           null
-                                      // ignore: dead_code
                                       ? NetworkImage(
                                           Api.gambar +
                                               profileController
                                                   .profile.value.data!.foto!
                                                   .toString(),
                                         ) as ImageProvider<Object>
-                                      : AssetImage("assets/logo_dikantin.png"),
+                                      : const AssetImage(
+                                          "assets/logo_dikantin.png"),
                             ),
                             title: Text(
                               "#${orderData.transaksi!.kodeTr.toString()}",
                               style: GoogleFonts.poppins(
-                                  textStyle: TextStyle(
+                                  textStyle: const TextStyle(
                                       fontSize: 14,
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold)),
@@ -146,14 +153,13 @@ class _ProsesState extends State<Proses> {
                             subtitle: Text(
                               orderData.transaksi!.tanggal.toString(),
                               style: GoogleFonts.poppins(
-                                  textStyle: TextStyle(
+                                  textStyle: const TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.normal)),
                             ),
                           ),
                           Container(
-                            padding: EdgeInsets.all(10),
-                            // color: Colors.blue,
+                            padding: const EdgeInsets.all(10),
                             child: Column(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
@@ -165,7 +171,7 @@ class _ProsesState extends State<Proses> {
                                       Text(
                                         "Total Menu",
                                         style: GoogleFonts.poppins(
-                                            textStyle: TextStyle(
+                                            textStyle: const TextStyle(
                                                 fontSize: 14,
                                                 color: Colors.black,
                                                 fontWeight: FontWeight.normal)),
@@ -173,7 +179,7 @@ class _ProsesState extends State<Proses> {
                                       Text(
                                         "${orderData.transaksi!.detailTransaksi!.length.toString()} menu",
                                         style: GoogleFonts.poppins(
-                                            textStyle: TextStyle(
+                                            textStyle: const TextStyle(
                                                 fontSize: 14,
                                                 color: Colors.black,
                                                 fontWeight: FontWeight.bold)),
@@ -187,7 +193,7 @@ class _ProsesState extends State<Proses> {
                                       Text(
                                         "Total",
                                         style: GoogleFonts.poppins(
-                                            textStyle: TextStyle(
+                                            textStyle: const TextStyle(
                                                 fontSize: 14,
                                                 color: Colors.black,
                                                 fontWeight: FontWeight.normal)),
@@ -195,7 +201,7 @@ class _ProsesState extends State<Proses> {
                                       Text(
                                         totalHarga.toRupiah(),
                                         style: GoogleFonts.poppins(
-                                            textStyle: TextStyle(
+                                            textStyle: const TextStyle(
                                                 fontSize: 14,
                                                 color: Colors.black,
                                                 fontWeight: FontWeight.bold)),
@@ -218,7 +224,7 @@ class _ProsesState extends State<Proses> {
                                             ? ''
                                             : orderData.status.toString(),
                                         style: GoogleFonts.poppins(
-                                            textStyle: TextStyle(
+                                            textStyle: const TextStyle(
                                                 fontSize: 14,
                                                 color: Colors.red,
                                                 fontWeight: FontWeight.bold)),
@@ -228,9 +234,11 @@ class _ProsesState extends State<Proses> {
                                 ]),
                           )
                         ],
-                      )),
-                ),
-              );
+                      ),
+                    ),
+                  ),
+                );
+              }
             },
           );
         }

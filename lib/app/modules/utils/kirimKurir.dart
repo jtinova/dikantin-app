@@ -221,19 +221,45 @@ class _KirimKurirState extends State<KirimKurir> {
                                     ],
                                   ),
                                   SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text(
-                                    'Alamat : ${orderData.transaksi!.alamat.toString()}',
-                                    style: GoogleFonts.poppins(
-                                        textStyle: TextStyle(
-                                            fontSize: 13,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w500)),
+                                    height: 10,
                                   ),
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
+                                      Expanded(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Align(
+                                              alignment: Alignment.topLeft,
+                                              child: Text(
+                                                "Alamat : ",
+                                                style: GoogleFonts.poppins(
+                                                    textStyle: TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.w400)),
+                                              ),
+                                            ),
+                                            Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Text(
+                                                "${orderData.transaksi!.alamat.toString()}" ??
+                                                    '',
+                                                style: GoogleFonts.poppins(
+                                                    textStyle: TextStyle(
+                                                        fontSize: 12,
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.w500)),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                       ElevatedButton(
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: Color(0xFF2579FD),
@@ -301,7 +327,7 @@ class _KirimKurirState extends State<KirimKurir> {
                                                           await Future.delayed(
                                                               Duration(
                                                                   milliseconds:
-                                                                      4100));
+                                                                      2000));
 
                                                           double latitude = double
                                                               .parse(orderData

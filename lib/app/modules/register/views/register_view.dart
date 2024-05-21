@@ -1,5 +1,6 @@
 import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'package:get/get.dart';
 
@@ -16,11 +17,11 @@ class RegisterView extends GetView<RegisterController> {
 
     return MediaQuery(
       data: query.copyWith(
-          textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15)),
+        textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15),),
       child: Scaffold(
         body: Container(
           height: MediaQuery.of(context).size.height,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             image: DecorationImage(
               image: AssetImage(
                   'assets/bg.png'), // Ganti dengan path gambar latar belakang Anda
@@ -54,10 +55,10 @@ class RegisterView extends GetView<RegisterController> {
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20.0),
-                        borderSide: BorderSide(color: Colors.black),
+                        borderSide: const BorderSide(color: Colors.black),
                       ),
                       hintText: 'Masukkan nama anda',
-                      suffixIcon: Icon(
+                      suffixIcon: const Icon(
                         CarbonIcons.user_avatar,
                       ),
                     ),
@@ -76,10 +77,10 @@ class RegisterView extends GetView<RegisterController> {
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20.0),
-                        borderSide: BorderSide(color: Colors.black),
+                        borderSide: const BorderSide(color: Colors.black),
                       ),
-                      hintText: 'Masukkan Email anda',
-                      suffixIcon: Icon(
+                      hintText: 'Masukkan email Polije anda',
+                      suffixIcon: const Icon(
                         CarbonIcons.mail_all,
                       ),
                     ),
@@ -95,17 +96,17 @@ class RegisterView extends GetView<RegisterController> {
                         .phoneController, // Anda dapat mengganti controller sesuai kebutuhan
                     keyboardType: TextInputType
                         .phone, // Menentukan jenis keyboard untuk nomor telepon
-                    maxLength: 12,
+                    maxLength: 13,
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20.0),
-                        borderSide: BorderSide(color: Colors.black),
+                        borderSide: const BorderSide(color: Colors.black),
                       ),
                       hintText:
                           'Masukkan nomor telepon anda', // Ubah teks petunjuk
-                      suffixIcon: Icon(
+                      suffixIcon: const Icon(
                         Icons.phone, // Mengganti ikon ke ikon telepon
                       ),
                     ),
@@ -150,7 +151,7 @@ class RegisterView extends GetView<RegisterController> {
                         fillColor: Colors.white,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20.0),
-                          borderSide: BorderSide(color: Colors.black),
+                          borderSide: const BorderSide(color: Colors.black),
                         ),
                         hintText: 'Masukkan password anda',
                         suffixIcon: IconButton(
@@ -178,7 +179,8 @@ class RegisterView extends GetView<RegisterController> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30.0),
                         ),
-                        backgroundColor: Color.fromARGB(255, 55, 156, 211),
+                        backgroundColor:
+                            const Color.fromARGB(255, 55, 156, 211),
                       ),
                       onPressed: () async {
                         // Ambil data dari controller
@@ -186,23 +188,31 @@ class RegisterView extends GetView<RegisterController> {
                         final email = controller.emailController.text;
                         final phone = controller.phoneController.text;
                         final password = controller.passwordController.text;
-
+                        await EasyLoading.show(
+                          status: 'loading...',
+                          maskType: EasyLoadingMaskType.black,
+                        );
                         // Periksa apakah email mengandung "@student.polije.ac.id"
-                        if (!email.contains("@student.polije.ac.id") &&
-                            !email.contains("@polije.ac.id")) {
-                          // Tampilkan pesan kesalahan jika alamat email tidak valid
-                          Get.snackbar(
-                              "Error", "Harus menggunakan email Polije");
-                          return;
-                        }
+                        // if (!email.contains("@student.polije.ac.id") &&
+                        //     !email.contains("@polije.ac.id")) {
+                        //   // Tampilkan pesan kesalahan jika alamat email tidak valid
+                        //   Get.snackbar(
+                        //       "Error", "Harus menggunakan email Polije");
+                        //   EasyLoading.dismiss();
+                        //   print('EasyLoading dismiss');
+                        //   return;
+                        // }
 
                         // Panggil metode register dari RegisterProvider
                         try {
                           await controller.registerProvider
                               .register(name, email, phone, password);
-                          // Pendaftaran berhasil, tambahkan logika sesuai kebutuhan Anda
+                          EasyLoading.dismiss();
+                          print('EasyLoading dismiss');
                         } catch (e) {
                           // Penanganan kesalahan saat pendaftaran gagal
+                          EasyLoading.dismiss();
+                          print('EasyLoading dismiss');
                           print('Pendaftaran gagal: $e');
                         }
                       },
@@ -210,6 +220,7 @@ class RegisterView extends GetView<RegisterController> {
                         "Register",
                         style: TextStyle(
                           fontSize: textScaleFactor <= 1.15 ? 14 : 14,
+                          color: Colors.white,
                         ),
                       ),
                     ),
@@ -228,6 +239,10 @@ class RegisterView extends GetView<RegisterController> {
                         backgroundColor: Colors.white,
                       ),
                       onPressed: () {
+                        controller.nameController.clear();
+                        controller.emailController.clear();
+                        controller.phoneController.clear();
+                        controller.passwordController.clear();
                         Get.toNamed('/login');
                       },
                       child: Text(

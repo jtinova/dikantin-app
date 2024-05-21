@@ -99,9 +99,9 @@ class ProfileView extends GetView<ProfileController> {
                     onPressed: () {
                       profileController.editAlamat(
                           alamat: profileController.addressController.text,
-                          long: '54647',
-                          lat: '343',
-                          ket: 'd');
+                          long: '',
+                          lat: '',
+                          ket: '');
                       Get.back();
                     },
                     child: Text(
@@ -183,7 +183,7 @@ class ProfileView extends GetView<ProfileController> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               ElevatedButton(
-                                child: Text('Ya'),
+                                child: Text('Ya', style: TextStyle(color: Colors.white),),
                                 onPressed: () {
                                   profileController.logout();
                                 },
@@ -413,7 +413,8 @@ class ProfileView extends GetView<ProfileController> {
                       ..text =
                           profileController.profile.value.data?.noTelepon ?? '',
                     keyboardType: TextInputType.number,
-                    maxLength: 12,
+                    autocorrect: false,
+                    maxLength: 13,
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.symmetric(
                           vertical: 10.0, horizontal: 10.0),

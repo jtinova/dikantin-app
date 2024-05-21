@@ -1,7 +1,5 @@
 // ignore_for_file: unused_import, unnecessary_null_comparison
 
-import 'dart:ffi';
-
 import 'package:dikantin/app/data/models/search_model.dart';
 import 'package:dikantin/app/data/providers/riwayat_provider.dart';
 // import 'package:dikantin/app/data/models/riwayat_model.dart';

@@ -105,6 +105,10 @@ class _MakananState extends State<Makanan> {
                       homeController.catatanController
                           .clear(); // Tutup BottomSheet
                     },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(Colors
+                          .blue), // Mengatur warna latar belakang menjadi biru
+                    ),
                     child: Text(
                       'Masukkan Keranjang',
                       style: GoogleFonts.poppins(
@@ -293,7 +297,7 @@ class _MakananState extends State<Makanan> {
                                             MainAxisAlignment.spaceEvenly,
                                         children: [
                                           Text(
-                                            maxLines: 3,
+                                            maxLines: 2,
                                             overflow: TextOverflow.ellipsis,
                                             menuData.nama ?? '',
                                             style: TextStyle(
