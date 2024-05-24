@@ -56,9 +56,6 @@ class _ProsesState extends State<Proses> {
     final mediaHeight =
         MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
     return Container(
-      decoration: const BoxDecoration(
-        color: Color.fromARGB(255, 250, 250, 250),
-      ),
       child: Obx(() {
         if (controller.isLoading.value) {
           return Shimmer.fromColors(
@@ -93,7 +90,7 @@ class _ProsesState extends State<Proses> {
           );
         } else if (controller.pesananProses.data?.isEmpty ?? true) {
           return SizedBox(
-            height: mediaHeight * 0.25,
+            height: mediaHeight * 0.40,
             child: Center(
               child: Lottie.asset('assets/notList.json', repeat: true),
             ),

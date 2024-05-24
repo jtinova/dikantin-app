@@ -54,9 +54,6 @@ class _KirimState extends State<Kirim> {
     final mediaHeight =
         MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
     return Container(
-      decoration: BoxDecoration(
-        color: Color.fromARGB(255, 250, 250, 250),
-        ),
       child: Obx(() {
         if (controller.isLoading.value) {
           return Shimmer.fromColors(
