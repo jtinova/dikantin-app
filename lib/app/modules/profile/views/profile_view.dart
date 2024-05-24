@@ -35,10 +35,10 @@ class ProfileView extends GetView<ProfileController> {
                     hintText: 'Tolong Inputkan alamat dengan lengkap',
                     filled: true,
                     fillColor: Colors.grey[200], // Atur warna latar belakang
-                    hintStyle: TextStyle(
+                    hintStyle: const TextStyle(
                         color: Colors.black54,
                         fontSize: 12), // Atur warna teks hintText
-                    contentPadding: EdgeInsets.symmetric(
+                    contentPadding: const EdgeInsets.symmetric(
                         vertical: 30.0,
                         horizontal: 15.0), // Sesuaikan nilai vertical
                     border: OutlineInputBorder(
@@ -56,7 +56,7 @@ class ProfileView extends GetView<ProfileController> {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 5,
               ),
               Row(
@@ -64,7 +64,7 @@ class ProfileView extends GetView<ProfileController> {
                 children: [
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF2579FD),
+                      backgroundColor: const Color(0xFF2579FD),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -81,7 +81,7 @@ class ProfileView extends GetView<ProfileController> {
                     child: Text(
                       'Lokasi saat ini',
                       style: GoogleFonts.poppins(
-                        textStyle: TextStyle(
+                        textStyle: const TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -91,7 +91,7 @@ class ProfileView extends GetView<ProfileController> {
                   ),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF2579FD),
+                      backgroundColor: const Color(0xFF2579FD),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -107,7 +107,7 @@ class ProfileView extends GetView<ProfileController> {
                     child: Text(
                       'Simpan',
                       style: GoogleFonts.poppins(
-                        textStyle: TextStyle(
+                        textStyle: const TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -125,7 +125,8 @@ class ProfileView extends GetView<ProfileController> {
 
     final myAppbar = AppBar(
       centerTitle: true,
-      title: Text(
+      automaticallyImplyLeading: false,
+      title: const Text(
         "Edit Profile",
         style: TextStyle(
           fontSize: 20,
@@ -141,12 +142,12 @@ class ProfileView extends GetView<ProfileController> {
               color: Colors.blue,
               borderRadius: BorderRadius.circular(8.0),
             ),
-            padding: EdgeInsets.symmetric(horizontal: 8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
             width: 40.0,
             height: 40.0,
             child: Center(
               child: IconButton(
-                icon: Icon(
+                icon: const Icon(
                   Icons.logout,
                   size: 17.0,
                   color: Colors.white,
@@ -165,8 +166,8 @@ class ProfileView extends GetView<ProfileController> {
                               height: 100.0,
                               fit: BoxFit.cover,
                             ),
-                            SizedBox(height: 20),
-                            Center(
+                            const SizedBox(height: 20),
+                            const Center(
                               child: Text(
                                 "Anda Akan Logout ?",
                                 style: TextStyle(
@@ -183,7 +184,6 @@ class ProfileView extends GetView<ProfileController> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               ElevatedButton(
-                                child: Text('Ya', style: TextStyle(color: Colors.white),),
                                 onPressed: () {
                                   profileController.logout();
                                 },
@@ -193,10 +193,13 @@ class ProfileView extends GetView<ProfileController> {
                                   ),
                                   backgroundColor: Colors.green,
                                 ),
+                                child: const Text(
+                                  'Ya',
+                                  style: TextStyle(color: Colors.white),
+                                ),
                               ),
-                              SizedBox(width: 8),
+                              const SizedBox(width: 8),
                               ElevatedButton(
-                                child: Text('Tidak'),
                                 onPressed: () {
                                   Get.back();
                                 },
@@ -205,6 +208,10 @@ class ProfileView extends GetView<ProfileController> {
                                     borderRadius: BorderRadius.circular(10.0),
                                   ),
                                   backgroundColor: Colors.red,
+                                ),
+                                child: const Text(
+                                  'Tidak',
+                                  style: TextStyle(color: Colors.white),
                                 ),
                               ),
                             ],
@@ -230,14 +237,15 @@ class ProfileView extends GetView<ProfileController> {
 
     return MediaQuery(
       data: query.copyWith(
-          textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15)),
+          textScaler:
+              TextScaler.linear(query.textScaleFactor.clamp(1.0, 1.15))),
       child: Scaffold(
         appBar: myAppbar,
         body: SingleChildScrollView(
           child: Column(
             children: [
               Center(
-                child: Container(
+                child: SizedBox(
                   width: 120.0,
                   height: 120.0,
                   child: Stack(
@@ -247,27 +255,28 @@ class ProfileView extends GetView<ProfileController> {
                         () => CircleAvatar(
                           radius: 60.0,
                           backgroundColor: Colors.transparent,
-                          backgroundImage:
-                              profileController.profile.value.data?.foto != null
-                                  // ignore: dead_code
-                                  ? NetworkImage(
-                                      Api.gambar +
-                                          profileController
-                                              .profile.value.data!.foto!
-                                              .toString(),
-                                    ) as ImageProvider<Object>
-                                  : AssetImage("assets/logo_dikantin.png"),
+                          backgroundImage: profileController
+                                      .profile.value.data?.foto !=
+                                  null
+                              // ignore: dead_code
+                              ? NetworkImage(
+                                  Api.gambar +
+                                      profileController
+                                          .profile.value.data!.foto!
+                                          .toString(),
+                                ) as ImageProvider<Object>
+                              : const AssetImage("assets/logo_dikantin.png"),
                         ),
                       ),
                       Container(
                         width: 30.0,
                         height: 30.0,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           shape: BoxShape.circle,
                           color: Colors.blue,
                         ),
                         child: IconButton(
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.edit,
                             size: 16.0,
                             color: Colors.white,
@@ -282,10 +291,10 @@ class ProfileView extends GetView<ProfileController> {
                   ),
                 ),
               ),
-              Align(
+              const Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 40, top: 20, right: 20),
+                  padding: EdgeInsets.only(left: 40, top: 20, right: 20),
                   child: Row(
                     children: [
                       Text(
@@ -311,29 +320,29 @@ class ProfileView extends GetView<ProfileController> {
                     controller: profileController.fullNameController
                       ..text = profileController.profile.value.data?.nama ?? '',
                     decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(
+                      contentPadding: const EdgeInsets.symmetric(
                           vertical: 10.0, horizontal: 10.0),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.black),
+                        borderSide: const BorderSide(color: Colors.black),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                            color: const Color.fromARGB(255, 126, 70, 70)),
+                        borderSide: const BorderSide(
+                            color: Color.fromARGB(255, 126, 70, 70)),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.blue),
+                        borderSide: const BorderSide(color: Colors.blue),
                       ),
                     ),
                   ),
                 ),
               ),
-              Align(
+              const Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 40, top: 20, right: 20),
+                  padding: EdgeInsets.only(left: 40, top: 20, right: 20),
                   child: Row(
                     children: [
                       Text(
@@ -360,22 +369,22 @@ class ProfileView extends GetView<ProfileController> {
                       ..text =
                           profileController.profile.value.data?.email ?? '',
                     decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(
+                      contentPadding: const EdgeInsets.symmetric(
                           vertical: 10.0, horizontal: 10.0),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(
                             10.0), // Menentukan radius untuk membuat bentuk rounded
-                        borderSide: BorderSide(
+                        borderSide: const BorderSide(
                             color:
                                 Colors.black), // Menentukan warna garis pinggir
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.black),
+                        borderSide: const BorderSide(color: Colors.black),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
+                        borderSide: const BorderSide(
                             color: Colors
                                 .blue), // Menentukan warna garis pinggir saat fokus
                       ),
@@ -383,10 +392,10 @@ class ProfileView extends GetView<ProfileController> {
                   ),
                 ),
               ),
-              Align(
+              const Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 40, top: 20, right: 20),
+                  padding: EdgeInsets.only(left: 40, top: 20, right: 20),
                   child: Row(
                     children: [
                       Text(
@@ -416,22 +425,22 @@ class ProfileView extends GetView<ProfileController> {
                     autocorrect: false,
                     maxLength: 13,
                     decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(
+                      contentPadding: const EdgeInsets.symmetric(
                           vertical: 10.0, horizontal: 10.0),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(
                             10.0), // Menentukan radius untuk membuat bentuk rounded
-                        borderSide: BorderSide(
+                        borderSide: const BorderSide(
                             color:
                                 Colors.black), // Menentukan warna garis pinggir
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.black),
+                        borderSide: const BorderSide(color: Colors.black),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
+                        borderSide: const BorderSide(
                             color: Colors
                                 .blue), // Menentukan warna garis pinggir saat fokus
                       ),
@@ -445,7 +454,7 @@ class ProfileView extends GetView<ProfileController> {
                   padding: const EdgeInsets.only(left: 40, top: 20, right: 20),
                   child: Row(
                     children: [
-                      Text(
+                      const Text(
                         "Alamat",
                         style: TextStyle(
                           color: Colors.black,
@@ -453,7 +462,7 @@ class ProfileView extends GetView<ProfileController> {
                           fontSize: 12,
                         ),
                       ),
-                      Spacer(),
+                      const Spacer(),
                       GestureDetector(
                         onTap: () {
                           // addressBottomsheet(context);
@@ -464,11 +473,11 @@ class ProfileView extends GetView<ProfileController> {
                             keterangan:
                                 profileController.profile.value.data?.ket ?? '',
                             initialSelectedValue: orderController
-                                    .unit.value.data!.first?.namaGedung ??
+                                    .unit.value.data!.first.namaGedung ??
                                 'pilih Gedung',
                           ));
                         },
-                        child: Icon(
+                        child: const Icon(
                           Icons.edit,
                           size: 24.0,
                           color: Colors.blue,
@@ -493,10 +502,10 @@ class ProfileView extends GetView<ProfileController> {
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: Colors.grey[200], // Atur warna latar belakang
-                      hintStyle: TextStyle(
+                      hintStyle: const TextStyle(
                           color: Colors.black54,
                           fontSize: 12), // Atur warna teks hintText
-                      contentPadding: EdgeInsets.symmetric(
+                      contentPadding: const EdgeInsets.symmetric(
                           vertical: 30.0,
                           horizontal: 15.0), // Sesuaikan nilai vertical
                       border: OutlineInputBorder(
@@ -515,7 +524,7 @@ class ProfileView extends GetView<ProfileController> {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               ElevatedButton.icon(

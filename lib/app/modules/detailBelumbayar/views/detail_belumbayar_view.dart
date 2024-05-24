@@ -32,11 +32,11 @@ class DetailBelumbayarView extends GetView<DetailBelumbayarController> {
     }
     final DetailBelumbayarController controller =
         Get.put(DetailBelumbayarController());
-        final transaksi = orderData.transaksi;
-        final totalHarga = transaksi!.totalHarga ?? 0;
-        final totalBayar = transaksi.totalBayar ?? 0;
-        final kembalian = transaksi.kembalian ?? 0;
-        final detailTransaksiList = transaksi.detailTransaksi ?? [];
+    final transaksi = orderData.transaksi;
+    final totalHarga = transaksi!.totalHarga ?? 0;
+    final totalBayar = transaksi.totalBayar ?? 0;
+    final kembalian = transaksi.kembalian ?? 0;
+    final detailTransaksiList = transaksi.detailTransaksi ?? [];
     final query = MediaQuery.of(context);
     return MediaQuery(
       data: query.copyWith(
@@ -374,86 +374,106 @@ class DetailBelumbayarView extends GetView<DetailBelumbayarController> {
                                           ),
                                           if (detailTransaksi.statusKonfirm ==
                                               "menunggu")
-                                              ElevatedButton(
-                                                onPressed: () {
-                                                  showDialog(
-                                                    context: context,
-                                                    builder: (BuildContext context) {
-                                                      return AlertDialog(
-                                                        title: const Text(
-                                                          "Konfirmasi",
-                                                          style: TextStyle(
-                                                            fontSize: 18,
-                                                            fontWeight: FontWeight.bold,
-                                                            color: Colors.black,
-                                                          ),
+                                            ElevatedButton(
+                                              onPressed: () {
+                                                showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return AlertDialog(
+                                                      title: const Text(
+                                                        "Konfirmasi",
+                                                        style: TextStyle(
+                                                          fontSize: 18,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.black,
                                                         ),
-                                                        content: const Text(
-                                                          "Apakah Anda yakin ingin membatalkan produk ini?",
-                                                          style: TextStyle(
-                                                            fontSize: 16,
-                                                            color: Colors.black,
-                                                          ),
+                                                      ),
+                                                      content: const Text(
+                                                        "Apakah Anda yakin ingin membatalkan produk ini?",
+                                                        style: TextStyle(
+                                                          fontSize: 16,
+                                                          color: Colors.black,
                                                         ),
-                                                        actions: [
-                                                          TextButton(
-                                                            onPressed: () {
-                                                              Navigator.of(context).pop();
-                                                            },
-                                                            child: const Text(
-                                                              "Tidak",
-                                                              style: TextStyle(
-                                                                fontSize: 16,
-                                                                fontWeight: FontWeight.bold,
-                                                                color: Colors.grey,
-                                                              ),
+                                                      ),
+                                                      actions: [
+                                                        TextButton(
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                          child: const Text(
+                                                            "Tidak",
+                                                            style: TextStyle(
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color:
+                                                                  Colors.grey,
                                                             ),
                                                           ),
-                                                          TextButton(
-                                                            onPressed: () async {
-                                                              // Lakukan aksi pembatalan produk di sini
-                                                              await EasyLoading.show(
-                                                                status: 'loading...',
-                                                                maskType: EasyLoadingMaskType.black,
-                                                              );
-                                                              controller.cancelProduct(transaksi.kodeTr.toString(),
-                                                                  detailTransaksi.kodeMenu.toString());
-                                                              EasyLoading.dismiss();
-                                                              refreshData();
-                                                              Navigator.of(context).pop();
-                                                              Get.snackbar('Success', 'Berhasil dibatalkan');
-                                                            },
-                                                            child: const Text(
-                                                              "Ya",
-                                                              style: TextStyle(
-                                                                fontSize: 16,
-                                                                fontWeight: FontWeight.bold,
-                                                                color: Colors.red,
-                                                              ),
+                                                        ),
+                                                        TextButton(
+                                                          onPressed: () async {
+                                                            // Lakukan aksi pembatalan produk di sini
+                                                            await EasyLoading
+                                                                .show(
+                                                              status:
+                                                                  'loading...',
+                                                              maskType:
+                                                                  EasyLoadingMaskType
+                                                                      .black,
+                                                            );
+                                                            controller.cancelProduct(
+                                                                transaksi.kodeTr
+                                                                    .toString(),
+                                                                detailTransaksi
+                                                                    .kodeMenu
+                                                                    .toString());
+                                                            EasyLoading
+                                                                .dismiss();
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                          child: const Text(
+                                                            "Ya",
+                                                            style: TextStyle(
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color: Colors.red,
                                                             ),
                                                           ),
-                                                        ],
-                                                      );
-                                                    },
-                                                  );
-                                                },
-                                                style: ElevatedButton.styleFrom(
-                                                  backgroundColor: Colors.red,
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(8.0),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors.red,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          8.0),
+                                                ),
+                                              ),
+                                              child: Text(
+                                                'Batalkan',
+                                                style: GoogleFonts.poppins(
+                                                  textStyle: const TextStyle(
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Colors.white,
                                                   ),
                                                 ),
-                                                child: Text(
-                                                  'Batalkan',
-                                                  style: GoogleFonts.poppins(
-                                                    textStyle: const TextStyle(
-                                                      fontSize: 12,
-                                                      fontWeight: FontWeight.w600,
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
-                                                ),
-                                              )
+                                              ),
+                                            )
                                         ],
                                       ),
                                       Divider(
@@ -737,10 +757,4 @@ class DetailBelumbayarView extends GetView<DetailBelumbayarController> {
       ),
     );
   }
-}
-
-void refreshData() {
-// Menggunakan setState untuk merefresh tampilan setelah produk dibatalkan
-Get.find<PesananController>().refreshPesanan();
-Get.back();
 }
