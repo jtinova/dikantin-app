@@ -22,6 +22,7 @@ class PesananView extends GetView<PesananController> {
     final myAppbar = AppBar(
       elevation: 5, // Menghilangkan shadow di bawah AppBar
       backgroundColor: Colors.white,
+      automaticallyImplyLeading: false,
       actions: [
         Center(
           child: Padding(
@@ -29,7 +30,7 @@ class PesananView extends GetView<PesananController> {
             child: Text(
               "Pesanan Saya ",
               style: GoogleFonts.poppins(
-                  textStyle: TextStyle(
+                  textStyle: const TextStyle(
                       fontSize: 20,
                       color: Colors.black,
                       fontWeight: FontWeight.w600)),
@@ -38,7 +39,7 @@ class PesananView extends GetView<PesananController> {
         ),
       ],
       title: Container(
-        padding: EdgeInsets.fromLTRB(0, 5, 10, 0),
+        padding: const EdgeInsets.fromLTRB(0, 5, 10, 0),
         child: Image.asset(
           'assets/logo_dikantin.png',
           height: 90, // Sesuaikan dengan tinggi yang Anda inginkan
@@ -53,24 +54,29 @@ class PesananView extends GetView<PesananController> {
           tabs: [
             Tab(child: Obx(() {
               final pesananProses = controller.pesananProses.data ?? [];
-              final jumlahTransaksi = pesananProses.where((pesanan) => pesanan.transaksi!.detailTransaksi!.isNotEmpty).length;
-    
+              final jumlahTransaksi = pesananProses
+                  .where((pesanan) =>
+                      pesanan.transaksi!.detailTransaksi!.isNotEmpty)
+                  .length;
+              final showBadge = pesananController.orderProses.isNotEmpty &&
+                  jumlahTransaksi != 0;
+
               return badges.Badge(
-                showBadge: (pesananController.orderProses.isNotEmpty ?? true),
-                badgeAnimation: badges.BadgeAnimation.slide(),
+                showBadge: showBadge,
+                badgeAnimation: const badges.BadgeAnimation.slide(),
                 badgeContent: Text(
                   jumlahTransaksi.toString(),
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 10,
                   ),
                 ),
                 position: badges.BadgePosition.topEnd(top: -10, end: -15),
-                badgeStyle: badges.BadgeStyle(
+                badgeStyle: const badges.BadgeStyle(
                   shape: badges.BadgeShape.circle,
                   badgeColor: Colors.orange,
                 ),
-                child: Text(
+                child: const Text(
                   "Diproses",
                   style: TextStyle(
                     fontSize: 14,
@@ -82,20 +88,20 @@ class PesananView extends GetView<PesananController> {
             Tab(child: Obx(() {
               return badges.Badge(
                 showBadge: (pesananController.orderDikirim.isNotEmpty ?? true),
-                badgeAnimation: badges.BadgeAnimation.slide(),
+                badgeAnimation: const badges.BadgeAnimation.slide(),
                 badgeContent: Text(
                   (pesananController.orderDikirim.length ?? 0).toString(),
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 10,
                   ),
                 ),
                 position: badges.BadgePosition.topEnd(top: -10, end: -15),
-                badgeStyle: badges.BadgeStyle(
+                badgeStyle: const badges.BadgeStyle(
                   shape: badges.BadgeShape.circle,
                   badgeColor: Colors.orange,
                 ),
-                child: Text(
+                child: const Text(
                   "Dikirim",
                   style: TextStyle(
                     fontSize: 14,
@@ -105,22 +111,30 @@ class PesananView extends GetView<PesananController> {
               );
             })),
             Tab(child: Obx(() {
+              final pesananBelumBayar = controller.belumbayar.data ?? [];
+              final jumlahTransaksi = pesananBelumBayar
+                  .where((pesanan) =>
+                      pesanan.transaksi!.detailTransaksi!.isNotEmpty)
+                  .length;
+              final showBadge = pesananController.belumBayar.isNotEmpty &&
+                  jumlahTransaksi != 0;
+
               return badges.Badge(
-                showBadge: (pesananController.belumBayar.isNotEmpty ?? true),
-                badgeAnimation: badges.BadgeAnimation.slide(),
+                showBadge: showBadge,
+                badgeAnimation: const badges.BadgeAnimation.slide(),
                 badgeContent: Text(
-                  (pesananController.belumBayar.length ?? 0).toString(),
-                  style: TextStyle(
+                  jumlahTransaksi.toString(),
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 10,
                   ),
                 ),
                 position: badges.BadgePosition.topEnd(top: -10, end: -15),
-                badgeStyle: badges.BadgeStyle(
+                badgeStyle: const badges.BadgeStyle(
                   shape: badges.BadgeShape.circle,
                   badgeColor: Colors.orange,
                 ),
-                child: Text(
+                child: const Text(
                   "Belum bayar",
                   style: TextStyle(
                     fontSize: 14,
@@ -131,14 +145,14 @@ class PesananView extends GetView<PesananController> {
             })),
           ],
           labelStyle: GoogleFonts.poppins(
-            textStyle: TextStyle(
+            textStyle: const TextStyle(
               fontSize: 14,
               color: Colors.black,
               fontWeight: FontWeight.bold, // Font Weight untuk yang terpilih
             ),
           ),
           unselectedLabelStyle: GoogleFonts.poppins(
-            textStyle: TextStyle(
+            textStyle: const TextStyle(
               fontSize: 14,
               fontWeight:
                   FontWeight.normal, // Font Weight untuk yang tidak terpilih
@@ -149,18 +163,19 @@ class PesananView extends GetView<PesananController> {
 
     return MediaQuery(
       data: query.copyWith(
-          textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15)),
+          textScaler:
+              TextScaler.linear(query.textScaleFactor.clamp(1.0, 1.15))),
       child: DefaultTabController(
         length: 3,
         child: Scaffold(
             appBar: myAppbar,
             body: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.white,
               ),
               child: TabBarView(
                   controller: pesananController.tabController,
-                  children: [Proses(), Kirim(), belumbayar()]),
+                  children: const [Proses(), Kirim(), belumbayar()]),
             )),
       ),
     );

@@ -25,6 +25,7 @@ class HomeView extends GetView<HomeController> {
     final app = AppBar(
       elevation: 0, // Menghilangkan shadow di bawah AppBar
       backgroundColor: Colors.white, // Membuat AppBar transparan
+      automaticallyImplyLeading: false,
       actions: [
         Padding(
           padding: const EdgeInsets.only(right: 30.0),
@@ -90,6 +91,7 @@ class HomeView extends GetView<HomeController> {
                         // collapsedHeight: 100,
                         floating: false,
                         pinned: false,
+                        automaticallyImplyLeading: false,
                         flexibleSpace: SingleChildScrollView(
                           physics: NeverScrollableScrollPhysics(),
                           child: Container(

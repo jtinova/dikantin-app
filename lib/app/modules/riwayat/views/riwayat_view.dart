@@ -25,6 +25,7 @@ class RiwayatView extends GetView<RiwayatController> {
     final app = AppBar(
       elevation: 0, // Menghilangkan shadow di bawah AppBar
       backgroundColor: Colors.white, // Membuat AppBar transparan
+      automaticallyImplyLeading: false,
       actions: [
         Container(
           padding: EdgeInsets.fromLTRB(0, 5, 10, 0),
