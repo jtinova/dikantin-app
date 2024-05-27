@@ -1,5 +1,5 @@
 class Api {
-  static const koneksi = "https://dikantin.com/v3";
+  static const koneksi = "https://dikantin.com/api/v4";
   static const koneksi1 = "https://dikantin.com/api";
   static const gambar = "https://dikantin.com/";
   static const signUp = "$koneksi1/validate/register";
