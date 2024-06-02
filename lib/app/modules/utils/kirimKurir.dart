@@ -1,5 +1,7 @@
 import 'package:android_intent_plus/android_intent.dart';
+import 'package:dikantin/app/modules/detailPesananKurir/views/detail_pesanan_kurir_view.dart';
 import 'package:dikantin/app/modules/utils/formatDate.dart';
+import 'package:dikantin/app/modules/utils/widgets/item_pesanan_kurir.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -10,7 +12,7 @@ import '../../data/providers/services.dart';
 import '../pesananKurir/controllers/pesananKurir_controller.dart';
 
 class KirimKurir extends StatefulWidget {
-  const KirimKurir({Key? key}) : super(key: key);
+  const KirimKurir({super.key});
 
   @override
   State<KirimKurir> createState() => _KirimKurirState();
@@ -25,7 +27,8 @@ class _KirimKurirState extends State<KirimKurir> {
 
     return MediaQuery(
       data: query.copyWith(
-          textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15)),
+          textScaler:
+              TextScaler.linear(query.textScaleFactor.clamp(1.0, 1.15))),
       child: Scaffold(
         body: RefreshIndicator(
           onRefresh: () async => await controllerc.loadUntukDikirim(),
@@ -46,23 +49,23 @@ class _KirimKurirState extends State<KirimKurir> {
   Widget content(BuildContext context) {
     double textScaleFactor = MediaQuery.of(context).textScaleFactor;
 
-    final baseColorHex = 0xFFE0E0E0;
-    final highlightColorHex = 0xFFC0C0C0;
+    const baseColorHex = 0xFFE0E0E0;
+    const highlightColorHex = 0xFFC0C0C0;
     final mediaHeight =
         MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
     return Container(
       child: Obx(() {
         if (controllerc.isLoading.value) {
           return Shimmer.fromColors(
-            baseColor: Color(baseColorHex),
-            highlightColor: Color(highlightColorHex),
+            baseColor: const Color(baseColorHex),
+            highlightColor: const Color(highlightColorHex),
             child: Padding(
               padding: const EdgeInsets.all(10),
-              child: Container(
+              child: SizedBox(
                 height: mediaHeight,
                 child: ListView.builder(
                     itemCount: 5,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemBuilder: (BuildContext context, index) {
                       return Padding(
@@ -84,7 +87,7 @@ class _KirimKurirState extends State<KirimKurir> {
             ),
           );
         } else if (controllerc.pesananUntukDikirim.data?.isEmpty ?? true) {
-          return Container(
+          return SizedBox(
               height: mediaHeight * 0.40,
               child: Center(
                 child: Lottie.asset('assets/notList.json', repeat: true),
@@ -92,13 +95,108 @@ class _KirimKurirState extends State<KirimKurir> {
         } else {
           return ListView.builder(
             itemCount: controllerc.pesananUntukDikirim.data!.length,
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemBuilder: (BuildContext context, int index) {
               final orderData = controllerc.pesananUntukDikirim.data![index];
-              final alamat = orderData.transaksi!.alamat;
-              final totalHarga = orderData.transaksi!.totalHarga ?? 0;
-              return GestureDetector(
+              return ItemPesananKurir(
+                  orderData: orderData,
+                  onTap: () {
+                    Get.to(const DetailPesananKurirView(),
+                        arguments: orderData.transaksi?.kodeTr);
+                  },
+                  onButtonPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Lottie.asset(
+                                "assets/Animation_logout.json", // Ganti dengan nama file Lottie Anda
+                                width: 100.0,
+                                height: 100.0,
+                                fit: BoxFit.cover,
+                              ),
+                              const SizedBox(height: 20),
+                              Center(
+                                child: Text(
+                                  "Apakah anda yakin?",
+                                  style: TextStyle(
+                                    color: const Color(0xff3CA2D9),
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: textScaleFactor <= 1.15 ? 14 : 14,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          actions: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () async {
+                                    await controllerc.acceptedPesanan(
+                                        orderData.transaksi!.kodeTr.toString());
+                                    Get.back();
+                                    await Future.delayed(
+                                        const Duration(milliseconds: 2000));
+
+                                    double latitude = double.parse(orderData
+                                        .transaksi!.latitude
+                                        .toString()); // Replace with the actual latitude
+                                    double longitude = double.parse(orderData
+                                        .transaksi!.longitude
+                                        .toString()); // Replace with the actual longitude
+
+                                    final intent = AndroidIntent(
+                                      action: "action_view",
+                                      data: Uri.encodeFull(
+                                          "google.navigation:q=$latitude,$longitude&avoid=tf"),
+                                      package: "com.google.android.apps.maps",
+                                    );
+
+                                    intent.launch();
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    backgroundColor: Colors.green,
+                                  ),
+                                  child: const Text(
+                                    'Ya',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    Get.back();
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                  child: const Text(
+                                    'Tidak',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  });
+              /* return GestureDetector(
                 onTap: () {
                   // Get.to(DetailTransaksiView(),
                   //     arguments: orderData.transaksi?.kodeTr);
@@ -407,7 +505,7 @@ class _KirimKurirState extends State<KirimKurir> {
                         ],
                       )),
                 ),
-              );
+              ); */
             },
           );
         }

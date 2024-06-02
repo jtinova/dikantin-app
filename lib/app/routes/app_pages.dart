@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 
 import '../modules/detailBelumbayar/bindings/detail_belumbayar_binding.dart';
 import '../modules/detailBelumbayar/views/detail_belumbayar_view.dart';
+import '../modules/detailPesananKurir/bindings/detail_pesanan_kurir_binding.dart';
+import '../modules/detailPesananKurir/views/detail_pesanan_kurir_view.dart';
 import '../modules/detailTransaksi/bindings/detail_transaksi_binding.dart';
 import '../modules/detailTransaksi/views/detail_transaksi_view.dart';
 import '../modules/forgotPassword/bindings/forgot_password_binding.dart';
@@ -166,6 +168,11 @@ class AppPages {
       name: _Paths.DETAIL_BELUMBAYAR,
       page: () => const DetailBelumbayarView(),
       binding: DetailBelumbayarBinding(),
+    ),
+    GetPage(
+      name: _Paths.DETAIL_PESANAN_KURIR,
+      page: () => const DetailPesananKurirView(),
+      binding: DetailPesananKurirBinding(),
     ),
   ];
 }

@@ -1,4 +1,6 @@
+import 'package:dikantin/app/modules/detailPesananKurir/views/detail_pesanan_kurir_view.dart';
 import 'package:dikantin/app/modules/utils/formatDate.dart';
+import 'package:dikantin/app/modules/utils/widgets/item_riwayat_pesanan_kurir.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -114,7 +116,7 @@ class RiwayatKurirView extends GetView<RiwayatKurirController> {
         } else {
           return ListView.builder(
             itemCount: controllerc.loadRiwayat.data!.length,
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemBuilder: (BuildContext context, int index) {
               final orderData = controllerc.loadRiwayat.data![index];
@@ -126,7 +128,17 @@ class RiwayatKurirView extends GetView<RiwayatKurirController> {
 
               // Jika status 'Selesai', maka item tidak ditampilkan
               if (isStatusSelesai) {
-                return GestureDetector(
+                return ItemRiwayatPesananKurir(
+                    orderData: orderData,
+                    onTap: () {
+                      Get.to(const DetailPesananKurirView(),
+                          arguments: orderData.transaksi?.kodeTr);
+                    },
+                    onButtonPressed: () {
+                      Get.to(const DetailPesananKurirView(),
+                          arguments: orderData.transaksi?.kodeTr);
+                    });
+                /* return GestureDetector(
                   onTap: () {
                     // Get.to(DetailTransaksiView(),
                     //     arguments: orderData.transaksi?.kodeTr);
@@ -348,7 +360,7 @@ class RiwayatKurirView extends GetView<RiwayatKurirController> {
                           ],
                         )),
                   ),
-                );
+                ); */
               } else {
                 return Container();
               }

@@ -1,4 +1,6 @@
+import 'package:dikantin/app/modules/detailPesananKurir/views/detail_pesanan_kurir_view.dart';
 import 'package:dikantin/app/modules/utils/formatDate.dart';
+import 'package:dikantin/app/modules/utils/widgets/item_konfirmasi_pesanan_kurir.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -103,7 +105,20 @@ class _KonfirmasikurirState extends State<Konfirmasikurir> {
               if (isStatusSelesai) {
                 return Container(); // Container kosong untuk item yang disembunyikan
               }
-              return GestureDetector(
+              return ItemKonfirmasiPesananKurir(
+                  orderData: orderData,
+                  onTap: () {
+                    Get.to(const DetailPesananKurirView(),
+                        arguments: orderData.transaksi?.kodeTr);
+                  },
+                  onButtonPressed: (){
+                    controller.scanQrCode(
+                      orderData
+                          .transaksi!.kodeTr
+                          .toString());
+                  }
+                );
+              /* return GestureDetector(
                 onTap: () {
                   // Get.to(DetailTransaksiView(),
                   //     arguments: orderData.transaksi?.kodeTr);
@@ -398,7 +413,7 @@ class _KonfirmasikurirState extends State<Konfirmasikurir> {
                         ],
                       )),
                 ),
-              );
+              ); */
             },
           );
         }

@@ -62,6 +62,7 @@ class Transaksi {
   dynamic idKasir;
   int? totalBayar;
   int? totalHarga;
+  int? totalKurir;
   int? kembalian;
   String? statusPengiriman;
   dynamic buktiPengiriman;
@@ -96,6 +97,7 @@ class Transaksi {
       this.idKasir,
       this.totalBayar,
       this.totalHarga,
+      this.totalKurir,
       this.kembalian,
       this.statusPengiriman,
       this.buktiPengiriman,
@@ -130,6 +132,7 @@ class Transaksi {
     idKasir = json['id_kasir'];
     totalBayar = json['total_bayar'];
     totalHarga = json['total_harga'];
+    totalKurir = json['total_biaya_kurir'];
     kembalian = json['kembalian'];
     statusPengiriman = json['status_pengiriman'];
     buktiPengiriman = json['bukti_pengiriman'];
@@ -171,6 +174,7 @@ class Transaksi {
     data['id_kasir'] = idKasir;
     data['total_bayar'] = totalBayar;
     data['total_harga'] = totalHarga;
+    data['total_biaya _kurir'] = totalKurir;
     data['kembalian'] = kembalian;
     data['status_pengiriman'] = statusPengiriman;
     data['bukti_pengiriman'] = buktiPengiriman;

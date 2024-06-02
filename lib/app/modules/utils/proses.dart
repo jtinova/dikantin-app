@@ -103,6 +103,8 @@ class _ProsesState extends State<Proses> {
             itemBuilder: (BuildContext context, int index) {
               final orderData = controller.pesananProses.data![index];
               final totalHarga = orderData.transaksi?.totalHarga ?? 0;
+              final biayaKirim = orderData.transaksi?.totalKurir ?? 0;
+              final totalTransaksi = totalHarga + biayaKirim;
               final waktuPemesanan =
                   formatDateTime(orderData.transaksi!.tanggal.toString());
 
@@ -339,7 +341,7 @@ class _ProsesState extends State<Proses> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        totalHarga.toRupiah(),
+                                        totalTransaksi.toRupiah(),
                                         style: GoogleFonts.poppins(
                                             textStyle: const TextStyle(
                                                 fontSize: 14,
