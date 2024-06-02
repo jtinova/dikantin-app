@@ -131,11 +131,12 @@ class PesananProvider extends GetxController {
 
     if (response.statusCode == 200) {
       // Berhasil membatalkan pesanan
-      print('Pesanan berhasil dibatalkan');
+      print('Pesanan berhasil dikonfirmasi untuk diantar');
     } else {
       // Gagal membatalkan pesanan
-      print('Gagal membatalkan pesanan. Status code: ${response.statusCode}');
-      throw Exception('Gagal membatalkan pesanan');
+      print(
+          'Gagal konfirmasi untuk diantar pesanan. Status code: ${response.statusCode}');
+      throw Exception('Gagal konfirmasi untuk diantar pesanan');
     }
   }
 

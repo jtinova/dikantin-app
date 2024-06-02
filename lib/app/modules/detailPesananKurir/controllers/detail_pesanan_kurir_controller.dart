@@ -1,16 +1,12 @@
+import 'package:android_intent_plus/android_intent.dart';
+import 'package:dikantin/app/data/models/pesanan_kirim_model.dart';
+import 'package:dikantin/app/data/providers/pesanan_provider.dart';
+import 'package:dikantin/app/modules/pesananKurir/controllers/pesananKurir_controller.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:get/get.dart';
-import 'package:flutter/material.dart';
 
-import '../../../data/models/pesanan_kirim_model.dart';
-import '../../../data/providers/pesanan_provider.dart';
-
-class PesananKurirController extends GetxController
-    with GetTickerProviderStateMixin {
-  //TODO: Implement PesananController
-  late AnimationController _controller;
-  late TabController tabController; // Tambahkan variabel TabController
-  final count = 0.obs;
+class DetailPesananKurirController extends GetxController {
   final isLoading = true.obs; // Define RxBool for loading state
   final pesananProvider = PesananProvider().obs; // Instantiate your provider
   late PesananKirim pesananUntukDikirim = PesananKirim();
@@ -19,51 +15,68 @@ class PesananKurirController extends GetxController
   var orderUntukDikirim = <DataPesananKirim>[].obs;
   var orderKonfirmasi = <DataPesananKirim>[].obs;
   var riwayatKurir = <DataPesananKirim>[].obs;
+  var pesananData = Rxn<DataPesananKirim>();
+  var detailPesanan = <DataPesananKirim>[].obs;
   String scannedQrCode = '';
 
   @override
   void onInit() {
     super.onInit();
-    _controller = AnimationController(
-      vsync: this,
-      duration: Duration(seconds: 1),
-    );
-    tabController = TabController(length: 2, vsync: this);
-    tabController.addListener(_handleTabSelection);
-
     loadUntukDikirim();
     loadKonfirmasi();
     loadRiwayatKurir();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
+  Future<void> loadAllData() async {
+    await loadUntukDikirim();
+    await loadKonfirmasi();
+    await loadRiwayatKurir();
   }
 
-  @override
-  void onClose() {
-    _controller.dispose();
-    tabController.dispose(); // Hapus TabController saat controller ditutup
+  Future<void> fecthPesanan(String kodeTr) async {
+    await loadAllData();
 
-    super.onClose();
-  }
-
-  void _handleTabSelection() async {
-    // Handle perubahan tab di sini
-    switch (tabController.index) {
-      case 0:
-        loadUntukDikirim();
-        break;
-      case 1:
-        loadKonfirmasi();
-        break;
+    // Memeriksa status konfirmasi menu dengan kodeMenu yang diberikan
+    final DataPesananKirim? order = findOrderById(kodeTr);
+    if (order != null) {
+      pesananData.value = order;
+      // Memeriksa apakah detail transaksi kosong
+      if (pesananData.value?.transaksi?.detailTransaksi?.isEmpty ?? true) {
+        Get.back();
+      }
     }
   }
 
-  void increment() => count.value++;
-  void startAnimation() {
-    _controller.forward();
+  Future<void> refreshData(String kodeTr) async {
+    try {
+      isLoading(true);
+      await fecthPesanan(kodeTr);
+      Get.find<PesananKurirController>().refreshPesanan();
+    } catch (error) {
+      // Tampilkan pesan kesalahan kepada pengguna
+      Get.snackbar("Error", "Failed to refresh data: $error");
+    } finally {
+      isLoading(false);
+    }
+  }
+
+  DataPesananKirim? detailTransaksiData(String kodeTr) {
+    // Cari pesanan di setiap kategori (proses, dikirim, diterima)
+    try {
+      // Memperoleh data pesanan terbaru
+      // Memeriksa transaksi berdasarkan kode transaksi yang diberikan
+      final DataPesananKirim? order = findOrderById(kodeTr);
+      if (order != null) {
+        detailPesanan.assignAll([order]);
+      } else {
+        // Jika transaksi tidak ditemukan, beri feedback kepada pengguna
+        Get.snackbar("Error", "Order not found");
+      }
+    } catch (error) {
+      // Tampilkan pesan kesalahan kepada pengguna
+      Get.snackbar("Error", "Failed to load order details: $error");
+    }
+    return null;
   }
 
   DataPesananKirim? findOrderById(String orderId) {
@@ -81,10 +94,16 @@ class PesananKurirController extends GetxController
       return orderDiterimaById;
     }
 
+    final riwayatKurirById = riwayatKurir
+        .firstWhereOrNull((order) => order.transaksi?.kodeTr == orderId);
+    if (riwayatKurirById != null) {
+      return riwayatKurirById;
+    }
+
     return null; // Return null jika pesanan tidak ditemukan
   }
 
-  Future<void> scanQrCode(String kode_tr) async {
+  Future<void> scanQrCode(String kodeTr) async {
     try {
       // Panggil fungsi scan QR code dari paket barcode_scanner
       scannedQrCode = await FlutterBarcodeScanner.scanBarcode(
@@ -94,21 +113,21 @@ class PesananKurirController extends GetxController
         ScanMode.QR,
       );
 
-      if (kode_tr != scannedQrCode) {
+      if (kodeTr != scannedQrCode) {
         Get.snackbar("Scan Gagal, ", "Kode Tidak Sesuai",
             snackPosition: SnackPosition.BOTTOM,
-            duration: Duration(seconds: 5),
+            duration: const Duration(seconds: 5),
             backgroundColor: Colors.red,
             colorText: Colors.white);
       }
 
-      if (scannedQrCode == kode_tr) {
+      if (scannedQrCode == kodeTr) {
         Get.snackbar("Scan Berhasil, ", "Menunggu Konfirmasi Admin",
             snackPosition: SnackPosition.BOTTOM,
-            duration: Duration(seconds: 5),
+            duration: const Duration(seconds: 5),
             backgroundColor: Colors.green,
             colorText: Colors.white);
-        await confirmKurir(kode_tr, scannedQrCode);
+        await confirmKurir(kodeTr, scannedQrCode);
       }
       // Update nilai hasil scan ke dalam variabel scannedQrCode
       // scannedQrCode.value = result ?? '';
@@ -169,7 +188,7 @@ class PesananKurirController extends GetxController
       // Refresh data setelah pembatalan pesanan berhasil
       await loadUntukDikirim();
       update();
-
+      Get.back();
       isLoading(false);
     } catch (error) {
       isLoading(false);

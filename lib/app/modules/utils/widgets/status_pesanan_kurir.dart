@@ -1,14 +1,17 @@
-import 'package:dikantin/app/data/models/pesanan_model.dart';
+import 'package:dikantin/app/data/models/pesanan_kirim_model.dart';
+import 'package:dikantin/app/modules/pesanan/controllers/pesanan_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class StatusPesanan extends StatelessWidget {
-  final DataPesanan orderData;
-  const StatusPesanan({super.key, required this.orderData});
+class StatusPesananKurir extends StatelessWidget {
+  final DataPesananKirim orderData;
+  const StatusPesananKurir({super.key, required this.orderData});
 
   @override
   Widget build(BuildContext context) {
     final statusTransaksi = orderData.status;
+    final transaksi = orderData.transaksi;
 
     return SizedBox(
       width: MediaQuery.of(context).size.width,
@@ -41,31 +44,25 @@ class StatusPesanan extends StatelessWidget {
                                 size: 20,
                                 color: Colors.white,
                               )
-                            : statusTransaksi.toString().contains('null')
+                            : statusTransaksi.toString().contains('Selesai')
                                 ? const Icon(
-                                    Icons.money_off,
+                                    Icons.check,
                                     size: 20,
                                     color: Colors.white,
                                   )
-                                : statusTransaksi.toString().contains('Selesai')
+                                : statusTransaksi
+                                        .toString()
+                                        .contains('Menunggu 2')
                                     ? const Icon(
-                                        Icons.check,
+                                        Icons.domain_verification,
                                         size: 20,
                                         color: Colors.white,
                                       )
-                                    : statusTransaksi
-                                            .toString()
-                                            .contains('Menunggu 2')
-                                        ? const Icon(
-                                            Icons.domain_verification,
-                                            size: 20,
-                                            color: Colors.white,
-                                          )
-                                        : const Icon(
-                                            Icons.delivery_dining,
-                                            size: 20,
-                                            color: Colors.white,
-                                          ),
+                                    : const Icon(
+                                        Icons.delivery_dining,
+                                        size: 20,
+                                        color: Colors.white,
+                                      ),
                       ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -83,20 +80,14 @@ class StatusPesanan extends StatelessWidget {
                           ),
                           Text(
                             statusTransaksi.toString().contains('proses')
-                                ? "Menunggu kurir"
-                                : statusTransaksi.toString().contains('null')
-                                    ? "Belum Bayar"
-                                    : statusTransaksi.toString().contains('menunggu')
-                                    ? "Pesanan sedang dimasak"
+                                ? "Konfirmasi pengantaran"
+                                : statusTransaksi.toString().contains('Selesai')
+                                    ? "Selesai"
                                     : statusTransaksi
                                             .toString()
-                                            .contains('Selesai')
-                                        ? "Selesai"
-                                        : statusTransaksi
-                                                .toString()
-                                                .contains('Menunggu 2')
-                                            ? "Sudah diantar"
-                                            : "Sedang diantar",
+                                            .contains('Menunggu 2')
+                                        ? "Proses konfirmasi admin"
+                                        : "Pengantaran",
                             style: GoogleFonts.poppins(
                               textStyle: TextStyle(
                                 fontSize: 13,

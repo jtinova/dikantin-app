@@ -15,7 +15,7 @@ import '../pesanan/controllers/pesanan_controller.dart';
 import '../profile/controllers/profile_controller.dart';
 
 class belumbayar extends StatefulWidget {
-  const belumbayar({Key? key}) : super(key: key);
+  const belumbayar({super.key});
 
   @override
   State<belumbayar> createState() => _belumbayarState();
@@ -120,7 +120,7 @@ class _belumbayarState extends State<belumbayar> {
                     width: MediaQuery.of(context).size.width,
                     child: Container(
                         margin: const EdgeInsets.only(
-                          top: 16, left: 16, right: 16, bottom: 8),
+                            top: 16, left: 16, right: 16, bottom: 8),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10.0),
                           color: Colors.white,
@@ -170,10 +170,9 @@ class _belumbayarState extends State<belumbayar> {
                                             textStyle: TextStyle(
                                                 fontSize: 11,
                                                 color: Colors.grey.shade600,
-                                                fontWeight:
-                                                    FontWeight.w400)),
+                                                fontWeight: FontWeight.w400)),
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 4,
                                       ),
                                       Text(
@@ -186,8 +185,7 @@ class _belumbayarState extends State<belumbayar> {
                                             textStyle: TextStyle(
                                                 fontSize: 13,
                                                 color: Colors.red.shade700,
-                                                fontWeight:
-                                                    FontWeight.w600)),
+                                                fontWeight: FontWeight.w600)),
                                       ),
                                     ],
                                   )
@@ -231,7 +229,7 @@ class _belumbayarState extends State<belumbayar> {
                                   ),
                                   ElevatedButton(
                                     onPressed: () {
-                                      Get.to(const DetailBelumbayarView(),
+                                      Get.to(() => const DetailTransaksiView(),
                                           arguments:
                                               orderData.transaksi?.kodeTr);
                                     },
