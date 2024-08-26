@@ -172,6 +172,7 @@ class _MakananState extends State<Makanan> {
                         onChanged: (text) {
                           controller.search(
                               text); // Trigger the search as the user types
+                          homeController.onSearchChanged(text);
                         },
                         decoration: InputDecoration.collapsed(
                           filled: true,

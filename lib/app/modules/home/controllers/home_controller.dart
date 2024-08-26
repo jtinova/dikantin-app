@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -28,7 +29,8 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
   var cartList = <Datasearch>[].obs;
   var penjualanD = <Data>[].obs;
   var rekomendasiD = <DataRekomendasi>[].obs;
-
+  final FocusNode searchFocus = FocusNode();
+  Timer? _debounce;
   var itemQuantities = <int, int>{}.obs;
   final isLoading = false.obs; // Tambahkan isLoading
   final isCashSelected = true.obs;
@@ -127,6 +129,7 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
   void onClose() {
     _controller.dispose();
     tabController.dispose();
+    _debounce?.cancel();
     super.onClose();
   }
 
@@ -184,20 +187,20 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
 
       // Check if the response status code is 200
       // if (result.code == 200) {
-        // Execute addToCart logic
-        if (!cartList.any((element) => element.idMenu == item.idMenu)) {
-          cartList.add(item);
-          itemQuantities[item.idMenu!] = 1;
-          saveNoteForMenu(item.idMenu!, catatanController.text);
-        } else {
-          addQuantity(item.idMenu!);
-        }
-        // Save or update the note for the item
-        notesMap[idMenu] = note;
+      // Execute addToCart logic
+      if (!cartList.any((element) => element.idMenu == item.idMenu)) {
+        cartList.add(item);
+        itemQuantities[item.idMenu!] = 1;
+        saveNoteForMenu(item.idMenu!, catatanController.text);
+      } else {
+        addQuantity(item.idMenu!);
+      }
+      // Save or update the note for the item
+      notesMap[idMenu] = note;
 
-        // Refresh itemQuantities and notesMap
-        itemQuantities.refresh();
-        notesMap.refresh();
+      // Refresh itemQuantities and notesMap
+      itemQuantities.refresh();
+      notesMap.refresh();
       // } else {
       //   // Show error Snackbar if the response status code is not 200
       //   Get.snackbar(
@@ -483,5 +486,18 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
       print('Gagal ambil data. Status code: ${response.statusCode}');
       throw Exception('Gagal ambil data');
     }
+  }
+
+  void onSearchChanged(String keyword) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(seconds: 1), () {
+      if (keyword.length > 3) {
+        searcher(keyword);
+      }
+    });
+  }
+
+  Future<void> searcher(String keyword) async {
+    await menuProvider.value.updateSearchFrequency(keyword);
   }
 }

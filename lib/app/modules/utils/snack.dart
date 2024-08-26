@@ -174,10 +174,12 @@ class _SnackState extends State<Snack> {
                       Expanded(
                           child: TextFormField(
                         controller: controller.searchController,
+                        focusNode: homeController.searchFocus,
                         initialValue: null,
                         onChanged: (text) {
                           controller.search(
                               text); // Trigger the search as the user types
+                          homeController.onSearchChanged(text);
                         },
                         decoration: InputDecoration.collapsed(
                           filled: true,

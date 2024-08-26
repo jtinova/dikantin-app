@@ -176,7 +176,7 @@ class MenuProvider extends GetxController {
       throw Exception('Gagal memuat data');
     }
   }
-  
+
   Future<Recommendation> fetchDataRecommendationMenu() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
@@ -307,6 +307,28 @@ class MenuProvider extends GetxController {
       return Search.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Gagal memuat data');
+    }
+  }
+
+  Future<void> updateSearchFrequency(String search_term) async {
+    final Map<String, dynamic> postData = {
+      "search_term": search_term,
+    };
+
+    final response = await http.post(
+      Uri.parse(Api.riwayatSearch),
+      body: jsonEncode(postData),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    );
+
+    if (response.statusCode == 200) {
+      print('Berhasil di update');
+    } else {
+      // Gagal membatalkan pesanan
+      print('Gagal update riwayat. Status code: ${response.statusCode}');
+      throw Exception('Gagal membatalkan pesanan');
     }
   }
 }

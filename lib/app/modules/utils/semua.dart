@@ -24,7 +24,8 @@ class _SemuaState extends State<Semua> {
     Get.bottomSheet(
       MediaQuery(
         data: MediaQuery.of(context).copyWith(
-            textScaler: TextScaler.linear(MediaQuery.of(context).textScaleFactor.clamp(1.0, 1.15))),
+            textScaler: TextScaler.linear(
+                MediaQuery.of(context).textScaleFactor.clamp(1.0, 1.15))),
         child: Container(
           height: MediaQuery.of(context).size.height,
           color: Colors.white,
@@ -167,11 +168,13 @@ class _SemuaState extends State<Semua> {
                       ),
                       Expanded(
                           child: TextFormField(
+                        focusNode: homeController.searchFocus,
                         controller: controller.searchController,
                         initialValue: null,
                         onChanged: (text) {
                           controller.search(
                               text); // Trigger the search as the user types
+                          homeController.onSearchChanged(text);
                         },
                         decoration: InputDecoration.collapsed(
                           filled: true,
