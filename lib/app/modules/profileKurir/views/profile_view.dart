@@ -3,13 +3,14 @@
 import 'package:dikantin/app/modules/utils/formatDate.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../pesananKurir/controllers/pesananKurir_controller.dart';
 import '../controllers/profile_controller.dart';
 
 class ProfileKurirView extends GetView<ProfileKurirController> {
-  ProfileKurirView({Key? key}) : super(key: key);
+  ProfileKurirView({super.key});
   final ProfileKurirController profileKurirController =
       Get.find<ProfileKurirController>();
   final PesananKurirController pesananKurirController =
@@ -23,7 +24,7 @@ class ProfileKurirView extends GetView<ProfileKurirController> {
     final myAppbar = AppBar(
       centerTitle: true,
       title: Text(
-        "Edit Profile",
+        "Profile",
         style: TextStyle(
           fontSize: 20,
           color: Colors.black,
@@ -35,7 +36,7 @@ class ProfileKurirView extends GetView<ProfileKurirController> {
           padding: const EdgeInsets.all(8.0),
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.blue,
+              color: Colors.red,
               borderRadius: BorderRadius.circular(8.0),
             ),
             padding: EdgeInsets.symmetric(horizontal: 8.0),
@@ -81,7 +82,6 @@ class ProfileKurirView extends GetView<ProfileKurirController> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               ElevatedButton(
-                                child: Text('Ya'),
                                 onPressed: () {
                                   print("logout clicked");
                                   profileKurirController.logout();
@@ -92,10 +92,15 @@ class ProfileKurirView extends GetView<ProfileKurirController> {
                                   ),
                                   backgroundColor: Colors.green,
                                 ),
+                                child: Text(
+                                  'Ya',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
                               ),
                               SizedBox(width: 8),
                               ElevatedButton(
-                                child: Text('Tidak'),
                                 onPressed: () {
                                   Navigator.pop(context);
                                 },
@@ -104,6 +109,12 @@ class ProfileKurirView extends GetView<ProfileKurirController> {
                                     borderRadius: BorderRadius.circular(10.0),
                                   ),
                                   backgroundColor: Colors.red,
+                                ),
+                                child: Text(
+                                  'Tidak',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
                             ],
@@ -129,336 +140,253 @@ class ProfileKurirView extends GetView<ProfileKurirController> {
 
     return MediaQuery(
       data: query.copyWith(
-          textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15)),
+          textScaler:
+              TextScaler.linear(query.textScaleFactor.clamp(1.0, 1.15))),
       child: Scaffold(
         appBar: myAppbar,
         backgroundColor: Colors.white,
         body: SafeArea(
           top: true,
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Expanded(
-                child: Align(
-                    alignment: AlignmentDirectional(0.00, -1.00),
-                    child: // Generated code for this Column Widget...
-                        Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 10, left: 10),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Expanded(
-                                child: Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      16, 4, 0, 4),
-                                  child: Obx(
-                                    () => Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          profileKurirController.profileKurir
-                                                  .value.data?.nama ??
-                                              '',
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  0, 4, 0, 0),
-                                          child: Text(
-                                            profileKurirController.profileKurir
-                                                    .value.data?.email ??
-                                                '',
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: textScaleFactor <= 1.15
-                                                  ? 12
-                                                  : 12,
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  0, 4, 0, 0),
-                                          child: Text(
-                                            profileKurirController.profileKurir
-                                                    .value.data?.telepon ??
-                                                '',
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 12,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Divider(
-                          height: 2,
-                          thickness: 1,
-                          color: Colors.black38,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              right: 20, left: 20, top: 15),
-                          child: Container(
-                            width: x,
-                            decoration: BoxDecoration(
-                              color: Colors.blue[300],
-                              borderRadius: BorderRadius.circular(8),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  spreadRadius: 2,
-                                  blurRadius: 7,
-                                  offset: Offset(0,
-                                      3), // changes the position of the shadow
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 8, left: 8, bottom: 8),
-                                  child: Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                      'Pendapatan Kurir',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 13),
-                                    ),
-                                  ),
-                                ),
-                                Divider(
-                                  height: 2,
-                                  thickness: 1,
-                                  color: Color.fromARGB(96, 70, 70, 70),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 30, right: 15, bottom: 15),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Align(
-                                        alignment: Alignment.centerRight,
-                                        child: Obx(() {
-                                          return Text(
-                                            controller.today.value.toRupiah(),
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 23),
-                                          );
-                                        }),
-                                      ),
-                                      Align(
-                                        alignment: Alignment.centerRight,
-                                        child: Text(
-                                          'Total Pendapatan Hari ini',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 13),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Expanded(
-                                child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0, 0, 0, 12),
-                                    child: Container(
-                                      width: 200,
-                                      decoration: BoxDecoration(
-                                        color:
-                                            Color.fromARGB(255, 255, 255, 255),
-                                        borderRadius: BorderRadius.circular(8),
-                                        // border: Border.all(
-                                        //     color: Color.fromARGB(
-                                        //         255, 167, 167, 167),
-                                        //     width: 1 // Lebar border
-                                        //     ),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.grey.withOpacity(0.5),
-                                            spreadRadius: 1,
-                                            blurRadius: 3,
-                                            offset: Offset(0,
-                                                2), // changes the position of the shadow
-                                          ),
-                                        ],
-                                      ),
-                                      child: Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            12, 12, 12, 12),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Icon(
-                                              Icons.receipt_rounded,
-                                              color: Colors.blue[600],
-                                              size: 30,
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0, 8, 0, 4),
-                                              child: Obx(
-                                                () => Text(
-                                                  pesananKurirController
-                                                      .orderUntukDikirim.length
-                                                      .toString(),
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize:
-                                                        textScaleFactor <= 1.15
-                                                            ? 14
-                                                            : 12,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Text(
-                                              'Untuk Dikirim',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize:
-                                                    textScaleFactor <= 1.15
-                                                        ? 14
-                                                        : 13,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    )),
-                              ),
-                              SizedBox(
-                                width: 13,
-                              ),
-                              Expanded(
-                                child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0, 0, 0, 12),
-                                    child: Container(
-                                      width: 200,
-                                      decoration: BoxDecoration(
-                                        color:
-                                            Color.fromARGB(255, 255, 255, 255),
-                                        borderRadius: BorderRadius.circular(8),
-                                        // border: Border.all(
-                                        //     color: Color.fromARGB(
-                                        //         255, 167, 167, 167),
-                                        //     width: 1 // Lebar border
-                                        //     ),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.grey.withOpacity(0.5),
-                                            spreadRadius: 1,
-                                            blurRadius: 3,
-                                            offset: Offset(0,
-                                                2), // changes the position of the shadow
-                                          ),
-                                        ],
-                                      ),
-                                      child: Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            12, 12, 12, 12),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          // ignore: prefer_const_literals_to_create_immutables
-                                          children: [
-                                            Icon(
-                                              Icons.ssid_chart_rounded,
-                                              color: Colors.blue[600],
-                                              size: 30,
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0, 8, 0, 4),
-                                              child: Obx(
-                                                () => Text(
-                                                  pesananKurirController
-                                                      .orderKonfirmasi.length
-                                                      .toString(),
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize:
-                                                        textScaleFactor <= 1.15
-                                                            ? 14
-                                                            : 13,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Text(
-                                              'Konfirmasi',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize:
-                                                    textScaleFactor <= 1.15
-                                                        ? 14
-                                                        : 13,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    )),
-                              ),
-                            ],
-                          ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.blue[600],
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 2,
+                          blurRadius: 7,
+                          offset: Offset(0, 3), // changes the position of the shadow
                         ),
                       ],
-                    )),
-              ),
-            ],
+                    ),
+                    child: Column(
+                      children: [
+                        Obx(
+                          () => Row(
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Container(
+                                margin: EdgeInsets.all(16),
+                                padding: EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                                child: Image.asset(
+                                  'assets/logo_dikantin.png',
+                                  height: 50,
+                                  width: 50,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              Column(
+                                mainAxisSize: MainAxisSize.max,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    profileKurirController.profileKurir.value.data?.nama ?? '',
+                                    style: GoogleFonts.poppins(
+                                      textStyle: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 2,),
+                                  Text(
+                                    profileKurirController.profileKurir.value.data?.email ?? '',
+                                    style: GoogleFonts.poppins(
+                                      textStyle: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 4,),
+                                  Text(
+                                    profileKurirController.profileKurir.value.data?.telepon ?? '',
+                                    style: GoogleFonts.poppins(
+                                      textStyle: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.symmetric(vertical: 16,horizontal: 8),
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            color: Colors.white,
+                            elevation: 5,
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Pendapatan Kurir',
+                                    style: GoogleFonts.poppins(
+                                      textStyle: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                  Divider(
+                                    color: Colors.grey[400],
+                                  ),
+                                  SizedBox(height: 10),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Obx(
+                                      () => Text(
+                                        controller.today.value.toRupiah(),
+                                        style: GoogleFonts.poppins(
+                                          textStyle: TextStyle(
+                                            fontSize: 24,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      'Total Pendapatan Hari ini',
+                                      style: GoogleFonts.poppins(
+                                        textStyle: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          elevation: 5,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.receipt_rounded,
+                                  color: Colors.blue[600],
+                                  size: 40,
+                                ),
+                                SizedBox(height: 8),
+                                Obx(
+                                  () => Text(
+                                    pesananKurirController.orderUntukDikirim.length.toString(),
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 4),
+                                Text(
+                                  'Untuk Dikirim',
+                                  style: TextStyle(
+                                    color: Colors.black54,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 16),
+                      Expanded(
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          elevation: 5,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.ssid_chart_rounded,
+                                  color: Colors.blue[600],
+                                  size: 40,
+                                ),
+                                SizedBox(height: 8),
+                                Obx(
+                                  () => Text(
+                                    pesananKurirController.orderKonfirmasi.length.toString(),
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 4),
+                                Text(
+                                  'Konfirmasi',
+                                  style: TextStyle(
+                                    color: Colors.black54,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

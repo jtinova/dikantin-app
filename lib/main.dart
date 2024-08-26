@@ -38,7 +38,6 @@ Future<void> main() async {
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
       theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
-      darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
       initialBinding: BindingsBuilder(
         () async {
           // final fmcToken = await messaging.getToken();

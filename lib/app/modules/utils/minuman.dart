@@ -299,7 +299,7 @@ class _MinumanState extends State<Minuman> {
                                             MainAxisAlignment.spaceEvenly,
                                         children: [
                                           Text(
-                                            maxLines: 3,
+                                            maxLines: 2,
                                             overflow: TextOverflow.ellipsis,
                                             menuData.nama ?? '',
                                             style: TextStyle(

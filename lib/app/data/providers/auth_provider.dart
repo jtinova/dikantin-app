@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert'; // Import for JSON decoding
 
 class AuthProvider extends GetxController {
-  static const String baseUrl = 'http://dikantin.com/api';
+  static const String baseUrl = 'https://dikantin.com/api';
 
   Future<http.Response> login(
       String username, String password, String tokenfcm) async {
@@ -24,10 +24,10 @@ class AuthProvider extends GetxController {
 
       // Extract the "token" from the JSON
       final token = jsonResponse['data']['token'];
-      final id_customer = jsonResponse['data']['id_customer'];
+      final idCustomer = jsonResponse['data']['id_customer'];
 
       // Save token to SharedPreferences
-      saveTokenToSharedPreferences(token, id_customer);
+      saveTokenToSharedPreferences(token, idCustomer);
 
       return response;
     } else {
@@ -35,14 +35,14 @@ class AuthProvider extends GetxController {
       final jsonResponse = jsonDecode(response.body);
       final errorMessage = jsonResponse['data'];
 
-      print('${response.body}');
+      print(response.body);
 
       if (errorMessage == "Akun anda belum terverifikasi") {
         Get.snackbar(
           'Gagal Login !..',
-          '${errorMessage}, Mohon cek email anda',
+          '$errorMessage, Mohon cek email anda',
           snackPosition: SnackPosition.TOP, // Menampilkan Snackbar dari atas
-          duration: Duration(seconds: 2),
+          duration: const Duration(seconds: 2),
           backgroundColor: Colors.red,
         );
         throw Exception('Account not verified: $errorMessage');
@@ -51,7 +51,7 @@ class AuthProvider extends GetxController {
           'Gagal Login !..',
           '$errorMessage',
           snackPosition: SnackPosition.TOP, // Menampilkan Snackbar dari atas
-          duration: Duration(seconds: 2),
+          duration: const Duration(seconds: 2),
           backgroundColor: Colors.red,
         );
         throw Exception('$errorMessage');
@@ -60,10 +60,10 @@ class AuthProvider extends GetxController {
   }
 
   Future<String> saveTokenToSharedPreferences(
-      String token, String id_customer) async {
+      String token, String idCustomer) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('token', token);
-    await prefs.setString('id_customer', id_customer);
+    await prefs.setString('id_customer', idCustomer);
     return token;
   }
 
@@ -93,14 +93,14 @@ class AuthProvider extends GetxController {
       final jsonResponse = jsonDecode(response.body);
       final errorMessage = jsonResponse['data'];
 
-      print('${response.body}');
+      print(response.body);
 
       if (errorMessage == "Email atau password anda salah") {
         Get.snackbar(
           'Gagal Login Email atau password anda salah ..!',
           '$errorMessage',
           snackPosition: SnackPosition.TOP, // Menampilkan Snackbar dari atas
-          duration: Duration(seconds: 2),
+          duration: const Duration(seconds: 2),
         );
         throw Exception('$errorMessage');
       } else if (errorMessage == "Password salah") {
@@ -108,7 +108,7 @@ class AuthProvider extends GetxController {
           'Gagal Login password salah',
           '$errorMessage',
           snackPosition: SnackPosition.TOP, // Menampilkan Snackbar dari atas
-          duration: Duration(seconds: 2),
+          duration: const Duration(seconds: 2),
         );
         throw Exception('$errorMessage');
       } else {
@@ -116,7 +116,7 @@ class AuthProvider extends GetxController {
           'Gagal Login !..',
           '$errorMessage',
           snackPosition: SnackPosition.TOP, // Menampilkan Snackbar dari atas
-          duration: Duration(seconds: 2),
+          duration: const Duration(seconds: 2),
         );
         throw Exception('$errorMessage');
       }
@@ -152,10 +152,10 @@ class RegisterProvider {
           'Silahkan Cek Email Anda untuk aktivasi akun',
           snackPosition: SnackPosition.TOP,
           backgroundColor: Colors.white, // Menampilkan Snackbar dari atas
-          duration: Duration(seconds: 3),
+          duration: const Duration(seconds: 3),
         );
 
-        await Future.delayed(Duration(seconds: 2));
+        await Future.delayed(const Duration(seconds: 2));
 
         Get.offAllNamed("/login");
       } else {
@@ -164,7 +164,7 @@ class RegisterProvider {
           'Silahkan Buat Laporan Ke Pihak Admin Untuk memvalidasi email anda',
           snackPosition: SnackPosition.TOP, // Menampilkan Snackbar dari atas
           backgroundColor: Colors.white, // Menampilkan Snackbar dari atas
-          duration: Duration(seconds: 3),
+          duration: const Duration(seconds: 3),
         );
         // throw Exception('Registration failed ${response.body}');
       }
@@ -174,7 +174,7 @@ class RegisterProvider {
         'Registrasi Gagal',
         'Eror Saat Registrasi $e',
         snackPosition: SnackPosition.TOP,
-        duration: Duration(seconds: 2),
+        duration: const Duration(seconds: 2),
       );
 
       throw Exception('Registration failed: $e');
@@ -206,7 +206,7 @@ class ForgotPasswordProvider with ChangeNotifier {
           'Berhasil',
           'Cek Email anda untuk Mengaktivasi',
           snackPosition: SnackPosition.TOP,
-          duration: Duration(seconds: 2),
+          duration: const Duration(seconds: 2),
         );
         Get.offAllNamed("/otp-page");
       } else {
@@ -214,7 +214,7 @@ class ForgotPasswordProvider with ChangeNotifier {
           'Perhatian !',
           responseBody['data'],
           snackPosition: SnackPosition.TOP,
-          duration: Duration(seconds: 2),
+          duration: const Duration(seconds: 2),
         );
         print('Error status code: ${response.statusCode}');
         print('Error response body: ${response.body}');
@@ -224,7 +224,7 @@ class ForgotPasswordProvider with ChangeNotifier {
         'Gagal',
         '$error',
         snackPosition: SnackPosition.TOP,
-        duration: Duration(seconds: 2),
+        duration: const Duration(seconds: 2),
       );
     }
 
@@ -280,7 +280,7 @@ class PasswordVerificationProvider extends GetConnect {
       );
       return response;
     } catch (error) {
-      throw error;
+      rethrow;
     }
   }
 }

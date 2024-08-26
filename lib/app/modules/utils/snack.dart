@@ -23,12 +23,12 @@ class _SnackState extends State<Snack> {
     Get.bottomSheet(
       MediaQuery(
         data: MediaQuery.of(context).copyWith(
-            textScaleFactor:
-                MediaQuery.of(context).textScaleFactor.clamp(1.0, 1.15)),
+            textScaler: TextScaler.linear(
+                MediaQuery.of(context).textScaleFactor.clamp(1.0, 1.15))),
         child: Container(
           height: MediaQuery.of(context).size.height,
           color: Colors.white,
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -39,7 +39,8 @@ class _SnackState extends State<Snack> {
                     Align(
                       alignment: Alignment.topRight,
                       child: IconButton(
-                        icon: Icon(Icons.close, color: Colors.black, size: 25),
+                        icon: const Icon(Icons.close,
+                            color: Colors.black, size: 25),
                         onPressed: () {
                           Get.back(); // Tutup BottomSheet
                         },
@@ -49,7 +50,8 @@ class _SnackState extends State<Snack> {
                       height: MediaQuery.of(context).size.height * 0.2,
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(15)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(15)),
                         image: DecorationImage(
                           image: NetworkImage(
                               Api.gambar + menuData.foto.toString()),
@@ -57,7 +59,7 @@ class _SnackState extends State<Snack> {
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Text(
@@ -70,7 +72,7 @@ class _SnackState extends State<Snack> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     Text(
                       menuData.namaKantin ?? '',
                       style: GoogleFonts.poppins(
@@ -81,9 +83,9 @@ class _SnackState extends State<Snack> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     Text(
-                      'Harga: ${harga}',
+                      'Harga: $harga',
                       style: GoogleFonts.poppins(
                         textStyle: const TextStyle(
                           fontSize: 15,
@@ -92,7 +94,7 @@ class _SnackState extends State<Snack> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                   ],
                 ),
               ),
@@ -107,6 +109,10 @@ class _SnackState extends State<Snack> {
                       homeController.catatanController
                           .clear(); // Tutup BottomSheet
                     },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(Colors
+                          .blue), // Mengatur warna latar belakang menjadi biru
+                    ),
                     child: Text(
                       'Masukkan Keranjang',
                       style: GoogleFonts.poppins(
@@ -137,27 +143,29 @@ class _SnackState extends State<Snack> {
 
     return MediaQuery(
       data: query.copyWith(
-          textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15)),
+          textScaler:
+              TextScaler.linear(query.textScaleFactor.clamp(1.0, 1.15))),
       child: RefreshIndicator(
         onRefresh: () async {
           await controller.refreshData();
         },
         child: SingleChildScrollView(
           child: Container(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             child: Column(
               children: [
                 Container(
-                  margin: EdgeInsets.fromLTRB(10, 5, 10, 0),
+                  margin: const EdgeInsets.fromLTRB(10, 5, 10, 0),
                   decoration: BoxDecoration(
-                      border: Border.all(color: Color(0xFF969696), width: 1.5),
+                      border: Border.all(
+                          color: const Color(0xFF969696), width: 1.5),
                       borderRadius: const BorderRadius.all(
                         Radius.circular(14.0),
                       )),
                   child: Row(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
                         child: Icon(
                           Icons.search,
                           color: Color(0xFF969696),
@@ -200,7 +208,7 @@ class _SnackState extends State<Snack> {
                         child: GridView.builder(
                           padding: EdgeInsets.zero,
                           gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
+                              const SliverGridDelegateWithFixedCrossAxisCount(
                             childAspectRatio: 0.80,
                             crossAxisCount: 2,
                             mainAxisSpacing: 10,
@@ -208,7 +216,7 @@ class _SnackState extends State<Snack> {
                           ),
                           itemCount: 10,
                           shrinkWrap: true,
-                          physics: ScrollPhysics(),
+                          physics: const ScrollPhysics(),
                           itemBuilder: (BuildContext context, int index) {
                             return Container(
                               decoration: BoxDecoration(
@@ -234,7 +242,7 @@ class _SnackState extends State<Snack> {
                         ),
                       );
                     } else if (controller.searchResults.isEmpty) {
-                      return Container(
+                      return SizedBox(
                         height: mediaHeight * 0.35,
                         child: Center(
                           child:
@@ -243,7 +251,8 @@ class _SnackState extends State<Snack> {
                       );
                     } else {
                       return GridView.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
                           childAspectRatio: 0.70,
                           crossAxisCount: 2,
                           mainAxisSpacing: 10,
@@ -251,7 +260,7 @@ class _SnackState extends State<Snack> {
                         ),
                         itemCount: controller.searchResults.length,
                         shrinkWrap: true,
-                        physics: ScrollPhysics(),
+                        physics: const ScrollPhysics(),
                         itemBuilder: (BuildContext context, int index) {
                           final menuData = controller.searchResults[index];
                           final harga = menuData.harga ?? 0;
@@ -266,7 +275,7 @@ class _SnackState extends State<Snack> {
                               elevation: 4,
                               shape: RoundedRectangleBorder(
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(10)),
+                                    const BorderRadius.all(Radius.circular(10)),
                                 side: BorderSide(color: Colors.grey.shade200),
                               ),
                               child: Column(
@@ -295,10 +304,10 @@ class _SnackState extends State<Snack> {
                                             MainAxisAlignment.spaceEvenly,
                                         children: [
                                           Text(
-                                            maxLines: 3,
+                                            maxLines: 2,
                                             overflow: TextOverflow.ellipsis,
                                             menuData.nama ?? '',
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontSize: 14,
                                               color: Colors.black,
                                               fontWeight: FontWeight.w500,
@@ -306,7 +315,7 @@ class _SnackState extends State<Snack> {
                                           ),
                                           Text(
                                             menuData.namaKantin ?? '',
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontSize: 14,
                                               color: Colors.black,
                                               fontWeight: FontWeight.w500,
@@ -318,7 +327,7 @@ class _SnackState extends State<Snack> {
                                             children: [
                                               Text(
                                                 harga.toRupiah(),
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                   fontSize: 14,
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.w500,
@@ -331,7 +340,7 @@ class _SnackState extends State<Snack> {
                                                       width: 30,
                                                       child: Ink(
                                                         decoration:
-                                                            ShapeDecoration(
+                                                            const ShapeDecoration(
                                                           color: Colors.blue,
                                                           shape: CircleBorder(),
                                                         ),
@@ -357,7 +366,7 @@ class _SnackState extends State<Snack> {
                                                       width: 30,
                                                       child: Ink(
                                                         decoration:
-                                                            ShapeDecoration(
+                                                            const ShapeDecoration(
                                                           color: Colors.blue,
                                                           shape: CircleBorder(),
                                                         ),

@@ -94,7 +94,7 @@ class ForgotPasswordView extends GetView<ForgotPasswordController> {
                         "Login",
                         style: TextStyle(
                           fontSize: 15.0,
-                          color: Color(0xff32B768),
+                          color: Colors.blue,
                         ),
                       ),
                     )
@@ -123,7 +123,12 @@ class ForgotPasswordView extends GetView<ForgotPasswordController> {
                     EasyLoading.dismiss();
                     print('EasyLoading dismiss');
                   },
-                  child: const Text("Submit"),
+                  child: const Text(
+                    "Submit",
+                    style: TextStyle(
+                      color: Colors.white
+                    ),
+                  ),
                 ),
               ],
             ),

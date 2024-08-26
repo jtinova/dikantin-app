@@ -32,7 +32,8 @@ class OrderKantinView extends GetView<OrderKantinController> {
 
     return MediaQuery(
       data: query.copyWith(
-          textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15)),
+        textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15),
+      ),
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,

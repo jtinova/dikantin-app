@@ -30,6 +30,7 @@ abstract class Routes {
   static const DETAIL_BELUMBAYAR = _Paths.DETAIL_BELUMBAYAR;
   static const SEPATEK = _Paths.SEPATEK;
   static const TES = _Paths.TES;
+  static const DETAIL_PESANAN_KURIR = _Paths.DETAIL_PESANAN_KURIR;
 }
 
 abstract class _Paths {
@@ -61,4 +62,5 @@ abstract class _Paths {
   static const DETAIL_BELUMBAYAR = '/detail-belumbayar';
   static const SEPATEK = '/sepatek';
   static const TES = '/tes';
+  static const DETAIL_PESANAN_KURIR = '/detail-pesanan-kurir';
 }

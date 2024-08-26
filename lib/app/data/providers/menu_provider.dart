@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../models/penjualan_model.dart';
+import '../models/recommendation_model.dart';
 import '../models/search_model.dart';
 import '../models/riwayat_model.dart';
 
@@ -171,6 +172,24 @@ class MenuProvider extends GetxController {
 
     if (response.statusCode == 200) {
       return Penjualan.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Gagal memuat data');
+    }
+  }
+  
+  Future<Recommendation> fetchDataRecommendationMenu() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    final response = await http.get(
+      Uri.parse(Api.rekomendasiMenu),
+      headers: {
+        'Authorization':
+            'Bearer $token', // Gantilah [TOKEN] dengan token yang sesuai
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return Recommendation.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Gagal memuat data');
     }

@@ -17,7 +17,8 @@ class RegisterView extends GetView<RegisterController> {
 
     return MediaQuery(
       data: query.copyWith(
-          textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15)),
+        textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15),
+      ),
       child: Scaffold(
         body: Container(
           height: MediaQuery.of(context).size.height,
@@ -220,6 +221,7 @@ class RegisterView extends GetView<RegisterController> {
                         "Register",
                         style: TextStyle(
                           fontSize: textScaleFactor <= 1.15 ? 14 : 14,
+                          color: Colors.white,
                         ),
                       ),
                     ),

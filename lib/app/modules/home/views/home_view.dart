@@ -25,6 +25,7 @@ class HomeView extends GetView<HomeController> {
     final app = AppBar(
       elevation: 0, // Menghilangkan shadow di bawah AppBar
       backgroundColor: Colors.white, // Membuat AppBar transparan
+      automaticallyImplyLeading: false,
       actions: [
         Padding(
           padding: const EdgeInsets.only(right: 30.0),
@@ -71,7 +72,8 @@ class HomeView extends GetView<HomeController> {
     final query = MediaQuery.of(context);
     return MediaQuery(
       data: query.copyWith(
-          textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15)),
+        textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15),
+      ),
       child: DefaultTabController(
         length: 6,
         child: Scaffold(
@@ -90,6 +92,7 @@ class HomeView extends GetView<HomeController> {
                         // collapsedHeight: 100,
                         floating: false,
                         pinned: false,
+                        automaticallyImplyLeading: false,
                         flexibleSpace: SingleChildScrollView(
                           physics: NeverScrollableScrollPhysics(),
                           child: Container(

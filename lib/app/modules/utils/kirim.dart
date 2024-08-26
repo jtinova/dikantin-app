@@ -27,7 +27,8 @@ class _KirimState extends State<Kirim> {
 
     return MediaQuery(
       data: query.copyWith(
-          textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15)),
+        textScaler: TextScaler.linear(query.textScaleFactor.clamp(1.0, 1.15)),
+      ),
       child: Scaffold(
         body: RefreshIndicator(
           onRefresh: () async => await controller.loadDikirim(),
@@ -99,9 +100,11 @@ class _KirimState extends State<Kirim> {
             itemBuilder: (BuildContext context, int index) {
               final orderData = controller.pesananDikirim.data![index];
               final totalHarga = orderData.transaksi!.totalHarga ?? 0;
-              return GestureDetector(
+              final waktuPemesanan =
+                  formatDateTime(orderData.transaksi!.tanggal.toString());
+              /* return GestureDetector(
                 onTap: () {
-                  Get.to(const DetailTransaksiView(),
+                  Get.to(DetailTransaksiView(),
                       arguments: orderData.transaksi?.kodeTr);
                 },
                 child: Padding(
@@ -230,6 +233,148 @@ class _KirimState extends State<Kirim> {
                                 ]),
                           )
                         ],
+                      )),
+                ),
+              ); */
+              return GestureDetector(
+                onTap: () {
+                  Get.to(() => DetailTransaksiView(),
+                      arguments: orderData.transaksi?.kodeTr);
+                },
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: Container(
+                      margin: const EdgeInsets.only(
+                          top: 16, left: 16, right: 16, bottom: 4),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.0),
+                        color: Colors.white,
+                        boxShadow: const [
+                          BoxShadow(
+                              color: Color(0x3f000000),
+                              offset: Offset(0, 2),
+                              blurRadius: 3.5),
+                        ],
+                      ),
+                      key: ValueKey(orderData.transaksi?.kodeTr),
+                      // color: Colors.red,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  'assets/logo_dikantin.png',
+                                  height: 100,
+                                  width: 100,
+                                  fit: BoxFit.cover,
+                                ),
+                                Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "#${orderData.transaksi!.kodeTr.toString()}",
+                                      style: GoogleFonts.poppins(
+                                          textStyle: const TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w600)),
+                                    ),
+                                    Text(
+                                      waktuPemesanan,
+                                      style: GoogleFonts.poppins(
+                                          textStyle: TextStyle(
+                                              fontSize: 11,
+                                              color: Colors.grey.shade600,
+                                              fontWeight: FontWeight.w400)),
+                                    ),
+                                    const SizedBox(
+                                      height: 4,
+                                    ),
+                                    Text(
+                                      orderData.status
+                                              .toString()
+                                              .contains('null')
+                                          ? 'Belum Bayar'
+                                          : orderData.status.toString(),
+                                      style: GoogleFonts.poppins(
+                                          textStyle: TextStyle(
+                                              fontSize: 13,
+                                              color: Colors.orange.shade800,
+                                              fontWeight: FontWeight.w600)),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 2,
+                            ),
+                            const Divider(
+                              color: Colors.grey,
+                              thickness: 1,
+                            ),
+                            const SizedBox(
+                              height: 4,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      totalHarga.toRupiah(),
+                                      style: GoogleFonts.poppins(
+                                          textStyle: const TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w600)),
+                                    ),
+                                    Text(
+                                      "${orderData.transaksi!.detailTransaksi!.length.toString()} menu",
+                                      style: GoogleFonts.poppins(
+                                          textStyle: TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.grey.shade600,
+                                              fontWeight: FontWeight.w500)),
+                                    ),
+                                  ],
+                                ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    Get.to(() => DetailTransaksiView(),
+                                        arguments: orderData.transaksi?.kodeTr);
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.blue,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(32.0),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    'Lihat detail',
+                                    style: GoogleFonts.poppins(
+                                      textStyle: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
                       )),
                 ),
               );

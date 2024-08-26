@@ -1,5 +1,5 @@
 class Api {
-  static const koneksi = "https://dikantin.com/api/v2";
+  static const koneksi = "https://dikantin.com/api/v5";
   static const koneksi1 = "https://dikantin.com/api";
   static const gambar = "https://dikantin.com/";
   static const signUp = "$koneksi1/validate/register";
@@ -23,6 +23,7 @@ class Api {
   static const daftarKantin = "$koneksi1/datakantin/";
   static const daftarMenuKantin = "$koneksi1/menu/filterMenu/";
   static const diskon = "$koneksi1/menu/productWithDiscount/";
+  static const rekomendasiMenu = "$koneksi1/menu/rekomendasiprodukk/";
   static const penjualanHariIni = "$koneksi1/menu/productBestToday";
   static const riwayat = "$koneksi1/transaction/riwayatTransaction/";
   static const pesananProses = "$koneksi1/transaction/diproses";
@@ -42,4 +43,5 @@ class Api {
   static const biayakurir = "$koneksi1/customer/biayaKurir";
   static const checkjam = "$koneksi1/transaction/setOperationHour";
   static const checkversion = "$koneksi1/version";
+  static const productCancellation = "$koneksi1/cancelled/transaksi?";
 }
