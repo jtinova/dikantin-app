@@ -6,16 +6,20 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'dart:async';
 
-class DetailChatPage extends StatefulWidget {
+class DetailChatPageKurir extends StatefulWidget {
   final int conversationId;
   final String kantinnn;
-  DetailChatPage({required this.conversationId, required this.kantinnn});
+  final String idkurirr;
+  DetailChatPageKurir(
+      {required this.conversationId,
+      required this.kantinnn,
+      required this.idkurirr});
 
   @override
   _DetailChatPageState createState() => _DetailChatPageState();
 }
 
-class _DetailChatPageState extends State<DetailChatPage> {
+class _DetailChatPageState extends State<DetailChatPageKurir> {
   List<dynamic> _messages = [];
   String? _token;
   String? _currentUserId;
@@ -34,8 +38,8 @@ class _DetailChatPageState extends State<DetailChatPage> {
 
   Future<void> _loadTokenAndCurrentUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('token');
-    String? idCustomer = prefs.getString('id_customer');
+    String? token = prefs.getString('tokenkurir');
+    String? idCustomer = prefs.getString('id_kurir');
 
     if (token != null && idCustomer != null) {
       setState(() {
@@ -43,7 +47,7 @@ class _DetailChatPageState extends State<DetailChatPage> {
         _currentUserId = idCustomer;
       });
     } else {
-      print('Token atau id_customer tidak ditemukan');
+      print('Token atau id_kurir tidak ditemukan');
     }
   }
 
@@ -133,8 +137,8 @@ class _DetailChatPageState extends State<DetailChatPage> {
         },
         body: jsonEncode({
           'conversation_id': widget.conversationId,
-          'id_pengirim': _currentUserId,
-          'tipe_pengirim': 'customer',
+          'id_pengirim': '${widget.idkurirr}',
+          'tipe_pengirim': 'kurir',
           'pesan': messageText,
         }),
       );
@@ -147,7 +151,7 @@ class _DetailChatPageState extends State<DetailChatPage> {
         });
         _messageController.clear();
       } else {
-        print('Gagal mengirim pesan. Status code: ${response.statusCode}');
+        print('Gagal mengirim pesan. Status code: ${response.body}');
       }
     } catch (error) {
       print('Terjadi kesalahan saat mengirim pesan: $error');
@@ -175,7 +179,7 @@ class _DetailChatPageState extends State<DetailChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Kantin ${widget.kantinnn}'),
+        title: Text('Customer ${widget.kantinnn}'),
       ),
       body: Column(
         children: [

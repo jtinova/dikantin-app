@@ -221,38 +221,73 @@ class DetailTransaksiController extends GetxController {
     }
   }
 
-  Future<int?> fetchMessages(String idTransaksi, String idKantin) async {
-    final url = Uri.parse(Api.getId);
+    Future<int?> fetchMessages(String idTransaksi, String idKantin) async {
+      final url = Uri.parse(Api.getId);
 
-    // Membuat body request
-    final body = {
-      "id_transaksi": idTransaksi,
-      "id_kantin": idKantin,
-    };
+      // Membuat body request
+      final body = {
+        "id_transaksi": idTransaksi,
+        "id_kantin": idKantin,
+      };
 
-    try {
-      final response = await http.post(
-        url,
-        headers: {
-          "Content-Type": "application/json", // Set header content type
-        },
-        body: jsonEncode(body), // Mengubah body ke format JSON
-      );
+      try {
+        final response = await http.post(
+          url,
+          headers: {
+            "Content-Type": "application/json", // Set header content type
+          },
+          body: jsonEncode(body), // Mengubah body ke format JSON
+        );
 
-      // Memeriksa status code
-      if (response.statusCode == 200) {
-        final responseData = jsonDecode(response.body);
-        // Mengembalikan id_chat jika respons sukses
-        return responseData['id'];
-      } else {
-        // Menangani jika status code tidak 200
-        print('Request failed with status: ${response.statusCode}.');
+        // Memeriksa status code
+        if (response.statusCode == 200) {
+          final responseData = jsonDecode(response.body);
+          // Mengembalikan id_chat jika respons sukses
+          return responseData['id'];
+        } else {
+          // Menangani jika status code tidak 200
+          print('Request failed with status: ${response.statusCode}.');
+          return null;
+        }
+      } catch (e) {
+        // Menangani kesalahan lainnya
+        print('Error occurred: $e');
         return null;
       }
-    } catch (e) {
-      // Menangani kesalahan lainnya
-      print('Error occurred: $e');
-      return null;
     }
-  }
+
+    Future<int?> fetchMessagesKurir(String idTransaksi, String idKantin) async {
+      final url = Uri.parse(Api.getIdKurir);
+
+      // Membuat body request
+      final body = {
+        "id_transaksi": idTransaksi,
+        "id_kurir": idKantin,
+      };
+
+      try {
+        final response = await http.post(
+          url,
+          headers: {
+            "Content-Type": "application/json", // Set header content type
+          },
+          body: jsonEncode(body), // Mengubah body ke format JSON
+        );
+
+        // Memeriksa status code
+        if (response.statusCode == 200) {
+          final responseData = jsonDecode(response.body);
+          // Mengembalikan id_chat jika respons sukses
+          return responseData['id'];
+        } else {
+          // Menangani jika status code tidak 200
+          print('Request failed with status: ${response.statusCode}.');
+          return null;
+        }
+      } catch (e) {
+        // Menangani kesalahan lainnya
+        print('Error occurred: $e');
+        return null;
+      }
+    }
 }
