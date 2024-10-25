@@ -9,11 +9,13 @@ import 'dart:async';
 class DetailChatPageKurir extends StatefulWidget {
   final int conversationId;
   final String kantinnn;
-  final String idkurirr;
-  DetailChatPageKurir(
-      {required this.conversationId,
-      required this.kantinnn,
-      required this.idkurirr});
+  final String idkurirr; // current user id (kurir)
+
+  DetailChatPageKurir({
+    required this.conversationId,
+    required this.kantinnn,
+    required this.idkurirr,
+  });
 
   @override
   _DetailChatPageState createState() => _DetailChatPageState();
@@ -22,7 +24,6 @@ class DetailChatPageKurir extends StatefulWidget {
 class _DetailChatPageState extends State<DetailChatPageKurir> {
   List<dynamic> _messages = [];
   String? _token;
-  String? _currentUserId;
   final _messageController = TextEditingController();
   late WebSocketChannel _channel;
   Timer? _pingTimer;
@@ -31,23 +32,21 @@ class _DetailChatPageState extends State<DetailChatPageKurir> {
   @override
   void initState() {
     super.initState();
-    _loadTokenAndCurrentUser();
+    _loadToken();
     _fetchMessages();
     _connectToWebSocket();
   }
 
-  Future<void> _loadTokenAndCurrentUser() async {
+  Future<void> _loadToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('tokenkurir');
-    String? idCustomer = prefs.getString('id_kurir');
 
-    if (token != null && idCustomer != null) {
+    if (token != null) {
       setState(() {
         _token = token;
-        _currentUserId = idCustomer;
       });
     } else {
-      print('Token atau id_kurir tidak ditemukan');
+      print('Token tidak ditemukan');
     }
   }
 
@@ -98,7 +97,7 @@ class _DetailChatPageState extends State<DetailChatPageKurir> {
       if (data['event'] == 'message.sent') {
         final msgData = jsonDecode(data['data']);
 
-        if (msgData['id_pengirim'] != _currentUserId) {
+        if (msgData['id_pengirim'] != widget.idkurirr) { // Ambil dari constructor
           _addMessage(msgData);
         }
       }
@@ -137,7 +136,7 @@ class _DetailChatPageState extends State<DetailChatPageKurir> {
         },
         body: jsonEncode({
           'conversation_id': widget.conversationId,
-          'id_pengirim': '${widget.idkurirr}',
+          'id_pengirim': widget.idkurirr, // Ambil dari constructor
           'tipe_pengirim': 'kurir',
           'pesan': messageText,
         }),
@@ -146,7 +145,7 @@ class _DetailChatPageState extends State<DetailChatPageKurir> {
       if (response.statusCode == 200) {
         _addMessage({
           'pesan': messageText,
-          'id_pengirim': _currentUserId,
+          'id_pengirim': widget.idkurirr, // Ambil dari constructor
           'created_at': DateTime.now().toString(),
         });
         _messageController.clear();
@@ -185,9 +184,7 @@ class _DetailChatPageState extends State<DetailChatPageKurir> {
         children: [
           Expanded(
             child: _isLoading
-                ? Center(
-                    child:
-                        CircularProgressIndicator()) // Loading saat fetch messages
+                ? Center(child: CircularProgressIndicator()) // Loading saat fetch messages
                 : _messages.isEmpty
                     ? Center(child: Text('Tidak ada pesan'))
                     : ListView.builder(
@@ -195,7 +192,7 @@ class _DetailChatPageState extends State<DetailChatPageKurir> {
                         itemCount: _messages.length,
                         itemBuilder: (context, index) {
                           final message = _messages[index];
-                          final isMe = message['id_pengirim'] == _currentUserId;
+                          final isMe = message['id_pengirim'] == widget.idkurirr; // Check dengan idkurirr dari constructor
 
                           return Align(
                             alignment: isMe
@@ -206,8 +203,7 @@ class _DetailChatPageState extends State<DetailChatPageKurir> {
                                   vertical: 5, horizontal: 10),
                               padding: EdgeInsets.all(10),
                               decoration: BoxDecoration(
-                                color:
-                                    isMe ? Colors.blue[100] : Colors.grey[300],
+                                color: isMe ? Colors.blue[100] : Colors.grey[300],
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Column(
@@ -249,8 +245,7 @@ class _DetailChatPageState extends State<DetailChatPageKurir> {
                 ),
                 IconButton(
                   icon: Icon(Icons.send),
-                  onPressed:
-                      _sendMessage, // Tidak menggunakan loading untuk send message
+                  onPressed: _sendMessage, // Tidak menggunakan loading untuk send message
                 ),
               ],
             ),

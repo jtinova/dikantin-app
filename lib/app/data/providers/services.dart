@@ -1,7 +1,7 @@
 class Api {
-  static const koneksi = "https://dikantin.com/v5";
-  static const koneksi1 = "https://dikantin.com/api";
-  static const gambar = "https://dikantin.com/";
+  static const koneksi = "http://10.10.185.98:8000/v5";
+  static const koneksi1 = "http://10.10.185.98:8000/api";
+  static const gambar = "http://10.10.185.98:8000/";
   static const signUp = "$koneksi1/validate/register";
   static const signIn = "$koneksi1/validate/login";
   static const getToken = "$koneksi1/validate/getTokenCustomer";
@@ -48,5 +48,5 @@ class Api {
   static const getIdKurir = "$koneksi1/getidkurir";
   static const getMessage = "$koneksi1/getallmessage/";
   static const sendMessage = "$koneksi1/sendmessage";
-  static const socketUrl = "https://dikantin.com:8080/app/inwzp1yrljbtb0ovplnz";
+  static const socketUrl = "ws://10.10.185.98:8080/app/inwzp1yrljbtb0ovplnz";
 }
