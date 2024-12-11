@@ -364,10 +364,12 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
     } else {
       totalBayar = totalPriceWithKurir;
     }
+    int biayaKirim = OrderController().calculateValueBasedOnRange() ?? 2000;
 
     Map<String, dynamic> detailOrderan = {
       "total_harga": totalPrice,
       "total_bayar": totalBayar,
+      "biaya_kirim": biayaKirim,
       "kembalian": totalBayar - totalPriceWithKurir,
       "model_pembayaran": paymentMethod
     };
