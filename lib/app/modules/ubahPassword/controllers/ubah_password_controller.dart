@@ -8,6 +8,9 @@ class UbahPasswordController extends GetxController {
   final passwordProvider = PasswordVerificationProvider().obs;
   var newPassword = TextEditingController();
   var confirmPassword = TextEditingController();
+  final obscureText = true.obs;
+  final obscureConfirmText = true.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -68,6 +71,14 @@ class UbahPasswordController extends GetxController {
       // Menampilkan pesan kesalahan ke pengguna jika diperlukan
       Get.snackbar('Error', 'Terjadi kesalahan: $error');
     }
+  }
+
+  void toggleObscureText() {
+    obscureText.value = !obscureText.value;
+  }
+
+  void toggleObscureConfirmText() {
+    obscureConfirmText.value = !obscureConfirmText.value;
   }
 }
 
