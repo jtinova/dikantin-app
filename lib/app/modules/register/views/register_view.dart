@@ -1,6 +1,7 @@
 import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'package:get/get.dart';
 
@@ -8,252 +9,375 @@ import '../controllers/register_controller.dart';
 
 class RegisterView extends GetView<RegisterController> {
   const RegisterView({Key? key}) : super(key: key);
+
+  static const Color primaryColor = Color(0xFF1E2857);
+
   @override
   Widget build(BuildContext context) {
-    double textScaleFactor = MediaQuery.of(context).textScaleFactor;
-
     final RegisterController c = Get.put(RegisterController());
     final query = MediaQuery.of(context);
 
     return MediaQuery(
-      data: query.copyWith(
-        textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15),),
+      data: query.copyWith(textScaleFactor: query.textScaleFactor.clamp(1.0, 1.15)),
       child: Scaffold(
-        body: Container(
-          height: MediaQuery.of(context).size.height,
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(
-                  'assets/bg.png'), // Ganti dengan path gambar latar belakang Anda
-              fit: BoxFit.cover, // Sesuaikan sesuai kebutuhan Anda
-            ),
-          ),
-          child: SingleChildScrollView(
+        backgroundColor: Colors.white,
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 25),
-                  child: Text("Register",
-                      style: TextStyle(
-                          fontSize: textScaleFactor <= 1.15 ? 40 : 40,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white)),
+                const SizedBox(height: 60),
+                Center(
+                  child: Image.asset(
+                    'assets/logo_dikantin.png',
+                    width: 200,
+                    height: 200,
+                  ),
                 ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height / 8,
+                Text(
+                  "Registrasi",
+                  style: GoogleFonts.poppins(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: primaryColor,
+                  ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20, right: 20, left: 20),
+                Text(
+                  "Buat akun anda untuk melanjutkan",
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    color: Colors.grey,
+                  ),
+                ),
+                const SizedBox(height: 40),
+                // TextField Nama
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.1),
+                        spreadRadius: 1,
+                        blurRadius: 4,
+                        offset: const Offset(0, 1),
+                      ),
+                    ],
+                  ),
                   child: TextField(
-                    style: TextStyle(
-                      fontSize: textScaleFactor <= 1.15 ? 14 : 14,
-                    ),
-                    keyboardType: TextInputType.name,
                     controller: c.nameController,
+                    style: GoogleFonts.poppins(fontSize: 14),
                     decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.person_outline, color: Colors.grey[400], size: 20),
+                      hintText: 'Masukkan nama',
+                      hintStyle: GoogleFonts.poppins(
+                        color: Colors.grey[400],
+                        fontSize: 14,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: Colors.grey[200]!, width: 1),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: Colors.grey[200]!, width: 1),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: Colors.grey[300]!, width: 1),
+                      ),
                       filled: true,
                       fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                        borderSide: const BorderSide(color: Colors.black),
-                      ),
-                      hintText: 'Masukkan nama anda',
-                      suffixIcon: const Icon(
-                        CarbonIcons.user_avatar,
-                      ),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20, right: 20, left: 20),
+                const SizedBox(height: 16),
+                // TextField Email
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.1),
+                        spreadRadius: 1,
+                        blurRadius: 4,
+                        offset: const Offset(0, 1),
+                      ),
+                    ],
+                  ),
                   child: TextField(
-                    style: TextStyle(
-                      fontSize: textScaleFactor <= 1.15 ? 14 : 14,
-                    ),
-                    keyboardType: TextInputType.name,
                     controller: c.emailController,
+                    style: GoogleFonts.poppins(fontSize: 14),
                     decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.mail_outline, color: Colors.grey[400], size: 20),
+                      hintText: 'Masukkan email',
+                      hintStyle: GoogleFonts.poppins(
+                        color: Colors.grey[400],
+                        fontSize: 14,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: Colors.grey[200]!, width: 1),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: Colors.grey[200]!, width: 1),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: Colors.grey[300]!, width: 1),
+                      ),
                       filled: true,
                       fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                        borderSide: const BorderSide(color: Colors.black),
-                      ),
-                      hintText: 'Masukkan email Polije anda',
-                      suffixIcon: const Icon(
-                        CarbonIcons.mail_all,
-                      ),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20, right: 20, left: 20),
+                const SizedBox(height: 16),
+                // TextField Nomor Telepon
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.1),
+                        spreadRadius: 1,
+                        blurRadius: 4,
+                        offset: const Offset(0, 1),
+                      ),
+                    ],
+                  ),
                   child: TextField(
-                    style: TextStyle(
-                      fontSize: textScaleFactor <= 1.15 ? 14 : 14,
-                    ),
-                    controller: c
-                        .phoneController, // Anda dapat mengganti controller sesuai kebutuhan
-                    keyboardType: TextInputType
-                        .phone, // Menentukan jenis keyboard untuk nomor telepon
+                    controller: c.phoneController,
+                    keyboardType: TextInputType.phone,
                     maxLength: 13,
+                    style: GoogleFonts.poppins(fontSize: 14),
                     decoration: InputDecoration(
+                      counterText: "",
+                      prefixIcon: Icon(Icons.phone_outlined, color: Colors.grey[400], size: 20),
+                      hintText: 'Masukkan nomor telepon',
+                      hintStyle: GoogleFonts.poppins(
+                        color: Colors.grey[400],
+                        fontSize: 14,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: Colors.grey[200]!, width: 1),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: Colors.grey[200]!, width: 1),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: Colors.grey[300]!, width: 1),
+                      ),
                       filled: true,
                       fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                        borderSide: const BorderSide(color: Colors.black),
-                      ),
-                      hintText:
-                          'Masukkan nomor telepon anda', // Ubah teks petunjuk
-                      suffixIcon: const Icon(
-                        Icons.phone, // Mengganti ikon ke ikon telepon
-                      ),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                     ),
                   ),
                 ),
-                // Padding(
-                //   padding: const EdgeInsets.only(top: 20, right: 20, left: 20),
-                //   child: TextField(
-                //     style: TextStyle(
-                //       fontSize: textScaleFactor <= 1.15 ? 14 : 14,
-                //     ),
-                //     controller: c.addressController,
-                //     keyboardType: TextInputType
-                //         .streetAddress, // Menentukan jenis keyboard untuk teks
-                //     decoration: InputDecoration(
-                //       filled: true,
-                //       fillColor: Colors.white,
-                //       border: OutlineInputBorder(
-                //         borderRadius: BorderRadius.circular(20.0),
-                //         borderSide: BorderSide(color: Colors.black),
-                //       ),
-                //       hintText:
-                //           'Masukkan alamat lengkap anda', // Ubah teks petunjuk
-                //       suffixIcon: Icon(
-                //         Icons.location_on, // Mengganti ikon ke ikon alamat
-                //       ),
-                //     ),
-                //   ),
-                // ),
+                const SizedBox(height: 16),
+                // TextField Password
                 Obx(() {
-                  return Padding(
-                    padding:
-                        const EdgeInsets.only(top: 20, right: 20, left: 20),
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.1),
+                          spreadRadius: 1,
+                          blurRadius: 4,
+                          offset: const Offset(0, 1),
+                        ),
+                      ],
+                    ),
                     child: TextField(
-                      style: TextStyle(
-                        fontSize: textScaleFactor <= 1.15 ? 14 : 14,
-                      ),
                       controller: c.passwordController,
-                      keyboardType: TextInputType.streetAddress,
+                      obscureText: c.obscureText.value,
+                      style: GoogleFonts.poppins(fontSize: 14),
                       decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.lock_outline, color: Colors.grey[400], size: 20),
+                        hintText: 'Masukkan password',
+                        hintStyle: GoogleFonts.poppins(
+                          color: Colors.grey[400],
+                          fontSize: 14,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: Colors.grey[200]!, width: 1),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: Colors.grey[200]!, width: 1),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: Colors.grey[300]!, width: 1),
+                        ),
                         filled: true,
                         fillColor: Colors.white,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                          borderSide: const BorderSide(color: Colors.black),
-                        ),
-                        hintText: 'Masukkan password anda',
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                         suffixIcon: IconButton(
                           icon: Icon(
                             c.obscureText.value
-                                ? CarbonIcons.view_off
-                                : CarbonIcons.view,
+                                ? Icons.visibility_off_outlined
+                                : Icons.visibility_outlined,
+                            color: Colors.grey[400],
+                            size: 20,
                           ),
-                          onPressed: () {
-                            c.toggleObscureText();
-                          },
+                          onPressed: () => c.toggleObscureText(),
                         ),
                       ),
-                      obscureText: c.obscureText.value,
                     ),
                   );
                 }),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20.0),
-                  child: SizedBox(
-                    width: 300,
-                    height: 40,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0),
+                const SizedBox(height: 16),
+                // TextField Konfirmasi Password
+                Obx(() {
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.1),
+                          spreadRadius: 1,
+                          blurRadius: 4,
+                          offset: const Offset(0, 1),
                         ),
-                        backgroundColor:
-                            const Color.fromARGB(255, 55, 156, 211),
+                      ],
+                    ),
+                    child: TextField(
+                      controller: c.confirmPasswordController,
+                      obscureText: c.obscureConfirmText.value,
+                      style: GoogleFonts.poppins(fontSize: 14),
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.lock_outline, color: Colors.grey[400], size: 20),
+                        hintText: 'Konfirmasi password',
+                        hintStyle: GoogleFonts.poppins(
+                          color: Colors.grey[400],
+                          fontSize: 14,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: Colors.grey[200]!, width: 1),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: Colors.grey[200]!, width: 1),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: Colors.grey[300]!, width: 1),
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                        // suffixIcon: IconButton(
+                        //   icon: Icon(
+                        //     c.obscureConfirmText.value
+                        //         ? Icons.visibility_off_outlined
+                        //         : Icons.visibility_outlined,
+                        //     color: Colors.grey[400],
+                        //     size: 20,
+                        //   ),
+                        //   onPressed: () => c.toggleObscureConfirmText(),
+                        // ),
                       ),
-                      onPressed: () async {
-                        // Ambil data dari controller
-                        final name = controller.nameController.text;
-                        final email = controller.emailController.text;
-                        final phone = controller.phoneController.text;
-                        final password = controller.passwordController.text;
-                        await EasyLoading.show(
-                          status: 'loading...',
-                          maskType: EasyLoadingMaskType.black,
+                    ),
+                  );
+                }),
+                const SizedBox(height: 24),
+                // Tombol Daftar
+                SizedBox(
+                  width: double.infinity,
+                  height: 45,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: primaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    onPressed: () async {
+                      await EasyLoading.show(
+                        status: 'loading...',
+                        maskType: EasyLoadingMaskType.black,
+                      );
+                      try {
+                        await c.registerProvider.register(
+                          c.nameController.text,
+                          c.emailController.text,
+                          c.phoneController.text,
+                          c.passwordController.text,
                         );
-                        // Periksa apakah email mengandung "@student.polije.ac.id"
-                        // if (!email.contains("@student.polije.ac.id") &&
-                        //     !email.contains("@polije.ac.id")) {
-                        //   // Tampilkan pesan kesalahan jika alamat email tidak valid
-                        //   Get.snackbar(
-                        //       "Error", "Harus menggunakan email Polije");
-                        //   EasyLoading.dismiss();
-                        //   print('EasyLoading dismiss');
-                        //   return;
-                        // }
-
-                        // Panggil metode register dari RegisterProvider
-                        try {
-                          await controller.registerProvider
-                              .register(name, email, phone, password);
-                          EasyLoading.dismiss();
-                          print('EasyLoading dismiss');
-                        } catch (e) {
-                          // Penanganan kesalahan saat pendaftaran gagal
-                          EasyLoading.dismiss();
-                          print('EasyLoading dismiss');
-                          print('Pendaftaran gagal: $e');
-                        }
-                      },
-                      child: Text(
-                        "Register",
-                        style: TextStyle(
-                          fontSize: textScaleFactor <= 1.15 ? 14 : 14,
-                          color: Colors.white,
-                        ),
+                        EasyLoading.dismiss();
+                        // Clear semua controller
+                        c.nameController.clear();
+                        c.emailController.clear();
+                        c.phoneController.clear();
+                        c.passwordController.clear();
+                        c.confirmPasswordController.clear();
+                        // Navigasi ke login view
+                        Get.offNamed('/login'); // Menggunakan offNamed agar tidak bisa kembali ke halaman register
+                      } catch (e) {
+                        EasyLoading.dismiss();
+                        print('Pendaftaran gagal: $e');
+                      }
+                    },
+                    child: Text(
+                      "Daftar",
+                      style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
                       ),
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20.0),
-                  child: SizedBox(
-                    width: 300,
-                    height: 40,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0),
-                        ),
-                        backgroundColor: Colors.white,
+                const SizedBox(height: 16),
+                // Text dan Tombol Login
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Sudah punya akun? ",
+                      style: GoogleFonts.poppins(
+                        fontSize: 14,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.zero,
+                        minimumSize: Size.zero,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
                       onPressed: () {
-                        controller.nameController.clear();
-                        controller.emailController.clear();
-                        controller.phoneController.clear();
-                        controller.passwordController.clear();
+                        c.nameController.clear();
+                        c.emailController.clear();
+                        c.phoneController.clear();
+                        c.passwordController.clear();
+                        c.confirmPasswordController.clear();
                         Get.toNamed('/login');
                       },
                       child: Text(
-                        "Login",
-                        style: TextStyle(
-                          color: Colors.black54,
-                          fontSize: textScaleFactor <= 1.15 ? 14 : 14,
+                        "Masuk",
+                        style: GoogleFonts.poppins(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: primaryColor,
                         ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
               ],
             ),
