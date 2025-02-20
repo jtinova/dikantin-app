@@ -10,6 +10,10 @@ abstract class Routes {
   static const CODE_OTP = _Paths.CODE_OTP;
   static const SEND_EMAIL = _Paths.SEND_EMAIL;
   static const SIGN_IN_COURIER = _Paths.SIGN_IN_COURIER;
+  static const NAVIGATION = _Paths.NAVIGATION;
+  static const ORDER = _Paths.ORDER;
+  static const HISTORY = _Paths.HISTORY;
+  static const PROFILE = _Paths.PROFILE;
 }
 
 abstract class _Paths {
@@ -21,4 +25,8 @@ abstract class _Paths {
   static const CODE_OTP = '/code-otp';
   static const SEND_EMAIL = '/send-email';
   static const SIGN_IN_COURIER = '/sign-in-courier';
+  static const NAVIGATION = '/navigation';
+  static const ORDER = '/order';
+  static const HISTORY = '/history';
+  static const PROFILE = '/profile';
 }

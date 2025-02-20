@@ -212,7 +212,7 @@ class SignInView extends GetView<SignInController> {
                           width: double.infinity,
                           height: 45,
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () => Get.offAllNamed(Routes.NAVIGATION),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF1E2857),
                               shape: RoundedRectangleBorder(
