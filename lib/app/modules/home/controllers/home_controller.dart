@@ -1,23 +1,14 @@
 import 'package:get/get.dart';
 
 class HomeController extends GetxController {
-  //TODO: Implement HomeController
+  var currentIndex = 0.obs;
+  var selectedCanteen = "Semua".obs; // Default selected canteen
 
-  final count = 0.obs;
-  @override
-  void onInit() {
-    super.onInit();
+  void updateIndex(int index) {
+    currentIndex.value = index;
   }
 
-  @override
-  void onReady() {
-    super.onReady();
+  void selectCanteen(String canteen) {
+    selectedCanteen.value = canteen;
   }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
-  void increment() => count.value++;
 }

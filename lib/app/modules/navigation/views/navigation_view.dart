@@ -99,26 +99,26 @@ class NavigationView extends GetView<NavigationController> {
                     children: [
                       _bottomAppBarItem(
                         context,
-                        icon: CupertinoIcons.home,
+                        icon: CupertinoIcons.house_fill,
                         page: 0,
                         label: "Beranda",
                       ),
                       _bottomAppBarItem(
                         context,
-                        icon: CupertinoIcons.bag,
+                        icon: CupertinoIcons.cart_fill,
                         page: 1,
                         label: "Pesanan",
                       ),
                       _bottomAppBarItem(
                         context,
-                        icon: CupertinoIcons.clock,
+                        icon: CupertinoIcons.clock_fill,
                         page: 2,
                         label: "Riwayat",
                       ),
                       _bottomAppBarItem(
-                        context,
-                        icon: CupertinoIcons.person,
-                        page: 3,
+                          context,
+                          icon: CupertinoIcons.person_fill,
+                          page: 3,
                         label: "Profile",
                       ),
                     ],
