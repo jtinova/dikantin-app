@@ -1,11 +1,9 @@
-import 'package:dikantin_app_rebuild/app/modules/profile/views/about_app.dart';
-import 'package:dikantin_app_rebuild/app/modules/profile/views/my_profile.dart';
 import 'package:get/get.dart';
 
+import '../modules/chat/bindings/chat_binding.dart';
+import '../modules/chat/views/chat_view.dart';
 import '../modules/code_otp/bindings/code_otp_binding.dart';
 import '../modules/code_otp/views/code_otp_view.dart';
-import '../modules/history/bindings/history_binding.dart';
-import '../modules/history/views/history_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/navigation/bindings/navigation_binding.dart';
@@ -13,6 +11,8 @@ import '../modules/navigation/views/navigation_view.dart';
 import '../modules/order/bindings/order_binding.dart';
 import '../modules/order/views/order_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
+import '../modules/profile/views/about_app.dart';
+import '../modules/profile/views/my_profile.dart';
 import '../modules/profile/views/profile_view.dart';
 import '../modules/reset_password/bindings/reset_password_binding.dart';
 import '../modules/reset_password/views/reset_password_view.dart';
@@ -75,26 +75,26 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.ORDER,
-      page: () => const OrderView(),
+      page: () => OrderView(),
       binding: OrderBinding(),
-    ),
-    GetPage(
-      name: _Paths.HISTORY,
-      page: () => const HistoryView(),
-      binding: HistoryBinding(),
     ),
     GetPage(
       name: _Paths.PROFILE,
       page: () => const ProfileView(),
       binding: ProfileBinding(),
     ),
-     GetPage(
+    GetPage(
       name: _Paths.ABOUT_APP,
       page: () => const AboutApp(),
     ),
-     GetPage(
+    GetPage(
       name: _Paths.MY_PROFILE,
       page: () => MyProfile(),
+    ),
+    GetPage(
+      name: _Paths.CHAT,
+      page: () => const ChatView(),
+      binding: ChatBinding(),
     ),
   ];
 }

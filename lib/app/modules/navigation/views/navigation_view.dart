@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
-import '../../history/views/history_view.dart';
+import '../../chat/views/chat_view.dart';
 import '../../home/views/home_view.dart';
 import '../../order/views/order_view.dart';
 import '../../profile/views/profile_view.dart';
@@ -64,8 +64,8 @@ class NavigationView extends GetView<NavigationController> {
           children: [
             // Page
             HomeView(),
-            const OrderView(),
-            const HistoryView(),
+            OrderView(),
+            const ChatView(),
             const ProfileView(),
           ],
         ),
@@ -111,14 +111,14 @@ class NavigationView extends GetView<NavigationController> {
                       ),
                       _bottomAppBarItem(
                         context,
-                        icon: CupertinoIcons.clock_fill,
+                        icon: CupertinoIcons.chat_bubble_2_fill,
                         page: 2,
-                        label: "Riwayat",
+                        label: "Chat",
                       ),
                       _bottomAppBarItem(
-                          context,
-                          icon: CupertinoIcons.person_fill,
-                          page: 3,
+                        context,
+                        icon: CupertinoIcons.person_fill,
+                        page: 3,
                         label: "Profile",
                       ),
                     ],

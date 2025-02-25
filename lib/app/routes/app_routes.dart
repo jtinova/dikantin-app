@@ -12,10 +12,10 @@ abstract class Routes {
   static const SIGN_IN_COURIER = _Paths.SIGN_IN_COURIER;
   static const NAVIGATION = _Paths.NAVIGATION;
   static const ORDER = _Paths.ORDER;
-  static const HISTORY = _Paths.HISTORY;
   static const PROFILE = _Paths.PROFILE;
   static const ABOUT_APP = _Paths.ABOUT_APP;
   static const MY_PROFILE = _Paths.MY_PROFILE;
+  static const CHAT = _Paths.CHAT;
 }
 
 abstract class _Paths {
@@ -29,8 +29,8 @@ abstract class _Paths {
   static const SIGN_IN_COURIER = '/sign-in-courier';
   static const NAVIGATION = '/navigation';
   static const ORDER = '/order';
-  static const HISTORY = '/history';
   static const PROFILE = '/profile';
   static const ABOUT_APP = '/about_app';
   static const MY_PROFILE = '/my_profile';
+  static const CHAT = '/chat';
 }
