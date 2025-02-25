@@ -39,14 +39,21 @@ class MyProfile extends StatelessWidget {
           ),
         ),
       ),
-      body: Center(
+      body: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             CircleAvatar(
               backgroundImage: AssetImage('assets/images/logo_dikantin.png'),
               backgroundColor: Colors.black12,
               radius: 50,
+            ),
+            SizedBox(height: 5),
+            Text(
+              "Ubah Foto",
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.blue,
+              ),
             ),
             SizedBox(height: 30),
             FormBuilder(
