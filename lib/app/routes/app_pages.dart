@@ -1,3 +1,5 @@
+import 'package:dikantin_app_rebuild/app/modules/profile/views/about_app.dart';
+import 'package:dikantin_app_rebuild/app/modules/profile/views/my_profile.dart';
 import 'package:get/get.dart';
 
 import '../modules/code_otp/bindings/code_otp_binding.dart';
@@ -85,6 +87,14 @@ class AppPages {
       name: _Paths.PROFILE,
       page: () => const ProfileView(),
       binding: ProfileBinding(),
+    ),
+     GetPage(
+      name: _Paths.ABOUT_APP,
+      page: () => const AboutApp(),
+    ),
+     GetPage(
+      name: _Paths.MY_PROFILE,
+      page: () => MyProfile(),
     ),
   ];
 }

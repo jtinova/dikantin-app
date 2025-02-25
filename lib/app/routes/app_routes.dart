@@ -14,6 +14,8 @@ abstract class Routes {
   static const ORDER = _Paths.ORDER;
   static const HISTORY = _Paths.HISTORY;
   static const PROFILE = _Paths.PROFILE;
+  static const ABOUT_APP = _Paths.ABOUT_APP;
+  static const MY_PROFILE = _Paths.MY_PROFILE;
 }
 
 abstract class _Paths {
@@ -29,4 +31,6 @@ abstract class _Paths {
   static const ORDER = '/order';
   static const HISTORY = '/history';
   static const PROFILE = '/profile';
+  static const ABOUT_APP = '/about_app';
+  static const MY_PROFILE = '/my_profile';
 }
