@@ -42,7 +42,7 @@ class NavigationView extends GetView<NavigationController> {
             backgroundColor: Color(0xFF1E2857),
             colorText: Colors.white,
             borderWidth: 5.0,
-            snackPosition: SnackPosition.TOP,
+            snackPosition: SnackPosition.BOTTOM,
             margin: const EdgeInsets.all(20.0),
             icon: const Icon(
               CupertinoIcons.info_circle,

@@ -20,8 +20,6 @@ import '../modules/send_email/bindings/send_email_binding.dart';
 import '../modules/send_email/views/send_email_view.dart';
 import '../modules/sign_in/bindings/sign_in_binding.dart';
 import '../modules/sign_in/views/sign_in_view.dart';
-import '../modules/sign_in_courier/bindings/sign_in_courier_binding.dart';
-import '../modules/sign_in_courier/views/sign_in_courier_view.dart';
 import '../modules/sign_up/bindings/sign_up_binding.dart';
 import '../modules/sign_up/views/sign_up_view.dart';
 
@@ -62,11 +60,6 @@ class AppPages {
       name: _Paths.SEND_EMAIL,
       page: () => SendEmailView(),
       binding: SendEmailBinding(),
-    ),
-    GetPage(
-      name: _Paths.SIGN_IN_COURIER,
-      page: () => SignInCourierView(),
-      binding: SignInCourierBinding(),
     ),
     GetPage(
       name: _Paths.NAVIGATION,

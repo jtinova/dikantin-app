@@ -1,8 +1,10 @@
+import 'package:dikantin_app_rebuild/app/providers/auth_provider.dart';
 import 'package:dikantin_app_rebuild/app/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:provider/provider.dart';
 
 import 'app/routes/app_pages.dart';
 
@@ -22,12 +24,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: "Dikantin App Rebuild",
-      initialRoute: AppPages.INITIAL,
-      theme: lightMode,
-      getPages: AppPages.routes,
-      debugShowCheckedModeBanner: false,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthenticationProvider()),
+      ],
+      child: GetMaterialApp(
+        title: "Dikantin App Rebuild",
+        initialRoute: AppPages.INITIAL,
+        theme: lightMode,
+        getPages: AppPages.routes,
+        debugShowCheckedModeBanner: false,
+      ),
     );
   }
 }

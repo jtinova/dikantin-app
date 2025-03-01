@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
+import '../../../providers/db_provider.dart';
 import '../controllers/profile_controller.dart';
 
 class ProfileView extends GetView<ProfileController> {
@@ -73,7 +74,7 @@ class ProfileView extends GetView<ProfileController> {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 25),
               GestureDetector(
                 onTap: () => Get.toNamed(Routes.ABOUT_APP),
                 child: Padding(
@@ -96,9 +97,49 @@ class ProfileView extends GetView<ProfileController> {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 25),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text("Logout"),
+                        content: Text("Kami yakin ingin logout?"),
+                        backgroundColor: Colors.white,
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            style: ButtonStyle(
+                              backgroundColor:
+                                  WidgetStatePropertyAll(Color(0xFF1E2857)),
+                            ),
+                            child: Text(
+                              "Batal",
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              DatabaseProvider().logout();
+                              Get.offAllNamed(Routes.SIGN_IN);
+                            },
+                            child: Text(
+                              "Logout",
+                              style: TextStyle(
+                                color: Colors.red,
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Row(
