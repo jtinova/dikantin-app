@@ -32,6 +32,10 @@ class CodeOtpView extends GetView<CodeOtpController> {
 
   @override
   Widget build(BuildContext context) {
+    final Map<String, dynamic> arguments =
+        Get.arguments as Map<String, dynamic>;
+    final String email = arguments['email'];
+
     return WillPopScope(
       onWillPop: () async {
         if (_backButtonPressCount == 0) {
@@ -42,13 +46,13 @@ class CodeOtpView extends GetView<CodeOtpController> {
           });
           // Show a snackbar or toast indicating press again to exit
           Get.snackbar(
-            "Information",
-            "Press again to exit",
+            "Informasi ",
+            "Tekan sekali lagi untuk keluar",
             animationDuration: const Duration(milliseconds: 200),
             duration: const Duration(milliseconds: 1650),
             backgroundColor: const Color.fromARGB(255, 238, 238, 238),
             borderWidth: 5.0,
-            snackPosition: SnackPosition.BOTTOM,
+            snackPosition: SnackPosition.TOP,
             margin: const EdgeInsets.all(20.0),
             icon: const Icon(
               CupertinoIcons.info_circle,
@@ -105,7 +109,7 @@ class CodeOtpView extends GetView<CodeOtpController> {
                         ),
                         children: [
                           TextSpan(
-                            text: "Email User",
+                            text: email,
                             style: TextStyle(
                               fontSize: 18,
                               color: Colors.black,
@@ -127,12 +131,12 @@ class CodeOtpView extends GetView<CodeOtpController> {
                       key: _formKey,
                       child: PinCodeTextField(
                         appContext: context,
-                        length: 4,
+                        length: 6,
                         pastedTextStyle: const TextStyle(
                           color: Color(0xFF1E2857),
                           fontWeight: FontWeight.bold,
                         ),
-                        obscureText: true,
+                        obscureText: false,
                         blinkWhenObscuring: true,
                         obscuringWidget: const Icon(
                           CupertinoIcons.lock_fill,
@@ -143,7 +147,7 @@ class CodeOtpView extends GetView<CodeOtpController> {
                           shape: PinCodeFieldShape.box,
                           borderRadius: BorderRadius.circular(15.0),
                           fieldHeight: 55,
-                          fieldWidth: 50,
+                          fieldWidth: 45,
                           activeFillColor: Colors.white,
                           inactiveColor:
                               const Color.fromARGB(255, 225, 225, 225),
@@ -273,7 +277,7 @@ class CodeOtpView extends GetView<CodeOtpController> {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 25),
                   ],
                 ),
               ),

@@ -42,18 +42,16 @@ class SignInView extends GetView<SignInController> {
           });
           // Show a snackbar or toast indicating press again to exit
           Get.snackbar(
-            "Informasi",
+            "Informasi ",
             "Tekan sekali lagi untuk keluar",
             animationDuration: const Duration(milliseconds: 200),
             duration: const Duration(milliseconds: 1650),
-            backgroundColor: Color(0xFF1E2857),
-            colorText: Colors.white,
+            backgroundColor: const Color.fromARGB(255, 238, 238, 238),
             borderWidth: 5.0,
             snackPosition: SnackPosition.TOP,
             margin: const EdgeInsets.all(20.0),
             icon: const Icon(
               CupertinoIcons.info_circle,
-              color: Colors.white,
             ),
           );
           return false; // Do not exit the app yet

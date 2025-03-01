@@ -3,37 +3,33 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class DatabaseProvider extends ChangeNotifier {
   final Future<SharedPreferences> _pref = SharedPreferences.getInstance();
-
+  
   String _token = "";
 
   String get token => _token;
 
-  void saveToken(String token) async {
+  Future<void> saveToken(String token) async {
     SharedPreferences value = await _pref;
-
-    value.setString("token", token);
+    await value.setString("token", token);
+    _token = token;
+    
+    notifyListeners();
   }
 
-  Future<String> getToken() async {
+  Future<String?> getToken() async {
     SharedPreferences value = await _pref;
+    _token = value.getString("token") ?? "";
 
-    if (value.containsKey("token")) {
-      String data = value.getString("token")!;
-      _token = data;
+    notifyListeners();
 
-      notifyListeners();
-      return "";
-    } else {
-      _token = "";
-
-      notifyListeners();
-      return "";
-    }
+    return _token.isNotEmpty ? _token : null;
   }
 
-  void logout() async {
-    final value = await _pref;
+  Future<void> clearToken() async {
+    SharedPreferences value = await _pref;
+    await value.remove("token");
+    _token = "";
 
-    value.clear();
+    notifyListeners();
   }
 }

@@ -1,10 +1,11 @@
+import 'package:dikantin_app_rebuild/app/providers/auth_provider.dart';
 import 'package:dikantin_app_rebuild/app/routes/app_pages.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
-import '../../../providers/db_provider.dart';
 import '../controllers/profile_controller.dart';
 
 class ProfileView extends GetView<ProfileController> {
@@ -105,7 +106,7 @@ class ProfileView extends GetView<ProfileController> {
                     builder: (BuildContext context) {
                       return AlertDialog(
                         title: Text("Logout"),
-                        content: Text("Kami yakin ingin logout?"),
+                        content: Text("Kamu yakin ingin logout?"),
                         backgroundColor: Colors.white,
                         actions: [
                           TextButton(
@@ -123,18 +124,49 @@ class ProfileView extends GetView<ProfileController> {
                               ),
                             ),
                           ),
-                          TextButton(
-                            onPressed: () {
-                              DatabaseProvider().logout();
-                              Get.offAllNamed(Routes.SIGN_IN);
-                            },
-                            child: Text(
-                              "Logout",
-                              style: TextStyle(
-                                color: Colors.red,
+                          Consumer<AuthenticationProvider>(
+                              builder: (context, auth, child) {
+                            WidgetsBinding.instance.addPostFrameCallback(
+                              (_) {
+                                if (auth.resMessage != '') {
+                                  Get.snackbar(
+                                    "Informasi",
+                                    auth.resMessage,
+                                    animationDuration:
+                                        const Duration(milliseconds: 200),
+                                    duration:
+                                        const Duration(milliseconds: 1650),
+                                    backgroundColor: auth.statusCode == 200
+                                        ? Colors.green
+                                        : Colors.red,
+                                    colorText: Colors.white,
+                                    borderWidth: 5.0,
+                                    snackPosition: SnackPosition.TOP,
+                                    margin: const EdgeInsets.all(20.0),
+                                    icon: const Icon(
+                                      CupertinoIcons.info_circle,
+                                      color: Colors.white,
+                                    ),
+                                  );
+
+                                  auth.clear();
+                                }
+                              },
+                            );
+                            return TextButton(
+                              onPressed: auth.isLoading
+                                  ? null
+                                  : () {
+                                      auth.logoutUser();
+                                    },
+                              child: Text(
+                                "Logout",
+                                style: TextStyle(
+                                  color: Colors.red,
+                                ),
                               ),
-                            ),
-                          ),
+                            );
+                          }),
                         ],
                       );
                     },

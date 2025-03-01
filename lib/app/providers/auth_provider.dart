@@ -89,6 +89,132 @@ class AuthenticationProvider extends ChangeNotifier {
     }
   }
 
+  void sendEmailOTP({
+    required String email,
+    BuildContext? context,
+  }) async {
+    _isLoading = true;
+    notifyListeners();
+
+    String url = "$baseURL/send-reset-password";
+
+    final body = {
+      "email": email,
+    };
+    print(body);
+
+    try {
+      http.Response req = await http.post(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: json.encode(body),
+      );
+
+      // Store Status Code
+      statusCode = req.statusCode;
+
+      if (req.statusCode == 200) {
+        final res = json.decode(req.body);
+
+        print(res);
+
+        _isLoading = true;
+        _resMessage = res["message"];
+
+        notifyListeners();
+
+        Get.offAllNamed(Routes.CODE_OTP, arguments: {'email': email});
+      } else {
+        final res = json.decode(req.body);
+
+        print(res);
+
+        _isLoading = false;
+        _resMessage = res["message"];
+
+        notifyListeners();
+      }
+    } on SocketException catch (_) {
+      _isLoading = false;
+      _resMessage = "Koneksi Internet Tidak Tersedia";
+    } catch (e) {
+      _isLoading = false;
+      _resMessage = "Mohon Coba Lagi";
+      notifyListeners();
+
+      print(e);
+    }
+  }
+
+  void VerifyCodeOTP({
+    required String otp,
+    BuildContext? context,
+  }) async {}
+
+  void logoutUser() async {
+    _isLoading = true;
+    notifyListeners();
+
+    String url = "$baseURL/logout";
+
+    try {
+      String? token = await DatabaseProvider().getToken();
+
+      if (token == null) {
+        _isLoading = false;
+        _resMessage = "Token tidak ditemukan";
+        notifyListeners();
+        return;
+      }
+
+      http.Response req = await http.post(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      // Store Status Code
+      statusCode = req.statusCode;
+
+      if (req.statusCode == 200) {
+        final res = json.decode(req.body);
+
+        print(res);
+
+        await DatabaseProvider().clearToken();
+
+        _isLoading = false;
+        _resMessage = "Logout Berhasil";
+
+        notifyListeners();
+
+        Get.offAllNamed(Routes.SIGN_IN);
+      } else {
+        final res = json.decode(req.body);
+
+        print(res);
+
+        _isLoading = false;
+        _resMessage = res["message"];
+
+        notifyListeners();
+      }
+    } on SocketException catch (_) {
+      _isLoading = false;
+      _resMessage = "Koneksi Internet Tidak Tersedia";
+    } catch (e) {
+      _isLoading = false;
+      _resMessage = "Terjadi Kesalahan, Coba Lagi";
+      notifyListeners();
+
+      print(e);
+    }
+  }
+
   void clear() {
     _isLoading = false;
     _resMessage = "";
