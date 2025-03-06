@@ -2,12 +2,14 @@
 
 import 'dart:async';
 
+import 'package:dikantin_app_rebuild/app/providers/auth_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
 import '../../../routes/app_pages.dart';
 import '../controllers/sign_up_controller.dart';
@@ -16,7 +18,8 @@ class SignUpView extends GetView<SignUpController> {
   SignUpView({super.key});
 
   final _formKey = GlobalKey<FormBuilderState>();
-  final _obscureText = true.obs;
+  final _obscurePassword = true.obs;
+  final _obscureConfPassword = true.obs;
 
   // Variables to track back button
   int _backButtonPressCount = 0;
@@ -40,18 +43,16 @@ class SignUpView extends GetView<SignUpController> {
           });
           // Show a snackbar or toast indicating press again to exit
           Get.snackbar(
-            "Informasi",
+            "Informasi ",
             "Tekan sekali lagi untuk keluar",
             animationDuration: const Duration(milliseconds: 200),
             duration: const Duration(milliseconds: 1650),
-            backgroundColor: Color(0xFF1E2857),
-            colorText: Colors.white,
+            backgroundColor: const Color.fromARGB(255, 238, 238, 238),
             borderWidth: 5.0,
             snackPosition: SnackPosition.TOP,
             margin: const EdgeInsets.all(20.0),
             icon: const Icon(
               CupertinoIcons.info_circle,
-              color: Colors.white,
             ),
           );
           return false; // Do not exit the app yet
@@ -256,14 +257,14 @@ class SignUpView extends GetView<SignUpController> {
                               ),
                               suffixIcon: IconButton(
                                 icon: Icon(
-                                  _obscureText.value
+                                  _obscurePassword.value
                                       ? CupertinoIcons.eye
                                       : CupertinoIcons.eye_slash,
                                   size: 18.0,
                                   color: Colors.black87,
                                 ),
                                 onPressed: () {
-                                  _obscureText.toggle();
+                                  _obscurePassword.toggle();
                                 },
                               ),
                               hintText: "Masukan password",
@@ -288,9 +289,10 @@ class SignUpView extends GetView<SignUpController> {
                                 horizontal: 15,
                               ),
                             ),
-                            obscureText: _obscureText.value,
+                            obscureText: _obscurePassword.value,
                             validator: FormBuilderValidators.compose([
                               FormBuilderValidators.required(),
+                              FormBuilderValidators.minLength(8),
                             ]),
                           ),
                         ),
@@ -314,14 +316,14 @@ class SignUpView extends GetView<SignUpController> {
                               ),
                               suffixIcon: IconButton(
                                 icon: Icon(
-                                  _obscureText.value
+                                  _obscureConfPassword.value
                                       ? CupertinoIcons.eye
                                       : CupertinoIcons.eye_slash,
                                   size: 18.0,
                                   color: Colors.black87,
                                 ),
                                 onPressed: () {
-                                  _obscureText.toggle();
+                                  _obscureConfPassword.toggle();
                                 },
                               ),
                               hintText: "Masukan konfirmasi password",
@@ -346,36 +348,104 @@ class SignUpView extends GetView<SignUpController> {
                                 horizontal: 15,
                               ),
                             ),
-                            obscureText: _obscureText.value,
+                            obscureText: _obscureConfPassword.value,
                             validator: FormBuilderValidators.compose([
                               FormBuilderValidators.required(),
+                              FormBuilderValidators.minLength(8),
                             ]),
-                          ),
-                        ),
-                        const SizedBox(height: 35),
-                        SizedBox(
-                          width: double.infinity,
-                          height: 45,
-                          child: ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF1E2857),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                            ),
-                            child: Text(
-                              "Daftar",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.white,
-                              ),
-                            ),
                           ),
                         ),
                       ],
                     ),
+                  ),
+                  const SizedBox(height: 35),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 45,
+                    child: Consumer<AuthenticationProvider>(
+                        builder: (context, auth, child) {
+                      WidgetsBinding.instance.addPostFrameCallback(
+                        (_) {
+                          if (auth.resMessage != '') {
+                            Get.snackbar(
+                              "Informasi",
+                              auth.resMessage,
+                              animationDuration:
+                                  const Duration(milliseconds: 200),
+                              duration: const Duration(milliseconds: 1650),
+                              backgroundColor: auth.statusCode == 200
+                                  ? Colors.green
+                                  : Colors.red,
+                              colorText: Colors.white,
+                              borderWidth: 5.0,
+                              snackPosition: SnackPosition.TOP,
+                              margin: const EdgeInsets.all(20.0),
+                              icon: const Icon(
+                                CupertinoIcons.info_circle,
+                                color: Colors.white,
+                              ),
+                            );
+                          }
+
+                          auth.clear();
+                        },
+                      );
+                      return ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            _formKey.currentState!.save();
+                            final formData = _formKey.currentState!.value;
+
+                            final String? fullName = formData['fullname'];
+                            final String? phone = formData['phone_number'];
+                            final String? email = formData['email'];
+                            final String? password = formData['password'];
+                            final String? confirmPassword =
+                                formData['confirm_password'];
+
+                            if (confirmPassword == password) {
+                              auth.registerUser(
+                                fullName: fullName.toString(),
+                                phoneNumber: phone.toString().trim(),
+                                email: email.toString().trim(),
+                                password: confirmPassword.toString().trim(),
+                                context: context,
+                              );
+                            } else {
+                              Get.snackbar(
+                                "Informasi ",
+                                "Password Tidak Sesuai",
+                                animationDuration:
+                                    const Duration(milliseconds: 200),
+                                duration: const Duration(milliseconds: 1650),
+                                backgroundColor:
+                                    const Color.fromARGB(255, 238, 238, 238),
+                                borderWidth: 5.0,
+                                snackPosition: SnackPosition.TOP,
+                                margin: const EdgeInsets.all(20.0),
+                                icon: const Icon(
+                                  CupertinoIcons.info_circle,
+                                ),
+                              );
+                            }
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFF1E2857),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                        ),
+                        child: Text(
+                          "Daftar",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white,
+                          ),
+                        ),
+                      );
+                    }),
                   ),
                   const SizedBox(height: 50),
                   GestureDetector(

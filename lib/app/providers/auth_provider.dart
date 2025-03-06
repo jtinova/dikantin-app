@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:dikantin_app_rebuild/app/data/api.dart';
 import 'package:dikantin_app_rebuild/app/routes/app_pages.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -14,21 +15,94 @@ import 'db_provider.dart';
 class AuthenticationProvider extends ChangeNotifier {
   final baseURL = AppUrl.baseURL;
 
-  bool _isLoading = false;
   String _resMessage = "";
-  int? _responseData;
   int? statusCode;
 
-  bool get isLoading => _isLoading;
   String get resMessage => _resMessage;
-  int? get responseData => _responseData;
+
+  void registerUser({
+    required String fullName,
+    required String email,
+    required String phoneNumber,
+    required String password,
+    BuildContext? context,
+  }) async {
+    EasyLoading.show(status: 'Loading...');
+    notifyListeners();
+
+    String url = "$baseURL/register";
+
+    final body = {
+      "full_name": fullName,
+      "email": email,
+      "phone_number": phoneNumber,
+      "password": password,
+    };
+    print(body);
+
+    try {
+      http.Response req = await http.post(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: json.encode(body),
+      );
+
+      statusCode = req.statusCode;
+
+      if (req.statusCode == 200) {
+        final res = json.decode(req.body);
+        print(req.body);
+
+        _resMessage = res["message"];
+        notifyListeners();
+
+        EasyLoading.dismiss();
+
+        Get.offAllNamed(Routes.SIGN_IN);
+      } else {
+        final res = json.decode(req.body);
+        print(res);
+
+        if (res.containsKey("errors")) {
+          Map<String, dynamic> errors = res["errors"];
+          String errorMessage = "";
+          if (errors.containsKey("email")) {
+            errorMessage += "${errors["email"][0]}\n";
+          }
+          if (errors.containsKey("phone_number")) {
+            errorMessage += "${errors["phone_number"][0]}\n";
+          }
+          _resMessage = errorMessage.trim();
+          notifyListeners();
+        } else {
+          _resMessage = res["message"];
+          notifyListeners();
+        }
+
+        EasyLoading.dismiss();
+      }
+    } on SocketException catch (_) {
+      statusCode = 0;
+      _resMessage = "Koneksi Internet Tidak Tersedia";
+      EasyLoading.dismiss();
+    } catch (e) {
+      statusCode = null;
+      _resMessage = "Mohon Coba Lagi";
+      notifyListeners();
+      EasyLoading.dismiss();
+
+      print(e);
+    }
+  }
 
   void loginUser({
     required String email,
     required String password,
     BuildContext? context,
   }) async {
-    _isLoading = true;
+    EasyLoading.show(status: 'Loading...');
     notifyListeners();
 
     String url = "$baseURL/login";
@@ -56,15 +130,15 @@ class AuthenticationProvider extends ChangeNotifier {
 
         print(req.body);
 
-        _isLoading = true;
         _resMessage = res["message"];
-
         notifyListeners();
 
         // Save Token Navigate To Dashboard
         final token = res["data"]["access_token"];
 
-        DatabaseProvider().saveToken(token);
+        await DatabaseProvider().saveToken(token);
+
+        EasyLoading.dismiss();
 
         Get.offAllNamed(Routes.NAVIGATION);
       } else {
@@ -72,18 +146,20 @@ class AuthenticationProvider extends ChangeNotifier {
 
         print(res);
 
-        _isLoading = false;
         _resMessage = res["message"];
-
         notifyListeners();
+
+        EasyLoading.dismiss();
       }
     } on SocketException catch (_) {
-      _isLoading = false;
+      statusCode = 0;
       _resMessage = "Koneksi Internet Tidak Tersedia";
+      EasyLoading.dismiss();
     } catch (e) {
-      _isLoading = false;
+      statusCode = null;
       _resMessage = "Mohon Coba Lagi";
       notifyListeners();
+      EasyLoading.dismiss();
 
       print(e);
     }
@@ -93,7 +169,7 @@ class AuthenticationProvider extends ChangeNotifier {
     required String email,
     BuildContext? context,
   }) async {
-    _isLoading = true;
+    EasyLoading.show(status: 'Loading...');
     notifyListeners();
 
     String url = "$baseURL/send-reset-password";
@@ -120,10 +196,10 @@ class AuthenticationProvider extends ChangeNotifier {
 
         print(res);
 
-        _isLoading = true;
         _resMessage = res["message"];
-
         notifyListeners();
+
+        EasyLoading.dismiss();
 
         Get.offAllNamed(Routes.CODE_OTP, arguments: {'email': email});
       } else {
@@ -131,18 +207,20 @@ class AuthenticationProvider extends ChangeNotifier {
 
         print(res);
 
-        _isLoading = false;
         _resMessage = res["message"];
-
         notifyListeners();
+
+        EasyLoading.dismiss();
       }
     } on SocketException catch (_) {
-      _isLoading = false;
+      statusCode = 0;
       _resMessage = "Koneksi Internet Tidak Tersedia";
+      EasyLoading.dismiss();
     } catch (e) {
-      _isLoading = false;
+      statusCode = null;
       _resMessage = "Mohon Coba Lagi";
       notifyListeners();
+      EasyLoading.dismiss();
 
       print(e);
     }
@@ -153,7 +231,7 @@ class AuthenticationProvider extends ChangeNotifier {
     required String otp,
     BuildContext? context,
   }) async {
-    _isLoading = true;
+    EasyLoading.show(status: 'Loading...');
     notifyListeners();
 
     String url = "$baseURL/verify-otp";
@@ -181,10 +259,10 @@ class AuthenticationProvider extends ChangeNotifier {
 
         print(res);
 
-        _isLoading = true;
         _resMessage = res["message"];
-
         notifyListeners();
+
+        EasyLoading.dismiss();
 
         Get.offAllNamed(Routes.RESET_PASSWORD, arguments: {'email': email});
       } else {
@@ -192,18 +270,20 @@ class AuthenticationProvider extends ChangeNotifier {
 
         print(res);
 
-        _isLoading = false;
         _resMessage = res["message"];
-
         notifyListeners();
+
+        EasyLoading.dismiss();
       }
     } on SocketException catch (_) {
-      _isLoading = false;
+      statusCode = 0;
       _resMessage = "Koneksi Internet Tidak Tersedia";
+      EasyLoading.dismiss();
     } catch (e) {
-      _isLoading = false;
+      statusCode = null;
       _resMessage = "Mohon Coba Lagi";
       notifyListeners();
+      EasyLoading.dismiss();
 
       print(e);
     }
@@ -213,7 +293,7 @@ class AuthenticationProvider extends ChangeNotifier {
     required String email,
     BuildContext? context,
   }) async {
-    _isLoading = true;
+    EasyLoading.show(status: 'Loading...');
     notifyListeners();
 
     String url = "$baseURL/send-reset-password";
@@ -240,27 +320,29 @@ class AuthenticationProvider extends ChangeNotifier {
 
         print(res);
 
-        _isLoading = true;
         _resMessage = res["message"];
-
         notifyListeners();
+
+        EasyLoading.dismiss();
       } else {
         final res = json.decode(req.body);
 
         print(res);
 
-        _isLoading = false;
         _resMessage = res["message"];
-
         notifyListeners();
+
+        EasyLoading.dismiss();
       }
     } on SocketException catch (_) {
-      _isLoading = false;
+      statusCode = 0;
       _resMessage = "Koneksi Internet Tidak Tersedia";
+      EasyLoading.dismiss();
     } catch (e) {
-      _isLoading = false;
+      statusCode = null;
       _resMessage = "Mohon Coba Lagi";
       notifyListeners();
+      EasyLoading.dismiss();
 
       print(e);
     }
@@ -271,7 +353,7 @@ class AuthenticationProvider extends ChangeNotifier {
     required String newPassword,
     BuildContext? context,
   }) async {
-    _isLoading = true;
+    EasyLoading.show(status: 'Loading...');
     notifyListeners();
 
     String url = "$baseURL/reset-password";
@@ -299,10 +381,10 @@ class AuthenticationProvider extends ChangeNotifier {
 
         print(res);
 
-        _isLoading = true;
         _resMessage = res["message"];
-
         notifyListeners();
+
+        EasyLoading.dismiss();
 
         Get.offAllNamed(Routes.SIGN_IN);
       } else {
@@ -310,25 +392,27 @@ class AuthenticationProvider extends ChangeNotifier {
 
         print(res);
 
-        _isLoading = false;
         _resMessage = res["message"];
-
         notifyListeners();
+
+        EasyLoading.dismiss();
       }
     } on SocketException catch (_) {
-      _isLoading = false;
+      statusCode = 0;
       _resMessage = "Koneksi Internet Tidak Tersedia";
+      EasyLoading.dismiss();
     } catch (e) {
-      _isLoading = false;
+      statusCode = null;
       _resMessage = "Mohon Coba Lagi";
       notifyListeners();
+      EasyLoading.dismiss();
 
       print(e);
     }
   }
 
   void logoutUser() async {
-    _isLoading = true;
+    EasyLoading.show(status: 'Loading...');
     notifyListeners();
 
     String url = "$baseURL/logout";
@@ -337,9 +421,10 @@ class AuthenticationProvider extends ChangeNotifier {
       String? token = await DatabaseProvider().getToken();
 
       if (token == null) {
-        _isLoading = false;
         _resMessage = "Token tidak ditemukan";
         notifyListeners();
+
+        EasyLoading.dismiss();
         return;
       }
 
@@ -361,10 +446,10 @@ class AuthenticationProvider extends ChangeNotifier {
 
         await DatabaseProvider().clearToken();
 
-        _isLoading = false;
         _resMessage = "Logout Berhasil";
-
         notifyListeners();
+
+        EasyLoading.dismiss();
 
         Get.offAllNamed(Routes.SIGN_IN);
       } else {
@@ -372,25 +457,26 @@ class AuthenticationProvider extends ChangeNotifier {
 
         print(res);
 
-        _isLoading = false;
         _resMessage = res["message"];
-
         notifyListeners();
+
+        EasyLoading.dismiss();
       }
     } on SocketException catch (_) {
-      _isLoading = false;
+      statusCode = 0;
       _resMessage = "Koneksi Internet Tidak Tersedia";
+      EasyLoading.dismiss();
     } catch (e) {
-      _isLoading = false;
+      statusCode = null;
       _resMessage = "Terjadi Kesalahan, Coba Lagi";
       notifyListeners();
+      EasyLoading.dismiss();
 
       print(e);
     }
   }
 
   void clear() {
-    _isLoading = false;
     _resMessage = "";
     statusCode == null;
 

@@ -18,7 +18,8 @@ class ResetPasswordView extends GetView<ResetPasswordController> {
   ResetPasswordView({super.key});
 
   final _formKey = GlobalKey<FormBuilderState>();
-  final _obscureText = true.obs;
+  final _obscurePassword = true.obs;
+  final _obscureConfPassword = true.obs;
 
   // Variables to track back button
   int _backButtonPressCount = 0;
@@ -130,14 +131,14 @@ class ResetPasswordView extends GetView<ResetPasswordController> {
                               ),
                               suffixIcon: IconButton(
                                 icon: Icon(
-                                  _obscureText.value
+                                  _obscurePassword.value
                                       ? CupertinoIcons.eye
                                       : CupertinoIcons.eye_slash,
                                   size: 18.0,
                                   color: Colors.black87,
                                 ),
                                 onPressed: () {
-                                  _obscureText.toggle();
+                                  _obscurePassword.toggle();
                                 },
                               ),
                               hintText: "Masukan password",
@@ -162,7 +163,7 @@ class ResetPasswordView extends GetView<ResetPasswordController> {
                                 horizontal: 15,
                               ),
                             ),
-                            obscureText: _obscureText.value,
+                            obscureText: _obscurePassword.value,
                             validator: FormBuilderValidators.compose([
                               FormBuilderValidators.required(),
                               FormBuilderValidators.minLength(8),
@@ -189,14 +190,14 @@ class ResetPasswordView extends GetView<ResetPasswordController> {
                               ),
                               suffixIcon: IconButton(
                                 icon: Icon(
-                                  _obscureText.value
+                                  _obscureConfPassword.value
                                       ? CupertinoIcons.eye
                                       : CupertinoIcons.eye_slash,
                                   size: 18.0,
                                   color: Colors.black87,
                                 ),
                                 onPressed: () {
-                                  _obscureText.toggle();
+                                  _obscureConfPassword.toggle();
                                 },
                               ),
                               hintText: "Konfirmasi password",
@@ -221,7 +222,7 @@ class ResetPasswordView extends GetView<ResetPasswordController> {
                                 horizontal: 15,
                               ),
                             ),
-                            obscureText: _obscureText.value,
+                            obscureText: _obscureConfPassword.value,
                             validator: FormBuilderValidators.compose([
                               FormBuilderValidators.required(),
                               FormBuilderValidators.minLength(8),
@@ -263,82 +264,56 @@ class ResetPasswordView extends GetView<ResetPasswordController> {
                             );
 
                             return ElevatedButton(
-                              onPressed: auth.isLoading
-                                  ? null
-                                  : () {
-                                      if (_formKey.currentState!.validate()) {
-                                        _formKey.currentState!.save();
-                                        final formData =
-                                            _formKey.currentState!.value;
+                              onPressed: () {
+                                if (_formKey.currentState!.validate()) {
+                                  _formKey.currentState!.save();
+                                  final formData = _formKey.currentState!.value;
 
-                                        final String? password =
-                                            formData['password'];
-                                        final String? confirmPassword =
-                                            formData['confirm_password'];
+                                  final String? password = formData['password'];
+                                  final String? confirmPassword =
+                                      formData['confirm_password'];
 
-                                        if (confirmPassword == password) {
-                                          auth.resetPassword(
-                                            email: email.toString().trim(),
-                                            newPassword: confirmPassword
-                                                .toString()
-                                                .trim(),
-                                            context: context,
-                                          );
-                                        } else {
-                                          Get.snackbar(
-                                            "Informasi ",
-                                            "Password Tidak Sesuai",
-                                            animationDuration: const Duration(
-                                                milliseconds: 200),
-                                            duration: const Duration(
-                                                milliseconds: 1650),
-                                            backgroundColor:
-                                                const Color.fromARGB(
-                                                    255, 238, 238, 238),
-                                            borderWidth: 5.0,
-                                            snackPosition: SnackPosition.TOP,
-                                            margin: const EdgeInsets.all(20.0),
-                                            icon: const Icon(
-                                              CupertinoIcons.info_circle,
-                                            ),
-                                          );
-                                        }
-                                      }
-                                    },
-                              style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.resolveWith<Color>(
-                                  (Set<MaterialState> states) {
-                                    if (auth.isLoading) {
-                                      return Colors.grey;
-                                    }
-                                    return const Color(0xFF1E2857);
-                                  },
-                                ),
-                                shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
+                                  if (confirmPassword == password) {
+                                    auth.resetPassword(
+                                      email: email.toString().trim(),
+                                      newPassword:
+                                          confirmPassword.toString().trim(),
+                                      context: context,
+                                    );
+                                  } else {
+                                    Get.snackbar(
+                                      "Informasi ",
+                                      "Password Tidak Sesuai",
+                                      animationDuration:
+                                          const Duration(milliseconds: 200),
+                                      duration:
+                                          const Duration(milliseconds: 1650),
+                                      backgroundColor: const Color.fromARGB(
+                                          255, 238, 238, 238),
+                                      borderWidth: 5.0,
+                                      snackPosition: SnackPosition.TOP,
+                                      margin: const EdgeInsets.all(20.0),
+                                      icon: const Icon(
+                                        CupertinoIcons.info_circle,
+                                      ),
+                                    );
+                                  }
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Color(0xFF1E2857),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
                                 ),
                               ),
-                              child: auth.isLoading
-                                  ? Text(
-                                      "Loading ...",
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.black,
-                                      ),
-                                    )
-                                  : Text(
-                                      "Reset Password",
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.white,
-                                      ),
-                                    ),
+                              child: Text(
+                                "Reset Password",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white,
+                                ),
+                              ),
                             );
                           }),
                         ),

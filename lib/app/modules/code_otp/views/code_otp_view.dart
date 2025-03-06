@@ -34,9 +34,10 @@ class CodeOtpView extends GetView<CodeOtpController> {
 
   @override
   Widget build(BuildContext context) {
-    final Map<String, dynamic> arguments =
-        Get.arguments as Map<String, dynamic>;
-    final String email = arguments['email'];
+    String email = "";
+    if (Get.arguments != null && Get.arguments is Map<String, dynamic>) {
+      email = Get.arguments['email'] ?? "";
+    }
 
     return WillPopScope(
       onWillPop: () async {
@@ -210,69 +211,46 @@ class CodeOtpView extends GetView<CodeOtpController> {
                         );
 
                         return ElevatedButton(
-                          onPressed: auth.isLoading
-                              ? null
-                              : () {
-                                  if (_otpCode != '') {
-                                    auth.verifyCodeOTP(
-                                      email: email.toString().trim(),
-                                      otp: _otpCode.toString().trim(),
-                                      context: context,
-                                    );
-                                  } else {
-                                    Get.snackbar(
-                                      "Informasi",
-                                      "Kode OTP belum diisi",
-                                      animationDuration:
-                                          const Duration(milliseconds: 200),
-                                      duration:
-                                          const Duration(milliseconds: 1650),
-                                      backgroundColor: Color(0xFF1E2857),
-                                      colorText: Colors.white,
-                                      borderWidth: 5.0,
-                                      snackPosition: SnackPosition.TOP,
-                                      margin: const EdgeInsets.all(20.0),
-                                      icon: const Icon(
-                                        CupertinoIcons.info_circle,
-                                        color: Colors.white,
-                                      ),
-                                    );
-                                  }
-                                },
-                          style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.resolveWith<Color>(
-                              (Set<MaterialState> states) {
-                                if (auth.isLoading) {
-                                  return Colors.grey;
-                                }
-                                return const Color(0xFF1E2857);
-                              },
-                            ),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15),
-                              ),
+                          onPressed: () {
+                            if (_otpCode != '') {
+                              auth.verifyCodeOTP(
+                                email: email.toString().trim(),
+                                otp: _otpCode.toString().trim(),
+                                context: context,
+                              );
+                            } else {
+                              Get.snackbar(
+                                "Informasi",
+                                "Kode OTP belum diisi",
+                                animationDuration:
+                                    const Duration(milliseconds: 200),
+                                duration: const Duration(milliseconds: 1650),
+                                backgroundColor: Color(0xFF1E2857),
+                                colorText: Colors.white,
+                                borderWidth: 5.0,
+                                snackPosition: SnackPosition.TOP,
+                                margin: const EdgeInsets.all(20.0),
+                                icon: const Icon(
+                                  CupertinoIcons.info_circle,
+                                  color: Colors.white,
+                                ),
+                              );
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0xFF1E2857),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
                             ),
                           ),
-                          child: auth.isLoading
-                              ? Text(
-                                  "Loading ...",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black,
-                                  ),
-                                )
-                              : Text(
-                                  "Verifikasi Kode",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white,
-                                  ),
-                                ),
+                          child: Text(
+                            "Verifikasi Kode",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white,
+                            ),
+                          ),
                         );
                       }),
                     ),

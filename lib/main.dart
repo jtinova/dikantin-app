@@ -1,6 +1,7 @@
 import 'package:dikantin_app_rebuild/app/providers/auth_provider.dart';
 import 'package:dikantin_app_rebuild/app/theme/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'package:get/get.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -17,6 +18,23 @@ void main() {
   );
 
   FlutterNativeSplash.remove();
+
+  configLoading();
+}
+
+void configLoading() {
+  EasyLoading.instance
+    ..loadingStyle = EasyLoadingStyle.light
+    ..maskType = EasyLoadingMaskType.black
+    ..animationStyle = EasyLoadingAnimationStyle.scale
+    ..indicatorType = EasyLoadingIndicatorType.threeBounce
+    ..userInteractions = false
+    ..dismissOnTap = false
+    ..indicatorSize = 35
+    ..textStyle = TextStyle(
+      fontSize: 17,
+      fontWeight: FontWeight.w500,
+    );
 }
 
 class MyApp extends StatelessWidget {
@@ -33,6 +51,7 @@ class MyApp extends StatelessWidget {
         initialRoute: AppPages.INITIAL,
         theme: lightMode,
         getPages: AppPages.routes,
+        builder: EasyLoading.init(),
         debugShowCheckedModeBanner: false,
       ),
     );

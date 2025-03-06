@@ -148,96 +148,71 @@ class SendEmailView extends GetView<SendEmailController> {
                             FormBuilderValidators.email(),
                           ]),
                         ),
-                        const SizedBox(height: 35),
-                        SizedBox(
-                          width: double.infinity,
-                          height: 45,
-                          child: Consumer<AuthenticationProvider>(
-                              builder: (context, auth, child) {
-                            WidgetsBinding.instance.addPostFrameCallback(
-                              (_) {
-                                if (auth.resMessage != '') {
-                                  Get.snackbar(
-                                    "Informasi",
-                                    auth.resMessage,
-                                    animationDuration:
-                                        const Duration(milliseconds: 200),
-                                    duration:
-                                        const Duration(milliseconds: 1650),
-                                    backgroundColor: auth.statusCode == 200
-                                        ? Colors.green
-                                        : Colors.red,
-                                    colorText: Colors.white,
-                                    borderWidth: 5.0,
-                                    snackPosition: SnackPosition.TOP,
-                                    margin: const EdgeInsets.all(20.0),
-                                    icon: const Icon(
-                                      CupertinoIcons.info_circle,
-                                      color: Colors.white,
-                                    ),
-                                  );
-
-                                  auth.clear();
-                                }
-                              },
-                            );
-                            return ElevatedButton(
-                              onPressed: auth.isLoading
-                                  ? null
-                                  : () {
-                                      if (_formKey.currentState!
-                                          .saveAndValidate()) {
-                                        _formKey.currentState!.save();
-
-                                        final formData =
-                                            _formKey.currentState!.value;
-
-                                        final String? email = formData['email'];
-
-                                        auth.sendEmailOTP(
-                                          email: email.toString().trim(),
-                                        );
-                                      }
-                                    },
-                              style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.resolveWith<Color>(
-                                  (Set<MaterialState> states) {
-                                    if (auth.isLoading) {
-                                      return Colors.grey;
-                                    }
-                                    return const Color(0xFF1E2857);
-                                  },
-                                ),
-                                shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                ),
-                              ),
-                              child: auth.isLoading
-                                  ? Text(
-                                      "Loading ...",
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.black,
-                                      ),
-                                    )
-                                  : Text(
-                                      "Kirim OTP",
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                            );
-                          }),
-                        ),
                       ],
                     ),
+                  ),
+                  const SizedBox(height: 35),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 45,
+                    child: Consumer<AuthenticationProvider>(
+                        builder: (context, auth, child) {
+                      WidgetsBinding.instance.addPostFrameCallback(
+                        (_) {
+                          if (auth.resMessage != '') {
+                            Get.snackbar(
+                              "Informasi",
+                              auth.resMessage,
+                              animationDuration:
+                                  const Duration(milliseconds: 200),
+                              duration: const Duration(milliseconds: 1650),
+                              backgroundColor: auth.statusCode == 200
+                                  ? Colors.green
+                                  : Colors.red,
+                              colorText: Colors.white,
+                              borderWidth: 5.0,
+                              snackPosition: SnackPosition.TOP,
+                              margin: const EdgeInsets.all(20.0),
+                              icon: const Icon(
+                                CupertinoIcons.info_circle,
+                                color: Colors.white,
+                              ),
+                            );
+
+                            auth.clear();
+                          }
+                        },
+                      );
+                      return ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.saveAndValidate()) {
+                            _formKey.currentState!.save();
+
+                            final formData = _formKey.currentState!.value;
+
+                            final String? email = formData['email'];
+
+                            auth.sendEmailOTP(
+                              email: email.toString().trim(),
+                            );
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFF1E2857),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                        ),
+                        child: Text(
+                          "Kirim OTP",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white,
+                          ),
+                        ),
+                      );
+                    }),
                   ),
                   const SizedBox(height: 70),
                   GestureDetector(

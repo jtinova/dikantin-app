@@ -154,11 +154,9 @@ class ProfileView extends GetView<ProfileController> {
                               },
                             );
                             return TextButton(
-                              onPressed: auth.isLoading
-                                  ? null
-                                  : () {
-                                      auth.logoutUser();
-                                    },
+                              onPressed: () {
+                                auth.logoutUser();
+                              },
                               child: Text(
                                 "Logout",
                                 style: TextStyle(
