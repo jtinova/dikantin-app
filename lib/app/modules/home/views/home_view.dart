@@ -36,7 +36,10 @@ class HomeView extends GetView<HomeController> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Header(formKey: _formKey),
+              Header(
+                formKey: _formKey,
+                controller: controller,
+              ),
               BannerCarousel(controller: controller),
               Categories(controller: controller),
               Canteens(controller: controller),
@@ -50,7 +53,9 @@ class HomeView extends GetView<HomeController> {
 }
 
 class Header extends StatelessWidget {
-  const Header({super.key, required this.formKey});
+  const Header({super.key, required this.formKey, required this.controller});
+
+  final HomeController controller;
 
   final GlobalKey<FormBuilderState> formKey;
 
@@ -60,7 +65,7 @@ class Header extends StatelessWidget {
       children: [
         Container(
           width: double.infinity,
-          height: 100,
+          height: 105,
           alignment: Alignment.centerLeft,
           color: Color(0xFF1E2857),
         ),
@@ -76,34 +81,67 @@ class Header extends StatelessWidget {
                   fontSize: 18,
                 ),
               ),
-              SizedBox(height: 8),
+              SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Icon(
                     CupertinoIcons.location_solid,
                     color: Colors.white,
                     size: 20,
                   ),
-                  SizedBox(width: 5),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 2),
-                    child: Text(
-                      'Gedung TI',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 5),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 6),
-                    child: Icon(
-                      CupertinoIcons.chevron_down,
-                      color: Colors.white,
-                      size: 12,
+                  SizedBox(width: 7),
+                  SizedBox(
+                    width: 175,
+                    height: 25,
+                    child: Obx(
+                      () {
+                        return Container(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton<String>(
+                              value: controller.selectedLocation.value,
+                              icon: Icon(
+                                CupertinoIcons.chevron_down,
+                                color: Colors.black,
+                                size: 16,
+                              ),
+                              isExpanded: true,
+                              dropdownColor: Colors.white,
+                              borderRadius: BorderRadius.circular(15),
+                              items: controller.buildings
+                                  .map(
+                                    (building) => DropdownMenuItem(
+                                      value: building.name,
+                                      child: Text(
+                                        building.name,
+                                        style: TextStyle(
+                                          color: controller
+                                                      .selectedLocation.value ==
+                                                  building.name
+                                              ? Colors.black
+                                              : Colors.grey,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
+                              onChanged: (newValue) {
+                                if (newValue != null) {
+                                  controller.selectedLocation.value = newValue;
+                                }
+                              },
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ],

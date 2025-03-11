@@ -56,9 +56,6 @@ class AuthenticationProvider extends ChangeNotifier {
         print(req.body);
 
         _resMessage = res["message"];
-        notifyListeners();
-
-        EasyLoading.dismiss();
 
         Get.offAllNamed(Routes.SIGN_IN);
       } else {
@@ -75,25 +72,23 @@ class AuthenticationProvider extends ChangeNotifier {
             errorMessage += "${errors["phone_number"][0]}\n";
           }
           _resMessage = errorMessage.trim();
-          notifyListeners();
         } else {
           _resMessage = res["message"];
-          notifyListeners();
         }
-
-        EasyLoading.dismiss();
       }
+
+      notifyListeners();
     } on SocketException catch (_) {
       statusCode = 0;
       _resMessage = "Koneksi Internet Tidak Tersedia";
-      EasyLoading.dismiss();
     } catch (e) {
       statusCode = null;
       _resMessage = "Mohon Coba Lagi";
-      notifyListeners();
-      EasyLoading.dismiss();
 
       print(e);
+    } finally {
+      EasyLoading.dismiss();
+      notifyListeners();
     }
   }
 
@@ -131,14 +126,11 @@ class AuthenticationProvider extends ChangeNotifier {
         print(req.body);
 
         _resMessage = res["message"];
-        notifyListeners();
 
         // Save Token Navigate To Dashboard
         final token = res["data"]["access_token"];
 
         await DatabaseProvider().saveToken(token);
-
-        EasyLoading.dismiss();
 
         Get.offAllNamed(Routes.NAVIGATION);
       } else {
@@ -147,21 +139,20 @@ class AuthenticationProvider extends ChangeNotifier {
         print(res);
 
         _resMessage = res["message"];
-        notifyListeners();
-
-        EasyLoading.dismiss();
       }
+
+      notifyListeners();
     } on SocketException catch (_) {
       statusCode = 0;
       _resMessage = "Koneksi Internet Tidak Tersedia";
-      EasyLoading.dismiss();
     } catch (e) {
       statusCode = null;
       _resMessage = "Mohon Coba Lagi";
-      notifyListeners();
-      EasyLoading.dismiss();
 
       print(e);
+    } finally {
+      EasyLoading.dismiss();
+      notifyListeners();
     }
   }
 
@@ -197,9 +188,6 @@ class AuthenticationProvider extends ChangeNotifier {
         print(res);
 
         _resMessage = res["message"];
-        notifyListeners();
-
-        EasyLoading.dismiss();
 
         Get.offAllNamed(Routes.CODE_OTP, arguments: {'email': email});
       } else {
@@ -208,21 +196,20 @@ class AuthenticationProvider extends ChangeNotifier {
         print(res);
 
         _resMessage = res["message"];
-        notifyListeners();
-
-        EasyLoading.dismiss();
       }
+
+      notifyListeners();
     } on SocketException catch (_) {
       statusCode = 0;
       _resMessage = "Koneksi Internet Tidak Tersedia";
-      EasyLoading.dismiss();
     } catch (e) {
       statusCode = null;
       _resMessage = "Mohon Coba Lagi";
-      notifyListeners();
-      EasyLoading.dismiss();
 
       print(e);
+    } finally {
+      EasyLoading.dismiss();
+      notifyListeners();
     }
   }
 
@@ -260,9 +247,6 @@ class AuthenticationProvider extends ChangeNotifier {
         print(res);
 
         _resMessage = res["message"];
-        notifyListeners();
-
-        EasyLoading.dismiss();
 
         Get.offAllNamed(Routes.RESET_PASSWORD, arguments: {'email': email});
       } else {
@@ -271,21 +255,20 @@ class AuthenticationProvider extends ChangeNotifier {
         print(res);
 
         _resMessage = res["message"];
-        notifyListeners();
-
-        EasyLoading.dismiss();
       }
+
+      notifyListeners();
     } on SocketException catch (_) {
       statusCode = 0;
       _resMessage = "Koneksi Internet Tidak Tersedia";
-      EasyLoading.dismiss();
     } catch (e) {
       statusCode = null;
       _resMessage = "Mohon Coba Lagi";
-      notifyListeners();
-      EasyLoading.dismiss();
 
       print(e);
+    } finally {
+      EasyLoading.dismiss();
+      notifyListeners();
     }
   }
 
@@ -321,30 +304,26 @@ class AuthenticationProvider extends ChangeNotifier {
         print(res);
 
         _resMessage = res["message"];
-        notifyListeners();
-
-        EasyLoading.dismiss();
       } else {
         final res = json.decode(req.body);
 
         print(res);
 
         _resMessage = res["message"];
-        notifyListeners();
-
-        EasyLoading.dismiss();
       }
+
+      notifyListeners();
     } on SocketException catch (_) {
       statusCode = 0;
       _resMessage = "Koneksi Internet Tidak Tersedia";
-      EasyLoading.dismiss();
     } catch (e) {
       statusCode = null;
       _resMessage = "Mohon Coba Lagi";
-      notifyListeners();
-      EasyLoading.dismiss();
 
       print(e);
+    } finally {
+      EasyLoading.dismiss();
+      notifyListeners();
     }
   }
 
@@ -382,9 +361,6 @@ class AuthenticationProvider extends ChangeNotifier {
         print(res);
 
         _resMessage = res["message"];
-        notifyListeners();
-
-        EasyLoading.dismiss();
 
         Get.offAllNamed(Routes.SIGN_IN);
       } else {
@@ -393,21 +369,20 @@ class AuthenticationProvider extends ChangeNotifier {
         print(res);
 
         _resMessage = res["message"];
-        notifyListeners();
-
-        EasyLoading.dismiss();
       }
+
+      notifyListeners();
     } on SocketException catch (_) {
       statusCode = 0;
       _resMessage = "Koneksi Internet Tidak Tersedia";
-      EasyLoading.dismiss();
     } catch (e) {
       statusCode = null;
       _resMessage = "Mohon Coba Lagi";
-      notifyListeners();
-      EasyLoading.dismiss();
 
       print(e);
+    } finally {
+      EasyLoading.dismiss();
+      notifyListeners();
     }
   }
 
@@ -422,9 +397,6 @@ class AuthenticationProvider extends ChangeNotifier {
 
       if (token == null) {
         _resMessage = "Token tidak ditemukan";
-        notifyListeners();
-
-        EasyLoading.dismiss();
         return;
       }
 
@@ -447,9 +419,6 @@ class AuthenticationProvider extends ChangeNotifier {
         await DatabaseProvider().clearToken();
 
         _resMessage = "Logout Berhasil";
-        notifyListeners();
-
-        EasyLoading.dismiss();
 
         Get.offAllNamed(Routes.SIGN_IN);
       } else {
@@ -458,21 +427,20 @@ class AuthenticationProvider extends ChangeNotifier {
         print(res);
 
         _resMessage = res["message"];
-        notifyListeners();
-
-        EasyLoading.dismiss();
       }
+
+      notifyListeners();
     } on SocketException catch (_) {
       statusCode = 0;
       _resMessage = "Koneksi Internet Tidak Tersedia";
-      EasyLoading.dismiss();
     } catch (e) {
       statusCode = null;
       _resMessage = "Terjadi Kesalahan, Coba Lagi";
-      notifyListeners();
-      EasyLoading.dismiss();
 
       print(e);
+    } finally {
+      EasyLoading.dismiss();
+      notifyListeners();
     }
   }
 

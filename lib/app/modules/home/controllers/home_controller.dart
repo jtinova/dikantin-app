@@ -1,10 +1,76 @@
+// ignore_for_file: avoid_print
+
+import 'dart:convert';
+
+import 'package:dikantin_app_rebuild/app/data/api.dart';
+import 'package:dikantin_app_rebuild/app/providers/db_provider.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+
+import '../../../models/building.dart';
 
 class HomeController extends GetxController {
+  var isLoading = false.obs;
   var currentIndex = 0.obs;
-  var selectedCanteen = "Semua".obs; 
+  var selectedCanteen = "Semua".obs;
 
-   List<String> bannerList = [
+  var selectedLocation = 'Pilih Lokasi'.obs;
+  var buildings = <Building>[].obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    getLocation();
+  }
+
+  Future<void> getLocation() async {
+    isLoading.value = true;
+
+    String url = "${AppUrl.baseURL}/building";
+    String? token = await DatabaseProvider().getToken();
+
+    if (token == null) {
+      isLoading.value = false;
+      return;
+    }
+
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        List<dynamic> buildingData = data["data"];
+
+        buildings.value = [
+          Building(
+            id: "",
+            name: "Pilih Lokasi",
+            latitude: 0,
+            longitude: 0,
+          ),
+          ...buildingData.map((item) => Building.fromJson(item))
+        ];
+
+        if (buildings.isNotEmpty) {
+          selectedLocation.value = "Pilih Lokasi";
+        }
+      } else {
+        selectedLocation.value = "Pilih Lokasi";
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  List<String> bannerList = [
     'assets/images/image_carousel.png',
     'assets/images/image_carousel.png',
     'assets/images/image_carousel.png',
@@ -76,7 +142,7 @@ class HomeController extends GetxController {
   ];
 
   void updateIndex(int index) {
-    currentIndex.value = index; 
+    currentIndex.value = index;
   }
 
   void selectCanteen(String canteen) {
