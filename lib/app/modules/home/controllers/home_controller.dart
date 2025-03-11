@@ -2,11 +2,11 @@
 
 import 'dart:convert';
 
-import 'package:dikantin_app_rebuild/app/data/api.dart';
-import 'package:dikantin_app_rebuild/app/providers/db_provider.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+import '../../../data/api.dart';
+import '../../../providers/db_provider.dart';
 import '../../../models/building.dart';
 import '../../../models/canteen.dart';
 import '../../../models/category.dart';

@@ -35,18 +35,16 @@ class NavigationView extends GetView<NavigationController> {
           });
           // Show a snackbar or toast indicating press again to exit
           Get.snackbar(
-            "Information",
-            "Press again to exit",
+            "Informasi ",
+            "Tekan sekali lagi untuk keluar",
             animationDuration: const Duration(milliseconds: 200),
             duration: const Duration(milliseconds: 1650),
-            backgroundColor: Color(0xFF1E2857),
-            colorText: Colors.white,
+            backgroundColor: const Color.fromARGB(255, 238, 238, 238),
             borderWidth: 5.0,
-            snackPosition: SnackPosition.BOTTOM,
+            snackPosition: SnackPosition.TOP,
             margin: const EdgeInsets.all(20.0),
             icon: const Icon(
               CupertinoIcons.info_circle,
-              color: Colors.white,
             ),
           );
           return false; // Do not exit the app yet
@@ -66,7 +64,7 @@ class NavigationView extends GetView<NavigationController> {
             HomeView(),
             OrderView(),
             const ChatView(),
-            const ProfileView(),
+            ProfileView(),
           ],
         ),
         bottomNavigationBar: Container(

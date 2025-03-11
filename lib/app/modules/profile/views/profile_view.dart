@@ -9,7 +9,10 @@ import 'package:provider/provider.dart';
 import '../controllers/profile_controller.dart';
 
 class ProfileView extends GetView<ProfileController> {
-  const ProfileView({super.key});
+  ProfileView({super.key});
+
+  @override
+  final ProfileController controller = Get.put(ProfileController());
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +20,7 @@ class ProfileView extends GetView<ProfileController> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          'Profie',
+          'Profile',
           style: TextStyle(
             fontSize: 20,
             color: Colors.black,
@@ -31,28 +34,45 @@ class ProfileView extends GetView<ProfileController> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              CircleAvatar(
-                backgroundImage: AssetImage('assets/images/logo_dikantin.png'),
-                backgroundColor: Colors.black12,
-                radius: 48,
-              ),
-              SizedBox(height: 10),
-              Text(
-                'Budiono Siregar',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              Text(
-                'siregargamtenk@gmail.com',
-                style: TextStyle(
-                  color: Colors.black54,
-                  fontSize: 14,
-                ),
-              ),
-              SizedBox(height: 50),
+              Obx(() {
+                if (controller.isLoading.value) {
+                  return CircularProgressIndicator();
+                }
+                if (controller.users.value != null) {
+                  return Column(
+                    children: [
+                      CircleAvatar(
+                        backgroundImage:
+                            AssetImage('assets/images/logo_dikantin.png'),
+                        backgroundColor: Colors.black12,
+                        radius: 48,
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        controller.users.value!.fullName,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      Text(
+                        controller.users.value!.email,
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  );
+                } else {
+                  return Text(
+                    "Data tidak tersedia",
+                    style: TextStyle(color: Colors.red),
+                  );
+                }
+              }),
+              SizedBox(height: 40),
               GestureDetector(
                 onTap: () => Get.toNamed(Routes.MY_PROFILE),
                 child: Padding(
