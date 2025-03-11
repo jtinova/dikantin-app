@@ -18,7 +18,6 @@ void main() {
   );
 
   FlutterNativeSplash.remove();
-
   configLoading();
 }
 

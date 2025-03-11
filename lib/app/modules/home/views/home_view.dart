@@ -307,31 +307,34 @@ class Categories extends StatelessWidget {
         ),
         SizedBox(
           height: 85,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            shrinkWrap: true,
-            children: controller.categories.map((category) {
-              return Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15),
-                child: Column(
-                  children: [
-                    CircleAvatar(
-                      backgroundImage: AssetImage(category['image']!),
-                      radius: 30,
-                    ),
-                    SizedBox(height: 5),
-                    Text(
-                      category['name']!,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: Color(0xFF1E2857),
+          child: Obx(
+            () => ListView(
+              scrollDirection: Axis.horizontal,
+              shrinkWrap: true,
+              children: controller.categories.map((category) {
+                return Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: Column(
+                    children: [
+                      CircleAvatar(
+                        backgroundImage:
+                            AssetImage('assets/images/image_carousel.png'),
+                        radius: 30,
                       ),
-                    ),
-                  ],
-                ),
-              );
-            }).toList(),
+                      SizedBox(height: 5),
+                      Text(
+                        category.name,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xFF1E2857),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
+            ),
           ),
         ),
       ],
@@ -357,13 +360,13 @@ class Canteens extends StatelessWidget {
           () => ListView(
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
-            children: controller.canteens.map((category) {
+            children: controller.canteens.map((canteen) {
               bool isSelected =
-                  controller.selectedCanteen.value == category['name'];
+                  controller.selectedCanteen.value == canteen.name;
 
               return GestureDetector(
                 onTap: () {
-                  controller.selectCanteen(category['name']!);
+                  controller.selectedCanteen.value = canteen.name;
                 },
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 5),
@@ -378,7 +381,7 @@ class Canteens extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(
-                      category['name']!,
+                      canteen.name,
                       style: TextStyle(
                         fontSize: 16,
                         color: isSelected ? Colors.white : Color(0xFF1E2857),
