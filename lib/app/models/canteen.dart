@@ -15,11 +15,11 @@ class Canteen {
 
   factory Canteen.fromJson(Map<String, dynamic> json) {
     return Canteen(
-      id: json['id'],
-      name: json['name'],
-      phoneNumber: json['phone_number'],
-      balance: json['balance'],
-      status: json['status'],
+      id: json['id'] ?? '',
+      name: json['name'] ?? '',
+      phoneNumber: json['phone_number'] ?? '',
+      balance: json['balance'] ?? 0,
+      status: json['status'] ?? '',
     );
   }
 }

@@ -1,15 +1,19 @@
 // ignore_for_file: avoid_print
 
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 import '../../../data/api.dart';
 import '../../../providers/db_provider.dart';
 import '../../../models/building.dart';
 import '../../../models/canteen.dart';
 import '../../../models/category.dart';
+import '../../../models/menu.dart';
 
 class HomeController extends GetxController {
   var isLoading = false.obs;
@@ -21,6 +25,7 @@ class HomeController extends GetxController {
   var buildings = <Building>[].obs;
   var categories = <Category>[].obs;
   var canteens = <Canteen>[].obs;
+  var menus = <Menu>[].obs;
 
   List<String> bannerList = [
     'assets/images/image_carousel.png',
@@ -35,6 +40,7 @@ class HomeController extends GetxController {
     getLocation();
     getCategories();
     getCanteen();
+    getAllMenu();
   }
 
   Future<void> getLocation() async {
@@ -45,11 +51,26 @@ class HomeController extends GetxController {
 
     if (token == null) {
       isLoading.value = false;
+
+      Get.snackbar(
+        "Informasi ",
+        "Token Tidak Ditemukan",
+        animationDuration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 1650),
+        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+        borderWidth: 5.0,
+        snackPosition: SnackPosition.TOP,
+        margin: const EdgeInsets.all(20.0),
+        icon: const Icon(
+          CupertinoIcons.info_circle,
+        ),
+      );
+
       return;
     }
 
     try {
-      final response = await http.get(
+      http.Response req = await http.get(
         Uri.parse(url),
         headers: {
           'Content-Type': 'application/json',
@@ -57,9 +78,9 @@ class HomeController extends GetxController {
         },
       );
 
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        List<dynamic> buildingData = data["data"];
+      if (req.statusCode == 200) {
+        final res = json.decode(req.body);
+        List<dynamic> buildingData = res["data"];
 
         buildings.value = [
           Building(
@@ -75,9 +96,54 @@ class HomeController extends GetxController {
           selectedLocation.value = "Pilih Lokasi";
         }
       } else {
+        final res = json.decode(req.body);
         selectedLocation.value = "Pilih Lokasi";
+
+        print(res);
+
+        Get.snackbar(
+          "Informasi ",
+          "Terjadi Kesalahan",
+          animationDuration: const Duration(milliseconds: 200),
+          duration: const Duration(milliseconds: 1650),
+          backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+          borderWidth: 5.0,
+          snackPosition: SnackPosition.TOP,
+          margin: const EdgeInsets.all(20.0),
+          icon: const Icon(
+            CupertinoIcons.info_circle,
+          ),
+        );
       }
+    } on SocketException catch (_) {
+      Get.snackbar(
+        "Informasi ",
+        "Koneksi Internet Tidak Tersedia",
+        animationDuration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 1650),
+        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+        borderWidth: 5.0,
+        snackPosition: SnackPosition.TOP,
+        margin: const EdgeInsets.all(20.0),
+        icon: const Icon(
+          CupertinoIcons.info_circle,
+        ),
+      );
     } catch (e) {
+      Get.snackbar(
+        "Informasi ",
+        "Mohon Coba Lagi",
+        animationDuration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 1650),
+        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+        borderWidth: 5.0,
+        snackPosition: SnackPosition.TOP,
+        margin: const EdgeInsets.all(20.0),
+        icon: const Icon(
+          CupertinoIcons.info_circle,
+        ),
+      );
+
       print(e);
     } finally {
       isLoading.value = false;
@@ -92,11 +158,26 @@ class HomeController extends GetxController {
 
     if (token == null) {
       isLoading.value = false;
+
+      Get.snackbar(
+        "Informasi ",
+        "Token Tidak Ditemukan",
+        animationDuration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 1650),
+        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+        borderWidth: 5.0,
+        snackPosition: SnackPosition.TOP,
+        margin: const EdgeInsets.all(20.0),
+        icon: const Icon(
+          CupertinoIcons.info_circle,
+        ),
+      );
+
       return;
     }
 
     try {
-      final response = await http.get(
+      http.Response req = await http.get(
         Uri.parse(url),
         headers: {
           'Content-Type': 'application/json',
@@ -104,14 +185,62 @@ class HomeController extends GetxController {
         },
       );
 
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        List<dynamic> categoryData = data["data"];
+      if (req.statusCode == 200) {
+        final res = json.decode(req.body);
+        List<dynamic> categoryData = res["data"];
 
         categories.value =
             categoryData.map((item) => Category.fromJson(item)).toList();
+      } else {
+        final res = json.decode(req.body);
+
+        print(res);
+
+        selectedLocation.value = "Pilih Lokasi";
+
+        Get.snackbar(
+          "Informasi ",
+          "Terjadi Kesalahan",
+          animationDuration: const Duration(milliseconds: 200),
+          duration: const Duration(milliseconds: 1650),
+          backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+          borderWidth: 5.0,
+          snackPosition: SnackPosition.TOP,
+          margin: const EdgeInsets.all(20.0),
+          icon: const Icon(
+            CupertinoIcons.info_circle,
+          ),
+        );
       }
+    } on SocketException catch (_) {
+      Get.snackbar(
+        "Informasi ",
+        "Koneksi Internet Tidak Tersedia",
+        animationDuration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 1650),
+        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+        borderWidth: 5.0,
+        snackPosition: SnackPosition.TOP,
+        margin: const EdgeInsets.all(20.0),
+        icon: const Icon(
+          CupertinoIcons.info_circle,
+        ),
+      );
     } catch (e) {
+      Get.snackbar(
+        "Informasi ",
+        "Mohon Coba Lagi",
+        animationDuration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 1650),
+        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+        borderWidth: 5.0,
+        snackPosition: SnackPosition.TOP,
+        margin: const EdgeInsets.all(20.0),
+        icon: const Icon(
+          CupertinoIcons.info_circle,
+        ),
+      );
+
       print(e);
     } finally {
       isLoading.value = false;
@@ -126,11 +255,26 @@ class HomeController extends GetxController {
 
     if (token == null) {
       isLoading.value = false;
+
+      Get.snackbar(
+        "Informasi ",
+        "Token Tidak Ditemukan",
+        animationDuration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 1650),
+        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+        borderWidth: 5.0,
+        snackPosition: SnackPosition.TOP,
+        margin: const EdgeInsets.all(20.0),
+        icon: const Icon(
+          CupertinoIcons.info_circle,
+        ),
+      );
+
       return;
     }
 
     try {
-      final response = await http.get(
+      http.Response req = await http.get(
         Uri.parse(url),
         headers: {
           'Content-Type': 'application/json',
@@ -138,11 +282,11 @@ class HomeController extends GetxController {
         },
       );
 
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        
-        if (data["data"] is List) {
-          List<Canteen> sortedCanteens = (data["data"] as List)
+      if (req.statusCode == 200) {
+        final res = json.decode(req.body);
+
+        if (res["data"] is List) {
+          List<Canteen> sortedCanteens = (res["data"] as List)
               .map((item) => Canteen.fromJson(item))
               .toList();
 
@@ -168,61 +312,159 @@ class HomeController extends GetxController {
           }
         }
       } else {
+        final res = json.decode(req.body);
+
+        print(res);
+
+        selectedLocation.value = "Pilih Lokasi";
+
         selectedCanteen.value = "Semua";
-        canteens.value = [];
+
+        Get.snackbar(
+          "Informasi ",
+          "Terjadi Kesalahan",
+          animationDuration: const Duration(milliseconds: 200),
+          duration: const Duration(milliseconds: 1650),
+          backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+          borderWidth: 5.0,
+          snackPosition: SnackPosition.TOP,
+          margin: const EdgeInsets.all(20.0),
+          icon: const Icon(
+            CupertinoIcons.info_circle,
+          ),
+        );
       }
+    } on SocketException catch (_) {
+      Get.snackbar(
+        "Informasi ",
+        "Koneksi Internet Tidak Tersedia",
+        animationDuration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 1650),
+        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+        borderWidth: 5.0,
+        snackPosition: SnackPosition.TOP,
+        margin: const EdgeInsets.all(20.0),
+        icon: const Icon(
+          CupertinoIcons.info_circle,
+        ),
+      );
     } catch (e) {
+      Get.snackbar(
+        "Informasi ",
+        "Mohon Coba Lagi",
+        animationDuration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 1650),
+        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+        borderWidth: 5.0,
+        snackPosition: SnackPosition.TOP,
+        margin: const EdgeInsets.all(20.0),
+        icon: const Icon(
+          CupertinoIcons.info_circle,
+        ),
+      );
+
       print(e);
-      canteens.value = [];
     } finally {
       isLoading.value = false;
     }
   }
 
-  List<Map<String, String>> foodItems = [
-    {
-      "canteen": "Kantin 1",
-      "name": "Nasi Uduk Spesial",
-      "image": "assets/images/image_carousel.png",
-      "price": "Rp 12.000",
-      "status": "Buka"
-    },
-    {
-      "canteen": "Kantin 2",
-      "name": "Nasi Ayam Bakar",
-      "image": "assets/images/image_carousel.png",
-      "price": "Rp 12.000",
-      "status": "Buka"
-    },
-    {
-      "canteen": "Kantin 3",
-      "name": "Nasi Pecel",
-      "image": "assets/images/image_carousel.png",
-      "price": "Rp 12.000",
-      "status": "Tutup"
-    },
-    {
-      "canteen": "Kantin 4",
-      "name": "Nasi Rawon",
-      "image": "assets/images/image_carousel.png",
-      "price": "Rp 12.000",
-      "status": "Buka"
-    },
-    {
-      "canteen": "Kantin 5",
-      "name": "Nasi Soto Spesial",
-      "image": "assets/images/image_carousel.png",
-      "price": "Rp 12.000",
-      "status": "Buka"
-    },
-    {
-      "canteen": "Kantin 6",
-      "name": "Tahu Tek",
-      "image": "assets/images/image_carousel.png",
-      "price": "Rp 12.000",
-      "status": "Tutup"
-    },
-  ];
+  Future<void> getAllMenu() async {
+    isLoading.value = true;
+
+    String url = "${AppUrl.baseURL}/menu";
+    String? token = await DatabaseProvider().getToken();
+
+    if (token == null) {
+      isLoading.value = false;
+
+      Get.snackbar(
+        "Informasi ",
+        "Token Tidak Ditemukan",
+        animationDuration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 1650),
+        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+        borderWidth: 5.0,
+        snackPosition: SnackPosition.TOP,
+        margin: const EdgeInsets.all(20.0),
+        icon: const Icon(
+          CupertinoIcons.info_circle,
+        ),
+      );
+
+      return;
+    }
+
+    try {
+      http.Response req = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (req.statusCode == 200) {
+        final res = json.decode(req.body);
+
+        print(res);
+
+        List<dynamic> menuData = res["data"];
+
+        menus.value = menuData.map((item) => Menu.fromJson(item)).toList();
+      } else {
+        final res = json.decode(req.body);
+
+        print(res);
+
+        Get.snackbar(
+          "Informasi ",
+          "Terjadi Kesalahan",
+          animationDuration: const Duration(milliseconds: 200),
+          duration: const Duration(milliseconds: 1650),
+          backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+          borderWidth: 5.0,
+          snackPosition: SnackPosition.TOP,
+          margin: const EdgeInsets.all(20.0),
+          icon: const Icon(
+            CupertinoIcons.info_circle,
+          ),
+        );
+      }
+    } on SocketException catch (_) {
+      Get.snackbar(
+        "Informasi ",
+        "Koneksi Internet Tidak Tersedia",
+        animationDuration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 1650),
+        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+        borderWidth: 5.0,
+        snackPosition: SnackPosition.TOP,
+        margin: const EdgeInsets.all(20.0),
+        icon: const Icon(
+          CupertinoIcons.info_circle,
+        ),
+      );
+    } catch (e) {
+      Get.snackbar(
+        "Informasi ",
+        "Mohon Coba Lagi",
+        animationDuration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 1650),
+        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+        borderWidth: 5.0,
+        snackPosition: SnackPosition.TOP,
+        margin: const EdgeInsets.all(20.0),
+        icon: const Icon(
+          CupertinoIcons.info_circle,
+        ),
+      );
+
+      print(e);
+    } finally {
+      isLoading.value = false;
+    }
+  }
 
   int extractNumber(String text) {
     RegExp regExp = RegExp(r'\d+');
@@ -236,5 +478,15 @@ class HomeController extends GetxController {
 
   void selectCanteen(String canteen) {
     selectedCanteen.value = canteen;
+  }
+
+  String capitalizeFirst(String text) {
+    if (text.isEmpty) return text;
+    return text[0].toUpperCase() + text.substring(1).toLowerCase();
+  }
+
+  String formatRupiah(int price) {
+    final formatCurrency = NumberFormat("#,##0", "id_ID");
+    return formatCurrency.format(price);
   }
 }

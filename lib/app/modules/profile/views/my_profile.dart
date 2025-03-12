@@ -97,12 +97,24 @@ class MyProfile extends StatelessWidget {
                   ),
                   SizedBox(height: 30),
                   _buildFormField(
-                      "Nama :", "name", user?.fullName, CupertinoIcons.person),
+                    "Nama :",
+                    "name",
+                    user?.fullName,
+                    CupertinoIcons.person,
+                  ),
                   _buildFormField(
-                      "Email :", "email", user?.email, CupertinoIcons.mail,
-                      email: true),
-                  _buildFormField("No Telepon :", "no_telp", user?.phoneNumber,
-                      CupertinoIcons.phone),
+                    "Email :",
+                    "email",
+                    user?.email,
+                    CupertinoIcons.mail,
+                    email: true,
+                  ),
+                  _buildFormField(
+                    "No Telepon :",
+                    "no_telp",
+                    user?.phoneNumber,
+                    CupertinoIcons.phone,
+                  ),
                 ],
               ),
             );
@@ -123,16 +135,23 @@ class MyProfile extends StatelessWidget {
         FormBuilderTextField(
           name: name,
           initialValue: initialValue ?? '',
+          enabled: !email,
           keyboardType: email ? TextInputType.emailAddress : TextInputType.text,
           validator: FormBuilderValidators.compose([
             FormBuilderValidators.required(),
             if (email) FormBuilderValidators.email(),
           ]),
           decoration: InputDecoration(
-            prefixIcon: Icon(icon, size: 18, color: Colors.black87),
+            prefixIcon: Icon(
+              icon,
+              size: 18,
+              color: icon == CupertinoIcons.mail ? Colors.grey : Colors.black87,
+            ),
             hintText: "Masukkan $label",
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(15)),
+              borderRadius: BorderRadius.all(
+                Radius.circular(15),
+              ),
               borderSide: BorderSide(color: Colors.black87),
             ),
             contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),

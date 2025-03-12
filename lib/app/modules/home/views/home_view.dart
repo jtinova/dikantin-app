@@ -65,7 +65,7 @@ class Header extends StatelessWidget {
       children: [
         Container(
           width: double.infinity,
-          height: 105,
+          height: 107,
           alignment: Alignment.centerLeft,
           color: Color(0xFF1E2857),
         ),
@@ -409,97 +409,116 @@ class FoodGrids extends StatelessWidget {
       padding: const EdgeInsets.symmetric(
         horizontal: 10,
       ),
-      child: SizedBox(
-        height: (controller.foodItems.length / 2).ceil() * 200,
-        child: GridView.builder(
-          physics: NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 5,
-            mainAxisSpacing: 5,
-            childAspectRatio: 0.87,
-          ),
-          itemCount: controller.foodItems.length,
-          itemBuilder: (context, index) {
-            final food = controller.foodItems[index];
-            bool isClosed = food["status"] == "Tutup";
+      child: Obx(() {
+        if (controller.isLoading.value) {
+          return Center(child: CircularProgressIndicator());
+        }
 
-            return Card(
-              elevation: 3,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+        if (controller.menus.isEmpty) {
+          return Center(
+            child: Text(
+              "Tidak ada menu tersedia",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ClipRRect(
-                    borderRadius:
-                        BorderRadius.vertical(top: Radius.circular(10)),
-                    child: ColorFiltered(
-                      colorFilter: isClosed
-                          ? ColorFilter.mode(Colors.grey, BlendMode.saturation)
-                          : ColorFilter.mode(
-                              Colors.transparent, BlendMode.saturation),
-                      child: Image.asset(
-                        food["image"]!,
-                        width: double.infinity,
-                        height: 100,
-                        fit: BoxFit.cover,
+            ),
+          );
+        }
+
+        return SizedBox(
+          height: (controller.menus.length / 2).ceil() * 200,
+          child: GridView.builder(
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 5,
+              mainAxisSpacing: 5,
+              childAspectRatio: 0.87,
+            ),
+            itemCount: controller.menus.length,
+            itemBuilder: (context, index) {
+              final food = controller.menus[index];
+              bool isClosed = food.canteen.status == "close";
+
+              return Card(
+                elevation: 3,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ClipRRect(
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(10)),
+                      child: ColorFiltered(
+                        colorFilter: isClosed
+                            ? ColorFilter.mode(
+                                Colors.grey, BlendMode.saturation)
+                            : ColorFilter.mode(
+                                Colors.transparent, BlendMode.saturation),
+                        child: Image.asset(
+                          'assets/images/image_carousel.png',
+                          width: double.infinity,
+                          height: 100,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              food["canteen"]!,
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
+                    Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                food.canteen.name,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
-                            ),
-                            Spacer(),
-                            Text(
-                              food["status"]!,
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: isClosed ? Colors.red : Colors.green,
+                              Spacer(),
+                              Text(
+                                controller.capitalizeFirst(food.canteen.status),
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: isClosed ? Colors.red : Colors.green,
+                                ),
                               ),
+                            ],
+                          ),
+                          SizedBox(height: 5),
+                          Text(
+                            food.name,
+                            style: TextStyle(
+                              fontSize: 15,
+                              overflow: TextOverflow.ellipsis,
+                              fontWeight: FontWeight.w600,
                             ),
-                          ],
-                        ),
-                        SizedBox(height: 5),
-                        Text(
-                          food["name"]!,
-                          style: TextStyle(
-                            fontSize: 15,
-                            overflow: TextOverflow.ellipsis,
-                            fontWeight: FontWeight.w600,
                           ),
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          food["price"]!,
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
+                          SizedBox(height: 10),
+                          Text(
+                            "Rp ${controller.formatRupiah(food.sellingCost)}",
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
-      ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      }),
     );
   }
 }
