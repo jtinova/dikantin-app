@@ -19,8 +19,9 @@ class HomeController extends GetxController {
   var isLoading = false.obs;
   var currentIndex = 0.obs;
 
-  var selectedCanteen = "Semua".obs;
   var selectedLocation = 'Pilih Lokasi'.obs;
+  var selectedCategoryId = ''.obs;
+  var selectedCanteenId = 'all'.obs;
 
   var buildings = <Building>[].obs;
   var categories = <Category>[].obs;
@@ -40,7 +41,6 @@ class HomeController extends GetxController {
     getLocation();
     getCategories();
     getCanteen();
-    getAllMenu();
   }
 
   Future<void> getLocation() async {
@@ -298,7 +298,7 @@ class HomeController extends GetxController {
 
           canteens.value = [
             Canteen(
-              id: "",
+              id: "all",
               name: "Semua",
               phoneNumber: "",
               balance: 0,
@@ -307,18 +307,14 @@ class HomeController extends GetxController {
             ...sortedCanteens,
           ];
 
-          if (canteens.isNotEmpty) {
-            selectedCanteen.value = "Semua";
-          }
+          getMenuByCanteen(id: "all", context: Get.context!);
         }
       } else {
         final res = json.decode(req.body);
 
         print(res);
 
-        selectedLocation.value = "Pilih Lokasi";
-
-        selectedCanteen.value = "Semua";
+        selectedCanteenId.value = "all";
 
         Get.snackbar(
           "Informasi ",
@@ -369,10 +365,127 @@ class HomeController extends GetxController {
     }
   }
 
-  Future<void> getAllMenu() async {
+  Future<void> getMenuByCanteen({
+    required String id,
+    BuildContext? context,
+  }) async {
     isLoading.value = true;
 
-    String url = "${AppUrl.baseURL}/menu";
+    String url;
+
+    if (id == "all") {
+      url = "${AppUrl.baseURL}/menu";
+    } else {
+      url = "${AppUrl.baseURL}/canteen/menu/$id";
+    }
+
+    String? token = await DatabaseProvider().getToken();
+
+    if (token == null) {
+      isLoading.value = false;
+
+      Get.snackbar(
+        "Informasi ",
+        "Token Tidak Ditemukan",
+        animationDuration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 1650),
+        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+        borderWidth: 5.0,
+        snackPosition: SnackPosition.TOP,
+        margin: const EdgeInsets.all(20.0),
+        icon: const Icon(
+          CupertinoIcons.info_circle,
+        ),
+      );
+
+      return;
+    }
+
+    try {
+      http.Response req = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (req.statusCode == 200) {
+        final res = json.decode(req.body);
+
+        print(res);
+
+        List<dynamic> menuData = res["data"];
+
+        menus.value = menuData.map((item) => Menu.fromJson(item)).toList();
+      } else {
+        final res = json.decode(req.body);
+
+        print(res);
+
+        Get.snackbar(
+          "Informasi ",
+          "Terjadi Kesalahan",
+          animationDuration: const Duration(milliseconds: 200),
+          duration: const Duration(milliseconds: 1650),
+          backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+          borderWidth: 5.0,
+          snackPosition: SnackPosition.TOP,
+          margin: const EdgeInsets.all(20.0),
+          icon: const Icon(
+            CupertinoIcons.info_circle,
+          ),
+        );
+      }
+    } on SocketException catch (_) {
+      Get.snackbar(
+        "Informasi ",
+        "Koneksi Internet Tidak Tersedia",
+        animationDuration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 1650),
+        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+        borderWidth: 5.0,
+        snackPosition: SnackPosition.TOP,
+        margin: const EdgeInsets.all(20.0),
+        icon: const Icon(
+          CupertinoIcons.info_circle,
+        ),
+      );
+    } catch (e) {
+      Get.snackbar(
+        "Informasi ",
+        "Mohon Coba Lagi",
+        animationDuration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 1650),
+        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+        borderWidth: 5.0,
+        snackPosition: SnackPosition.TOP,
+        margin: const EdgeInsets.all(20.0),
+        icon: const Icon(
+          CupertinoIcons.info_circle,
+        ),
+      );
+
+      print(e);
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> getMenuByCategory({
+    required String id,
+    BuildContext? context,
+  }) async {
+    isLoading.value = true;
+
+    String url;
+
+    if (id == "all") {
+      url = "${AppUrl.baseURL}/category";
+    } else {
+      url = "${AppUrl.baseURL}/category/menu/$id";
+    }
+
     String? token = await DatabaseProvider().getToken();
 
     if (token == null) {
@@ -474,10 +587,6 @@ class HomeController extends GetxController {
 
   void updateIndex(int index) {
     currentIndex.value = index;
-  }
-
-  void selectCanteen(String canteen) {
-    selectedCanteen.value = canteen;
   }
 
   String capitalizeFirst(String text) {

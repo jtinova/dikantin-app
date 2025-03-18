@@ -314,23 +314,38 @@ class Categories extends StatelessWidget {
               children: controller.categories.map((category) {
                 return Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: Column(
-                    children: [
-                      CircleAvatar(
-                        backgroundImage:
-                            AssetImage('assets/images/image_carousel.png'),
-                        radius: 30,
-                      ),
-                      SizedBox(height: 5),
-                      Text(
-                        category.name,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xFF1E2857),
+                  child: GestureDetector(
+                    onTap: () {
+                      // Fetch menu by category
+                      controller.getMenuByCategory(id: category.id);
+
+                      // Highlight this category
+                      controller.selectedCategoryId.value = category.id;
+
+                      // Reset canteen to "Semua"
+                      controller.selectedCanteenId.value = "all";
+                    },
+                    child: Column(
+                      children: [
+                        CircleAvatar(
+                          backgroundImage:
+                              AssetImage('assets/images/image_carousel.png'),
+                          radius: 30,
                         ),
-                      ),
-                    ],
+                        SizedBox(height: 5),
+                        Text(
+                          category.name,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: controller.selectedCategoryId.value ==
+                                    category.id
+                                ? FontWeight.w700
+                                : FontWeight.w400,
+                            color: Color(0xFF1E2857),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 );
               }).toList(),
@@ -362,11 +377,18 @@ class Canteens extends StatelessWidget {
             shrinkWrap: true,
             children: controller.canteens.map((canteen) {
               bool isSelected =
-                  controller.selectedCanteen.value == canteen.name;
+                  controller.selectedCanteenId.value == canteen.id;
 
               return GestureDetector(
                 onTap: () {
-                  controller.selectedCanteen.value = canteen.name;
+                  // Fetch menu by canteen
+                  controller.getMenuByCanteen(id: canteen.id, context: context);
+
+                  // Highlight this canteen
+                  controller.selectedCanteenId.value = canteen.id;
+
+                  // Reset category selection
+                  controller.selectedCategoryId.value = "";
                 },
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 5),
