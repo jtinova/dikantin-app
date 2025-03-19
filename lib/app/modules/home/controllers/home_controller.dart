@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 import '../../../data/api.dart';
-import '../../../providers/db_provider.dart';
+import '../../../data/db_provider.dart';
 import '../../../models/building.dart';
 import '../../../models/canteen.dart';
 import '../../../models/category.dart';
@@ -46,7 +46,7 @@ class HomeController extends GetxController {
   Future<void> getLocation() async {
     isLoading.value = true;
 
-    String url = "${AppUrl.baseURL}/building";
+    String url = AppUrl.locations;
     String? token = await DatabaseProvider().getToken();
 
     if (token == null) {
@@ -153,7 +153,7 @@ class HomeController extends GetxController {
   Future<void> getCategories() async {
     isLoading.value = true;
 
-    String url = "${AppUrl.baseURL}/category";
+    String url = AppUrl.categories;
     String? token = await DatabaseProvider().getToken();
 
     if (token == null) {
@@ -250,7 +250,7 @@ class HomeController extends GetxController {
   Future<void> getCanteen() async {
     isLoading.value = true;
 
-    String url = "${AppUrl.baseURL}/canteen";
+    String url = AppUrl.canteens;
     String? token = await DatabaseProvider().getToken();
 
     if (token == null) {
@@ -374,9 +374,9 @@ class HomeController extends GetxController {
     String url;
 
     if (id == "all") {
-      url = "${AppUrl.baseURL}/menu";
+      url = AppUrl.menus;
     } else {
-      url = "${AppUrl.baseURL}/canteen/menu/$id";
+      url = "${AppUrl.menuByCanteen}/$id";
     }
 
     String? token = await DatabaseProvider().getToken();
@@ -481,9 +481,9 @@ class HomeController extends GetxController {
     String url;
 
     if (id == "all") {
-      url = "${AppUrl.baseURL}/category";
+      url = AppUrl.categories;
     } else {
-      url = "${AppUrl.baseURL}/category/menu/$id";
+      url = "${AppUrl.menuByCategory}/$id";
     }
 
     String? token = await DatabaseProvider().getToken();

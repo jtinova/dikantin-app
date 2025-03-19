@@ -2,7 +2,7 @@
 
 import 'dart:async';
 
-import 'package:dikantin_app_rebuild/app/providers/auth_provider.dart';
+import 'package:dikantin_app_rebuild/app/data/auth_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';

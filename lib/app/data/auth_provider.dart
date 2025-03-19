@@ -13,8 +13,6 @@ import 'dart:convert';
 import 'db_provider.dart';
 
 class AuthenticationProvider extends ChangeNotifier {
-  final baseURL = AppUrl.baseURL;
-
   String _resMessage = "";
   int? statusCode;
 
@@ -30,7 +28,7 @@ class AuthenticationProvider extends ChangeNotifier {
     EasyLoading.show(status: 'Loading...');
     notifyListeners();
 
-    String url = "$baseURL/register";
+    String url = AppUrl.signup;
 
     final body = {
       "full_name": fullName,
@@ -100,7 +98,7 @@ class AuthenticationProvider extends ChangeNotifier {
     EasyLoading.show(status: 'Loading...');
     notifyListeners();
 
-    String url = "$baseURL/login";
+    String url = AppUrl.signin;
 
     final body = {
       "email": email,
@@ -163,7 +161,7 @@ class AuthenticationProvider extends ChangeNotifier {
     EasyLoading.show(status: 'Loading...');
     notifyListeners();
 
-    String url = "$baseURL/send-reset-password";
+    String url = AppUrl.codeOTP;
 
     final body = {
       "email": email,
@@ -221,7 +219,7 @@ class AuthenticationProvider extends ChangeNotifier {
     EasyLoading.show(status: 'Loading...');
     notifyListeners();
 
-    String url = "$baseURL/verify-otp";
+    String url = AppUrl.verifyOTP;
 
     final body = {
       "email": email,
@@ -279,7 +277,7 @@ class AuthenticationProvider extends ChangeNotifier {
     EasyLoading.show(status: 'Loading...');
     notifyListeners();
 
-    String url = "$baseURL/send-reset-password";
+    String url = AppUrl.codeOTP;
 
     final body = {
       "email": email,
@@ -335,7 +333,7 @@ class AuthenticationProvider extends ChangeNotifier {
     EasyLoading.show(status: 'Loading...');
     notifyListeners();
 
-    String url = "$baseURL/reset-password";
+    String url = AppUrl.resetPassword;
 
     final body = {
       "email": email,
@@ -390,7 +388,7 @@ class AuthenticationProvider extends ChangeNotifier {
     EasyLoading.show(status: 'Loading...');
     notifyListeners();
 
-    String url = "$baseURL/logout";
+    String url = AppUrl.signout;
 
     try {
       String? token = await DatabaseProvider().getToken();

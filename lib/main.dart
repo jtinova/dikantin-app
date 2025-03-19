@@ -1,4 +1,4 @@
-import 'package:dikantin_app_rebuild/app/providers/auth_provider.dart';
+import 'package:dikantin_app_rebuild/app/data/auth_provider.dart';
 import 'package:dikantin_app_rebuild/app/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';

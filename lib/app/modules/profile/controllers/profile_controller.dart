@@ -10,7 +10,7 @@ import 'package:http/http.dart' as http;
 
 import '../../../data/api.dart';
 import '../../../models/user.dart';
-import '../../../providers/db_provider.dart';
+import '../../../data/db_provider.dart';
 
 class ProfileController extends GetxController {
   var isLoading = false.obs;
@@ -26,7 +26,7 @@ class ProfileController extends GetxController {
   Future<void> getDetailUser() async {
     isLoading.value = true;
 
-    String url = "${AppUrl.baseURL}/user";
+    String url = AppUrl.detailUserProfile;
     String? token = await DatabaseProvider().getToken();
 
     if (token == null) {
@@ -125,7 +125,7 @@ class ProfileController extends GetxController {
   }) async {
     isLoading.value = true;
 
-    String url = "${AppUrl.baseURL}/user/update";
+    String url = AppUrl.updateUserData;
     String? token = await DatabaseProvider().getToken();
 
     if (token == null) {
