@@ -7,15 +7,19 @@ import 'package:get/get.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 
+import 'app/data/db_provider.dart';
 import 'app/routes/app_pages.dart';
 
-void main() {
+void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
-  runApp(
-    const MyApp(),
-  );
+  // Check if a token exists before launching the app
+  String? token = await DatabaseProvider().getToken();
+  String initialRoute = token != null ? Routes.NAVIGATION : Routes.SIGN_IN;
+
+  runApp(MyApp(initialRoute: initialRoute));
+
 
   FlutterNativeSplash.remove();
   configLoading();
@@ -37,17 +41,19 @@ void configLoading() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final String initialRoute;
+  const MyApp({super.key, required this.initialRoute});
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthenticationProvider()),
+        ChangeNotifierProvider(create: (_) => DatabaseProvider())
       ],
       child: GetMaterialApp(
         title: "Dikantin App Rebuild",
-        initialRoute: AppPages.INITIAL,
+        initialRoute: initialRoute,
         theme: lightMode,
         getPages: AppPages.routes,
         builder: EasyLoading.init(),
