@@ -7,6 +7,7 @@ class Menu {
   final int sellingCost;
   final int mainCost;
   final int stock;
+  final String description;
   final Canteen canteen;
 
   Menu({
@@ -16,6 +17,7 @@ class Menu {
     required this.sellingCost,
     required this.mainCost,
     required this.stock,
+    required this.description,
     required this.canteen,
   });
 
@@ -27,6 +29,7 @@ class Menu {
       sellingCost: json['selling_cost'],
       mainCost: json['main_cost'],
       stock: json['stock'],
+      description: json['description'],
       canteen: Canteen.fromJson(json['canteen']),
     );
   }

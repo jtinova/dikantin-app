@@ -1,9 +1,10 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, collection_methods_unrelated_type
 
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -12,6 +13,7 @@ import '../../../data/api.dart';
 import '../../../data/db_provider.dart';
 import '../../../models/building.dart';
 import '../../../models/canteen.dart';
+import '../../../models/cart.dart';
 import '../../../models/category.dart';
 import '../../../models/menu.dart';
 
@@ -27,6 +29,9 @@ class HomeController extends GetxController {
   var categories = <Category>[].obs;
   var canteens = <Canteen>[].obs;
   var menus = <Menu>[].obs;
+  var cartItems = <CartItem>[].obs;
+
+  int get cartCount => cartItems.fold(0, (sum, item) => sum + item.quantity);
 
   List<String> bannerList = [
     'assets/images/image_carousel.png',
@@ -579,14 +584,102 @@ class HomeController extends GetxController {
     }
   }
 
-  int extractNumber(String text) {
-    RegExp regExp = RegExp(r'\d+');
-    Match? match = regExp.firstMatch(text);
-    return match != null ? int.parse(match.group(0)!) : 0;
+  void addToCart(Menu food, int quantity) {
+    int currentQuantity = getQuantity(food);
+    int totalQuantity = currentQuantity + quantity;
+
+    if (totalQuantity > food.stock) {
+      Get.snackbar(
+        "Peringatan",
+        "Jumlah melebihi stok persediaan!",
+        animationDuration: Duration(milliseconds: 200),
+        duration: Duration(milliseconds: 1650),
+        backgroundColor: Colors.red,
+        borderWidth: 5.0,
+        snackPosition: SnackPosition.TOP,
+        colorText: Colors.white,
+        margin: EdgeInsets.all(20.0),
+        icon: Icon(
+          CupertinoIcons.info_circle,
+          color: Colors.white,
+        ),
+      );
+      return;
+    }
+
+    // Check if the item is already in cart
+    final existingIndex =
+        cartItems.indexWhere((item) => item.menu.id == food.id);
+
+    if (existingIndex >= 0) {
+      // If item exists, increment quantity
+      cartItems[existingIndex] = CartItem(
+        menu: food,
+        quantity: cartItems[existingIndex].quantity + 1,
+      );
+    } else {
+      // If item doesn't exist, add new item with quantity 1
+      cartItems.add(CartItem(menu: food, quantity: 1));
+    }
+
+    // Show a snackbar to confirm addition
+    Get.snackbar(
+      "Item Ditambahkan",
+      "${food.name} ditambahkan ke keranjang",
+      animationDuration: Duration(milliseconds: 200),
+      duration: Duration(milliseconds: 1650),
+      backgroundColor: Colors.green,
+      borderWidth: 5.0,
+      colorText: Colors.white,
+      snackPosition: SnackPosition.TOP,
+      margin: EdgeInsets.all(20.0),
+      icon: Icon(
+        CupertinoIcons.info_circle,
+        color: Colors.white,
+      ),
+    );
+  }
+
+  void updateCart(Menu food, {required bool isAdding}) {
+    if (isAdding) {
+      addToCart(food, 1);
+    } else {
+      removeFromCart(food.id);
+    }
+  }
+
+  void removeFromCart(String foodId) {
+    final existingIndex =
+        cartItems.indexWhere((item) => item.menu.id == foodId);
+
+    if (existingIndex >= 0) {
+      if (cartItems[existingIndex].quantity > 1) {
+        // Decrement quantity if more than 1
+        cartItems[existingIndex] = CartItem(
+          menu: cartItems[existingIndex].menu,
+          quantity: cartItems[existingIndex].quantity - 1,
+        );
+      } else {
+        // Remove item if quantity is 1
+        cartItems.removeAt(existingIndex);
+      }
+    }
   }
 
   void updateIndex(int index) {
     currentIndex.value = index;
+  }
+
+  int getQuantity(Menu food) {
+    final existingItem =
+        cartItems.firstWhereOrNull((item) => item.menu.id == food.id);
+    return existingItem?.quantity ?? 0;
+  }
+
+  int extractNumber(String text) {
+    RegExp regExp = RegExp(r'\d+');
+    Match? match = regExp.firstMatch(text);
+    return match != null ? int.parse(match.group(0)!) : 0;
   }
 
   String capitalizeFirst(String text) {

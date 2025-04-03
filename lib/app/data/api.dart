@@ -1,6 +1,6 @@
 class AppUrl {
   // Change IP Address before run project
-  static String baseURL = 'http://10.10.177.175:8080/api';
+  static String baseURL = 'http://192.168.1.7:8080/api';
 
   // Authentication
   static String signin = '$baseURL/login';
