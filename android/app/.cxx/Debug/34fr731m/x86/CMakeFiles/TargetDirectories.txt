@@ -1,0 +1,2 @@
+C:/Users/IRUL/dikantin-app-old/android/app/.cxx/Debug/34fr731m/x86/CMakeFiles/edit_cache.dir
+C:/Users/IRUL/dikantin-app-old/android/app/.cxx/Debug/34fr731m/x86/CMakeFiles/rebuild_cache.dir

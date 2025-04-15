@@ -4,9 +4,12 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
 
+import '../controllers/profile_controller.dart';
+
 class MyProfile extends StatelessWidget {
   MyProfile({super.key});
 
+  final ProfileController controller = Get.put(ProfileController());
   final _formKey = GlobalKey<FormBuilderState>();
 
   @override
@@ -16,14 +19,42 @@ class MyProfile extends StatelessWidget {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Text(
-              'Simpan',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.black,
-                fontWeight: FontWeight.w500,
+            SizedBox(
+              width: 70,
+              height: 30,
+              child: ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    _formKey.currentState!.save();
+                    final formData = _formKey.currentState!.value;
+
+                    final String? fullName = formData['name'];
+                    final String? phoneNumber = formData['no_telp'];
+
+                    controller.updateUserData(
+                      fullName: fullName.toString(),
+                      phoneNumber: phoneNumber.toString().trim(),
+                      context: context,
+                    );
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF1E2857),
+                  padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: Text(
+                  'Simpan',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
               ),
-            ),
+            )
           ],
         ),
         leading: TextButton(
@@ -40,242 +71,94 @@ class MyProfile extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            CircleAvatar(
-              backgroundImage: AssetImage('assets/images/logo_dikantin.png'),
-              backgroundColor: Colors.black12,
-              radius: 50,
-            ),
-            SizedBox(height: 5),
-            Text(
-              "Ubah Foto",
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.blue,
-              ),
-            ),
-            SizedBox(height: 30),
-            FormBuilder(
+        child: Padding(
+          padding: const EdgeInsets.all(25),
+          child: Obx(() {
+            if (controller.isLoading.value) {
+              return Center(child: CircularProgressIndicator());
+            }
+
+            var user = controller.users.value;
+
+            return FormBuilder(
               key: _formKey,
-              child: Padding(
-                padding: const EdgeInsets.all(25),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Nama :',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.black,
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    FormBuilderTextField(
-                      name: "name",
-                      keyboardType: TextInputType.emailAddress,
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.black87,
-                      ),
-                      scrollPadding: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).viewInsets.bottom,
-                      ),
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(
-                          CupertinoIcons.person,
-                          size: 18,
-                          color: Colors.black87,
-                        ),
-                        hintText: "Masukan Nama",
-                        hintStyle: TextStyle(
-                          fontSize: 18,
-                          color: Colors.black54,
-                        ),
-                        enabledBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(15),
-                          ),
-                          borderSide: BorderSide(color: Colors.black87),
-                        ),
-                        focusedBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(15),
-                          ),
-                          borderSide: BorderSide(color: Colors.black87),
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          vertical: 15,
-                          horizontal: 15,
-                        ),
-                      ),
-                      validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(),
-                      ]),
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
-                      'Email :',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.black,
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    FormBuilderTextField(
-                      name: "email",
-                      keyboardType: TextInputType.emailAddress,
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.black87,
-                      ),
-                      scrollPadding: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).viewInsets.bottom,
-                      ),
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(
-                          CupertinoIcons.mail,
-                          size: 18,
-                          color: Colors.black87,
-                        ),
-                        hintText: "Masukan email",
-                        hintStyle: TextStyle(
-                          fontSize: 18,
-                          color: Colors.black54,
-                        ),
-                        enabledBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(15),
-                          ),
-                          borderSide: BorderSide(color: Colors.black87),
-                        ),
-                        focusedBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(15),
-                          ),
-                          borderSide: BorderSide(color: Colors.black87),
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          vertical: 15,
-                          horizontal: 15,
-                        ),
-                      ),
-                      validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(),
-                        FormBuilderValidators.email(),
-                      ]),
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
-                      'No Telepon :',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.black,
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    FormBuilderTextField(
-                      name: "no_telp",
-                      keyboardType: TextInputType.phone,
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.black87,
-                      ),
-                      scrollPadding: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).viewInsets.bottom,
-                      ),
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(
-                          CupertinoIcons.phone,
-                          size: 18,
-                          color: Colors.black87,
-                        ),
-                        hintText: "No Telepon",
-                        hintStyle: TextStyle(
-                          fontSize: 18,
-                          color: Colors.black54,
-                        ),
-                        enabledBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(15),
-                          ),
-                          borderSide: BorderSide(color: Colors.black87),
-                        ),
-                        focusedBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(15),
-                          ),
-                          borderSide: BorderSide(color: Colors.black87),
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          vertical: 15,
-                          horizontal: 15,
-                        ),
-                      ),
-                      validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(),
-                      ]),
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
-                      'Alamat :',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.black,
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    FormBuilderTextField(
-                      name: "address",
-                      keyboardType: TextInputType.streetAddress,
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.black87,
-                      ),
-                      scrollPadding: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).viewInsets.bottom,
-                      ),
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(
-                          CupertinoIcons.mail,
-                          size: 18,
-                          color: Colors.black87,
-                        ),
-                        hintText: "Alamat",
-                        hintStyle: TextStyle(
-                          fontSize: 18,
-                          color: Colors.black54,
-                        ),
-                        enabledBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(15),
-                          ),
-                          borderSide: BorderSide(color: Colors.black87),
-                        ),
-                        focusedBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(15),
-                          ),
-                          borderSide: BorderSide(color: Colors.black87),
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          vertical: 15,
-                          horizontal: 15,
-                        ),
-                      ),
-                      validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(),
-                        FormBuilderValidators.email(),
-                      ]),
-                    ),
-                  ],
-                ),
+              child: Column(
+                children: [
+                  CircleAvatar(
+                    backgroundImage:
+                        AssetImage('assets/images/logo_dikantin.png'),
+                    backgroundColor: Colors.black12,
+                    radius: 50,
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    "Ubah Foto",
+                    style: TextStyle(fontSize: 18, color: Colors.blue),
+                  ),
+                  SizedBox(height: 30),
+                  _buildFormField(
+                    "Nama :",
+                    "name",
+                    user?.fullName,
+                    CupertinoIcons.person,
+                  ),
+                  _buildFormField(
+                    "Email :",
+                    "email",
+                    user?.email,
+                    CupertinoIcons.mail,
+                    email: true,
+                  ),
+                  _buildFormField(
+                    "No Telepon :",
+                    "no_telp",
+                    user?.phoneNumber,
+                    CupertinoIcons.phone,
+                  ),
+                ],
               ),
-            ),
-          ],
+            );
+          }),
         ),
       ),
+    );
+  }
+
+  Widget _buildFormField(
+      String label, String name, String? initialValue, IconData icon,
+      {bool email = false}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: TextStyle(fontSize: 18, color: Colors.black)),
+        SizedBox(height: 5),
+        FormBuilderTextField(
+          name: name,
+          initialValue: initialValue ?? '',
+          enabled: !email,
+          keyboardType: email ? TextInputType.emailAddress : TextInputType.text,
+          validator: FormBuilderValidators.compose([
+            FormBuilderValidators.required(),
+            if (email) FormBuilderValidators.email(),
+          ]),
+          decoration: InputDecoration(
+            prefixIcon: Icon(
+              icon,
+              size: 18,
+              color: icon == CupertinoIcons.mail ? Colors.grey : Colors.black87,
+            ),
+            hintText: "Masukkan $label",
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(15),
+              ),
+              borderSide: BorderSide(color: Colors.black87),
+            ),
+            contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+          ),
+        ),
+        SizedBox(height: 20),
+      ],
     );
   }
 }

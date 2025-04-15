@@ -6,8 +6,8 @@ ThemeData lightMode = ThemeData(
   scaffoldBackgroundColor: Colors.white,
   colorScheme: ColorScheme.light(
     surface: Colors.white,
-    primary: Color(0xFF1E2857), 
-    secondary: Color(0xFF424242), 
+    primary: Color(0xFF1E2857),
+    secondary: Color(0xFF424242),
     onPrimary: Colors.black,
     onSecondary: Colors.black,
     onSurface: Colors.black,
@@ -20,8 +20,7 @@ ThemeData lightMode = ThemeData(
   fontFamily: 'Poppins',
   textSelectionTheme: const TextSelectionThemeData(
     cursorColor: Color(0xFF1E2857),
-    selectionColor: Color(0xFF1E2857), 
-    selectionHandleColor: Color(0xFF1E2857), 
+    selectionHandleColor: Color(0xFF1E2857),
   ),
 );
 
@@ -44,8 +43,8 @@ ThemeData darkMode = ThemeData(
   ),
   fontFamily: 'Poppins',
   textSelectionTheme: TextSelectionThemeData(
-    cursorColor: Colors.white, 
+    cursorColor: Colors.white,
     selectionColor: Colors.deepPurpleAccent,
-    selectionHandleColor: Colors.deepPurpleAccent, 
+    selectionHandleColor: Colors.deepPurpleAccent,
   ),
 );

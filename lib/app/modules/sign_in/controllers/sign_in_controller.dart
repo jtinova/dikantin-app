@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 
 class SignInController extends GetxController {
+
   //TODO: Implement SignInController
 
   final count = 0.obs;
@@ -8,4 +9,5 @@ class SignInController extends GetxController {
 
 
   void increment() => count.value++;
+
 }

@@ -2,7 +2,9 @@
 
 import 'dart:async';
 
-import 'package:dikantin_app_rebuild/app/providers/auth_provider.dart';
+import 'package:dikantin_app_rebuild/app/data/auth_provider.dart';
+import 'package:dikantin_app_rebuild/app/data/auth_canteen_provider.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -232,21 +234,19 @@ class SignInView extends GetView<SignInController> {
                         SizedBox(
                           width: double.infinity,
                           height: 45,
-                          child: Consumer<AuthenticationProvider>(
+                          child: Consumer<AuthCanteenProvider>(
                             builder: (context, auth, child) {
+                              // Snackbar tampil hanya sekali setelah login
                               WidgetsBinding.instance.addPostFrameCallback(
                                 (_) {
                                   if (auth.resMessage != '') {
                                     Get.snackbar(
                                       "Informasi",
                                       auth.resMessage,
-                                      animationDuration:
-                                          const Duration(milliseconds: 200),
-                                      duration:
-                                          const Duration(milliseconds: 1650),
-                                      backgroundColor: auth.statusCode == 200
-                                          ? Colors.green
-                                          : Colors.red,
+                                      animationDuration: const Duration(milliseconds: 200),
+                                      duration: const Duration(milliseconds: 1650),
+                                      backgroundColor:
+                                          auth.statusCode == 200 ? Colors.green : Colors.red,
                                       colorText: Colors.white,
                                       borderWidth: 5.0,
                                       snackPosition: SnackPosition.TOP,
@@ -256,9 +256,9 @@ class SignInView extends GetView<SignInController> {
                                         color: Colors.white,
                                       ),
                                     );
-                                  }
 
-                                  auth.clear();
+                                    // reset pesan setelah ditampilkan
+                                  }
                                 },
                               );
 
@@ -268,41 +268,33 @@ class SignInView extends GetView<SignInController> {
                                     : () {
                                         if (_formKey.currentState!.validate()) {
                                           _formKey.currentState!.save();
-                                          final formData =
-                                              _formKey.currentState!.value;
+                                          final formData = _formKey.currentState!.value;
 
-                                          final String? email =
-                                              formData['email'];
-                                          final String? password =
-                                              formData['password'];
+                                          final String? email = formData['email'];
+                                          final String? password = formData['password'];
 
-                                          auth.loginUser(
+                                          auth.loginCanteen(
                                             email: email.toString().trim(),
-                                            password:
-                                                password.toString().trim(),
+                                            password: password.toString().trim(),
                                             context: context,
                                           );
                                         }
                                       },
                                 style: ButtonStyle(
-                                  backgroundColor:
-                                      MaterialStateProperty.resolveWith<Color>(
+                                  backgroundColor: MaterialStateProperty.resolveWith<Color>(
                                     (Set<MaterialState> states) {
-                                      if (auth.isLoading) {
-                                        return Colors.grey;
-                                      }
+                                      if (auth.isLoading) return Colors.grey;
                                       return const Color(0xFF1E2857);
                                     },
                                   ),
-                                  shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
+                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(15),
                                     ),
                                   ),
                                 ),
                                 child: auth.isLoading
-                                    ? Text(
+                                    ? const Text(
                                         "Loading ...",
                                         style: TextStyle(
                                           fontSize: 18,
@@ -310,8 +302,8 @@ class SignInView extends GetView<SignInController> {
                                           color: Colors.black,
                                         ),
                                       )
-                                    : Text(
-                                        "Masuk",
+                                    : const Text(
+                                        "Masuk sebagai Kantin",
                                         style: TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.w500,
@@ -320,31 +312,6 @@ class SignInView extends GetView<SignInController> {
                                       ),
                               );
                             },
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        SizedBox(
-                          width: double.infinity,
-                          height: 45,
-                          child: ElevatedButton(
-                            onPressed: () => Get.offAllNamed(Routes.SIGN_UP),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                side: const BorderSide(
-                                  color: Color(0xFF1E2857),
-                                ),
-                              ),
-                            ),
-                            child: Text(
-                              "Daftar",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500,
-                                color: Color(0xFF1E2857),
-                              ),
-                            ),
                           ),
                         ),
                       ],

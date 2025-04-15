@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 
 class SendEmailController extends GetxController {
+
   //TODO: Implement SendEmailController
 
   final count = 0.obs;
@@ -8,4 +9,5 @@ class SendEmailController extends GetxController {
 
 
   void increment() => count.value++;
+
 }
