@@ -37,8 +37,7 @@ class HomeView extends GetView<HomeController> {
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () async {
-            await Future.delayed(const Duration(seconds: 1));
-            controller.onInit();
+            await controller.refreshAll();
           },
           child: SingleChildScrollView(
             child: Column(
@@ -138,6 +137,17 @@ class Header extends StatelessWidget {
                     height: 25,
                     child: Obx(
                       () {
+                        if (controller.isLoading.value) {
+                          return Skeletonizer(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                          );
+                        }
+
                         return Container(
                           padding: EdgeInsets.symmetric(horizontal: 10),
                           decoration: BoxDecoration(
@@ -247,6 +257,11 @@ class Header extends StatelessWidget {
                           horizontal: 10,
                         ),
                       ),
+                      onChanged: (value) {
+                        if (value!.isNotEmpty) {
+                          controller.getSearchMenu(query: value);
+                        }
+                      },
                     ),
                   ),
                 ),
@@ -599,7 +614,9 @@ class FoodGrids extends StatelessWidget {
                         child: Container(
                           width: double.infinity,
                           height: 100,
-                          color: Colors.grey[300],
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                          ),
                         ),
                       ),
                       Padding(

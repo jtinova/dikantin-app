@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print, collection_methods_unrelated_type
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -19,7 +20,9 @@ import '../../../models/menu.dart';
 
 class HomeController extends GetxController {
   var isLoading = false.obs;
+  var isMenuLoading = false.obs;
   var currentIndex = 0.obs;
+  Timer? _debounce;
 
   var selectedLocation = 'Pilih Lokasi'.obs;
   var selectedCategoryId = ''.obs;
@@ -46,6 +49,50 @@ class HomeController extends GetxController {
     getLocation();
     getCategories();
     getCanteen();
+  }
+
+  Future<void> refreshAll() async {
+    isLoading.value = true;
+
+    try {
+      await Future.wait([
+        getLocation(),
+        getCategories(),
+        getCanteen(),
+      ]);
+    } on SocketException catch (_) {
+      Get.snackbar(
+        "Informasi ",
+        "Koneksi Internet Tidak Tersedia",
+        animationDuration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 1650),
+        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+        borderWidth: 5.0,
+        snackPosition: SnackPosition.TOP,
+        margin: const EdgeInsets.all(20.0),
+        icon: const Icon(
+          CupertinoIcons.info_circle,
+        ),
+      );
+    } catch (e) {
+      Get.snackbar(
+        "Informasi ",
+        "Mohon Coba Lagi",
+        animationDuration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 1650),
+        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+        borderWidth: 5.0,
+        snackPosition: SnackPosition.TOP,
+        margin: const EdgeInsets.all(20.0),
+        icon: const Icon(
+          CupertinoIcons.info_circle,
+        ),
+      );
+
+      print(e);
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   Future<void> getLocation() async {
@@ -374,7 +421,7 @@ class HomeController extends GetxController {
     required String id,
     BuildContext? context,
   }) async {
-    isLoading.value = true;
+    isMenuLoading.value = true;
 
     String url;
 
@@ -387,7 +434,7 @@ class HomeController extends GetxController {
     String? token = await DatabaseProvider().getToken();
 
     if (token == null) {
-      isLoading.value = false;
+      isMenuLoading.value = false;
 
       Get.snackbar(
         "Informasi ",
@@ -473,7 +520,7 @@ class HomeController extends GetxController {
 
       print(e);
     } finally {
-      isLoading.value = false;
+      isMenuLoading.value = false;
     }
   }
 
@@ -481,7 +528,7 @@ class HomeController extends GetxController {
     required String id,
     BuildContext? context,
   }) async {
-    isLoading.value = true;
+    isMenuLoading.value = true;
 
     String url;
 
@@ -494,7 +541,7 @@ class HomeController extends GetxController {
     String? token = await DatabaseProvider().getToken();
 
     if (token == null) {
-      isLoading.value = false;
+      isMenuLoading.value = false;
 
       Get.snackbar(
         "Informasi ",
@@ -580,7 +627,113 @@ class HomeController extends GetxController {
 
       print(e);
     } finally {
-      isLoading.value = false;
+      isMenuLoading.value = false;
+    }
+  }
+
+  Future<void> getSearchMenu({
+    required String query,
+    BuildContext? context,
+  }) async {
+    if (query.isEmpty) {
+      menus.clear();
+      return;
+    }
+
+    isMenuLoading.value = true;
+
+    String url = "${AppUrl.searchMenu}?query=$query";
+
+    String? token = await DatabaseProvider().getToken();
+
+    if (token == null) {
+      isMenuLoading.value = false;
+
+      Get.snackbar(
+        "Informasi ",
+        "Token Tidak Ditemukan",
+        animationDuration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 1650),
+        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+        borderWidth: 5.0,
+        snackPosition: SnackPosition.TOP,
+        margin: const EdgeInsets.all(20.0),
+        icon: const Icon(
+          CupertinoIcons.info_circle,
+        ),
+      );
+
+      return;
+    }
+
+    try {
+      http.Response req = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (req.statusCode == 200) {
+        final res = json.decode(req.body);
+
+        print(res);
+
+        List<dynamic> menuData = res["data"];
+
+        menus.value = menuData.map((item) => Menu.fromJson(item)).toList();
+      } else {
+        final res = json.decode(req.body);
+
+        print(res);
+
+        Get.snackbar(
+          "Informasi ",
+          "Terjadi Kesalahan",
+          animationDuration: const Duration(milliseconds: 200),
+          duration: const Duration(milliseconds: 1650),
+          backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+          borderWidth: 5.0,
+          snackPosition: SnackPosition.TOP,
+          margin: const EdgeInsets.all(20.0),
+          icon: const Icon(
+            CupertinoIcons.info_circle,
+          ),
+        );
+      }
+    } on SocketException catch (_) {
+      Get.snackbar(
+        "Informasi ",
+        "Koneksi Internet Tidak Tersedia",
+        animationDuration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 1650),
+        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+        borderWidth: 5.0,
+        snackPosition: SnackPosition.TOP,
+        margin: const EdgeInsets.all(20.0),
+        icon: const Icon(
+          CupertinoIcons.info_circle,
+        ),
+      );
+    } catch (e) {
+      Get.snackbar(
+        "Informasi ",
+        "Mohon Coba Lagi",
+        animationDuration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 1650),
+        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+        borderWidth: 5.0,
+        snackPosition: SnackPosition.TOP,
+        margin: const EdgeInsets.all(20.0),
+        icon: const Icon(
+          CupertinoIcons.info_circle,
+        ),
+      );
+
+      print(e);
+    } finally {
+      isMenuLoading.value = false;
     }
   }
 
@@ -668,6 +821,13 @@ class HomeController extends GetxController {
 
   void updateIndex(int index) {
     currentIndex.value = index;
+  }
+
+  void handleSearch(String query) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      getSearchMenu(query: query);
+    });
   }
 
   int getQuantity(Menu food) {
