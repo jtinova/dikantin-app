@@ -1,10 +1,12 @@
 // ignore_for_file: unused_field, deprecated_member_use, must_be_immutable
 
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:dikantin_app_rebuild/app/modules/profile/controllers/profile_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -20,15 +22,10 @@ class HomeView extends GetView<HomeController> {
 
   final _formKey = GlobalKey<FormBuilderState>();
 
-  // Function to check if the keyboard is visible
-  bool isKeyboardVisible(BuildContext context) {
-    final mediaQuery = MediaQuery.of(context);
-    return mediaQuery.viewInsets.bottom > 0;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         backgroundColor: Color(0xFF1E2857),
         elevation: 0,
@@ -43,10 +40,7 @@ class HomeView extends GetView<HomeController> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Header(
-                  formKey: _formKey,
-                  controller: controller,
-                ),
+                Header(formKey: _formKey, controller: controller),
                 BannerCarousel(controller: controller),
                 Categories(controller: controller),
                 Canteens(controller: controller),
@@ -61,9 +55,10 @@ class HomeView extends GetView<HomeController> {
 }
 
 class Header extends StatelessWidget {
-  const Header({super.key, required this.formKey, required this.controller});
+  Header({super.key, required this.formKey, required this.controller});
 
   final HomeController controller;
+  final profileController = Get.find<ProfileController>();
 
   final GlobalKey<FormBuilderState> formKey;
 
@@ -73,145 +68,136 @@ class Header extends StatelessWidget {
       children: [
         Container(
           width: double.infinity,
-          height: 107,
-          alignment: Alignment.centerLeft,
-          color: Color(0xFF1E2857),
+          height: 97.5.h,
+          color: const Color(0xFF1E2857),
         ),
-        Row(
-          children: [
-            Spacer(),
-            Padding(
-              padding: const EdgeInsets.all(15),
-              child: IconButton(
-                onPressed: () {
-                  Get.to(Routes.CART);
-                },
-                icon: Obx(() => badges.Badge(
-                      position: badges.BadgePosition.topEnd(top: -10, end: -10),
-                      badgeStyle:
-                          const badges.BadgeStyle(badgeColor: Colors.white),
-                      badgeAnimation: badges.BadgeAnimation.rotation(),
-                      badgeContent: Text(
-                        "${controller.cartCount}",
-                        style: TextStyle(
-                          color: Color(0xFF1E2857),
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      child: Icon(
-                        CupertinoIcons.cart_fill,
-                        color: Colors.white,
-                        size: 27,
-                      ),
-                    )),
-              ),
-            ),
-          ],
+        Positioned(
+          top: 15.h,
+          right: 20.w,
+          child: IconButton(
+            onPressed: () {
+              Get.toNamed(Routes.CART);
+            },
+            icon: Obx(() => badges.Badge(
+                  position: badges.BadgePosition.topEnd(
+                    top: -10,
+                    end: -10,
+                  ),
+                  badgeStyle: const badges.BadgeStyle(
+                    badgeColor: Colors.white,
+                  ),
+                  badgeAnimation: badges.BadgeAnimation.rotation(),
+                  badgeContent: Text(
+                    "${controller.cartCount}",
+                    style: TextStyle(
+                      color: const Color(0xFF1E2857),
+                      fontSize: 13.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  child: Icon(
+                    CupertinoIcons.cart_fill,
+                    color: Colors.white,
+                    size: 28.r,
+                  ),
+                )),
+          ),
         ),
         Padding(
-          padding: const EdgeInsets.all(10),
+          padding: EdgeInsets.symmetric(
+            horizontal: 15.w,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              SizedBox(height: 12.h),
               Text(
                 'Antar ke :',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 18,
+                  fontSize: 16.sp,
                 ),
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 5.h),
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Icon(
                     CupertinoIcons.location_solid,
                     color: Colors.white,
-                    size: 20,
+                    size: 20.r,
                   ),
-                  SizedBox(width: 7),
-                  SizedBox(
-                    width: 175,
-                    height: 25,
-                    child: Obx(
-                      () {
-                        if (controller.isLoading.value) {
-                          return Skeletonizer(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                          );
-                        }
-
-                        return Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: DropdownButtonHideUnderline(
-                            child: DropdownButton<String>(
-                              value: controller.selectedLocation.value,
-                              icon: Icon(
-                                CupertinoIcons.chevron_down,
-                                color: Colors.black,
-                                size: 16,
-                              ),
-                              isExpanded: true,
-                              dropdownColor: Colors.white,
-                              borderRadius: BorderRadius.circular(15),
-                              items: controller.buildings
-                                  .map(
-                                    (building) => DropdownMenuItem(
-                                      value: building.name,
-                                      child: Text(
-                                        building.name,
-                                        style: TextStyle(
-                                          color: controller
-                                                      .selectedLocation.value ==
-                                                  building.name
-                                              ? Colors.black
-                                              : Colors.grey,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                  .toList(),
-                              onChanged: (newValue) {
-                                if (newValue != null) {
-                                  controller.selectedLocation.value = newValue;
-                                }
-                              },
+                  SizedBox(width: 8.w),
+                  Expanded(
+                    child: Obx(() {
+                      if (controller.isLoading.value) {
+                        return Skeletonizer(
+                          child: Container(
+                            margin: EdgeInsets.only(right: 90.w),
+                            height: 23.h,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              borderRadius: BorderRadius.circular(10.r),
                             ),
                           ),
                         );
-                      },
-                    ),
+                      }
+
+                      return GestureDetector(
+                        onTap: () {
+                          Get.toNamed(Routes.MY_PROFILE);
+                        },
+                        child: Container(
+                          margin: EdgeInsets.only(right: 90.w),
+                          padding: EdgeInsets.symmetric(horizontal: 8.w),
+                          height: 23.h,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10.r),
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  profileController
+                                          .users.value?.building?.name ??
+                                      'Pilih Lokasi',
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.black,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ),
+                              Icon(
+                                CupertinoIcons.chevron_down,
+                                color: Colors.grey,
+                                size: 18.r,
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }),
                   ),
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  top: 15,
-                  left: 10,
-                  right: 10,
-                  bottom: 10,
-                ),
+              Center(
                 child: Container(
+                  width: double.infinity,
+                  margin: EdgeInsets.symmetric(
+                    horizontal: 4.w,
+                    vertical: 13.h,
+                  ),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(15.r),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        blurRadius: 5,
-                        offset: Offset(0, 5),
+                        color: Colors.black.withOpacity(0.15),
+                        blurRadius: 10,
+                        offset: const Offset(0, 5),
                       ),
                     ],
                   ),
@@ -221,40 +207,24 @@ class Header extends StatelessWidget {
                       name: "search",
                       keyboardType: TextInputType.text,
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 16.sp,
                         color: Colors.black87,
                       ),
-                      scrollPadding: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).viewInsets.bottom,
-                      ),
                       decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.white,
-                        prefixIcon: const Icon(
+                        border: InputBorder.none,
+                        prefixIcon: Icon(
                           CupertinoIcons.search,
-                          size: 18,
+                          size: 22.r,
                           color: Colors.black87,
                         ),
                         hintText: "Cari Seleramu",
                         hintStyle: TextStyle(
-                          fontSize: 18,
+                          fontSize: 16.sp,
                           color: Colors.black54,
                         ),
-                        enabledBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(15),
-                          ),
-                          borderSide: BorderSide(color: Colors.white),
-                        ),
-                        focusedBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(15),
-                          ),
-                          borderSide: BorderSide(color: Colors.white),
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          vertical: 10,
-                          horizontal: 10,
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: 12.h,
+                          horizontal: 10.w,
                         ),
                       ),
                       onChanged: (value) {
@@ -288,13 +258,15 @@ class BannerCarousel extends StatelessWidget {
             return Skeletonizer(
               enabled: true,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
+                padding: EdgeInsets.symmetric(
+                  horizontal: 15.w,
+                ),
                 child: Container(
                   width: double.infinity,
-                  height: 165,
+                  height: 150.h,
                   decoration: BoxDecoration(
                     color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(15),
+                    borderRadius: BorderRadius.circular(15.r),
                   ),
                 ),
               ),
@@ -303,11 +275,11 @@ class BannerCarousel extends StatelessWidget {
 
           return CarouselSlider(
             options: CarouselOptions(
-              height: 165,
+              height: 150.h,
               autoPlay: true,
               enlargeCenterPage: true,
               enableInfiniteScroll: false,
-              viewportFraction: 0.9,
+              viewportFraction: 0.91,
               aspectRatio: 16 / 9,
               autoPlayInterval: Duration(seconds: 5),
               onPageChanged: (index, reason) {
@@ -316,7 +288,7 @@ class BannerCarousel extends StatelessWidget {
             ),
             items: controller.bannerList.map((item) {
               return ClipRRect(
-                borderRadius: BorderRadius.circular(15),
+                borderRadius: BorderRadius.circular(15.r),
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
@@ -331,29 +303,52 @@ class BannerCarousel extends StatelessWidget {
             }).toList(),
           );
         }),
-        Obx(
-          () => Row(
+        Obx(() {
+          if (controller.isLoading.value) {
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(
+                3,
+                (index) {
+                  return Container(
+                    width: 15.w,
+                    height: 2.5.h,
+                    margin: EdgeInsets.symmetric(
+                      vertical: 6.h,
+                      horizontal: 2.w,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(15.r),
+                    ),
+                  );
+                },
+              ),
+            );
+          }
+
+          return Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: controller.bannerList.asMap().entries.map((entry) {
               int index = entry.key;
               return Container(
-                width: 15,
-                height: 4,
+                width: 15.w,
+                height: 2.5.h,
                 margin: EdgeInsets.symmetric(
-                  vertical: 8,
-                  horizontal: 3,
+                  vertical: 6.h,
+                  horizontal: 2.w,
                 ),
                 decoration: BoxDecoration(
                   shape: BoxShape.rectangle,
                   color: controller.currentIndex.value == index
-                      ? Color(0xFF1E2857)
-                      : Color(0xFF1E2857).withOpacity(0.5),
-                  borderRadius: BorderRadius.circular(15),
+                      ? const Color(0xFF1E2857)
+                      : const Color(0xFF1E2857).withOpacity(0.5),
+                  borderRadius: BorderRadius.circular(15.r),
                 ),
               );
             }).toList(),
-          ),
-        ),
+          );
+        }),
       ],
     );
   }
@@ -370,20 +365,20 @@ class Categories extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 10,
-            horizontal: 15,
+          padding: EdgeInsets.symmetric(
+            vertical: 5.h,
+            horizontal: 15.w,
           ),
           child: Obx(() {
             if (controller.isLoading.value) {
               return Skeletonizer(
                 enabled: true,
                 child: Container(
-                  height: 15,
-                  width: 100,
+                  height: 10.h,
+                  width: 80.w,
                   decoration: BoxDecoration(
                     color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(5),
+                    borderRadius: BorderRadius.circular(5.r),
                   ),
                 ),
               );
@@ -392,42 +387,46 @@ class Categories extends StatelessWidget {
             return Text(
               'Kategori',
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 17.sp,
                 fontWeight: FontWeight.w600,
                 color: Color(0xFF1E2857),
               ),
             );
           }),
         ),
-        SizedBox(
-          height: 85,
+        Container(
+          height: 80.h,
+          width: double.infinity,
+          margin: EdgeInsets.symmetric(
+            horizontal: 15.w,
+          ),
           child: Obx(() {
             if (controller.isLoading.value) {
               return ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: 5,
+                itemCount: 6,
                 itemBuilder: (context, index) {
                   return Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 15),
+                    padding: EdgeInsets.symmetric(horizontal: 10.w),
                     child: Skeletonizer(
                       enabled: true,
                       child: Column(
                         children: [
                           Container(
-                            width: 60,
-                            height: 60,
+                            width: 60.w,
+                            height: 60.h,
                             decoration: BoxDecoration(
                               color: Colors.grey[300],
                               shape: BoxShape.circle,
                             ),
                           ),
-                          SizedBox(height: 5),
+                          SizedBox(height: 2.5.h),
                           Container(
-                            width: 80,
-                            height: 16,
+                            width: 63.w,
+                            height: 10.h,
                             decoration: BoxDecoration(
                               color: Colors.grey[300],
-                              borderRadius: BorderRadius.circular(5),
+                              borderRadius: BorderRadius.circular(5.r),
                             ),
                           ),
                         ],
@@ -443,7 +442,10 @@ class Categories extends StatelessWidget {
               shrinkWrap: true,
               children: controller.categories.map((category) {
                 return Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  padding: EdgeInsets.symmetric(
+                    vertical: 3.h,
+                    horizontal: 8.w,
+                  ),
                   child: GestureDetector(
                     onTap: () {
                       // Fetch menu by category
@@ -460,13 +462,13 @@ class Categories extends StatelessWidget {
                         CircleAvatar(
                           backgroundImage:
                               AssetImage('assets/images/image_carousel.png'),
-                          radius: 30,
+                          radius: 30.r,
                         ),
-                        SizedBox(height: 5),
+                        SizedBox(height: 2.5.h),
                         Text(
                           category.name,
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: 15.sp,
                             fontWeight: controller.selectedCategoryId.value ==
                                     category.id
                                 ? FontWeight.w700
@@ -495,28 +497,30 @@ class Canteens extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 10,
-        vertical: 20,
+      padding: EdgeInsets.symmetric(
+        horizontal: 15.w,
+        vertical: 7.h,
       ),
       child: SizedBox(
-        height: 35,
+        height: 30.h,
         child: Obx(() {
           if (controller.isLoading.value) {
             return ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: 5,
+              itemCount: 6,
               itemBuilder: (context, index) {
                 return Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 5),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 3.w,
+                  ),
                   child: Skeletonizer(
                     enabled: true,
                     child: Container(
-                      width: 80,
+                      width: 75.w,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                         color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(10.r),
                       ),
                     ),
                   ),
@@ -544,21 +548,23 @@ class Canteens extends StatelessWidget {
                   controller.selectedCategoryId.value = "";
                 },
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 5),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 3.w,
+                  ),
                   child: Container(
-                    width: 80,
+                    width: 75.w,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       shape: BoxShape.rectangle,
                       color: isSelected
                           ? Color(0xFF1E2857)
                           : Color(0xFF1E2857).withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(10.r),
                     ),
                     child: Text(
                       canteen.name,
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 15.sp,
                         color: isSelected ? Colors.white : Color(0xFF1E2857),
                       ),
                     ),
@@ -581,19 +587,29 @@ class FoodGrids extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 10,
+      padding: EdgeInsets.symmetric(
+        vertical: 5.h,
+        horizontal: 10.w,
       ),
       child: Obx(() {
         if (controller.isLoading.value) {
           return GridView.builder(
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              crossAxisSpacing: 5,
-              mainAxisSpacing: 5,
-              childAspectRatio: 0.87,
+              crossAxisSpacing: 5.w,
+              mainAxisSpacing: 5.w,
+              childAspectRatio: () {
+                double width = MediaQuery.of(context).size.width;
+                if (width <= 375) {
+                  return 0.85;
+                } else if (width <= 414) {
+                  return 0.96;
+                } else {
+                  return 1.14;
+                }
+              }(),
             ),
             itemCount: 6,
             itemBuilder: (context, index) {
@@ -662,122 +678,139 @@ class FoodGrids extends StatelessWidget {
         }
 
         if (controller.menus.isEmpty) {
-          return Center(
-            child: Text(
-              "Tidak ada menu tersedia",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
+          return Padding(
+            padding: EdgeInsets.symmetric(vertical: 15.h),
+            child: Center(
+              child: Text(
+                "Tidak ada menu tersedia",
+                style: TextStyle(
+                  fontSize: 17.sp,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           );
         }
 
-        return SizedBox(
-          height: (controller.menus.length / 2).ceil() * 198,
-          child: GridView.builder(
-            physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 5,
-              mainAxisSpacing: 5,
-              childAspectRatio: 0.87,
-            ),
-            itemCount: controller.menus.length,
-            itemBuilder: (context, index) {
-              final food = controller.menus[index];
-              bool isClosed = food.canteen.status == "close";
+        return GridView.builder(
+          physics: NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 5.w,
+            mainAxisSpacing: 5.w,
+            childAspectRatio: () {
+              double width = MediaQuery.of(context).size.width;
+              if (width <= 375) {
+                return 0.83;
+              } else if (width <= 414) {
+                return 0.94;
+              } else {
+                return 1.13;
+              }
+            }(),
+          ),
+          itemCount: controller.menus.length,
+          itemBuilder: (context, index) {
+            final food = controller.menus[index];
+            bool isClosed = food.canteen.status == "close";
 
-              return GestureDetector(
-                onTap: () {
-                  showModalBottomSheet(
-                    context: context,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(15),
-                      ),
-                    ),
-                    builder: (context) {
-                      return MenuDetailBottom(
-                        food: food,
-                        controller: controller,
-                      );
-                    },
-                  );
-                },
-                child: Card(
-                  elevation: 3,
+            return GestureDetector(
+              onTap: () {
+                showModalBottomSheet(
+                  context: context,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(15.r),
+                    ),
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ClipRRect(
-                        borderRadius:
-                            BorderRadius.vertical(top: Radius.circular(10)),
-                        child: ColorFiltered(
-                          colorFilter: isClosed
-                              ? ColorFilter.mode(
-                                  Colors.grey, BlendMode.saturation)
-                              : ColorFilter.mode(
-                                  Colors.transparent, BlendMode.saturation),
-                          child: Image.asset(
-                            'assets/images/image_carousel.png',
-                            width: double.infinity,
-                            height: 100,
-                            fit: BoxFit.cover,
-                          ),
+                  builder: (context) {
+                    return MenuDetailBottom(
+                      food: food,
+                      controller: controller,
+                    );
+                  },
+                );
+              },
+              child: Card(
+                elevation: 3,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ClipRRect(
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(10.r)),
+                      child: ColorFiltered(
+                        colorFilter: isClosed
+                            ? ColorFilter.mode(
+                                Colors.grey,
+                                BlendMode.saturation,
+                              )
+                            : ColorFilter.mode(
+                                Colors.transparent,
+                                BlendMode.saturation,
+                              ),
+                        child: Image.asset(
+                          'assets/images/image_carousel.png',
+                          width: double.infinity,
+                          height: 90.h,
+                          fit: BoxFit.cover,
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  food.canteen.name,
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: 8.h,
+                        horizontal: 10.w,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                food.canteen.name,
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w500,
                                 ),
-                                Spacer(),
-                                Text(
-                                  controller
-                                      .capitalizeFirst(food.canteen.status),
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    color: isClosed ? Colors.red : Colors.green,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 5),
-                            Text(
-                              food.name,
-                              style: TextStyle(
-                                fontSize: 15,
-                                overflow: TextOverflow.ellipsis,
-                                fontWeight: FontWeight.w600,
                               ),
-                            ),
-                            SizedBox(height: 10),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "Rp ${controller.formatRupiah(food.sellingCost)}",
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                              Spacer(),
+                              Text(
+                                controller.capitalizeFirst(food.canteen.status),
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: isClosed ? Colors.red : Colors.green,
                                 ),
-                                Obx(() {
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 2.5.h),
+                          Text(
+                            food.name,
+                            style: TextStyle(
+                              fontSize: 15.sp,
+                              overflow: TextOverflow.ellipsis,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          SizedBox(height: 7.h),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Rp ${controller.formatRupiah(food.sellingCost)}",
+                                style: TextStyle(
+                                  fontSize: 15.sp,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              Obx(
+                                () {
                                   int quantity = controller.getQuantity(food);
                                   return quantity > 0
                                       ? Row(
@@ -790,30 +823,31 @@ class FoodGrids extends StatelessWidget {
                                                 );
                                               },
                                               child: Container(
-                                                height: 20,
-                                                width: 20,
+                                                height: 18.h,
+                                                width: 20.w,
                                                 alignment: Alignment.center,
                                                 decoration: BoxDecoration(
                                                   color: Colors.red,
                                                   borderRadius:
-                                                      BorderRadius.circular(5),
+                                                      BorderRadius.circular(
+                                                          5.r),
                                                 ),
                                                 child: Icon(
                                                   Icons.remove,
-                                                  size: 18,
+                                                  size: 15.r,
                                                   color: Colors.white,
                                                 ),
                                               ),
                                             ),
-                                            SizedBox(width: 12),
+                                            SizedBox(width: 12.5.w),
                                             Text(
                                               "$quantity",
                                               style: TextStyle(
-                                                fontSize: 16,
+                                                fontSize: 15.sp,
                                                 fontWeight: FontWeight.w500,
                                               ),
                                             ),
-                                            SizedBox(width: 12),
+                                            SizedBox(width: 12.5.w),
                                             GestureDetector(
                                               onTap: () {
                                                 controller.updateCart(
@@ -822,17 +856,18 @@ class FoodGrids extends StatelessWidget {
                                                 );
                                               },
                                               child: Container(
-                                                height: 20,
-                                                width: 20,
+                                                height: 18.h,
+                                                width: 20.w,
                                                 alignment: Alignment.center,
                                                 decoration: BoxDecoration(
                                                   color: Color(0xFF1E2857),
                                                   borderRadius:
-                                                      BorderRadius.circular(5),
+                                                      BorderRadius.circular(
+                                                          5.r),
                                                 ),
                                                 child: Icon(
                                                   Icons.add,
-                                                  size: 18,
+                                                  size: 15.r,
                                                   color: Colors.white,
                                                 ),
                                               ),
@@ -852,11 +887,14 @@ class FoodGrids extends StatelessWidget {
                                                 duration: Duration(
                                                     milliseconds: 1650),
                                                 backgroundColor: Colors.red,
-                                                borderWidth: 5.0,
+                                                borderWidth: 5.w,
                                                 snackPosition:
                                                     SnackPosition.TOP,
                                                 colorText: Colors.white,
-                                                margin: EdgeInsets.all(20.0),
+                                                margin: EdgeInsets.symmetric(
+                                                  vertical: 20.h,
+                                                  horizontal: 20.w,
+                                                ),
                                                 icon: Icon(
                                                   CupertinoIcons.info_circle,
                                                   color: Colors.white,
@@ -865,8 +903,8 @@ class FoodGrids extends StatelessWidget {
                                             }
                                           },
                                           child: Container(
-                                            height: 20,
-                                            width: 20,
+                                            height: 18.h,
+                                            width: 20.w,
                                             alignment: Alignment.center,
                                             decoration: BoxDecoration(
                                               color: Color(0xFF1E2857),
@@ -875,23 +913,23 @@ class FoodGrids extends StatelessWidget {
                                             ),
                                             child: Icon(
                                               Icons.add,
-                                              size: 18,
+                                              size: 15.r,
                                               color: Colors.white,
                                             ),
                                           ),
                                         );
-                                }),
-                              ],
-                            ),
-                          ],
-                        ),
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         );
       }),
     );
@@ -910,58 +948,61 @@ class MenuDetailBottom extends StatelessWidget {
     bool isClosed = food.canteen.status == "close";
 
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: EdgeInsets.symmetric(
+        horizontal: 15.w,
+        vertical: 5.h,
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Center(
             child: Container(
-              width: 50,
-              height: 5,
+              width: 60.w,
+              height: 3.h,
               decoration: BoxDecoration(
                 color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(10.r),
               ),
             ),
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 5.h),
           Center(
             child: Text(
               food.name,
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 17.sp,
                 fontWeight: FontWeight.w600,
                 color: Color(0xFF1E2857),
               ),
             ),
           ),
-          SizedBox(height: 15),
+          SizedBox(height: 7.h),
           Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(20.r),
             ),
             child: Image.asset(
               'assets/images/image_carousel.png',
               width: double.infinity,
-              height: 150,
+              height: 140.h,
             ),
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 5.h),
           Text(
             food.description,
             style: TextStyle(
-              fontSize: 15,
+              fontSize: 15.sp,
               color: Color(0xFF1E2857),
             ),
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 10.h),
           Row(
             children: [
               Text(
                 "Kantin: ",
                 style: TextStyle(
-                  fontSize: 17,
+                  fontSize: 16.sp,
                   fontWeight: FontWeight.w500,
                   color: Color(0xFF1E2857),
                 ),
@@ -969,20 +1010,20 @@ class MenuDetailBottom extends StatelessWidget {
               Text(
                 controller.capitalizeFirst(food.canteen.status),
                 style: TextStyle(
-                  fontSize: 17,
+                  fontSize: 16.sp,
                   fontWeight: FontWeight.w500,
                   color: isClosed ? Colors.red : Colors.green,
                 ),
               ),
             ],
           ),
-          SizedBox(height: 5),
+          SizedBox(height: 5.h),
           Row(
             children: [
               Text(
                 "Harga: Rp ${food.sellingCost}",
                 style: TextStyle(
-                  fontSize: 17,
+                  fontSize: 16.sp,
                   fontWeight: FontWeight.w500,
                   color: Color(0xFF1E2857),
                 ),
@@ -1001,29 +1042,29 @@ class MenuDetailBottom extends StatelessWidget {
                               );
                             },
                             child: Container(
-                              height: 20,
-                              width: 20,
+                              height: 18.h,
+                              width: 20.w,
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
                                 color: Colors.red,
-                                borderRadius: BorderRadius.circular(5),
+                                borderRadius: BorderRadius.circular(5.r),
                               ),
                               child: Icon(
                                 Icons.remove,
-                                size: 18,
+                                size: 15.r,
                                 color: Colors.white,
                               ),
                             ),
                           ),
-                          SizedBox(width: 12),
+                          SizedBox(width: 20.w),
                           Text(
                             "$quantity",
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 16.sp,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          SizedBox(width: 12),
+                          SizedBox(width: 20.w),
                           GestureDetector(
                             onTap: () {
                               controller.updateCart(
@@ -1032,16 +1073,16 @@ class MenuDetailBottom extends StatelessWidget {
                               );
                             },
                             child: Container(
-                              height: 20,
-                              width: 20,
+                              height: 18.h,
+                              width: 20.w,
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
                                 color: Color(0xFF1E2857),
-                                borderRadius: BorderRadius.circular(5),
+                                borderRadius: BorderRadius.circular(5.r),
                               ),
                               child: Icon(
                                 Icons.add,
-                                size: 18,
+                                size: 15.r,
                                 color: Colors.white,
                               ),
                             ),
@@ -1059,10 +1100,13 @@ class MenuDetailBottom extends StatelessWidget {
                               animationDuration: Duration(milliseconds: 200),
                               duration: Duration(milliseconds: 1650),
                               backgroundColor: Colors.red,
-                              borderWidth: 5.0,
+                              borderWidth: 5.w,
                               snackPosition: SnackPosition.TOP,
                               colorText: Colors.white,
-                              margin: EdgeInsets.all(20.0),
+                              margin: EdgeInsets.symmetric(
+                                vertical: 20.h,
+                                horizontal: 20.w,
+                              ),
                               icon: Icon(
                                 CupertinoIcons.info_circle,
                                 color: Colors.white,
@@ -1071,37 +1115,46 @@ class MenuDetailBottom extends StatelessWidget {
                           }
                         },
                         child: Container(
-                          height: 20,
-                          width: 20,
+                          height: 18.h,
+                          width: 20.w,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                             color: Color(0xFF1E2857),
-                            borderRadius: BorderRadius.circular(5),
+                            borderRadius: BorderRadius.circular(5.r),
                           ),
                           child: Icon(
                             Icons.add,
-                            size: 18,
+                            size: 15.r,
                             color: Colors.white,
                           ),
                         ),
                       );
               }),
-              SizedBox(height: 20),
             ],
           ),
-          SizedBox(height: 10),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xFF1E2857),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+          SizedBox(height: 10.h),
+          SizedBox(
+            width: double.infinity,
+            height: 35.h,
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFF1E2857),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
               ),
-            ),
-            child: Center(
-              child: Text("Tutup", style: TextStyle(color: Colors.white)),
+              child: Center(
+                child: Text(
+                  "Tutup",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.sp,
+                  ),
+                ),
+              ),
             ),
           ),
         ],

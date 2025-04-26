@@ -121,6 +121,8 @@ class ProfileController extends GetxController {
   Future<void> updateUserData({
     required String fullName,
     required String phoneNumber,
+    required String buildingId,
+    required String detailAddress,
     BuildContext? context,
   }) async {
     isLoading.value = true;
@@ -151,6 +153,8 @@ class ProfileController extends GetxController {
     final body = {
       "full_name": fullName,
       "phone_number": phoneNumber,
+      "building_id": buildingId,
+      "detail_address": detailAddress,
     };
     print(body);
 

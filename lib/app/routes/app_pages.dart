@@ -4,6 +4,8 @@ import '../modules/cart/bindings/cart_binding.dart';
 import '../modules/cart/views/cart_view.dart';
 import '../modules/chat/bindings/chat_binding.dart';
 import '../modules/chat/views/chat_view.dart';
+import '../modules/checkout/bindings/checkout_binding.dart';
+import '../modules/checkout/views/checkout_view.dart';
 import '../modules/code_otp/bindings/code_otp_binding.dart';
 import '../modules/code_otp/views/code_otp_view.dart';
 import '../modules/home/bindings/home_binding.dart';
@@ -95,6 +97,11 @@ class AppPages {
       name: _Paths.CART,
       page: () => const CartView(),
       binding: CartBinding(),
+    ),
+    GetPage(
+      name: _Paths.CHECKOUT,
+      page: () => const CheckoutView(),
+      binding: CheckoutBinding(),
     ),
   ];
 }

@@ -1,7 +1,10 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:dikantin_app_rebuild/app/data/auth_provider.dart';
 import 'package:dikantin_app_rebuild/app/theme/theme.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -18,8 +21,14 @@ void main() async {
   String? token = await DatabaseProvider().getToken();
   String initialRoute = token != null ? Routes.NAVIGATION : Routes.SIGN_IN;
 
-  runApp(MyApp(initialRoute: initialRoute));
+  runApp(
+    DevicePreview(
+      enabled: !kReleaseMode,
+      builder: (context) => MyApp(initialRoute: initialRoute),
+    ),
+  );
 
+  // runApp(MyApp(initialRoute: initialRoute));
 
   FlutterNativeSplash.remove();
   configLoading();
@@ -33,9 +42,9 @@ void configLoading() {
     ..indicatorType = EasyLoadingIndicatorType.threeBounce
     ..userInteractions = false
     ..dismissOnTap = false
-    ..indicatorSize = 35
+    ..indicatorSize = 25.sp
     ..textStyle = TextStyle(
-      fontSize: 17,
+      fontSize: 35.sp,
       fontWeight: FontWeight.w500,
     );
 }
@@ -51,13 +60,20 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AuthenticationProvider()),
         ChangeNotifierProvider(create: (_) => DatabaseProvider())
       ],
-      child: GetMaterialApp(
-        title: "Dikantin App Rebuild",
-        initialRoute: initialRoute,
-        theme: lightMode,
-        getPages: AppPages.routes,
-        builder: EasyLoading.init(),
-        debugShowCheckedModeBanner: false,
+      child: ScreenUtilInit(
+        designSize: const Size(360, 690),
+        minTextAdapt: true,
+        splitScreenMode: true,
+        child: GetMaterialApp(
+          useInheritedMediaQuery: true,
+          locale: DevicePreview.locale(context),
+          title: "Dikantin App Rebuild",
+          initialRoute: initialRoute,
+          theme: lightMode,
+          getPages: AppPages.routes,
+          builder: EasyLoading.init(),
+          debugShowCheckedModeBanner: false,
+        ),
       ),
     );
   }

@@ -1,6 +1,6 @@
 class AppUrl {
   // Change IP Address before run project
-  static String baseURL = 'http://192.168.1.2:8080/api';
+  static String baseURL = 'http://192.168.1.12:8080/api';
 
   // Authentication
   static String signin = '$baseURL/login';
@@ -18,6 +18,10 @@ class AppUrl {
   static String menus = '$baseURL/menu';
   static String menuByCanteen = '$baseURL/canteen/menu';
   static String menuByCategory = '$baseURL/category/menu';
+
+  // API Order
+  static String calculateOrder = '$baseURL/transaction/calculate-order';
+  static String createOrder = '$baseURL/transaction/create';
 
   // API Profile
   static String detailUserProfile = '$baseURL/user';

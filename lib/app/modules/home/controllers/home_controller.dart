@@ -760,37 +760,17 @@ class HomeController extends GetxController {
       return;
     }
 
-    // Check if the item is already in cart
     final existingIndex =
         cartItems.indexWhere((item) => item.menu.id == food.id);
 
     if (existingIndex >= 0) {
-      // If item exists, increment quantity
       cartItems[existingIndex] = CartItem(
         menu: food,
         quantity: cartItems[existingIndex].quantity + 1,
       );
     } else {
-      // If item doesn't exist, add new item with quantity 1
       cartItems.add(CartItem(menu: food, quantity: 1));
     }
-
-    // Show a snackbar to confirm addition
-    Get.snackbar(
-      "Item Ditambahkan",
-      "${food.name} ditambahkan ke keranjang",
-      animationDuration: Duration(milliseconds: 200),
-      duration: Duration(milliseconds: 1650),
-      backgroundColor: Colors.green,
-      borderWidth: 5.0,
-      colorText: Colors.white,
-      snackPosition: SnackPosition.TOP,
-      margin: EdgeInsets.all(20.0),
-      icon: Icon(
-        CupertinoIcons.info_circle,
-        color: Colors.white,
-      ),
-    );
   }
 
   void updateCart(Menu food, {required bool isAdding}) {
@@ -807,13 +787,11 @@ class HomeController extends GetxController {
 
     if (existingIndex >= 0) {
       if (cartItems[existingIndex].quantity > 1) {
-        // Decrement quantity if more than 1
         cartItems[existingIndex] = CartItem(
           menu: cartItems[existingIndex].menu,
           quantity: cartItems[existingIndex].quantity - 1,
         );
       } else {
-        // Remove item if quantity is 1
         cartItems.removeAt(existingIndex);
       }
     }
@@ -842,6 +820,13 @@ class HomeController extends GetxController {
     return match != null ? int.parse(match.group(0)!) : 0;
   }
 
+  int get totalCartPrice {
+    return cartItems.fold(
+      0,
+      (sum, item) => sum + (item.menu.sellingCost * item.quantity),
+    );
+  }
+
   String capitalizeFirst(String text) {
     if (text.isEmpty) return text;
     return text[0].toUpperCase() + text.substring(1).toLowerCase();
@@ -850,5 +835,17 @@ class HomeController extends GetxController {
   String formatRupiah(int price) {
     final formatCurrency = NumberFormat("#,##0", "id_ID");
     return formatCurrency.format(price);
+  }
+
+  Map<String, List<CartItem>> get groupedCartItems {
+    Map<String, List<CartItem>> grouped = {};
+    for (var item in cartItems) {
+      final canteenName = item.menu.canteen.name;
+      if (!grouped.containsKey(canteenName)) {
+        grouped[canteenName] = [];
+      }
+      grouped[canteenName]!.add(item);
+    }
+    return grouped;
   }
 }
