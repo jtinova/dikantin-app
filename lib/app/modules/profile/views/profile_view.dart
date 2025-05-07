@@ -43,9 +43,6 @@ class ProfileView extends GetView<ProfileController> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Obx(() {
-                      if (controller.isLoading.value) {
-                        return CircularProgressIndicator();
-                      }
                       if (controller.users.value != null) {
                         return Column(
                           children: [
@@ -74,12 +71,24 @@ class ProfileView extends GetView<ProfileController> {
                           ],
                         );
                       } else {
-                        return Text(
-                          "Data tidak tersedia",
-                          style: TextStyle(
-                            fontSize: 16.sp,
-                            color: Colors.red,
-                          ),
+                        return Column(
+                          children: [
+                            CircleAvatar(
+                              backgroundImage:
+                                  AssetImage('assets/images/logo_dikantin.png'),
+                              backgroundColor: Colors.black12,
+                              radius: 48.r,
+                            ),
+                            SizedBox(height: 10.h),
+                            Text(
+                              "Data User Tidak Ditemukan",
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 18.sp,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
                         );
                       }
                     }),

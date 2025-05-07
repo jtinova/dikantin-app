@@ -92,10 +92,6 @@ class MyProfile extends StatelessWidget {
                 ),
                 child: IntrinsicHeight(
                   child: Obx(() {
-                    if (controller.isLoading.value) {
-                      return Center(child: CircularProgressIndicator());
-                    }
-
                     var user = controller.users.value;
 
                     return FormBuilder(

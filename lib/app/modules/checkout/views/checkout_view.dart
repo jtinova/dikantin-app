@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../../../routes/app_pages.dart';
@@ -17,16 +18,19 @@ class CheckoutView extends GetView<CheckoutController> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           "Proses Pesanan",
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+          style: TextStyle(
+            fontSize: 20.sp,
+            fontWeight: FontWeight.w500,
+          ),
         ),
         centerTitle: true,
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1),
+          preferredSize: Size.fromHeight(1.h),
           child: Container(
             color: Colors.grey[300],
-            height: 1,
+            height: 1.h,
           ),
         ),
       ),
@@ -34,432 +38,432 @@ class CheckoutView extends GetView<CheckoutController> {
         final data = controller.calculateResult.value;
         final user = profileController.users.value;
 
-        return controller.isLoading.value
-            ? const Center(child: CircularProgressIndicator())
-            : SingleChildScrollView(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Get.toNamed(Routes.MY_PROFILE);
-                      },
-                      child: Card(
-                        elevation: 3,
-                        child: Column(
+        return SingleChildScrollView(
+          padding: EdgeInsets.symmetric(
+            vertical: 10.h,
+            horizontal: 10.w,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  Get.toNamed(Routes.MY_PROFILE);
+                },
+                child: Card(
+                  elevation: 3,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          vertical: 10.h,
+                          horizontal: 16.w,
+                        ),
+                        child: Text(
+                          "Alamat Pengiriman",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16.sp,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10.w),
+                        child: Divider(
+                          height: 0.h,
+                          thickness: 0.5,
+                          color: Colors.grey[500],
+                        ),
+                      ),
+                      ListTile(
+                        leading: Icon(
+                          Icons.location_on,
+                          color: Colors.red,
+                          size: 28.r,
+                        ),
+                        title: Text(
+                          user!.fullName,
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                          ),
+                        ),
+                        subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 10,
-                                horizontal: 16,
-                              ),
-                              child: Text(
-                                "Alamat Pengiriman",
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16,
-                                ),
+                            Text(
+                              "(${controller.formatPhoneNumber(user.phoneNumber)})",
+                              style: TextStyle(
+                                fontSize: 15.sp,
                               ),
                             ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10),
-                              child: Divider(
-                                height: 0,
-                                thickness: 0.5,
-                                color: Colors.grey[500],
-                              ),
-                            ),
-                            ListTile(
-                              leading: const Icon(
-                                Icons.location_on,
-                                color: Colors.red,
-                                size: 28,
-                              ),
-                              title: Text(
-                                user!.fullName,
-                                style: const TextStyle(
-                                  fontSize: 16,
+                            Row(
+                              children: [
+                                Text(
+                                  "Lokasi",
+                                  style: TextStyle(
+                                    fontSize: 15.sp,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
-                              ),
-                              subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "(${controller.formatPhoneNumber(user.phoneNumber)})",
-                                    style: const TextStyle(
-                                      fontSize: 15,
+                                SizedBox(width: 2.h),
+                                Text(
+                                  ": ",
+                                  style: TextStyle(
+                                    fontSize: 15.sp,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    user.building?.name ?? 'Nama Gedung Kosong',
+                                    style: TextStyle(
+                                      fontSize: 15.sp,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        "Lokasi",
-                                        style: const TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      SizedBox(width: 2),
-                                      Text(
-                                        ": ",
-                                        style: const TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Text(
-                                          user.building?.name ??
-                                              'Nama Gedung Kosong',
-                                          style: const TextStyle(
-                                            fontSize: 15,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  "Detail",
+                                  style: TextStyle(
+                                    fontSize: 15.sp,
+                                    fontWeight: FontWeight.w500,
                                   ),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        "Detail",
-                                        style: const TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      SizedBox(width: 4),
-                                      Text(
-                                        ": ",
-                                        style: const TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Text(
-                                          user.detailAddress ??
-                                              'Detail Alamat Kosong',
-                                          style: const TextStyle(
-                                            fontSize: 15,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                                ),
+                                SizedBox(width: 4.h),
+                                Text(
+                                  ": ",
+                                  style: TextStyle(
+                                    fontSize: 15.sp,
+                                    fontWeight: FontWeight.w500,
                                   ),
-                                ],
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    user.detailAddress ??
+                                        'Detail Alamat Kosong',
+                                    style: TextStyle(
+                                      fontSize: 15.sp,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              ...controller.groupedItemsByCanteen.entries.map((entry) {
+                final kantinNama = entry.key;
+                final items = entry.value;
+
+                return Card(
+                  margin: EdgeInsets.symmetric(vertical: 5.h),
+                  elevation: 3,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                          vertical: 10.h,
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.storefront,
+                              size: 21.r,
+                            ),
+                            SizedBox(
+                              width: 8.w,
+                            ),
+                            Text(
+                              kantinNama,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16.sp,
                               ),
                             ),
                           ],
                         ),
                       ),
-                    ),
-                    ...controller.groupedItemsByCanteen.entries.map((entry) {
-                      final kantinNama = entry.key;
-                      final items = entry.value;
-
-                      return Card(
-                        margin: const EdgeInsets.symmetric(vertical: 5),
-                        elevation: 3,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 10,
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10.w),
+                        child: Divider(
+                          height: 0.h,
+                          thickness: 0.5,
+                          color: Colors.grey[500],
+                        ),
+                      ),
+                      ...items.map((item) => ListTile(
+                            leading: ClipRRect(
+                              borderRadius: BorderRadius.circular(10.r),
+                              child: Image.asset(
+                                'assets/images/image_carousel.png',
+                                height: 50.h,
+                                width: 50.w,
+                                fit: BoxFit.cover,
                               ),
-                              child: Row(
+                            ),
+                            title: Text(item['nama']),
+                            subtitle: Text("x ${item['qty']}"),
+                            trailing: Text(
+                              "Rp ${controller.formatRupiah(item['subtotal'])}",
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                              ),
+                            ),
+                          )),
+                      SizedBox(height: 8.h),
+                    ],
+                  ),
+                );
+              }),
+              Card(
+                elevation: 3,
+                child: Column(
+                  children: [
+                    ListTile(
+                      leading: const Icon(
+                        CupertinoIcons.bag,
+                      ),
+                      title: Text(
+                        "Pilih Opsi",
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                        ),
+                      ),
+                      trailing: Obx(
+                        () => Text(
+                          controller.selectedDeliveryOption.value.isEmpty
+                              ? "Pilih Opsi"
+                              : controller.getDeliveryOptionTitle(
+                                  controller.selectedDeliveryOption.value,
+                                ),
+                          style: TextStyle(
+                            fontSize: 15.sp,
+                            color:
+                                controller.selectedDeliveryOption.value.isEmpty
+                                    ? Colors.grey
+                                    : Colors.black,
+                          ),
+                        ),
+                      ),
+                      onTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(20.r),
+                            ),
+                          ),
+                          builder: (_) {
+                            return Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 16.w,
+                                vertical: 10.h,
+                              ),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  const Icon(
-                                    Icons.storefront,
-                                    size: 21,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Text(
-                                    kantinNama,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 16,
+                                  Center(
+                                    child: Container(
+                                      width: 50.w,
+                                      height: 5.h,
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey[300],
+                                        borderRadius:
+                                            BorderRadius.circular(10.r),
+                                      ),
                                     ),
+                                  ),
+                                  SizedBox(height: 15.h),
+                                  Text(
+                                    "Pilih Lokasi Pengambilan",
+                                    style: TextStyle(
+                                      fontSize: 18.sp,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  SizedBox(height: 10.h),
+                                  CustomRadioTile(
+                                    title: "Diantar",
+                                    value: "deliver",
+                                    groupValue:
+                                        controller.selectedDeliveryOption.value,
+                                    onChanged: (value) {
+                                      controller.selectedDeliveryOption.value =
+                                          value!;
+                                      Get.back();
+                                    },
+                                  ),
+                                  CustomRadioTile(
+                                    title: "Ditempat",
+                                    value: "dine_in",
+                                    groupValue:
+                                        controller.selectedDeliveryOption.value,
+                                    onChanged: (value) {
+                                      controller.selectedDeliveryOption.value =
+                                          value!;
+                                      Get.back();
+                                    },
+                                  ),
+                                  CustomRadioTile(
+                                    title: "Diambil",
+                                    value: "pick_up",
+                                    groupValue:
+                                        controller.selectedDeliveryOption.value,
+                                    onChanged: (value) {
+                                      controller.selectedDeliveryOption.value =
+                                          value!;
+                                      Get.back();
+                                    },
                                   ),
                                 ],
                               ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10),
-                              child: Divider(
-                                height: 0,
-                                thickness: 0.5,
-                                color: Colors.grey[500],
-                              ),
-                            ),
-                            ...items.map((item) => ListTile(
-                                  leading: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: Image.asset(
-                                      'assets/images/image_carousel.png',
-                                      height: 50,
-                                      width: 50,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                  title: Text(item['nama']),
-                                  subtitle: Text("x ${item['qty']}"),
-                                  trailing: Text(
-                                    "Rp ${controller.formatRupiah(item['subtotal'])}",
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                )),
-                            const SizedBox(height: 8),
-                          ],
+                            );
+                          },
+                        );
+                      },
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 15.w),
+                      child: Divider(
+                        height: 0.h,
+                        thickness: 0.5,
+                        color: Colors.grey[500],
+                      ),
+                    ),
+                    ListTile(
+                      leading: Icon(
+                        CupertinoIcons.creditcard,
+                      ),
+                      title: Text(
+                        "Tipe Pembayaran",
+                        style: TextStyle(
+                          fontSize: 16.sp,
                         ),
-                      );
-                    }),
-                    Card(
-                      elevation: 3,
-                      child: Column(
-                        children: [
-                          ListTile(
-                            leading: const Icon(
-                              CupertinoIcons.bag,
-                            ),
-                            title: const Text(
-                              "Pilih Opsi",
-                              style: TextStyle(
-                                fontSize: 16,
-                              ),
-                            ),
-                            trailing: Obx(
-                              () => Text(
-                                controller.selectedDeliveryOption.value.isEmpty
-                                    ? "Pilih Opsi"
-                                    : controller.getDeliveryOptionTitle(
-                                        controller
-                                            .selectedDeliveryOption.value),
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: controller
-                                          .selectedDeliveryOption.value.isEmpty
-                                      ? Colors.grey
-                                      : Colors.black,
+                      ),
+                      trailing: Obx(
+                        () => Text(
+                          controller.selectedPaymentType.value.isEmpty
+                              ? "Pilih Opsi"
+                              : controller.getPaymentTypeTitle(
+                                  controller.selectedPaymentType.value,
                                 ),
-                              ),
+                          style: TextStyle(
+                            fontSize: 15.sp,
+                            color: controller.selectedPaymentType.value.isEmpty
+                                ? Colors.grey
+                                : Colors.black,
+                          ),
+                        ),
+                      ),
+                      onTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(20.r),
                             ),
-                            onTap: () {
-                              showModalBottomSheet(
-                                context: context,
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(20),
+                          ),
+                          builder: (_) {
+                            return Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 16.w,
+                                vertical: 10.h,
+                              ),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Center(
+                                    child: Container(
+                                      width: 50.w,
+                                      height: 5.h,
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey[300],
+                                        borderRadius:
+                                            BorderRadius.circular(10.r),
+                                      ),
+                                    ),
                                   ),
-                                ),
-                                builder: (_) {
-                                  return Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 16,
-                                      vertical: 10,
+                                  SizedBox(height: 15.h),
+                                  Text(
+                                    "Pilih Tipe Pembayaran",
+                                    style: TextStyle(
+                                      fontSize: 18.sp,
+                                      fontWeight: FontWeight.w600,
                                     ),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Center(
-                                          child: Container(
-                                            width: 50,
-                                            height: 5,
-                                            decoration: BoxDecoration(
-                                              color: Colors.grey[300],
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(height: 15),
-                                        const Text(
-                                          "Pilih Lokasi Pengambilan",
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 10),
-                                        CustomRadioTile(
-                                          title: "Ditempat",
-                                          value: "dine_in",
-                                          groupValue: controller
-                                              .selectedDeliveryOption.value,
-                                          onChanged: (value) {
-                                            controller.selectedDeliveryOption
-                                                .value = value!;
-                                            Get.back();
-                                          },
-                                        ),
-                                        CustomRadioTile(
-                                          title: "Diantar",
-                                          value: "deliver",
-                                          groupValue: controller
-                                              .selectedDeliveryOption.value,
-                                          onChanged: (value) {
-                                            controller.selectedDeliveryOption
-                                                .value = value!;
-                                            Get.back();
-                                          },
-                                        ),
-                                        CustomRadioTile(
-                                          title: "Diambil",
-                                          value: "pick_up",
-                                          groupValue: controller
-                                              .selectedDeliveryOption.value,
-                                          onChanged: (value) {
-                                            controller.selectedDeliveryOption
-                                                .value = value!;
-                                            Get.back();
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 15),
-                            child: Divider(
-                              height: 0,
-                              thickness: 0.5,
-                              color: Colors.grey[500],
-                            ),
-                          ),
-                          ListTile(
-                            leading: const Icon(
-                              CupertinoIcons.creditcard,
-                            ),
-                            title: const Text(
-                              "Tipe Pembayaran",
-                              style: TextStyle(
-                                fontSize: 16,
-                              ),
-                            ),
-                            trailing: Obx(
-                              () => Text(
-                                controller.selectedPaymentType.value.isEmpty
-                                    ? "Pilih Opsi"
-                                    : controller.getPaymentTypeTitle(
-                                        controller.selectedPaymentType.value),
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: controller
-                                          .selectedPaymentType.value.isEmpty
-                                      ? Colors.grey
-                                      : Colors.black,
-                                ),
-                              ),
-                            ),
-                            onTap: () {
-                              showModalBottomSheet(
-                                context: context,
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(20),
                                   ),
-                                ),
-                                builder: (_) {
-                                  return Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 16,
-                                      vertical: 10,
-                                    ),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Center(
-                                          child: Container(
-                                            width: 50,
-                                            height: 5,
-                                            decoration: BoxDecoration(
-                                              color: Colors.grey[300],
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(height: 15),
-                                        const Text(
-                                          "Pilih Tipe Pembayaran",
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 10),
-                                        CustomRadioTile(
-                                          title: "Cash",
-                                          value: "cash",
-                                          groupValue: controller
-                                              .selectedPaymentType.value,
-                                          onChanged: (value) {
-                                            controller.selectedPaymentType
-                                                .value = value!;
-                                            Get.back();
-                                          },
-                                        ),
-                                        CustomRadioTile(
-                                          title: "QRIS",
-                                          value: "credit_card",
-                                          groupValue: controller
-                                              .selectedPaymentType.value,
-                                          onChanged: (value) {
-                                            controller.selectedPaymentType
-                                                .value = value!;
-                                            Get.back();
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 15),
-                            child: Divider(
-                              height: 0,
-                              thickness: 0.5,
-                              color: Colors.grey[500],
-                            ),
-                          ),
-                          ListTile(
-                            leading: const Icon(
-                              Icons.delivery_dining,
-                            ),
-                            title: const Text(
-                              "Biaya Pengiriman",
-                              style: TextStyle(
-                                fontSize: 16,
+                                  SizedBox(height: 10.h),
+                                  CustomRadioTile(
+                                    title: "Cash",
+                                    value: "cash",
+                                    groupValue:
+                                        controller.selectedPaymentType.value,
+                                    onChanged: (value) {
+                                      controller.selectedPaymentType.value =
+                                          value!;
+                                      Get.back();
+                                    },
+                                  ),
+                                  CustomRadioTile(
+                                    title: "QRIS",
+                                    value: "credit_card",
+                                    groupValue:
+                                        controller.selectedPaymentType.value,
+                                    onChanged: (value) {
+                                      controller.selectedPaymentType.value =
+                                          value!;
+                                      Get.back();
+                                    },
+                                  ),
+                                ],
                               ),
-                            ),
-                            trailing: Text(
-                              "Rp ${controller.formatRupiah(data?['biaya_ongkir'])}",
-                              style: const TextStyle(
-                                fontSize: 14,
-                              ),
-                            ),
-                          ),
-                        ],
+                            );
+                          },
+                        );
+                      },
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 15.w),
+                      child: Divider(
+                        height: 0.h,
+                        thickness: 0.5,
+                        color: Colors.grey[500],
+                      ),
+                    ),
+                    ListTile(
+                      leading: const Icon(
+                        Icons.delivery_dining,
+                      ),
+                      title: Text(
+                        "Biaya Pengiriman",
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                        ),
+                      ),
+                      trailing: Text(
+                        "Rp ${controller.formatRupiah(data?['biaya_ongkir'])}",
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                        ),
                       ),
                     ),
                   ],
                 ),
-              );
+              ),
+            ],
+          ),
+        );
       }),
       bottomNavigationBar: Obx(() {
         final data = controller.calculateResult.value;
@@ -468,35 +472,42 @@ class CheckoutView extends GetView<CheckoutController> {
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Divider(height: 1, thickness: 0.5, color: Colors.grey[400]),
+            Divider(
+              height: 1.h,
+              thickness: 0.5,
+              color: Colors.grey[400],
+            ),
             Container(
               color: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+              padding: EdgeInsets.symmetric(
+                horizontal: 15.w,
+                vertical: 12.h,
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         "Total Pembayaran",
                         style: TextStyle(
-                          fontSize: 15,
+                          fontSize: 15.sp,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
                       Text(
                         "Rp ${controller.formatRupiah(data?['total_biaya_pembayaran'])}",
-                        style: const TextStyle(
-                          fontSize: 17,
+                        style: TextStyle(
+                          fontSize: 17.sp,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
                   ),
                   ElevatedButton(
-                    onPressed: () {
-                      controller.createOrder(
+                    onPressed: () async {
+                      bool success = await controller.createOrder(
                         tipePesan: controller.selectedDeliveryOption.value,
                         metodePembayaran: controller.selectedPaymentType.value,
                         gedung: user?.building?.id ?? '',
@@ -504,23 +515,25 @@ class CheckoutView extends GetView<CheckoutController> {
                         selectedItems: cartController.selectedCartItems,
                       );
 
-                      cartController.clearCart();
-                      Get.offAllNamed(Routes.NAVIGATION);
+                      if (success) {
+                        cartController.clearCart();
+                        Get.offAllNamed(Routes.NAVIGATION);
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF1E2857),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 25,
-                        vertical: 10,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 25.w,
+                        vertical: 10.h,
                       ),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
+                        borderRadius: BorderRadius.circular(15.r),
                       ),
                     ),
                     child: Text(
                       "Buat Pesanan",
-                      style: const TextStyle(
-                        fontSize: 16,
+                      style: TextStyle(
+                        fontSize: 16.sp,
                         fontWeight: FontWeight.w600,
                         color: Colors.white,
                       ),
@@ -565,11 +578,11 @@ class CustomRadioTile extends StatelessWidget {
         ),
       ),
       title: Padding(
-        padding: const EdgeInsets.only(left: 10),
+        padding: EdgeInsets.only(left: 10.w),
         child: Text(
           title,
-          style: const TextStyle(
-            fontSize: 17,
+          style: TextStyle(
+            fontSize: 17.sp,
             fontWeight: FontWeight.w500,
           ),
         ),

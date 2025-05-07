@@ -6,6 +6,8 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -52,7 +54,7 @@ class HomeController extends GetxController {
   }
 
   Future<void> refreshAll() async {
-    isLoading.value = true;
+    EasyLoading.show(status: 'Loading...');
 
     try {
       await Future.wait([
@@ -67,9 +69,12 @@ class HomeController extends GetxController {
         animationDuration: const Duration(milliseconds: 200),
         duration: const Duration(milliseconds: 1650),
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.0,
+        borderWidth: 5.w,
         snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.all(20.0),
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
         icon: const Icon(
           CupertinoIcons.info_circle,
         ),
@@ -81,9 +86,12 @@ class HomeController extends GetxController {
         animationDuration: const Duration(milliseconds: 200),
         duration: const Duration(milliseconds: 1650),
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.0,
+        borderWidth: 5.w,
         snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.all(20.0),
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
         icon: const Icon(
           CupertinoIcons.info_circle,
         ),
@@ -91,18 +99,18 @@ class HomeController extends GetxController {
 
       print(e);
     } finally {
-      isLoading.value = false;
+      EasyLoading.dismiss();
     }
   }
 
   Future<void> getLocation() async {
-    isLoading.value = true;
+    EasyLoading.show(status: 'Loading...');
 
     String url = AppUrl.locations;
     String? token = await DatabaseProvider().getToken();
 
     if (token == null) {
-      isLoading.value = false;
+      EasyLoading.dismiss();
 
       Get.snackbar(
         "Informasi ",
@@ -110,9 +118,12 @@ class HomeController extends GetxController {
         animationDuration: const Duration(milliseconds: 200),
         duration: const Duration(milliseconds: 1650),
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.0,
+        borderWidth: 5.w,
         snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.all(20.0),
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
         icon: const Icon(
           CupertinoIcons.info_circle,
         ),
@@ -159,9 +170,12 @@ class HomeController extends GetxController {
           animationDuration: const Duration(milliseconds: 200),
           duration: const Duration(milliseconds: 1650),
           backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-          borderWidth: 5.0,
+          borderWidth: 5.w,
           snackPosition: SnackPosition.TOP,
-          margin: const EdgeInsets.all(20.0),
+          margin: EdgeInsets.symmetric(
+            horizontal: 20.w,
+            vertical: 20.h,
+          ),
           icon: const Icon(
             CupertinoIcons.info_circle,
           ),
@@ -174,9 +188,12 @@ class HomeController extends GetxController {
         animationDuration: const Duration(milliseconds: 200),
         duration: const Duration(milliseconds: 1650),
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.0,
+        borderWidth: 5.w,
         snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.all(20.0),
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
         icon: const Icon(
           CupertinoIcons.info_circle,
         ),
@@ -188,9 +205,12 @@ class HomeController extends GetxController {
         animationDuration: const Duration(milliseconds: 200),
         duration: const Duration(milliseconds: 1650),
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.0,
+        borderWidth: 5.w,
         snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.all(20.0),
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
         icon: const Icon(
           CupertinoIcons.info_circle,
         ),
@@ -198,18 +218,18 @@ class HomeController extends GetxController {
 
       print(e);
     } finally {
-      isLoading.value = false;
+      EasyLoading.dismiss();
     }
   }
 
   Future<void> getCategories() async {
-    isLoading.value = true;
+    EasyLoading.show(status: 'Loading...');
 
     String url = AppUrl.categories;
     String? token = await DatabaseProvider().getToken();
 
     if (token == null) {
-      isLoading.value = false;
+      EasyLoading.dismiss();
 
       Get.snackbar(
         "Informasi ",
@@ -217,9 +237,12 @@ class HomeController extends GetxController {
         animationDuration: const Duration(milliseconds: 200),
         duration: const Duration(milliseconds: 1650),
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.0,
+        borderWidth: 5.w,
         snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.all(20.0),
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
         icon: const Icon(
           CupertinoIcons.info_circle,
         ),
@@ -256,9 +279,12 @@ class HomeController extends GetxController {
           animationDuration: const Duration(milliseconds: 200),
           duration: const Duration(milliseconds: 1650),
           backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-          borderWidth: 5.0,
+          borderWidth: 5.w,
           snackPosition: SnackPosition.TOP,
-          margin: const EdgeInsets.all(20.0),
+          margin: EdgeInsets.symmetric(
+            horizontal: 20.w,
+            vertical: 20.h,
+          ),
           icon: const Icon(
             CupertinoIcons.info_circle,
           ),
@@ -271,9 +297,12 @@ class HomeController extends GetxController {
         animationDuration: const Duration(milliseconds: 200),
         duration: const Duration(milliseconds: 1650),
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.0,
+        borderWidth: 5.w,
         snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.all(20.0),
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
         icon: const Icon(
           CupertinoIcons.info_circle,
         ),
@@ -285,9 +314,12 @@ class HomeController extends GetxController {
         animationDuration: const Duration(milliseconds: 200),
         duration: const Duration(milliseconds: 1650),
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.0,
+        borderWidth: 5.w,
         snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.all(20.0),
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
         icon: const Icon(
           CupertinoIcons.info_circle,
         ),
@@ -295,18 +327,18 @@ class HomeController extends GetxController {
 
       print(e);
     } finally {
-      isLoading.value = false;
+      EasyLoading.dismiss();
     }
   }
 
   Future<void> getCanteen() async {
-    isLoading.value = true;
+    EasyLoading.show(status: 'Loading...');
 
     String url = AppUrl.canteens;
     String? token = await DatabaseProvider().getToken();
 
     if (token == null) {
-      isLoading.value = false;
+      EasyLoading.dismiss();
 
       Get.snackbar(
         "Informasi ",
@@ -314,9 +346,12 @@ class HomeController extends GetxController {
         animationDuration: const Duration(milliseconds: 200),
         duration: const Duration(milliseconds: 1650),
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.0,
+        borderWidth: 5.w,
         snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.all(20.0),
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
         icon: const Icon(
           CupertinoIcons.info_circle,
         ),
@@ -374,9 +409,12 @@ class HomeController extends GetxController {
           animationDuration: const Duration(milliseconds: 200),
           duration: const Duration(milliseconds: 1650),
           backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-          borderWidth: 5.0,
+          borderWidth: 5.w,
           snackPosition: SnackPosition.TOP,
-          margin: const EdgeInsets.all(20.0),
+          margin: EdgeInsets.symmetric(
+            horizontal: 20.w,
+            vertical: 20.h,
+          ),
           icon: const Icon(
             CupertinoIcons.info_circle,
           ),
@@ -389,9 +427,12 @@ class HomeController extends GetxController {
         animationDuration: const Duration(milliseconds: 200),
         duration: const Duration(milliseconds: 1650),
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.0,
+        borderWidth: 5.w,
         snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.all(20.0),
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
         icon: const Icon(
           CupertinoIcons.info_circle,
         ),
@@ -403,9 +444,12 @@ class HomeController extends GetxController {
         animationDuration: const Duration(milliseconds: 200),
         duration: const Duration(milliseconds: 1650),
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.0,
+        borderWidth: 5.w,
         snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.all(20.0),
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
         icon: const Icon(
           CupertinoIcons.info_circle,
         ),
@@ -413,7 +457,7 @@ class HomeController extends GetxController {
 
       print(e);
     } finally {
-      isLoading.value = false;
+      EasyLoading.dismiss();
     }
   }
 
@@ -442,9 +486,12 @@ class HomeController extends GetxController {
         animationDuration: const Duration(milliseconds: 200),
         duration: const Duration(milliseconds: 1650),
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.0,
+        borderWidth: 5.w,
         snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.all(20.0),
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
         icon: const Icon(
           CupertinoIcons.info_circle,
         ),
@@ -481,9 +528,12 @@ class HomeController extends GetxController {
           animationDuration: const Duration(milliseconds: 200),
           duration: const Duration(milliseconds: 1650),
           backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-          borderWidth: 5.0,
+          borderWidth: 5.w,
           snackPosition: SnackPosition.TOP,
-          margin: const EdgeInsets.all(20.0),
+          margin: EdgeInsets.symmetric(
+            horizontal: 20.w,
+            vertical: 20.h,
+          ),
           icon: const Icon(
             CupertinoIcons.info_circle,
           ),
@@ -496,9 +546,12 @@ class HomeController extends GetxController {
         animationDuration: const Duration(milliseconds: 200),
         duration: const Duration(milliseconds: 1650),
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.0,
+        borderWidth: 5.w,
         snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.all(20.0),
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
         icon: const Icon(
           CupertinoIcons.info_circle,
         ),
@@ -510,9 +563,12 @@ class HomeController extends GetxController {
         animationDuration: const Duration(milliseconds: 200),
         duration: const Duration(milliseconds: 1650),
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.0,
+        borderWidth: 5.w,
         snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.all(20.0),
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
         icon: const Icon(
           CupertinoIcons.info_circle,
         ),
@@ -549,9 +605,12 @@ class HomeController extends GetxController {
         animationDuration: const Duration(milliseconds: 200),
         duration: const Duration(milliseconds: 1650),
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.0,
+        borderWidth: 5.w,
         snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.all(20.0),
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
         icon: const Icon(
           CupertinoIcons.info_circle,
         ),
@@ -588,9 +647,12 @@ class HomeController extends GetxController {
           animationDuration: const Duration(milliseconds: 200),
           duration: const Duration(milliseconds: 1650),
           backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-          borderWidth: 5.0,
+          borderWidth: 5.w,
           snackPosition: SnackPosition.TOP,
-          margin: const EdgeInsets.all(20.0),
+          margin: EdgeInsets.symmetric(
+            horizontal: 20.w,
+            vertical: 20.h,
+          ),
           icon: const Icon(
             CupertinoIcons.info_circle,
           ),
@@ -603,9 +665,12 @@ class HomeController extends GetxController {
         animationDuration: const Duration(milliseconds: 200),
         duration: const Duration(milliseconds: 1650),
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.0,
+        borderWidth: 5.w,
         snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.all(20.0),
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
         icon: const Icon(
           CupertinoIcons.info_circle,
         ),
@@ -617,9 +682,12 @@ class HomeController extends GetxController {
         animationDuration: const Duration(milliseconds: 200),
         duration: const Duration(milliseconds: 1650),
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.0,
+        borderWidth: 5.w,
         snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.all(20.0),
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
         icon: const Icon(
           CupertinoIcons.info_circle,
         ),
@@ -655,9 +723,12 @@ class HomeController extends GetxController {
         animationDuration: const Duration(milliseconds: 200),
         duration: const Duration(milliseconds: 1650),
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.0,
+        borderWidth: 5.w,
         snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.all(20.0),
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
         icon: const Icon(
           CupertinoIcons.info_circle,
         ),
@@ -694,9 +765,12 @@ class HomeController extends GetxController {
           animationDuration: const Duration(milliseconds: 200),
           duration: const Duration(milliseconds: 1650),
           backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-          borderWidth: 5.0,
+          borderWidth: 5.w,
           snackPosition: SnackPosition.TOP,
-          margin: const EdgeInsets.all(20.0),
+          margin: EdgeInsets.symmetric(
+            horizontal: 20.w,
+            vertical: 20.h,
+          ),
           icon: const Icon(
             CupertinoIcons.info_circle,
           ),
@@ -709,9 +783,12 @@ class HomeController extends GetxController {
         animationDuration: const Duration(milliseconds: 200),
         duration: const Duration(milliseconds: 1650),
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.0,
+        borderWidth: 5.w,
         snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.all(20.0),
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
         icon: const Icon(
           CupertinoIcons.info_circle,
         ),
@@ -723,9 +800,12 @@ class HomeController extends GetxController {
         animationDuration: const Duration(milliseconds: 200),
         duration: const Duration(milliseconds: 1650),
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.0,
+        borderWidth: 5.w,
         snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.all(20.0),
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
         icon: const Icon(
           CupertinoIcons.info_circle,
         ),
@@ -748,7 +828,7 @@ class HomeController extends GetxController {
         animationDuration: Duration(milliseconds: 200),
         duration: Duration(milliseconds: 1650),
         backgroundColor: Colors.red,
-        borderWidth: 5.0,
+        borderWidth: 5.w,
         snackPosition: SnackPosition.TOP,
         colorText: Colors.white,
         margin: EdgeInsets.all(20.0),

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../../checkout/controllers/checkout_controller.dart';
@@ -19,16 +20,16 @@ class CartView extends GetView<CartController> {
         title: Text(
           "Keranjang",
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 20.sp,
             fontWeight: FontWeight.w500,
           ),
         ),
         centerTitle: true,
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(1),
+          preferredSize: Size.fromHeight(1.h),
           child: Container(
             color: Colors.grey[300],
-            height: 1,
+            height: 1.h,
           ),
         ),
       ),
@@ -36,20 +37,34 @@ class CartView extends GetView<CartController> {
         final groupedItems = homeController.groupedCartItems;
 
         if (groupedItems.isEmpty) {
-          return Center(child: Text("Keranjang kosong"));
+          return Center(
+            child: Text(
+              "Keranjang kosong",
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 16.sp,
+              ),
+            ),
+          );
         }
 
         return ListView(
-          padding: EdgeInsets.all(10),
+          padding: EdgeInsets.symmetric(
+            vertical: 10.h,
+            horizontal: 10.w,
+          ),
           children: groupedItems.entries.map((entry) {
             final canteenName = entry.key;
             final items = entry.value;
 
             return Card(
-              margin: EdgeInsets.symmetric(vertical: 5),
+              margin: EdgeInsets.symmetric(vertical: 5.h),
               elevation: 3,
               child: Padding(
-                padding: const EdgeInsets.all(10),
+                padding: EdgeInsets.symmetric(
+                  vertical: 10.h,
+                  horizontal: 10.w,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -62,12 +77,12 @@ class CartView extends GetView<CartController> {
                           onChanged: (_) => controller.toggleCanteenSelection(
                               canteenName, groupedItems),
                         ),
-                        SizedBox(width: 5),
+                        SizedBox(width: 5.w),
                         Text(
                           canteenName,
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
-                            fontSize: 16,
+                            fontSize: 16.sp,
                           ),
                         ),
                       ],
@@ -78,7 +93,7 @@ class CartView extends GetView<CartController> {
                     ),
                     ...items.map((item) {
                       return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        padding: EdgeInsets.symmetric(vertical: 5.h),
                         child: Row(
                           children: [
                             CustomCheckbox(
@@ -87,23 +102,23 @@ class CartView extends GetView<CartController> {
                               onChanged: (_) =>
                                   controller.toggleItemSelection(item),
                             ),
-                            SizedBox(width: 5),
+                            SizedBox(width: 5.w),
                             ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(10.r),
                               child: Image.asset(
                                 'assets/images/image_carousel.png',
-                                height: 60,
-                                width: 60,
+                                height: 60.h,
+                                width: 60.w,
                                 fit: BoxFit.cover,
                               ),
                             ),
-                            SizedBox(width: 10),
+                            SizedBox(width: 10.w),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   SizedBox(
-                                    width: 130,
+                                    width: 130.w,
                                     child: Text(
                                       item.menu.name,
                                       style: TextStyle(
@@ -112,7 +127,7 @@ class CartView extends GetView<CartController> {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(height: 4),
+                                  SizedBox(height: 4.h),
                                   Text(
                                     "Rp ${controller.formatRupiah(item.menu.sellingCost)}",
                                   ),
@@ -133,9 +148,13 @@ class CartView extends GetView<CartController> {
                                     color: Colors.red,
                                   ),
                                 ),
-                                SizedBox(width: 8),
+                                SizedBox(
+                                  width: 12.5.w,
+                                ),
                                 Text("${item.quantity}"),
-                                SizedBox(width: 8),
+                                SizedBox(
+                                  width: 12.5.w,
+                                ),
                                 GestureDetector(
                                   onTap: () {
                                     homeController.updateCart(
@@ -163,17 +182,18 @@ class CartView extends GetView<CartController> {
       }),
       bottomNavigationBar: Obx(() {
         final allItems = homeController.cartItems;
+        Get.put(CartController());
 
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Divider(
-              height: 1,
+              height: 1.h,
               thickness: 0.5,
               color: Colors.grey[500],
             ),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
               color: Colors.white,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -190,16 +210,16 @@ class CartView extends GetView<CartController> {
                             onChanged: (_) =>
                                 controller.toggleSelectAll(allItems),
                           ),
-                          SizedBox(width: 3),
+                          SizedBox(width: 3.w),
                           Text("Semua"),
                         ],
                       ),
-                      SizedBox(height: 4),
+                      SizedBox(height: 4.h),
                       Text(
                         "Total: Rp ${controller.formatRupiah(controller.totalSelectedPrice)}",
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
-                          fontSize: 16,
+                          fontSize: 16.sp,
                         ),
                       ),
                     ],
@@ -214,9 +234,12 @@ class CartView extends GetView<CartController> {
                           duration: const Duration(milliseconds: 1650),
                           backgroundColor:
                               const Color.fromARGB(255, 238, 238, 238),
-                          borderWidth: 5.0,
+                          borderWidth: 5.w,
                           snackPosition: SnackPosition.TOP,
-                          margin: const EdgeInsets.all(20.0),
+                          margin: EdgeInsets.symmetric(
+                            vertical: 20.h,
+                            horizontal: 20.w,
+                          ),
                           icon: const Icon(
                             CupertinoIcons.info_circle,
                           ),
@@ -236,13 +259,13 @@ class CartView extends GetView<CartController> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xFF1E2857),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
+                        borderRadius: BorderRadius.circular(15.r),
                       ),
                     ),
                     child: Text(
                       "Checkout (${controller.totalSelectedItems})",
                       style: TextStyle(
-                        fontSize: 15,
+                        fontSize: 15.sp,
                         fontWeight: FontWeight.w500,
                         color: Colors.white,
                       ),
@@ -274,11 +297,11 @@ class CustomCheckbox extends StatelessWidget {
       data: Theme.of(context).copyWith(
         checkboxTheme: CheckboxThemeData(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(3),
+            borderRadius: BorderRadius.circular(3.r),
           ),
           side: BorderSide(
             color: Colors.grey[400]!,
-            width: 1,
+            width: 1.w,
           ),
           fillColor: WidgetStateProperty.resolveWith((states) {
             if (states.contains(WidgetState.selected)) {
@@ -286,13 +309,18 @@ class CustomCheckbox extends StatelessWidget {
             }
             return Colors.white;
           }),
-          checkColor: WidgetStateProperty.all(Colors.white),
+          checkColor: WidgetStateProperty.all(
+            Colors.white,
+          ),
         ),
       ),
       child: Checkbox(
         value: value,
         onChanged: onChanged,
-        visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+        visualDensity: VisualDensity(
+          horizontal: -4,
+          vertical: -4,
+        ),
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ),
     );

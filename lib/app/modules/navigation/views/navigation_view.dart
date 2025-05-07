@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:dikantin_app_rebuild/app/modules/order/views/order_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,7 +11,6 @@ import 'package:get/get.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 import 'package:badges/badges.dart' as badges;
 
-import '../../cart/views/cart_view.dart';
 import '../../chat/views/chat_view.dart';
 import '../../home/controllers/home_controller.dart';
 import '../../home/views/home_view.dart';
@@ -64,8 +64,9 @@ class NavigationView extends GetView<NavigationController> {
           children: [
             // Page
             HomeView(),
-            CartView(),
-            const ChatView(),
+            // CartView(),
+            OrderView(),
+            ChatView(),
             ProfileView(),
           ],
         ),

@@ -5,6 +5,8 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
@@ -13,8 +15,6 @@ import '../../../models/user.dart';
 import '../../../data/db_provider.dart';
 
 class ProfileController extends GetxController {
-  var isLoading = false.obs;
-
   var users = Rxn<User>();
 
   @override
@@ -24,13 +24,13 @@ class ProfileController extends GetxController {
   }
 
   Future<void> getDetailUser() async {
-    isLoading.value = true;
+    EasyLoading.show(status: 'Loading...');
 
     String url = AppUrl.detailUserProfile;
     String? token = await DatabaseProvider().getToken();
 
     if (token == null) {
-      isLoading.value = false;
+      EasyLoading.dismiss();
 
       Get.snackbar(
         "Informasi ",
@@ -38,9 +38,12 @@ class ProfileController extends GetxController {
         animationDuration: const Duration(milliseconds: 200),
         duration: const Duration(milliseconds: 1650),
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.0,
+        borderWidth: 5.w,
         snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.all(20.0),
+         margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
         icon: const Icon(
           CupertinoIcons.info_circle,
         ),
@@ -75,9 +78,12 @@ class ProfileController extends GetxController {
           animationDuration: const Duration(milliseconds: 200),
           duration: const Duration(milliseconds: 1650),
           backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-          borderWidth: 5.0,
+          borderWidth: 5.w,
           snackPosition: SnackPosition.TOP,
-          margin: const EdgeInsets.all(20.0),
+           margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
           icon: const Icon(
             CupertinoIcons.info_circle,
           ),
@@ -90,9 +96,12 @@ class ProfileController extends GetxController {
         animationDuration: const Duration(milliseconds: 200),
         duration: const Duration(milliseconds: 1650),
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.0,
+        borderWidth: 5.w,
         snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.all(20.0),
+         margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
         icon: const Icon(
           CupertinoIcons.info_circle,
         ),
@@ -104,9 +113,12 @@ class ProfileController extends GetxController {
         animationDuration: const Duration(milliseconds: 200),
         duration: const Duration(milliseconds: 1650),
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.0,
+        borderWidth: 5.w,
         snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.all(20.0),
+         margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
         icon: const Icon(
           CupertinoIcons.info_circle,
         ),
@@ -114,7 +126,7 @@ class ProfileController extends GetxController {
 
       print(e);
     } finally {
-      isLoading.value = false;
+      EasyLoading.dismiss();
     }
   }
 
@@ -125,13 +137,13 @@ class ProfileController extends GetxController {
     required String detailAddress,
     BuildContext? context,
   }) async {
-    isLoading.value = true;
+    EasyLoading.show(status: 'Loading...');
 
     String url = AppUrl.updateUserData;
     String? token = await DatabaseProvider().getToken();
 
     if (token == null) {
-      isLoading.value = false;
+      EasyLoading.dismiss();
 
       Get.snackbar(
         "Informasi ",
@@ -139,9 +151,12 @@ class ProfileController extends GetxController {
         animationDuration: const Duration(milliseconds: 200),
         duration: const Duration(milliseconds: 1650),
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.0,
+        borderWidth: 5.w,
         snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.all(20.0),
+         margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
         icon: const Icon(
           CupertinoIcons.info_circle,
         ),
@@ -182,9 +197,12 @@ class ProfileController extends GetxController {
           duration: const Duration(milliseconds: 1650),
           backgroundColor: Colors.green,
           colorText: Colors.white,
-          borderWidth: 5.0,
+          borderWidth: 5.w,
           snackPosition: SnackPosition.TOP,
-          margin: const EdgeInsets.all(20.0),
+           margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
           icon: const Icon(
             CupertinoIcons.info_circle,
             color: Colors.white,
@@ -209,9 +227,12 @@ class ProfileController extends GetxController {
             duration: const Duration(milliseconds: 1650),
             backgroundColor: Colors.red,
             colorText: Colors.white,
-            borderWidth: 5.0,
+            borderWidth: 5.w,
             snackPosition: SnackPosition.TOP,
-            margin: const EdgeInsets.all(20.0),
+             margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
             icon: const Icon(
               CupertinoIcons.info_circle,
               color: Colors.white,
@@ -226,9 +247,12 @@ class ProfileController extends GetxController {
         animationDuration: const Duration(milliseconds: 200),
         duration: const Duration(milliseconds: 1650),
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.0,
+        borderWidth: 5.w,
         snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.all(20.0),
+         margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
         icon: const Icon(
           CupertinoIcons.info_circle,
         ),
@@ -240,9 +264,12 @@ class ProfileController extends GetxController {
         animationDuration: const Duration(milliseconds: 200),
         duration: const Duration(milliseconds: 1650),
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.0,
+        borderWidth: 5.w,
         snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.all(20.0),
+         margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
         icon: const Icon(
           CupertinoIcons.info_circle,
         ),
@@ -250,7 +277,7 @@ class ProfileController extends GetxController {
 
       print(e);
     } finally {
-      isLoading.value = false;
+      EasyLoading.dismiss();
     }
   }
 }

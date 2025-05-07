@@ -805,7 +805,7 @@ class FoodGrids extends StatelessWidget {
                               Text(
                                 "Rp ${controller.formatRupiah(food.sellingCost)}",
                                 style: TextStyle(
-                                  fontSize: 15.sp,
+                                  fontSize: 13.sp,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -1021,7 +1021,7 @@ class MenuDetailBottom extends StatelessWidget {
           Row(
             children: [
               Text(
-                "Harga: Rp ${food.sellingCost}",
+                "Harga: Rp ${controller.formatRupiah(food.sellingCost)}",
                 style: TextStyle(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w500,

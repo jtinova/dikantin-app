@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -13,20 +15,19 @@ import '../../../data/db_provider.dart';
 import '../../../models/cart.dart';
 
 class CheckoutController extends GetxController {
-  var isLoading = false.obs;
   var selectedDeliveryOption = ''.obs;
   var selectedPaymentType = ''.obs;
   var calculateResult = Rxn<Map<String, dynamic>>();
   var groupedItemsByCanteen = <String, List<Map<String, dynamic>>>{}.obs;
 
   Future<void> getCalculate(List<CartItem> selectedItems) async {
-    isLoading.value = true;
+    EasyLoading.show(status: 'Loading...');
 
     String url = AppUrl.calculateOrder;
     String? token = await DatabaseProvider().getToken();
 
     if (token == null) {
-      isLoading.value = false;
+      EasyLoading.dismiss();
 
       Get.snackbar(
         "Informasi ",
@@ -34,13 +35,18 @@ class CheckoutController extends GetxController {
         animationDuration: const Duration(milliseconds: 200),
         duration: const Duration(milliseconds: 1650),
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.0,
+        borderWidth: 5.w,
         snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.all(20.0),
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
         icon: const Icon(
           CupertinoIcons.info_circle,
         ),
       );
+
+      return;
     }
 
     List<Map<String, dynamic>> menuPayload = selectedItems
@@ -78,9 +84,12 @@ class CheckoutController extends GetxController {
           animationDuration: const Duration(milliseconds: 200),
           duration: const Duration(milliseconds: 1650),
           backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-          borderWidth: 5.0,
+          borderWidth: 5.w,
           snackPosition: SnackPosition.TOP,
-          margin: const EdgeInsets.all(20.0),
+          margin: EdgeInsets.symmetric(
+            horizontal: 20.w,
+            vertical: 20.h,
+          ),
           icon: const Icon(
             CupertinoIcons.info_circle,
           ),
@@ -93,9 +102,12 @@ class CheckoutController extends GetxController {
         animationDuration: const Duration(milliseconds: 200),
         duration: const Duration(milliseconds: 1650),
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.0,
+        borderWidth: 5.w,
         snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.all(20.0),
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
         icon: const Icon(
           CupertinoIcons.info_circle,
         ),
@@ -107,9 +119,12 @@ class CheckoutController extends GetxController {
         animationDuration: const Duration(milliseconds: 200),
         duration: const Duration(milliseconds: 1650),
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.0,
+        borderWidth: 5.w,
         snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.all(20.0),
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
         icon: const Icon(
           CupertinoIcons.info_circle,
         ),
@@ -117,24 +132,24 @@ class CheckoutController extends GetxController {
 
       print(e);
     } finally {
-      isLoading.value = false;
+      EasyLoading.dismiss();
     }
   }
 
-  Future<void> createOrder({
+  Future<bool> createOrder({
     required String tipePesan,
     required String metodePembayaran,
     required String gedung,
     required String detailLokasi,
     required List<CartItem> selectedItems,
   }) async {
-    isLoading.value = true;
+    EasyLoading.show(status: 'Loading...');
 
     String url = AppUrl.createOrder;
     String? token = await DatabaseProvider().getToken();
 
     if (token == null) {
-      isLoading.value = false;
+      EasyLoading.dismiss();
 
       Get.snackbar(
         "Informasi ",
@@ -142,19 +157,22 @@ class CheckoutController extends GetxController {
         animationDuration: const Duration(milliseconds: 200),
         duration: const Duration(milliseconds: 1650),
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.0,
+        borderWidth: 5.w,
         snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.all(20.0),
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
         icon: const Icon(
           CupertinoIcons.info_circle,
         ),
       );
 
-      return;
+      return false;
     }
 
     if (gedung == '') {
-      isLoading.value = false;
+      EasyLoading.dismiss();
 
       Get.snackbar(
         "Informasi ",
@@ -162,17 +180,20 @@ class CheckoutController extends GetxController {
         animationDuration: const Duration(milliseconds: 200),
         duration: const Duration(milliseconds: 1650),
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.0,
+        borderWidth: 5.w,
         snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.all(20.0),
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
         icon: const Icon(
           CupertinoIcons.info_circle,
         ),
       );
 
-      return;
+      return false;
     } else if (detailLokasi == '') {
-      isLoading.value = false;
+      EasyLoading.dismiss();
 
       Get.snackbar(
         "Informasi ",
@@ -180,17 +201,20 @@ class CheckoutController extends GetxController {
         animationDuration: const Duration(milliseconds: 200),
         duration: const Duration(milliseconds: 1650),
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.0,
+        borderWidth: 5.w,
         snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.all(20.0),
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
         icon: const Icon(
           CupertinoIcons.info_circle,
         ),
       );
 
-      return;
+      return false;
     } else if (tipePesan.isEmpty) {
-      isLoading.value = false;
+      EasyLoading.dismiss();
 
       Get.snackbar(
         "Informasi ",
@@ -198,17 +222,20 @@ class CheckoutController extends GetxController {
         animationDuration: const Duration(milliseconds: 200),
         duration: const Duration(milliseconds: 1650),
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.0,
+        borderWidth: 5.w,
         snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.all(20.0),
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
         icon: const Icon(
           CupertinoIcons.info_circle,
         ),
       );
 
-      return;
+      return false;
     } else if (metodePembayaran.isEmpty) {
-      isLoading.value = false;
+      EasyLoading.dismiss();
 
       Get.snackbar(
         "Informasi ",
@@ -216,15 +243,18 @@ class CheckoutController extends GetxController {
         animationDuration: const Duration(milliseconds: 200),
         duration: const Duration(milliseconds: 1650),
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.0,
+        borderWidth: 5.w,
         snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.all(20.0),
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
         icon: const Icon(
           CupertinoIcons.info_circle,
         ),
       );
 
-      return;
+      return false;
     }
 
     List<Map<String, dynamic>> menuPayload = selectedItems
@@ -261,13 +291,18 @@ class CheckoutController extends GetxController {
           animationDuration: const Duration(milliseconds: 200),
           duration: const Duration(milliseconds: 1650),
           backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-          borderWidth: 5.0,
+          borderWidth: 5.w,
           snackPosition: SnackPosition.TOP,
-          margin: const EdgeInsets.all(20.0),
+          margin: EdgeInsets.symmetric(
+            horizontal: 20.w,
+            vertical: 20.h,
+          ),
           icon: const Icon(
             CupertinoIcons.info_circle,
           ),
         );
+
+        return true;
       } else {
         final res = json.decode(req.body);
 
@@ -279,14 +314,19 @@ class CheckoutController extends GetxController {
           animationDuration: const Duration(milliseconds: 200),
           duration: const Duration(milliseconds: 1650),
           backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-          borderWidth: 5.0,
+          borderWidth: 5.w,
           snackPosition: SnackPosition.TOP,
-          margin: const EdgeInsets.all(20.0),
+          margin: EdgeInsets.symmetric(
+            horizontal: 20.w,
+            vertical: 20.h,
+          ),
           icon: const Icon(
             CupertinoIcons.info_circle,
           ),
         );
       }
+
+      return false;
     } on SocketException catch (_) {
       Get.snackbar(
         "Informasi ",
@@ -294,13 +334,18 @@ class CheckoutController extends GetxController {
         animationDuration: const Duration(milliseconds: 200),
         duration: const Duration(milliseconds: 1650),
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.0,
+        borderWidth: 5.w,
         snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.all(20.0),
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
         icon: const Icon(
           CupertinoIcons.info_circle,
         ),
       );
+
+      return false;
     } catch (e) {
       Get.snackbar(
         "Informasi ",
@@ -308,17 +353,21 @@ class CheckoutController extends GetxController {
         animationDuration: const Duration(milliseconds: 200),
         duration: const Duration(milliseconds: 1650),
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.0,
+        borderWidth: 5.w,
         snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.all(20.0),
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
         icon: const Icon(
           CupertinoIcons.info_circle,
         ),
       );
 
       print(e);
+      return false;
     } finally {
-      isLoading.value = false;
+      EasyLoading.dismiss();
     }
   }
 
