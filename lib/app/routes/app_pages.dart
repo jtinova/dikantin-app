@@ -26,6 +26,12 @@ import '../modules/sign_in/bindings/sign_in_binding.dart';
 import '../modules/sign_in/views/sign_in_view.dart';
 import '../modules/sign_up/bindings/sign_up_binding.dart';
 import '../modules/sign_up/views/sign_up_view.dart';
+import '../modules/home_courier/bindings/home_courier_binding.dart';
+import '../modules/home_courier/views/home_courier_view.dart';
+import '../modules/navigation_courier/bindings/navigation_courier_binding.dart';
+import '../modules/navigation_courier/views/navigation_courier_view.dart';
+import '../modules/courier_delivery_history/bindings/courier_delivery_history_binding.dart';
+import '../modules/courier_delivery_history/views/courier_delivery_history_view.dart';
 
 part 'app_routes.dart';
 
@@ -71,6 +77,16 @@ class AppPages {
       binding: NavigationBinding(),
     ),
     GetPage(
+      name: _Paths.NAVIGATION_COURIER,
+      page: () => NavigationCourierView(),
+      binding: NavigationCourierBinding(),
+    ),
+    GetPage(
+      name: _Paths.HOME_COURIER,
+      page: () => HomeCourierView(),
+      binding: HomeCourierBinding(),
+    ),
+    GetPage(
       name: _Paths.ORDER,
       page: () => OrderView(),
       binding: OrderBinding(),
@@ -102,6 +118,11 @@ class AppPages {
       name: _Paths.CHECKOUT,
       page: () => const CheckoutView(),
       binding: CheckoutBinding(),
+    ),
+    GetPage(
+      name: Routes.COURIER_DELIVERY_HISTORY,
+      page: () => const CourierDeliveryHistoryView(),
+      binding: CourierDeliveryHistoryBinding(),
     ),
   ];
 }
