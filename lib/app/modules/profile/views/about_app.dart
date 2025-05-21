@@ -43,7 +43,7 @@ class AboutApp extends StatelessWidget {
                 child: Image.asset("assets/images/logo_dikantin.png"),
               ),
               Text(
-                "DiKantin adalah platform delivery food khusus untuk mahasiswa Politeknik Negeri Jember yang memudahkan pemesanan makanan dan minuman di kantin kampus. \n \n Dengan DiKantin, mahasiswa dapat dengan mudah memilih menu favorit dari berbagai tenant kantin, melakukan pemesanan secara online, dan menunggu pesanan siap tanpa perlu antre.",
+                "DiKantin Partner adalah platform manajemen pemesanan yang dirancang khusus untuk para mitra kantin di lingkungan Politeknik Negeri Jember. Melalui aplikasi ini, lapak kantin dapat menerima, mengelola, dan memproses pesanan dari mahasiswa secara real-time dengan lebih efisien. \n \n Dengan fitur yang mudah digunakan, DiKantin Partner membantu mempercepat pelayanan tanpa antrean panjang serta mendukung operasional kantin yang lebih modern dan teratur.",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,

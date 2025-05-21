@@ -12,239 +12,45 @@ import '../../../data/api.dart';
 import '../../../models/user.dart';
 import '../../../data/db_provider.dart';
 
+import 'package:dikantin_app_rebuild/app/models/canteen.dart';
+
 class ProfileController extends GetxController {
   var isLoading = false.obs;
 
-  var users = Rxn<User>();
+  var users = Rxn<Canteen>();
 
   @override
   void onInit() {
     super.onInit();
-    getDetailUser();
+    // getDetailUser();
+    getCanteenProfile();
   }
 
-  Future<void> getDetailUser() async {
+  Future<void> getCanteenProfile() async {
     isLoading.value = true;
 
-    String url = AppUrl.detailUserProfile;
-    String? token = await DatabaseProvider().getToken();
-
-    if (token == null) {
-      isLoading.value = false;
-
-      Get.snackbar(
-        "Informasi ",
-        "Token Tidak Ditemukan",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.0,
-        snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.all(20.0),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
-
-      return;
-    }
+    final token = await DatabaseProvider().getToken();
+    final url = Uri.parse(AppUrl.profilCanteen);
 
     try {
-      http.Response req = await http.get(
-        Uri.parse(url),
+      final response = await http.get(
+        url,
         headers: {
-          'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
         },
       );
 
-      if (req.statusCode == 200) {
-        final res = json.decode(req.body);
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        final data = jsonData['data'];
 
-        print(res);
-
-        users.value = User.fromJson(res["data"]);
+        users.value = Canteen.fromJson(data);
       } else {
-        final res = json.decode(req.body);
-
-        print(res);
-
-        Get.snackbar(
-          "Informasi ",
-          "Terjadi Kesalahan",
-          animationDuration: const Duration(milliseconds: 200),
-          duration: const Duration(milliseconds: 1650),
-          backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-          borderWidth: 5.0,
-          snackPosition: SnackPosition.TOP,
-          margin: const EdgeInsets.all(20.0),
-          icon: const Icon(
-            CupertinoIcons.info_circle,
-          ),
-        );
+        print("Gagal ambil profil kantin: ${response.statusCode}");
       }
-    } on SocketException catch (_) {
-      Get.snackbar(
-        "Informasi ",
-        "Koneksi Internet Tidak Tersedia",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.0,
-        snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.all(20.0),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
     } catch (e) {
-      Get.snackbar(
-        "Informasi ",
-        "Mohon Coba Lagi",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.0,
-        snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.all(20.0),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
-
-      print(e);
-    } finally {
-      isLoading.value = false;
-    }
-  }
-
-  Future<void> updateUserData({
-    required String fullName,
-    required String phoneNumber,
-    BuildContext? context,
-  }) async {
-    isLoading.value = true;
-
-    String url = AppUrl.updateUserData;
-    String? token = await DatabaseProvider().getToken();
-
-    if (token == null) {
-      isLoading.value = false;
-
-      Get.snackbar(
-        "Informasi ",
-        "Token Tidak Ditemukan",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.0,
-        snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.all(20.0),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
-
-      return;
-    }
-
-    final body = {
-      "full_name": fullName,
-      "phone_number": phoneNumber,
-    };
-    print(body);
-
-    try {
-      http.Response req = await http.put(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-        body: json.encode(body),
-      );
-
-      if (req.statusCode == 200) {
-        final res = json.decode(req.body);
-
-        print(res);
-
-        users.value = User.fromJson(res["data"]);
-
-        Get.snackbar(
-          "Informasi",
-          res["message"],
-          animationDuration: const Duration(milliseconds: 200),
-          duration: const Duration(milliseconds: 1650),
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-          borderWidth: 5.0,
-          snackPosition: SnackPosition.TOP,
-          margin: const EdgeInsets.all(20.0),
-          icon: const Icon(
-            CupertinoIcons.info_circle,
-            color: Colors.white,
-          ),
-        );
-      } else {
-        final res = json.decode(req.body);
-
-        print(res);
-
-        if (res["errors"] != null) {
-          String errorMessage = "";
-
-          res["errors"].forEach((key, value) {
-            errorMessage += "${value.join("\n")}\n";
-          });
-
-          Get.snackbar(
-            "Informasi",
-            errorMessage.trim(),
-            animationDuration: const Duration(milliseconds: 200),
-            duration: const Duration(milliseconds: 1650),
-            backgroundColor: Colors.red,
-            colorText: Colors.white,
-            borderWidth: 5.0,
-            snackPosition: SnackPosition.TOP,
-            margin: const EdgeInsets.all(20.0),
-            icon: const Icon(
-              CupertinoIcons.info_circle,
-              color: Colors.white,
-            ),
-          );
-        }
-      }
-    } on SocketException catch (_) {
-      Get.snackbar(
-        "Informasi ",
-        "Koneksi Internet Tidak Tersedia",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.0,
-        snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.all(20.0),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
-    } catch (e) {
-      Get.snackbar(
-        "Informasi ",
-        "Mohon Coba Lagi",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.0,
-        snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.all(20.0),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
-
-      print(e);
+      print("Error getCanteenProfile: $e");
     } finally {
       isLoading.value = false;
     }

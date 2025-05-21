@@ -16,6 +16,11 @@ abstract class Routes {
   static const MY_PROFILE = _Paths.MY_PROFILE;
   static const CHAT = _Paths.CHAT;
   static const CART = _Paths.CART;
+  static const HOME_KANTIN = _Paths.HOME_KANTIN;
+  static const MENU_KANTIN = _Paths.MENU_KANTIN;
+  static const RIWAYAT_KANTIN = _Paths.RIWAYAT_KANTIN;
+  static const PESANAN_KANTIN = _Paths.PESANAN_KANTIN;
+  static const ORDER_KANTIN = _Paths.ORDER_KANTIN;
 }
 
 abstract class _Paths {
@@ -33,4 +38,9 @@ abstract class _Paths {
   static const MY_PROFILE = '/my_profile';
   static const CHAT = '/chat';
   static const CART = '/cart';
+  static const HOME_KANTIN = '/home-kantin';
+  static const MENU_KANTIN = '/menu-kantin';
+  static const PESANAN_KANTIN = '/pesanan-kantin';
+  static const RIWAYAT_KANTIN = '/riwayat-kantin';
+  static const ORDER_KANTIN = '/order-kantin';
 }

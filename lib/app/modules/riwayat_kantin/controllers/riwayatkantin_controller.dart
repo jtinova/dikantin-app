@@ -1,37 +1,46 @@
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+import 'package:dikantin_app_rebuild/app/data/db_provider.dart';
+import 'package:dikantin_app_rebuild/app/data/api.dart';
 import 'package:flutter/material.dart';
+import 'package:dikantin_app_rebuild/app/models/history_canteen.dart';
+import 'dart:convert';
 
 class RiwayatKantinController extends GetxController {
-  var selectedItem = "Semua".obs;
-  var selectedDate = "Pilih Tanggal".obs;
-  var riwayatPesanan = <Map<String, dynamic>>[
-    {
-      "id": "#TRDKN233249", 
-      "datetime": "03 Mar 2024 12:36", 
-      "status": "Selesai", 
-      "pesanan": [
-        {"nama": "Nasi Kuning", "jumlah": 2, "harga": 12000},
-        {"nama": "Es Jeruk", "jumlah": 1, "harga": 4000}
-      ],
-      "image": "assets/images/pesanan.png",
-      "catatan": "Tidak pake sambal dan timun"
-    },
-    {
-      "id": "#TRDKN233249", 
-      "datetime": "03 Mar 2024 12:36", 
-      "status": "Dibatalkan", 
-      "pesanan": [
-        {"nama": "Nasi Geprek", "jumlah": 1, "harga": 14000},
-        {"nama": "Es Teh", "jumlah": 1, "harga": 3000}
-      ],
-      "image": "assets/images/pesanan.png",
-      "catatan": "-"
-    },
-  ].obs;
+  RxList<HistoryModel> daftarMenu = <HistoryModel>[].obs;
 
-  int get totalPendapatan => riwayatPesanan
-    .expand((order) => order["pesanan"] as List<dynamic>) 
-    .map((menu) => ((menu["jumlah"] ?? 0) * (menu["harga"] ?? 0)).toInt()) 
-    .reduce((sum, price) => sum + price);
+  @override
+  void onInit() {
+    super.onInit();
+    fetchHistory();
+  }
 
+  void refreshData() {
+    fetchHistory();
+  }
+
+  Future<void> fetchHistory() async {
+    try {
+      final token = await DatabaseProvider().getToken();
+      final response = await http.get(
+        Uri.parse(AppUrl.historyCanteen),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final result = jsonDecode(response.body);
+        final List data = result['data'];
+
+        final histories = data.map((json) => HistoryModel.fromJson(json)).toList();
+        daftarMenu.assignAll(histories);
+      } else {
+        print("Gagal mengambil riwayat transaksi: ${response.body}");
+      }
+    } catch (e) {
+      print("Error fetchHistory: $e");
+    }
+  }
 }

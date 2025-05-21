@@ -4,6 +4,7 @@ class Canteen {
   final String phoneNumber;
   final int balance;
   final String status;
+  final String email;
 
   Canteen({
     required this.id,
@@ -11,6 +12,7 @@ class Canteen {
     required this.phoneNumber,
     required this.balance,
     required this.status,
+    required this.email,
   });
 
   factory Canteen.fromJson(Map<String, dynamic> json) {
@@ -20,6 +22,7 @@ class Canteen {
       phoneNumber: json['phone_number'] ?? '',
       balance: json['balance'] ?? 0,
       status: json['status'] ?? '',
+      email: json['email'] ?? '',
     );
   }
 }

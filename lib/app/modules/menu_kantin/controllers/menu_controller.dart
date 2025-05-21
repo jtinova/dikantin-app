@@ -1,35 +1,83 @@
 import 'package:get/get.dart';
-import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
+import 'package:dikantin_app_rebuild/app/models/menu_kantin.dart';
+import 'dart:convert';
+
+import 'package:dikantin_app_rebuild/app/data/db_provider.dart';
+import 'package:dikantin_app_rebuild/app/data/api.dart';
 
 class MenuKantinController extends GetxController {
-var daftarMenu = <Map<String, dynamic>>[
-    {
-      "id": "1", 
-      "nama": "Nasi Lalapan Ayam Betutu", 
-      "harga": "Rp 10.000",
-      "status": "Tersedia", 
-      "image": "assets/images/pesanan.png",
-    },
-    {
-      "id": "2", 
-      "nama": "Nasi Soto Babat", 
-      "harga": "Rp 10.000",
-      "status": "Habis", 
-      "image": "assets/images/pesanan.png",
-    },
-    {
-      "id": "3", 
-      "nama": "Mie Instan Goreng", 
-      "harga": "Rp 10.000",
-      "status": "Tersedia", 
-      "image": "assets/images/pesanan.png",
-    },
-  ].obs;
+  RxList<MenuModel> daftarMenu = <MenuModel>[].obs;
 
-  void updateMenu(Map<String, dynamic> updatedMenuItem) {
-    int index = daftarMenu.indexWhere((item) => item["id"] == updatedMenuItem["id"]);
-    if (index != -1) {
-      daftarMenu[index] = updatedMenuItem; 
+  @override
+  void onInit() {
+    super.onInit();
+    fetchMenus();
+  }
+
+  void refreshData() {
+    fetchMenus();
+  }
+
+  Future<void> fetchMenus() async {
+    final token = await DatabaseProvider().getToken();
+    final url = Uri.parse(AppUrl.menuCanteen); 
+
+    try {
+      final response = await http.get(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        final List<dynamic> data = jsonData['data'];
+
+        daftarMenu.value = data.map((item) => MenuModel.fromJson(item)).toList();
+      } else {
+        print("Gagal ambil menu: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error fetchMenus: $e");
+    }
+  }
+
+  Future<void> updateMenuStock(String id, bool newStatus) async {
+    final token = await DatabaseProvider().getToken();
+      final url = Uri.parse(AppUrl.updateStock); 
+
+    try {
+      final response = await http.patch(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+        },
+        body: {
+          'menu_id': id,
+          'stock': newStatus ? '1' : '0', 
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final index = daftarMenu.indexWhere((menu) => menu.id == id);
+        if (index != -1) {
+          final updatedMenu = daftarMenu[index];
+          updatedMenu.isAvailable = newStatus;
+          daftarMenu[index] = updatedMenu;
+          // daftarMenu[index].isAvailable = newStatus;
+          // daftarMenu.refresh(); 
+        }
+      } else {
+        print("Gagal update stock: ${response.body}");
+      }
+    } catch (e) {
+      print("Error updateMenuStock: $e");
     }
   }
 }
+

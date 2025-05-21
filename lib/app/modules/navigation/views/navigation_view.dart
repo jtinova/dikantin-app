@@ -8,11 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
-import '../../chat/views/chat_view.dart';
-import '../../home/views/home_view.dart';
-import '../../order/views/order_view.dart';
+import '../../home_kantin/views/home_kantin_view.dart';
 import '../../profile/views/profile_view.dart';
 import '../controllers/navigation_controller.dart';
+import '../../pesanan_kantin/views/pesanan_view.dart';
+import '../../menu_kantin/views/menu_view.dart';
+import '../../riwayat_kantin/views/riwayatkantin_view.dart';
 
 class NavigationView extends GetView<NavigationController> {
   NavigationView({super.key});
@@ -61,12 +62,24 @@ class NavigationView extends GetView<NavigationController> {
           physics: const BouncingScrollPhysics(),
           children: [
             // Page
-            HomeView(),
-            OrderView(),
-            const ChatView(),
+            HomeKantinView(),
+            MenuKantinView(),
+            PesananKantinView(),
+            RiwayatKantinView(),
             ProfileView(),
           ],
         ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            controller.pageController.jumpToPage(2);
+          },
+          backgroundColor: Color(0xFF1E2857),
+          child: Icon(
+            CupertinoIcons.news_solid,
+            color: Colors.white,
+          ),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: Container(
           decoration: BoxDecoration(
             boxShadow: [
@@ -88,9 +101,9 @@ class NavigationView extends GetView<NavigationController> {
               color: Colors.white,
               notchMargin: 10,
               elevation: 0,
-              height: 70,
+              height: 74,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                padding: const EdgeInsets.symmetric(horizontal: 18.0),
                 child: Obx(
                   () => Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -103,20 +116,21 @@ class NavigationView extends GetView<NavigationController> {
                       ),
                       _bottomAppBarItem(
                         context,
-                        icon: CupertinoIcons.cart_fill,
+                        icon: CupertinoIcons.square_list_fill,
                         page: 1,
-                        label: "Pesanan",
+                        label: "Menu",
                       ),
+                      SizedBox(width: 48), 
                       _bottomAppBarItem(
                         context,
-                        icon: CupertinoIcons.chat_bubble_2_fill,
-                        page: 2,
-                        label: "Chat",
+                        icon: CupertinoIcons.doc_chart_fill,
+                        page: 3,
+                        label: "Riwayat",
                       ),
                       _bottomAppBarItem(
                         context,
                         icon: CupertinoIcons.person_fill,
-                        page: 3,
+                        page: 4, 
                         label: "Profile",
                       ),
                     ],
