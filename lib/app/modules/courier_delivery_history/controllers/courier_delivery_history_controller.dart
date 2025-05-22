@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 import 'package:dikantin_app_rebuild/app/data/api.dart';
 import 'package:dikantin_app_rebuild/app/providers/db_provider.dart';

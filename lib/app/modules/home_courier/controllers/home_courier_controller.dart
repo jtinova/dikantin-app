@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print, invalid_use_of_protected_member
+
 import 'dart:convert';
 import 'package:dikantin_app_rebuild/app/data/api.dart';
 import 'package:get/get.dart';

@@ -143,7 +143,7 @@ class OrderController extends GetxController {
             .map((item) => Order.fromJsonProgress(item))
             .toList();
 
-        print(progressOrder);
+        print(res);
       } else {
         final res = json.decode(req.body);
 
@@ -252,7 +252,7 @@ class OrderController extends GetxController {
             .map((item) => Order.fromJsonProgress(item))
             .toList();
 
-        print(shippingOrder);
+        print(res);
       } else {
         final res = json.decode(req.body);
 

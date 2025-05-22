@@ -1,36 +1,38 @@
 class AppUrl {
   // Change IP Address before run project
-  static String baseURL = 'http://192.168.1.2:8080/api';
+  static String baseURL = 'http://10.10.177.14:8080';
+  static String baseURLAPI = '$baseURL/api';
+  static String baseImageURL = '$baseURL/storage/menu/';
 
   // Authentication
-  static String signin = '$baseURL/login';
-  static String signup = '$baseURL/register';
-  static String codeOTP = '$baseURL/send-reset-password';
-  static String verifyOTP = "$baseURL/verify-otp";
-  static String resetPassword = "$baseURL/reset-password";
-  static String signout = "$baseURL/logout";
+  static String signin = '$baseURLAPI/login';
+  static String signup = '$baseURLAPI/register';
+  static String codeOTP = '$baseURLAPI/send-reset-password';
+  static String verifyOTP = "$baseURLAPI/verify-otp";
+  static String resetPassword = "$baseURLAPI/reset-password";
+  static String signout = "$baseURLAPI/logout";
 
   // API Home
-  static String locations = '$baseURL/building';
-  static String categories = '$baseURL/category';
-  static String canteens = '$baseURL/canteen';
-  static String searchMenu = '$baseURL/menu/search';
-  static String menus = '$baseURL/menu';
-  static String menuByCanteen = '$baseURL/canteen/menu';
-  static String menuByCategory = '$baseURL/category/menu';
+  static String locations = '$baseURLAPI/building';
+  static String categories = '$baseURLAPI/category';
+  static String canteens = '$baseURLAPI/canteen';
+  static String searchMenu = '$baseURLAPI/menu/search';
+  static String menus = '$baseURLAPI/menu';
+  static String menuByCanteen = '$baseURLAPI/canteen/menu';
+  static String menuByCategory = '$baseURLAPI/category/menu';
 
   // API Order
-  static String calculateOrder = '$baseURL/transaction/calculate-order';
-  static String createOrder = '$baseURL/transaction/create';
-  static String trackingProgress = '$baseURL/transaction/progress';
-  static String trackingDetailProgress = '$baseURL/transaction/';
-  static String trackingShipping = '$baseURL/transaction/shipping';
-  static String trackingDetailShipping = '$baseURL/transaction/shipping/';
-  static String trackingHistory = '$baseURL/transaction/history';
-  static String cancelOrder = '$baseURL/transaction/cancel';
-  static String pickUpOrder = '$baseURL/transaction/pick-up';
+  static String calculateOrder = '$baseURLAPI/transaction/calculate-order';
+  static String createOrder = '$baseURLAPI/transaction/create';
+  static String trackingProgress = '$baseURLAPI/transaction/progress';
+  static String trackingDetailProgress = '$baseURLAPI/transaction/';
+  static String trackingShipping = '$baseURLAPI/transaction/shipping';
+  static String trackingDetailShipping = '$baseURLAPI/transaction/shipping/';
+  static String trackingHistory = '$baseURLAPI/transaction/history';
+  static String cancelOrder = '$baseURLAPI/transaction/cancel';
+  static String pickUpOrder = '$baseURLAPI/transaction/pick-up';
 
   // API Profile
-  static String detailUserProfile = '$baseURL/user';
-  static String updateUserData = '$baseURL/user/update';
+  static String detailUserProfile = '$baseURLAPI/user';
+  static String updateUserData = '$baseURLAPI/user/update';
 }

@@ -44,8 +44,8 @@ class CourierProfileView extends GetView<CourierProfileController> {
                           Navigator.of(context).pop();
                         },
                         style: ButtonStyle(
-                          backgroundColor: MaterialStatePropertyAll(
-                              Color(0xFF1E2857)),
+                          backgroundColor:
+                              WidgetStatePropertyAll(Color(0xFF1E2857)),
                         ),
                         child: Text(
                           "Batal",
@@ -56,25 +56,21 @@ class CourierProfileView extends GetView<CourierProfileController> {
                       ),
                       Consumer<AuthenticationProvider>(
                         builder: (context, auth, child) {
-                          WidgetsBinding.instance
-                              .addPostFrameCallback((_) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
                             if (auth.resMessage != '') {
                               Get.snackbar(
                                 "Informasi",
                                 auth.resMessage,
                                 animationDuration:
                                     const Duration(milliseconds: 200),
-                                duration:
-                                    const Duration(milliseconds: 1650),
-                                backgroundColor:
-                                    auth.statusCode == 200
-                                        ? Colors.green
-                                        : Colors.red,
+                                duration: const Duration(milliseconds: 1650),
+                                backgroundColor: auth.statusCode == 200
+                                    ? Colors.green
+                                    : Colors.red,
                                 colorText: Colors.white,
                                 borderWidth: 5.0,
                                 snackPosition: SnackPosition.TOP,
-                                margin:
-                                    const EdgeInsets.all(20.0),
+                                margin: const EdgeInsets.all(20.0),
                                 icon: const Icon(
                                   CupertinoIcons.info_circle,
                                   color: Colors.white,
@@ -123,7 +119,8 @@ class CourierProfileView extends GetView<CourierProfileController> {
                           // Blue card with profile info
                           Container(
                             padding: EdgeInsets.all(20),
-                            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            margin: EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
                             decoration: BoxDecoration(
                               color: Color(0xFF1E2857),
                               borderRadius: BorderRadius.circular(16),
@@ -134,17 +131,21 @@ class CourierProfileView extends GetView<CourierProfileController> {
                                 Row(
                                   children: [
                                     CircleAvatar(
-                                      backgroundImage: AssetImage('assets/images/logo_dikantin.png'),
+                                      backgroundImage: AssetImage(
+                                          'assets/images/logo_dikantin.png'),
                                       backgroundColor: Colors.white,
                                       radius: 30,
                                     ),
                                     SizedBox(width: 16),
                                     Expanded(
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            controller.courierData['full_name'] ?? 'Nama tidak tersedia',
+                                            controller
+                                                    .courierData['full_name'] ??
+                                                'Nama tidak tersedia',
                                             style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 18,
@@ -153,7 +154,8 @@ class CourierProfileView extends GetView<CourierProfileController> {
                                           ),
                                           SizedBox(height: 4),
                                           Text(
-                                            controller.courierData['email'] ?? 'Email tidak tersedia',
+                                            controller.courierData['email'] ??
+                                                'Email tidak tersedia',
                                             style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 14,
@@ -161,7 +163,9 @@ class CourierProfileView extends GetView<CourierProfileController> {
                                           ),
                                           SizedBox(height: 4),
                                           Text(
-                                            controller.courierData['phone_number'] ?? 'No. HP tidak tersedia',
+                                            controller.courierData[
+                                                    'phone_number'] ??
+                                                'No. HP tidak tersedia',
                                             style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 14,
@@ -173,7 +177,7 @@ class CourierProfileView extends GetView<CourierProfileController> {
                                   ],
                                 ),
                                 SizedBox(height: 20),
-                                
+
                                 // Pendapatan Kurir Section
                                 Container(
                                   padding: EdgeInsets.all(16),
@@ -182,10 +186,12 @@ class CourierProfileView extends GetView<CourierProfileController> {
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
                                             'Pendapatan Kurir',
@@ -194,25 +200,42 @@ class CourierProfileView extends GetView<CourierProfileController> {
                                               fontWeight: FontWeight.w500,
                                             ),
                                           ),
-                                          if ((double.tryParse(controller.courierData['total_balance']?.toString() ?? '0') ?? 0) > 0)
+                                          if ((double.tryParse(controller
+                                                          .courierData[
+                                                              'total_balance']
+                                                          ?.toString() ??
+                                                      '0') ??
+                                                  0) >
+                                              0)
                                             ElevatedButton.icon(
                                               onPressed: () {
-                                                _showWithdrawalConfirmation(context);
+                                                _showWithdrawalConfirmation(
+                                                    context);
                                               },
-                                              icon: Icon(Icons.account_balance_wallet, size: 16, color: Colors.white),
-                                              label: Text('Tarik Dana', style: TextStyle(color: Colors.white)),
+                                              icon: Icon(
+                                                  Icons.account_balance_wallet,
+                                                  size: 16,
+                                                  color: Colors.white),
+                                              label: Text('Tarik Dana',
+                                                  style: TextStyle(
+                                                      color: Colors.white)),
                                               style: ElevatedButton.styleFrom(
-                                                backgroundColor: Color(0xFF1E2857),
+                                                backgroundColor:
+                                                    Color(0xFF1E2857),
                                                 foregroundColor: Colors.white,
-                                                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                                                textStyle: TextStyle(fontSize: 12),
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 12,
+                                                    vertical: 8),
+                                                textStyle:
+                                                    TextStyle(fontSize: 12),
                                               ),
                                             ),
                                         ],
                                       ),
                                       Divider(),
                                       Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
                                             'Total Saldo',
@@ -223,7 +246,12 @@ class CourierProfileView extends GetView<CourierProfileController> {
                                           ),
                                           Text(
                                             controller.formatCurrency(
-                                                double.tryParse(controller.courierData['total_balance']?.toString() ?? '0') ?? 0),
+                                                double.tryParse(controller
+                                                            .courierData[
+                                                                'total_balance']
+                                                            ?.toString() ??
+                                                        '0') ??
+                                                    0),
                                             style: TextStyle(
                                               fontSize: 22,
                                               fontWeight: FontWeight.bold,
@@ -233,7 +261,8 @@ class CourierProfileView extends GetView<CourierProfileController> {
                                       ),
                                       SizedBox(height: 8),
                                       Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
                                             'Pendapatan Hari Ini',
@@ -244,7 +273,12 @@ class CourierProfileView extends GetView<CourierProfileController> {
                                           ),
                                           Text(
                                             controller.formatCurrency(
-                                                double.tryParse(controller.courierData['today_earnings']?.toString() ?? '0') ?? 0),
+                                                double.tryParse(controller
+                                                            .courierData[
+                                                                'today_earnings']
+                                                            ?.toString() ??
+                                                        '0') ??
+                                                    0),
                                             style: TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w500,
@@ -258,10 +292,11 @@ class CourierProfileView extends GetView<CourierProfileController> {
                               ],
                             ),
                           ),
-                          
+
                           // Delivery statistics
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
                             child: Row(
                               children: [
                                 // For delivery
@@ -274,7 +309,8 @@ class CourierProfileView extends GetView<CourierProfileController> {
                                     child: Padding(
                                       padding: EdgeInsets.all(16),
                                       child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
                                           Icon(
                                             Icons.receipt_long,
@@ -312,7 +348,8 @@ class CourierProfileView extends GetView<CourierProfileController> {
                                     child: Padding(
                                       padding: EdgeInsets.all(16),
                                       child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
                                           Icon(
                                             Icons.check_circle_outline,
@@ -342,7 +379,7 @@ class CourierProfileView extends GetView<CourierProfileController> {
                               ],
                             ),
                           ),
-                          
+
                           // Menu options
                           Padding(
                             padding: EdgeInsets.all(16),
@@ -367,11 +404,13 @@ class CourierProfileView extends GetView<CourierProfileController> {
                                         fontSize: 16,
                                       ),
                                     ),
-                                    trailing: Icon(Icons.arrow_forward_ios, size: 16),
-                                    onTap: () => Get.toNamed(Routes.COURIER_DELIVERY_HISTORY),
+                                    trailing:
+                                        Icon(Icons.arrow_forward_ios, size: 16),
+                                    onTap: () => Get.toNamed(
+                                        Routes.COURIER_DELIVERY_HISTORY),
                                   ),
                                 ),
-                                
+
                                 // Informasi Aplikasi
                                 Card(
                                   elevation: 1,
@@ -390,11 +429,12 @@ class CourierProfileView extends GetView<CourierProfileController> {
                                         fontSize: 16,
                                       ),
                                     ),
-                                    trailing: Icon(Icons.arrow_forward_ios, size: 16),
+                                    trailing:
+                                        Icon(Icons.arrow_forward_ios, size: 16),
                                     onTap: () => Get.toNamed(Routes.ABOUT_APP),
                                   ),
                                 ),
-                                
+
                                 // Keluar
                                 Card(
                                   elevation: 1,
@@ -414,14 +454,16 @@ class CourierProfileView extends GetView<CourierProfileController> {
                                         fontSize: 16,
                                       ),
                                     ),
-                                    trailing: Icon(Icons.arrow_forward_ios, size: 16, color: Colors.red),
+                                    trailing: Icon(Icons.arrow_forward_ios,
+                                        size: 16, color: Colors.red),
                                     onTap: () {
                                       showDialog(
                                         context: context,
                                         builder: (BuildContext context) {
                                           return AlertDialog(
                                             title: Text("Logout"),
-                                            content: Text("Kamu yakin ingin logout?"),
+                                            content: Text(
+                                                "Kamu yakin ingin logout?"),
                                             backgroundColor: Colors.white,
                                             actions: [
                                               TextButton(
@@ -429,8 +471,9 @@ class CourierProfileView extends GetView<CourierProfileController> {
                                                   Navigator.of(context).pop();
                                                 },
                                                 style: ButtonStyle(
-                                                  backgroundColor: MaterialStatePropertyAll(
-                                                      Color(0xFF1E2857)),
+                                                  backgroundColor:
+                                                      WidgetStatePropertyAll(
+                                                          Color(0xFF1E2857)),
                                                 ),
                                                 child: Text(
                                                   "Batal",
@@ -440,28 +483,37 @@ class CourierProfileView extends GetView<CourierProfileController> {
                                                 ),
                                               ),
                                               Consumer<AuthenticationProvider>(
-                                                builder: (context, auth, child) {
+                                                builder:
+                                                    (context, auth, child) {
                                                   WidgetsBinding.instance
-                                                      .addPostFrameCallback((_) {
+                                                      .addPostFrameCallback(
+                                                          (_) {
                                                     if (auth.resMessage != '') {
                                                       Get.snackbar(
                                                         "Informasi",
                                                         auth.resMessage,
                                                         animationDuration:
-                                                            const Duration(milliseconds: 200),
+                                                            const Duration(
+                                                                milliseconds:
+                                                                    200),
                                                         duration:
-                                                            const Duration(milliseconds: 1650),
+                                                            const Duration(
+                                                                milliseconds:
+                                                                    1650),
                                                         backgroundColor:
-                                                            auth.statusCode == 200
+                                                            auth.statusCode ==
+                                                                    200
                                                                 ? Colors.green
                                                                 : Colors.red,
                                                         colorText: Colors.white,
                                                         borderWidth: 5.0,
-                                                        snackPosition: SnackPosition.TOP,
-                                                        margin:
-                                                            const EdgeInsets.all(20.0),
+                                                        snackPosition:
+                                                            SnackPosition.TOP,
+                                                        margin: const EdgeInsets
+                                                            .all(20.0),
                                                         icon: const Icon(
-                                                          CupertinoIcons.info_circle,
+                                                          CupertinoIcons
+                                                              .info_circle,
                                                           color: Colors.white,
                                                         ),
                                                       );
@@ -488,9 +540,10 @@ class CourierProfileView extends GetView<CourierProfileController> {
                                     },
                                   ),
                                 ),
-                                
+
                                 // Withdrawal history if any
-                                if (controller.withdrawalHistory.isNotEmpty) ...[
+                                if (controller
+                                    .withdrawalHistory.isNotEmpty) ...[
                                   SizedBox(height: 16),
                                   Text(
                                     'Riwayat Penarikan',
@@ -503,16 +556,23 @@ class CourierProfileView extends GetView<CourierProfileController> {
                                   ListView.builder(
                                     shrinkWrap: true,
                                     physics: NeverScrollableScrollPhysics(),
-                                    itemCount: controller.withdrawalHistory.length,
+                                    itemCount:
+                                        controller.withdrawalHistory.length,
                                     itemBuilder: (context, index) {
-                                      final history = controller.withdrawalHistory[index];
+                                      final history =
+                                          controller.withdrawalHistory[index];
                                       return Card(
                                         child: ListTile(
                                           title: Text(
                                             controller.formatCurrency(
-                                                double.tryParse(history['withdrawal_amount']?.toString() ?? '0') ?? 0),
+                                                double.tryParse(
+                                                        history['withdrawal_amount']
+                                                                ?.toString() ??
+                                                            '0') ??
+                                                    0),
                                           ),
-                                          subtitle: Text(history['withdrawal_date'] ?? ''),
+                                          subtitle: Text(
+                                              history['withdrawal_date'] ?? ''),
                                         ),
                                       );
                                     },
@@ -534,8 +594,10 @@ class CourierProfileView extends GetView<CourierProfileController> {
 
 void _showWithdrawalConfirmation(BuildContext context) {
   final controller = Get.find<CourierProfileController>();
-  final totalBalance = double.tryParse(controller.courierData['total_balance']?.toString() ?? '0') ?? 0;
-  
+  final totalBalance = double.tryParse(
+          controller.courierData['total_balance']?.toString() ?? '0') ??
+      0;
+
   // Dialog untuk memilih metode penarikan
   showDialog(
     context: context,
@@ -580,15 +642,15 @@ void _showWithdrawalConfirmation(BuildContext context) {
 }
 
 // Dialog konfirmasi untuk penarikan seluruh saldo
-void _confirmFullWithdrawal(BuildContext context, CourierProfileController controller, double totalBalance) {
+void _confirmFullWithdrawal(BuildContext context,
+    CourierProfileController controller, double totalBalance) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
         title: Text('Tarik Seluruh Saldo'),
         content: Text(
-          'Anda akan menarik seluruh saldo sebesar ${controller.formatCurrency(totalBalance)}. Lanjutkan?'
-        ),
+            'Anda akan menarik seluruh saldo sebesar ${controller.formatCurrency(totalBalance)}. Lanjutkan?'),
         actions: [
           TextButton(
             onPressed: () {
@@ -613,10 +675,11 @@ void _confirmFullWithdrawal(BuildContext context, CourierProfileController contr
 }
 
 // Dialog untuk input jumlah penarikan kustom
-void _showCustomAmountDialog(BuildContext context, CourierProfileController controller, double totalBalance) {
+void _showCustomAmountDialog(BuildContext context,
+    CourierProfileController controller, double totalBalance) {
   final TextEditingController textController = TextEditingController();
   controller.withdrawalAmount.value = 0;
-  
+
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -642,13 +705,15 @@ void _showCustomAmountDialog(BuildContext context, CourierProfileController cont
                 double? amount = double.tryParse(cleaned);
                 if (amount != null) {
                   controller.withdrawalAmount.value = amount;
-                  
+
                   // Format the text with thousand separators
                   if (value.isNotEmpty) {
-                    final formatted = controller.formatCurrency(amount).replaceAll('Rp ', '');
+                    final formatted =
+                        controller.formatCurrency(amount).replaceAll('Rp ', '');
                     textController.value = TextEditingValue(
                       text: formatted,
-                      selection: TextSelection.collapsed(offset: formatted.length),
+                      selection:
+                          TextSelection.collapsed(offset: formatted.length),
                     );
                   }
                 }
@@ -662,7 +727,9 @@ void _showCustomAmountDialog(BuildContext context, CourierProfileController cont
                   onPressed: () {
                     double halfBalance = totalBalance / 2;
                     controller.withdrawalAmount.value = halfBalance;
-                    textController.text = controller.formatCurrency(halfBalance).replaceAll('Rp ', '');
+                    textController.text = controller
+                        .formatCurrency(halfBalance)
+                        .replaceAll('Rp ', '');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.grey[300],
@@ -673,7 +740,9 @@ void _showCustomAmountDialog(BuildContext context, CourierProfileController cont
                 ElevatedButton(
                   onPressed: () {
                     controller.withdrawalAmount.value = totalBalance;
-                    textController.text = controller.formatCurrency(totalBalance).replaceAll('Rp ', '');
+                    textController.text = controller
+                        .formatCurrency(totalBalance)
+                        .replaceAll('Rp ', '');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.grey[300],
@@ -693,17 +762,19 @@ void _showCustomAmountDialog(BuildContext context, CourierProfileController cont
             child: Text('Batal'),
           ),
           Obx(() => ElevatedButton(
-            onPressed: controller.withdrawalAmount.value > 0 && controller.withdrawalAmount.value <= totalBalance
-                ? () {
-                    Navigator.of(context).pop();
-                    _confirmPartialWithdrawal(context, controller, controller.withdrawalAmount.value);
-                  }
-                : null,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xFF1E2857),
-            ),
-            child: Text('Lanjutkan', style: TextStyle(color: Colors.white)),
-          )),
+                onPressed: controller.withdrawalAmount.value > 0 &&
+                        controller.withdrawalAmount.value <= totalBalance
+                    ? () {
+                        Navigator.of(context).pop();
+                        _confirmPartialWithdrawal(context, controller,
+                            controller.withdrawalAmount.value);
+                      }
+                    : null,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF1E2857),
+                ),
+                child: Text('Lanjutkan', style: TextStyle(color: Colors.white)),
+              )),
         ],
       );
     },
@@ -711,15 +782,15 @@ void _showCustomAmountDialog(BuildContext context, CourierProfileController cont
 }
 
 // Dialog konfirmasi untuk penarikan sebagian saldo
-void _confirmPartialWithdrawal(BuildContext context, CourierProfileController controller, double amount) {
+void _confirmPartialWithdrawal(
+    BuildContext context, CourierProfileController controller, double amount) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
         title: Text('Konfirmasi Penarikan'),
         content: Text(
-          'Anda akan menarik dana sebesar ${controller.formatCurrency(amount)}. Lanjutkan?'
-        ),
+            'Anda akan menarik dana sebesar ${controller.formatCurrency(amount)}. Lanjutkan?'),
         actions: [
           TextButton(
             onPressed: () {

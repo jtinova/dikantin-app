@@ -105,8 +105,8 @@ class CartView extends GetView<CartController> {
                             SizedBox(width: 5.w),
                             ClipRRect(
                               borderRadius: BorderRadius.circular(10.r),
-                              child: Image.asset(
-                                'assets/images/image_carousel.png',
+                              child: Image.network(
+                                item.menu.imageUrl,
                                 height: 60.h,
                                 width: 60.w,
                                 fit: BoxFit.cover,

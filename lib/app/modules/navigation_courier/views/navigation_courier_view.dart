@@ -10,7 +10,6 @@ import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 import '../../chat/views/chat_view.dart';
 import '../../home_courier/views/home_courier_view.dart';
-import '../../order/views/order_view.dart';
 import '../../profile_courier/views/profile_courier_view.dart';
 import '../controllers/navigation_courier_controller.dart';
 

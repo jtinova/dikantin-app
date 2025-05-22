@@ -136,6 +136,7 @@ class OrderContent extends StatelessWidget {
             }
 
             return ListView.builder(
+              padding: EdgeInsets.only(bottom: 3.h),
               itemCount: items.length,
               itemBuilder: (context, index) {
                 final order = items[index];
@@ -157,7 +158,7 @@ class OrderContent extends StatelessWidget {
                                 Radius.circular(10.r),
                               ),
                               child: Image.asset(
-                                "assets/images/image_carousel.png",
+                                "assets/images/logo_dikantin.png",
                                 width: 85.w,
                                 height: 80.h,
                                 fit: BoxFit.cover,
@@ -323,6 +324,7 @@ class OrderContent extends StatelessWidget {
             }
 
             return ListView.builder(
+              padding: EdgeInsets.only(bottom: 3.h),
               itemCount: items.length,
               itemBuilder: (context, index) {
                 final order = items[index];
@@ -471,6 +473,7 @@ class OrderContent extends StatelessWidget {
             }
 
             return ListView.builder(
+              padding: EdgeInsets.only(bottom: 3.h),
               itemCount: items.length,
               itemBuilder: (context, index) {
                 final order = items[index];
@@ -658,6 +661,7 @@ class OrderContent extends StatelessWidget {
             }
 
             return ListView.builder(
+              padding: EdgeInsets.only(bottom: 3.h),
               itemCount: items.length,
               itemBuilder: (context, index) {
                 final order = items[index];
@@ -986,6 +990,14 @@ class OrderDetailBottom extends StatelessWidget {
                         ),
                       ),
                     ),
+                    Expanded(
+                      child: Text(
+                        controller.capitalizeFirst(item.status),
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                        ),
+                      ),
+                    ),
                     Text(
                       "Rp ${controller.formatRupiah(item.salesSubtotal)}",
                       style: TextStyle(
@@ -1063,6 +1075,7 @@ class OrderDetailBottom extends StatelessWidget {
               onPressed: () async {
                 if (order.status == "pending") {
                   await controller.cancelOrder(order.id);
+                  Navigator.pop(context);
                 } else {
                   Navigator.pop(context);
                 }
@@ -1177,7 +1190,7 @@ Color getStatusColor(String status) {
       return Colors.blue;
     case "done":
       return Colors.green;
-    case "Dibatalkan":
+    case "cancel":
       return Colors.red;
     default:
       return Colors.black;

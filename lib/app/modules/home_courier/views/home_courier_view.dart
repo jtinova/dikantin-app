@@ -1,6 +1,5 @@
-// ignore_for_file: unused_field, deprecated_member_use, must_be_immutable
+// ignore_for_file: unused_field, deprecated_member_use, must_be_immutable, avoid_print, use_build_context_synchronously
 
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -122,7 +121,7 @@ class HomeCourierView extends GetView<HomeCourierController> {
                           // Tab untuk kategori pesanan
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 15),
-                            child: CustomTabBar(),
+                            child: customTabBar(),
                           ),
                           
                           // Daftar pesanan berdasarkan tab
@@ -331,7 +330,7 @@ class HomeCourierView extends GetView<HomeCourierController> {
   }
 
   // Widget TabBar Custom
-  Widget CustomTabBar() {
+  Widget customTabBar() {
     return StatefulBuilder(
       builder: (context, setState) {
         final tabController = DefaultTabController.of(context);
@@ -358,10 +357,10 @@ class HomeCourierView extends GetView<HomeCourierController> {
           child: Row(
             children: [
               Expanded(
-                child: TabItem(index: 0, title: 'Untuk Dikirim'),
+                child: tabItem(index: 0, title: 'Untuk Dikirim'),
               ),
               Expanded(
-                child: TabItem(index: 1, title: 'Konfirmasi'),
+                child: tabItem(index: 1, title: 'Konfirmasi'),
               ),
             ],
           ),
@@ -371,7 +370,7 @@ class HomeCourierView extends GetView<HomeCourierController> {
   }
   
   // Widget Item Tab
-  Widget TabItem({required int index, required String title}) {
+  Widget tabItem({required int index, required String title}) {
     return Builder(
       builder: (context) {
         final tabController = DefaultTabController.of(context);
@@ -545,8 +544,8 @@ class DetailRow extends StatelessWidget {
   const DetailRow({
     required this.title,
     required this.value,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -1,3 +1,4 @@
+import '../data/api.dart';
 import 'canteen.dart';
 
 class Menu {
@@ -33,4 +34,6 @@ class Menu {
       canteen: Canteen.fromJson(json['canteen']),
     );
   }
+
+  String get imageUrl => '${AppUrl.baseImageURL}$image';
 }

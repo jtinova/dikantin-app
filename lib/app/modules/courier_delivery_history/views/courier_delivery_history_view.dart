@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import '../controllers/courier_delivery_history_controller.dart';
 
 class CourierDeliveryHistoryView extends GetView<CourierDeliveryHistoryController> {
-  const CourierDeliveryHistoryView({Key? key}) : super(key: key);
+  const CourierDeliveryHistoryView({super.key});
 
   @override
   Widget build(BuildContext context) {

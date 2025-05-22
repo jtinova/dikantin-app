@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
+import '../../../data/api.dart';
 import '../../../routes/app_pages.dart';
 import '../../cart/controllers/cart_controller.dart';
 import '../../profile/controllers/profile_controller.dart';
@@ -206,8 +207,8 @@ class CheckoutView extends GetView<CheckoutController> {
                       ...items.map((item) => ListTile(
                             leading: ClipRRect(
                               borderRadius: BorderRadius.circular(10.r),
-                              child: Image.asset(
-                                'assets/images/image_carousel.png',
+                              child: Image.network(
+                                '${AppUrl.baseImageURL}${item['gambar']}',
                                 height: 50.h,
                                 width: 50.w,
                                 fit: BoxFit.cover,

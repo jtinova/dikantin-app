@@ -753,8 +753,8 @@ class FoodGrids extends StatelessWidget {
                                 Colors.transparent,
                                 BlendMode.saturation,
                               ),
-                        child: Image.asset(
-                          'assets/images/image_carousel.png',
+                        child: Image.network(
+                          food.imageUrl,
                           width: double.infinity,
                           height: 90.h,
                           fit: BoxFit.cover,
@@ -982,8 +982,8 @@ class MenuDetailBottom extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20.r),
             ),
-            child: Image.asset(
-              'assets/images/image_carousel.png',
+            child: Image.network(
+              food.imageUrl,
               width: double.infinity,
               height: 140.h,
             ),
