@@ -20,6 +20,54 @@ class CheckoutController extends GetxController {
   var calculateResult = Rxn<Map<String, dynamic>>();
   var groupedItemsByCanteen = <String, List<Map<String, dynamic>>>{}.obs;
 
+  var itemForCheckout = <CartItem>[].obs;
+  var checkoutNoteController = <String, TextEditingController>{}.obs;
+
+  void initializeCheckoutData(List<CartItem> itemsFromCart) {
+    itemForCheckout.assignAll(itemsFromCart);
+
+    // Buang controller lama jika ada
+    checkoutNoteController.forEach((_, ctrl) => ctrl.dispose());
+    checkoutNoteController.clear();
+
+    // Buat controller baru untuk setiap item di halaman checkout
+    for (var item in itemForCheckout) {
+      final noteCtrl = TextEditingController(text: item.note ?? '');
+      checkoutNoteController[item.menu.id] = noteCtrl;
+      noteCtrl.addListener(() {
+        final index =
+            itemForCheckout.indexWhere((i) => i.menu.id == item.menu.id);
+        if (index != -1) {
+          itemForCheckout[index] = itemForCheckout[index].copyWith(
+              note: noteCtrl.text.trim().isEmpty ? null : noteCtrl.text.trim());
+        }
+      });
+    }
+
+    if (itemForCheckout.isNotEmpty) {
+      getCalculate(itemForCheckout);
+    }
+  }
+
+  TextEditingController getCheckoutNoteControllerForItem(String menuId) {
+    if (!checkoutNoteController.containsKey(menuId)) {
+      final item = itemForCheckout.firstWhereOrNull((i) => i.menu.id == menuId);
+      checkoutNoteController[menuId] =
+          TextEditingController(text: item?.note ?? '');
+      checkoutNoteController[menuId]?.addListener(() {
+        final index =
+            itemForCheckout.indexWhere((i) => i.menu.id == item?.menu.id);
+        if (index != -1) {
+          itemForCheckout[index] = itemForCheckout[index].copyWith(
+              note: checkoutNoteController[menuId]?.text.trim().isEmpty ?? true
+                  ? null
+                  : checkoutNoteController[menuId]?.text.trim());
+        }
+      });
+    }
+    return checkoutNoteController[menuId]!;
+  }
+
   Future<void> getCalculate(List<CartItem> selectedItems) async {
     EasyLoading.show(status: 'Loading...');
 
@@ -49,12 +97,15 @@ class CheckoutController extends GetxController {
       return;
     }
 
-    List<Map<String, dynamic>> menuPayload = selectedItems
-        .map((item) => {
-              "id": item.menu.id,
-              "qty": item.quantity,
-            })
-        .toList();
+    List<Map<String, dynamic>> menuPayload = selectedItems.map((item) {
+      String? note =
+          checkoutNoteController[item.menu.id]?.text.trim() ?? item.note;
+      return {
+        "id": item.menu.id,
+        "qty": item.quantity,
+        "note": (note == null || note.isEmpty) ? null : note,
+      };
+    }).toList();
 
     try {
       http.Response req = await http.post(
@@ -72,7 +123,10 @@ class CheckoutController extends GetxController {
         print(res);
 
         calculateResult.value = res['data'];
-        groupItemsByCanteen(res['data']['details']);
+
+        if (res['data'] != null && res['data']['details'] != null) {
+          groupItemsForDisplay(res['data']['details'] as List<dynamic>);
+        }
       } else {
         final res = json.decode(req.body);
 
@@ -141,7 +195,6 @@ class CheckoutController extends GetxController {
     required String metodePembayaran,
     required String gedung,
     required String detailLokasi,
-    required List<CartItem> selectedItems,
   }) async {
     EasyLoading.show(status: 'Loading...');
 
@@ -257,12 +310,14 @@ class CheckoutController extends GetxController {
       return false;
     }
 
-    List<Map<String, dynamic>> menuPayload = selectedItems
-        .map((item) => {
-              "id": item.menu.id,
-              "qty": item.quantity,
-            })
-        .toList();
+    List<Map<String, dynamic>> menuPayload = itemForCheckout.map((item) {
+      String? note = checkoutNoteController[item.menu.id]?.text.trim();
+      return {
+        "id": item.menu.id,
+        "qty": item.quantity,
+        "note": (note == null || note.isEmpty) ? null : note,
+      };
+    }).toList();
 
     try {
       http.Response req = await http.post(
@@ -371,18 +426,24 @@ class CheckoutController extends GetxController {
     }
   }
 
-  Future<void> groupItemsByCanteen(List<dynamic> details) async {
+  Future<void> groupItemsForDisplay(List<dynamic> apiDetails) async {
     final grouped = <String, List<Map<String, dynamic>>>{};
-
-    for (var item in details) {
-      final canteenName = item['canteen'] ?? 'Tanpa Nama Kantin';
-
+    for (var apiDetailItem in apiDetails) {
+      final String canteenName =
+          apiDetailItem['canteen'] ?? 'Tanpa Nama Kantin';
       if (!grouped.containsKey(canteenName)) {
         grouped[canteenName] = [];
       }
-      grouped[canteenName]!.add(item);
-    }
 
+      final String menuIdFromApi = apiDetailItem['id']?.toString() ?? '';
+
+      Map<String, dynamic> displayItem =
+          Map<String, dynamic>.from(apiDetailItem);
+      displayItem['menu_id_for_controller'] =
+          menuIdFromApi; // Kunci untuk controller
+
+      grouped[canteenName]!.add(displayItem);
+    }
     groupedItemsByCanteen.value = grouped;
   }
 
@@ -429,5 +490,12 @@ class CheckoutController extends GetxController {
       }
     }
     return buffer.toString().trim();
+  }
+
+  @override
+  void onClose() {
+    checkoutNoteController.forEach((_, controller) => controller.dispose());
+    checkoutNoteController.clear();
+    super.onClose();
   }
 }

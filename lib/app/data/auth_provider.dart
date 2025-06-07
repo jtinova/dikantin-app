@@ -130,13 +130,52 @@ class AuthenticationProvider extends ChangeNotifier {
 
         await DatabaseProvider().saveToken(token);
 
+        EasyLoading.dismiss();
         Get.offAllNamed(Routes.NAVIGATION);
       } else {
-        final res = json.decode(req.body);
+        // Handle Login Courier
+        String url = AppUrl.courierSignIn;
 
-        print(res);
+        final body = {
+          "email": email,
+          "password": password,
+        };
+        print(body);
 
-        _resMessage = res["message"];
+        http.Response reqCourier = await http.post(
+          Uri.parse(url),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: json.encode(body),
+        );
+
+        // Store Status Code
+        statusCode = reqCourier.statusCode;
+
+        if (reqCourier.statusCode == 200) {
+          final res = json.decode(reqCourier.body);
+
+          print(reqCourier.body);
+
+          _resMessage = res["message"];
+
+          // Save Token Navigate To Dashboard Courier
+          final token = res["data"]["access_token"];
+
+          await DatabaseProvider().saveToken(token);
+
+          EasyLoading.dismiss();
+          Get.offAllNamed(Routes.NAVIGATION_COURIER);
+        } else {
+          final res = json.decode(reqCourier.body);
+
+          print(res);
+
+          _resMessage = res["message"];
+        }
+
+        notifyListeners();
       }
 
       notifyListeners();
@@ -442,7 +481,6 @@ class AuthenticationProvider extends ChangeNotifier {
     }
   }
 
-  
   void clear() {
     _resMessage = "";
     statusCode == null;

@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -572,7 +573,7 @@ class OrderController extends GetxController {
         },
         body: json.encode(
           {
-            "transaction_id": id,
+            "transaction_detail_id": id,
           },
         ),
       );
@@ -904,4 +905,23 @@ class OrderController extends GetxController {
       return 'Invalid Date';
     }
   }
+
+  Color getStatusColor(String status) {
+  switch (status) {
+    case "pending":
+      return Color(0xFF1E2857);
+    case "cooking":
+      return Colors.orange;
+    case "Siap Diambil":
+      return Colors.deepPurple;
+    case "on_delivery":
+      return Colors.blue;
+    case "done":
+      return Colors.green;
+    case "cancel":
+      return Colors.red;
+    default:
+      return Colors.black;
+  }
+}
 }

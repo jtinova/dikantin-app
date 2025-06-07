@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
+import '../../../models/cart.dart';
 import '../../checkout/controllers/checkout_controller.dart';
 import '../../checkout/views/checkout_view.dart';
 import '../../home/controllers/home_controller.dart';
@@ -122,6 +123,7 @@ class CartView extends GetView<CartController> {
                                     child: Text(
                                       item.menu.name,
                                       style: TextStyle(
+                                        fontSize: 15.sp,
                                         fontWeight: FontWeight.w600,
                                         overflow: TextOverflow.ellipsis,
                                       ),
@@ -130,6 +132,31 @@ class CartView extends GetView<CartController> {
                                   SizedBox(height: 4.h),
                                   Text(
                                     "Rp ${controller.formatRupiah(item.menu.sellingCost)}",
+                                    style: TextStyle(
+                                      fontSize: 14.sp,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4.h),
+                                  SizedBox(
+                                    height: 20.h,
+                                    child: TextFormField(
+                                      controller: controller
+                                          .getNoteForItem(item.menu.id),
+                                      style: TextStyle(fontSize: 13.sp),
+                                      decoration: InputDecoration(
+                                        hintText: "Catatan (opsional)",
+                                        hintStyle: TextStyle(
+                                          fontSize: 13.sp,
+                                          color: Colors.grey,
+                                        ),
+                                        isDense: true,
+                                        border: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Colors.grey.shade400,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -182,7 +209,6 @@ class CartView extends GetView<CartController> {
       }),
       bottomNavigationBar: Obx(() {
         final allItems = homeController.cartItems;
-        Get.put(CartController());
 
         return Column(
           mainAxisSize: MainAxisSize.min,
@@ -245,12 +271,15 @@ class CartView extends GetView<CartController> {
                           ),
                         );
                       } else {
+                        final List<CartItem> itemsToCheckout =
+                            controller.getSelectedCartItemWithCurrentNote();
+
                         Get.to(
                           () => CheckoutView(),
                           binding: BindingsBuilder(
                             () {
                               Get.put(CheckoutController())
-                                  .getCalculate(controller.selectedCartItems);
+                                  .initializeCheckoutData(itemsToCheckout);
                             },
                           ),
                         );

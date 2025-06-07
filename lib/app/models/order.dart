@@ -10,6 +10,7 @@ class Order {
   final String date;
   final String status;
   final String? orderType;
+  final String? note;
 
   Order({
     required this.id,
@@ -23,6 +24,7 @@ class Order {
     required this.date,
     required this.status,
     this.orderType,
+    this.note,
   });
 
   // For detail response 
@@ -38,6 +40,7 @@ class Order {
       grandTotal: 0,
       date: '',
       status: json['status'],
+      note: json['note'] ?? '',
     );
   }
 

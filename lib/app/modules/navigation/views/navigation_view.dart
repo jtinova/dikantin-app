@@ -9,10 +9,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
-import 'package:badges/badges.dart' as badges;
 
 import '../../chat/views/chat_view.dart';
-import '../../home/controllers/home_controller.dart';
 import '../../home/views/home_view.dart';
 import '../../profile/views/profile_view.dart';
 import '../controllers/navigation_controller.dart';
@@ -62,9 +60,7 @@ class NavigationView extends GetView<NavigationController> {
           controller: controller.pageController,
           physics: const BouncingScrollPhysics(),
           children: [
-            // Page
             HomeView(),
-            // CartView(),
             OrderView(),
             ChatView(),
             ProfileView(),
@@ -139,8 +135,6 @@ class NavigationView extends GetView<NavigationController> {
     required int page,
     required String label,
   }) {
-    bool isCart = page == 1;
-
     return ZoomTapAnimation(
       onTap: () => controller.goToPage(page),
       child: Container(
@@ -148,33 +142,12 @@ class NavigationView extends GetView<NavigationController> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            isCart
-                ? Obx(() => badges.Badge(
-                      showBadge: Get.find<HomeController>().cartCount > 0,
-                      position: badges.BadgePosition.topEnd(top: -8, end: -8),
-                      badgeStyle:
-                          const badges.BadgeStyle(badgeColor: Colors.red),
-                      badgeContent: Text(
-                        "${Get.find<HomeController>().cartCount}",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      child: Icon(
-                        icon,
-                        color: controller.currentPage.value == page
-                            ? const Color(0xFF1E2857)
-                            : Colors.grey,
-                      ),
-                    ))
-                : Icon(
-                    icon,
-                    color: controller.currentPage.value == page
-                        ? const Color(0xFF1E2857)
-                        : Colors.grey,
-                  ),
+            Icon(
+              icon,
+              color: controller.currentPage.value == page
+                  ? const Color(0xFF1E2857)
+                  : Colors.grey,
+            ),
             SizedBox(height: 2.h),
             Text(
               label,

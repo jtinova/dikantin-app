@@ -46,7 +46,7 @@ class HomeController extends GetxController {
   ];
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
     getLocation();
     getCategories();
@@ -104,14 +104,10 @@ class HomeController extends GetxController {
   }
 
   Future<void> getLocation() async {
-    EasyLoading.show(status: 'Loading...');
-
     String url = AppUrl.locations;
     String? token = await DatabaseProvider().getToken();
 
     if (token == null) {
-      EasyLoading.dismiss();
-
       Get.snackbar(
         "Informasi ",
         "Token Tidak Ditemukan",
@@ -217,20 +213,14 @@ class HomeController extends GetxController {
       );
 
       print(e);
-    } finally {
-      EasyLoading.dismiss();
-    }
+    } finally {}
   }
 
   Future<void> getCategories() async {
-    EasyLoading.show(status: 'Loading...');
-
     String url = AppUrl.categories;
     String? token = await DatabaseProvider().getToken();
 
     if (token == null) {
-      EasyLoading.dismiss();
-
       Get.snackbar(
         "Informasi ",
         "Token Tidak Ditemukan",
@@ -326,20 +316,14 @@ class HomeController extends GetxController {
       );
 
       print(e);
-    } finally {
-      EasyLoading.dismiss();
-    }
+    } finally {}
   }
 
   Future<void> getCanteen() async {
-    EasyLoading.show(status: 'Loading...');
-
     String url = AppUrl.canteens;
     String? token = await DatabaseProvider().getToken();
 
     if (token == null) {
-      EasyLoading.dismiss();
-
       Get.snackbar(
         "Informasi ",
         "Token Tidak Ditemukan",
@@ -456,9 +440,7 @@ class HomeController extends GetxController {
       );
 
       print(e);
-    } finally {
-      EasyLoading.dismiss();
-    }
+    } finally {}
   }
 
   Future<void> getMenuByCanteen({
@@ -847,10 +829,12 @@ class HomeController extends GetxController {
       cartItems[existingIndex] = CartItem(
         menu: food,
         quantity: cartItems[existingIndex].quantity + 1,
+        note: cartItems[existingIndex].note,
       );
     } else {
-      cartItems.add(CartItem(menu: food, quantity: 1));
+      cartItems.add(CartItem(menu: food, quantity: 1, note: null));
     }
+    cartItems.refresh();
   }
 
   void updateCart(Menu food, {required bool isAdding}) {
@@ -870,6 +854,7 @@ class HomeController extends GetxController {
         cartItems[existingIndex] = CartItem(
           menu: cartItems[existingIndex].menu,
           quantity: cartItems[existingIndex].quantity - 1,
+          note: cartItems[existingIndex].note,
         );
       } else {
         cartItems.removeAt(existingIndex);

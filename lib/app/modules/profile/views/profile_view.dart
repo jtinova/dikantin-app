@@ -93,78 +93,95 @@ class ProfileView extends GetView<ProfileController> {
                       }
                     }),
                     SizedBox(height: 40.h),
-                    GestureDetector(
-                      onTap: () => Get.toNamed(Routes.MY_PROFILE),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15.w),
-                        child: Row(
-                          children: [
-                            Icon(
-                              CupertinoIcons.pencil,
-                              color: Colors.grey,
-                            ),
-                            SizedBox(width: 10.h),
-                            Text(
-                              'Profile Saya',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18.sp,
-                              ),
-                            ),
-                          ],
+                    Card(
+                      elevation: 1,
+                      margin: EdgeInsets.only(bottom: 10.h),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                      child: ListTile(
+                        leading: Icon(
+                          CupertinoIcons.pencil,
+                          color: Colors.black,
                         ),
+                        title: Text(
+                          'Profile Saya',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 18.sp,
+                          ),
+                        ),
+                        trailing: Icon(
+                          Icons.arrow_forward_ios,
+                          size: 16.r,
+                        ),
+                        onTap: () => Get.toNamed(Routes.MY_PROFILE),
                       ),
                     ),
-                    SizedBox(height: 25.h),
-                    GestureDetector(
-                      onTap: () => Get.toNamed(Routes.ABOUT_APP),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15.w),
-                        child: Row(
-                          children: [
-                            Icon(
-                              CupertinoIcons.info_circle,
-                              color: Colors.grey,
-                            ),
-                            SizedBox(width: 10.w),
-                            Text(
-                              'Informasi Aplikasi',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18.sp,
-                              ),
-                            ),
-                          ],
+                    Card(
+                      elevation: 1,
+                      margin: EdgeInsets.only(bottom: 10.h),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                      child: ListTile(
+                        leading: Icon(
+                          CupertinoIcons.info_circle,
+                          color: Colors.black,
                         ),
+                        title: Text(
+                          'Informasi Aplikasi',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 18.sp,
+                          ),
+                        ),
+                        trailing: Icon(
+                          Icons.arrow_forward_ios,
+                          size: 16.r,
+                        ),
+                        onTap: () => Get.toNamed(Routes.ABOUT_APP),
                       ),
                     ),
-                    SizedBox(height: 25.h),
-                    GestureDetector(
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text(
-                                "Logout",
-                                style: TextStyle(
-                                  fontSize: 18.sp,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w500,
+                    Card(
+                      elevation: 1,
+                      margin: EdgeInsets.only(bottom: 10.h),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                      child: ListTile(
+                        leading: Icon(
+                          CupertinoIcons.square_arrow_left,
+                          color: Colors.red,
+                        ),
+                        title: Text(
+                          'Logout',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 18.sp,
+                          ),
+                        ),
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text(
+                                  "Logout",
+                                  style: TextStyle(
+                                    fontSize: 18.sp,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
-                              ),
-                              content: Text(
-                                "Kamu yakin ingin logout?",
-                                style: TextStyle(
-                                  fontSize: 16.sp,
-                                  color: Colors.black,
+                                content: Text(
+                                  "Kamu yakin ingin logout?",
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                  ),
                                 ),
-                              ),
-                              backgroundColor: Colors.white,
-                              actions: [
-                                SizedBox(
-                                  width: 90.w,
-                                  child: TextButton(
+                                backgroundColor: Colors.white,
+                                actions: [
+                                  TextButton(
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                     },
@@ -176,81 +193,63 @@ class ProfileView extends GetView<ProfileController> {
                                     child: Text(
                                       "Batal",
                                       style: TextStyle(
-                                        fontSize: 16.sp,
+                                        fontSize: 14.sp,
                                         color: Colors.white,
                                       ),
                                     ),
                                   ),
-                                ),
-                                Consumer<AuthenticationProvider>(
-                                    builder: (context, auth, child) {
-                                  WidgetsBinding.instance.addPostFrameCallback(
-                                    (_) {
-                                      if (auth.resMessage != '') {
-                                        Get.snackbar(
-                                          "Informasi",
-                                          auth.resMessage,
-                                          animationDuration:
-                                              const Duration(milliseconds: 200),
-                                          duration: const Duration(
-                                              milliseconds: 1650),
-                                          backgroundColor:
-                                              auth.statusCode == 200
-                                                  ? Colors.green
-                                                  : Colors.red,
-                                          colorText: Colors.white,
-                                          borderWidth: 5.w,
-                                          snackPosition: SnackPosition.TOP,
-                                          margin: EdgeInsets.symmetric(
-                                            vertical: 20.h,
-                                            horizontal: 20.w,
-                                          ),
-                                          icon: const Icon(
-                                            CupertinoIcons.info_circle,
-                                            color: Colors.white,
-                                          ),
-                                        );
+                                  Consumer<AuthenticationProvider>(
+                                      builder: (context, auth, child) {
+                                    WidgetsBinding.instance
+                                        .addPostFrameCallback(
+                                      (_) {
+                                        if (auth.resMessage != '') {
+                                          Get.snackbar(
+                                            "Informasi",
+                                            auth.resMessage,
+                                            animationDuration: const Duration(
+                                                milliseconds: 200),
+                                            duration: const Duration(
+                                                milliseconds: 1650),
+                                            backgroundColor:
+                                                auth.statusCode == 200
+                                                    ? Colors.green
+                                                    : Colors.red,
+                                            colorText: Colors.white,
+                                            borderWidth: 5.w,
+                                            snackPosition: SnackPosition.TOP,
+                                            margin: EdgeInsets.symmetric(
+                                              vertical: 20.h,
+                                              horizontal: 20.w,
+                                            ),
+                                            icon: const Icon(
+                                              CupertinoIcons.info_circle,
+                                              color: Colors.white,
+                                            ),
+                                          );
 
-                                        auth.clear();
-                                      }
-                                    },
-                                  );
-                                  return TextButton(
-                                    onPressed: () {
-                                      auth.logoutUser();
-                                    },
-                                    child: Text(
-                                      "Logout",
-                                      style: TextStyle(
-                                        fontSize: 16.sp,
-                                        color: Colors.red,
+                                          auth.clear();
+                                        }
+                                      },
+                                    );
+                                    return TextButton(
+                                      onPressed: () {
+                                        auth.logoutUser();
+                                      },
+                                      child: Text(
+                                        "Logout",
+                                        style: TextStyle(
+                                          fontSize: 14.sp,
+                                          color: Colors.red,
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                }),
-                              ],
-                            );
-                          },
-                        );
-                      },
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15.w),
-                        child: Row(
-                          children: [
-                            Icon(
-                              CupertinoIcons.square_arrow_left,
-                              color: Colors.red,
-                            ),
-                            SizedBox(width: 10),
-                            Text(
-                              'Keluar',
-                              style: TextStyle(
-                                color: Colors.red,
-                                fontSize: 18.sp,
-                              ),
-                            ),
-                          ],
-                        ),
+                                    );
+                                  }),
+                                ],
+                              );
+                            },
+                          );
+                        },
                       ),
                     ),
                   ],

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -5,14 +6,66 @@ import '../../../models/cart.dart';
 import '../../home/controllers/home_controller.dart';
 
 class CartController extends GetxController {
+  final HomeController homeController = Get.find();
+
   final selectedCartItemIds = <String>[].obs;
+  var noteController = <String, TextEditingController>{}.obs;
+
   int get totalSelectedItems => selectedCartItemIds.length;
 
+  @override
+  void onInit() {
+    super.onInit();
+    _synchonizeNote();
+    ever(homeController.cartItems, (_) => _synchonizeNote());
+  }
+
+  void _synchonizeNote() {
+    final Set<String> currentMenuIdInCart =
+        homeController.cartItems.map((item) => item.menu.id).toSet();
+
+    // Hapus untuk item yang tidak lagi ada dikeranjang
+    noteController.keys.toList().forEach((menuId) {
+      if (!currentMenuIdInCart.contains(menuId)) {
+        noteController[menuId]?.dispose();
+        noteController.remove(menuId);
+      }
+    });
+
+    // Tambah atau pastikan ada untuk setiap item dikeranjang
+    for (var item in homeController.cartItems) {
+      if (!noteController.containsKey(item.menu.id)) {
+        noteController[item.menu.id] =
+            TextEditingController(text: item.note ?? '');
+      }
+    }
+    noteController.refresh();
+  }
+
+  TextEditingController getNoteForItem(String menuId) {
+    // Pastikan noteController sudah terisi untuk menuId
+    if (!noteController.containsKey(menuId)) {
+      final cartItem = homeController.cartItems
+          .firstWhereOrNull((item) => item.menu.id == menuId);
+      noteController[menuId] =
+          TextEditingController(text: cartItem?.note ?? '');
+    }
+    return noteController[menuId]!;
+  }
+
   List<CartItem> get selectedCartItems {
-    final allItems = Get.find<HomeController>().cartItems;
-    return allItems
+    return homeController.cartItems
         .where((item) => selectedCartItemIds.contains(item.menu.id))
         .toList();
+  }
+
+  List<CartItem> getSelectedCartItemWithCurrentNote() {
+    return selectedCartItems.map((cartItem) {
+      String? currentNote = noteController[cartItem.menu.id]?.text.trim();
+      return cartItem.copyWith(
+        note: currentNote?.isNotEmpty == true ? currentNote : null,
+      );
+    }).toList();
   }
 
   Future<void> toggleItemSelection(CartItem item) async {
@@ -50,8 +103,11 @@ class CartController extends GetxController {
     }
   }
 
-  Future<void> clearCart() async {
+  Future<void> clearCartSelectionsAndNote() async {
     selectedCartItemIds.clear();
+    noteController.forEach((key, ctrl) {
+      ctrl.clear();
+    });
   }
 
   int get totalSelectedPrice {
@@ -62,5 +118,12 @@ class CartController extends GetxController {
   String formatRupiah(int price) {
     final formatCurrency = NumberFormat("#,##0", "id_ID");
     return formatCurrency.format(price);
+  }
+
+  @override
+  void onClose() {
+    noteController.forEach((_, controller) => controller.dispose());
+    noteController.clear();
+    super.onClose();
   }
 }

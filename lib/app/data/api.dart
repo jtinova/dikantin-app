@@ -1,10 +1,10 @@
 class AppUrl {
   // Change IP Address before run project
-  static String baseURL = 'http://10.10.177.14:8080';
+  static String baseURL = 'http://192.168.1.12:8080';
   static String baseURLAPI = '$baseURL/api';
   static String baseImageURL = '$baseURL/storage/menu/';
 
-  // Authentication
+  // Authentication User
   static String signin = '$baseURLAPI/login';
   static String signup = '$baseURLAPI/register';
   static String codeOTP = '$baseURLAPI/send-reset-password';
@@ -12,7 +12,7 @@ class AppUrl {
   static String resetPassword = "$baseURLAPI/reset-password";
   static String signout = "$baseURLAPI/logout";
 
-  // API Home
+  // API Home User
   static String locations = '$baseURLAPI/building';
   static String categories = '$baseURLAPI/category';
   static String canteens = '$baseURLAPI/canteen';
@@ -21,7 +21,7 @@ class AppUrl {
   static String menuByCanteen = '$baseURLAPI/canteen/menu';
   static String menuByCategory = '$baseURLAPI/category/menu';
 
-  // API Order
+  // API Order User
   static String calculateOrder = '$baseURLAPI/transaction/calculate-order';
   static String createOrder = '$baseURLAPI/transaction/create';
   static String trackingProgress = '$baseURLAPI/transaction/progress';
@@ -32,7 +32,24 @@ class AppUrl {
   static String cancelOrder = '$baseURLAPI/transaction/cancel';
   static String pickUpOrder = '$baseURLAPI/transaction/pick-up';
 
-  // API Profile
+  // API Profile User
   static String detailUserProfile = '$baseURLAPI/user';
   static String updateUserData = '$baseURLAPI/user/update';
+
+  // API Auth Courier
+  static String courierSignIn = '$baseURLAPI/courier/login';
+  static String courierProfile = '$baseURLAPI/courier/profile';
+
+  // API Order Courier
+  static String pendingOrders = '$baseURLAPI/shipping/pending';
+  static String detailOrder = '$baseURLAPI/shipping';
+  
+  static String deliveryOrder = '$baseURLAPI/shipping/deliver';
+  static String completeOrder = '$baseURLAPI/shipping/delivered';
+  static String shippingHistory = '$baseURLAPI/shipping/history';
+  static String shippingStats = '$baseURLAPI/shipping/stats';
+
+  // API WithDraw Courier
+  static String withDrawlBalance = '$baseURLAPI/courier/withdraw-balance';
+  static String withDrawlHistory = '$baseURLAPI/courier-withdrawals';
 }

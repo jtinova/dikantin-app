@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:dikantin_app_rebuild/app/data/api.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:dikantin_app_rebuild/app/providers/db_provider.dart';
+import 'package:dikantin_app_rebuild/app/data/db_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:flutter/services.dart';
@@ -50,7 +50,7 @@ class HomeCourierController extends GetxController {
       }
 
       final response = await http.get(
-        Uri.parse('$baseURL/courier/profile'),
+        Uri.parse(AppUrl.courierProfile),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -89,11 +89,11 @@ class HomeCourierController extends GetxController {
       print("Request headers: $headers");
 
       final response = await http.get(
-        Uri.parse('$baseURL/shipping/pending'),
+        Uri.parse(AppUrl.pendingOrders),
         headers: headers,
       );
 
-      print("Request URL: ${Uri.parse('$baseURL/shipping/pending')}");
+      print("Request URL: ${Uri.parse(AppUrl.pendingOrders)}");
       print("Response Status Code: ${response.statusCode}");
       print("Response Headers: ${response.headers}");
       print("Response Body: ${response.body}");
@@ -131,7 +131,7 @@ class HomeCourierController extends GetxController {
       }
 
       final response = await http.get(
-        Uri.parse('$baseURL/shipping/$orderId'),
+        Uri.parse('${AppUrl.detailOrder}/$orderId'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -161,7 +161,7 @@ class HomeCourierController extends GetxController {
       }
 
       final response = await http.patch(
-        Uri.parse('$baseURL/shipping/deliver'),
+        Uri.parse(AppUrl.deliveryOrder),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -205,7 +205,7 @@ class HomeCourierController extends GetxController {
       }
 
       final response = await http.patch(
-        Uri.parse('$baseURL/shipping/delivered'),
+        Uri.parse(AppUrl.completeOrder),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -230,7 +230,6 @@ class HomeCourierController extends GetxController {
     }
   }
 
-  // Fungsi untuk scan barcode
   Future<String?> scanBarcode() async {
     try {
       final ScanResult result = await BarcodeScanner.scan(
@@ -283,7 +282,7 @@ class HomeCourierController extends GetxController {
       }
 
       final response = await http.get(
-        Uri.parse('$baseURL/courier-withdrawals'),
+        Uri.parse(AppUrl.withDrawlHistory),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
