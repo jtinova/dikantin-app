@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 class CourierDeliveryHistoryController extends GetxController {
-  final baseURL = AppUrl.baseURL;
+  final baseURL = AppUrl.baseURLAPI;
   var isLoading = true.obs;
   var deliveryHistory = [].obs;
 

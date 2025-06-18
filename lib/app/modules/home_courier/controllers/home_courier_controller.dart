@@ -10,7 +10,7 @@ import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:flutter/services.dart';
 
 class HomeCourierController extends GetxController {
-  final baseURL = AppUrl.baseURL;
+  final baseURL = AppUrl.baseURLAPI;
   
   var isLoading = true.obs;
   var courierData = {}.obs;

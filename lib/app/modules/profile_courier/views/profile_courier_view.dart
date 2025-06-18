@@ -1,4 +1,4 @@
-import 'package:dikantin_app_rebuild/app/providers/auth_provider.dart';
+import 'package:dikantin_app_rebuild/app/data/auth_provider.dart';
 import 'package:dikantin_app_rebuild/app/routes/app_pages.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +10,47 @@ import '../controllers/courier_profile_controller.dart';
 
 class CourierProfileView extends GetView<CourierProfileController> {
   const CourierProfileView({super.key});
+
+  void _handleLogout(BuildContext context) {
+    try {
+      final authProvider = Provider.of<AuthenticationProvider>(context, listen: false);
+      authProvider.logoutUser();
+      
+      // Show snackbar after logout
+      Get.snackbar(
+        "Informasi",
+        "Logout berhasil",
+        animationDuration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 1650),
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+        borderWidth: 5.0,
+        snackPosition: SnackPosition.TOP,
+        margin: const EdgeInsets.all(20.0),
+        icon: const Icon(
+          CupertinoIcons.info_circle,
+          color: Colors.white,
+        ),
+      );
+    } catch (e) {
+      print("Error during logout: $e");
+      Get.snackbar(
+        "Error",
+        "Terjadi kesalahan saat logout: $e",
+        animationDuration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 1650),
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        borderWidth: 5.0,
+        snackPosition: SnackPosition.TOP,
+        margin: const EdgeInsets.all(20.0),
+        icon: const Icon(
+          CupertinoIcons.info_circle,
+          color: Colors.white,
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,43 +95,17 @@ class CourierProfileView extends GetView<CourierProfileController> {
                           ),
                         ),
                       ),
-                      Consumer<AuthenticationProvider>(
-                        builder: (context, auth, child) {
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            if (auth.resMessage != '') {
-                              Get.snackbar(
-                                "Informasi",
-                                auth.resMessage,
-                                animationDuration:
-                                    const Duration(milliseconds: 200),
-                                duration: const Duration(milliseconds: 1650),
-                                backgroundColor: auth.statusCode == 200
-                                    ? Colors.green
-                                    : Colors.red,
-                                colorText: Colors.white,
-                                borderWidth: 5.0,
-                                snackPosition: SnackPosition.TOP,
-                                margin: const EdgeInsets.all(20.0),
-                                icon: const Icon(
-                                  CupertinoIcons.info_circle,
-                                  color: Colors.white,
-                                ),
-                              );
-                              auth.clear();
-                            }
-                          });
-                          return TextButton(
-                            onPressed: () {
-                              auth.logoutUser();
-                            },
-                            child: Text(
-                              "Logout",
-                              style: TextStyle(
-                                color: Colors.red,
-                              ),
-                            ),
-                          );
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          _handleLogout(context);
                         },
+                        child: Text(
+                          "Logout",
+                          style: TextStyle(
+                            color: Colors.red,
+                          ),
+                        ),
                       ),
                     ],
                   );
@@ -105,9 +120,7 @@ class CourierProfileView extends GetView<CourierProfileController> {
             ? Center(child: CircularProgressIndicator())
             : RefreshIndicator(
                 onRefresh: () async {
-                  await controller.getProfile();
-                  await controller.getWithdrawalHistory();
-                  await controller.getDeliveryStats();
+                  await controller.refreshData();
                 },
                 child: Stack(
                   children: [
@@ -206,7 +219,7 @@ class CourierProfileView extends GetView<CourierProfileController> {
                                                           ?.toString() ??
                                                       '0') ??
                                                   0) >
-                                              0)
+                                                  0)
                                             ElevatedButton.icon(
                                               onPressed: () {
                                                 _showWithdrawalConfirmation(
@@ -251,7 +264,7 @@ class CourierProfileView extends GetView<CourierProfileController> {
                                                                 'total_balance']
                                                             ?.toString() ??
                                                         '0') ??
-                                                    0),
+                                            0),
                                             style: TextStyle(
                                               fontSize: 22,
                                               fontWeight: FontWeight.bold,
@@ -278,7 +291,7 @@ class CourierProfileView extends GetView<CourierProfileController> {
                                                                 'today_earnings']
                                                             ?.toString() ??
                                                         '0') ??
-                                                    0),
+                                            0),
                                             style: TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w500,
@@ -482,56 +495,17 @@ class CourierProfileView extends GetView<CourierProfileController> {
                                                   ),
                                                 ),
                                               ),
-                                              Consumer<AuthenticationProvider>(
-                                                builder:
-                                                    (context, auth, child) {
-                                                  WidgetsBinding.instance
-                                                      .addPostFrameCallback(
-                                                          (_) {
-                                                    if (auth.resMessage != '') {
-                                                      Get.snackbar(
-                                                        "Informasi",
-                                                        auth.resMessage,
-                                                        animationDuration:
-                                                            const Duration(
-                                                                milliseconds:
-                                                                    200),
-                                                        duration:
-                                                            const Duration(
-                                                                milliseconds:
-                                                                    1650),
-                                                        backgroundColor:
-                                                            auth.statusCode ==
-                                                                    200
-                                                                ? Colors.green
-                                                                : Colors.red,
-                                                        colorText: Colors.white,
-                                                        borderWidth: 5.0,
-                                                        snackPosition:
-                                                            SnackPosition.TOP,
-                                                        margin: const EdgeInsets
-                                                            .all(20.0),
-                                                        icon: const Icon(
-                                                          CupertinoIcons
-                                                              .info_circle,
-                                                          color: Colors.white,
-                                                        ),
-                                                      );
-                                                      auth.clear();
-                                                    }
-                                                  });
-                                                  return TextButton(
-                                                    onPressed: () {
-                                                      auth.logoutUser();
-                                                    },
-                                                    child: Text(
-                                                      "Logout",
-                                                      style: TextStyle(
-                                                        color: Colors.red,
-                                                      ),
-                                                    ),
-                                                  );
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                  _handleLogout(context);
                                                 },
+                                                child: Text(
+                                                  "Logout",
+                                                  style: TextStyle(
+                                                    color: Colors.red,
+                                                  ),
+                                                ),
                                               ),
                                             ],
                                           );
@@ -569,7 +543,7 @@ class CourierProfileView extends GetView<CourierProfileController> {
                                                         history['withdrawal_amount']
                                                                 ?.toString() ??
                                                             '0') ??
-                                                    0),
+                                                0),
                                           ),
                                           subtitle: Text(
                                               history['withdrawal_date'] ?? ''),
