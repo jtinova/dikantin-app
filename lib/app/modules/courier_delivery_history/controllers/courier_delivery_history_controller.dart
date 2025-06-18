@@ -2,7 +2,7 @@
 
 import 'dart:convert';
 import 'package:dikantin_app_rebuild/app/data/api.dart';
-import 'package:dikantin_app_rebuild/app/providers/db_provider.dart';
+import 'package:dikantin_app_rebuild/app/data/db_provider.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
@@ -28,14 +28,14 @@ class CourierDeliveryHistoryController extends GetxController {
       }
 
       final response = await http.get(
-        Uri.parse('$baseURL/shipping/history'),
+        Uri.parse(AppUrl.shippingHistory),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
         },
       );
 
-      print("Request URL: ${Uri.parse('$baseURL/shipping/history')}");
+      print("Request URL: ${Uri.parse(AppUrl.shippingHistory)}");
       print("Response status: ${response.statusCode}");
       print("Response body: ${response.body}");
 

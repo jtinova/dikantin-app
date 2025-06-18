@@ -21,14 +21,14 @@ void main() async {
   String? token = await DatabaseProvider().getToken();
   String initialRoute = token != null ? Routes.NAVIGATION : Routes.SIGN_IN;
 
-  runApp(
-    DevicePreview(
-      enabled: !kReleaseMode,
-      builder: (context) => MyApp(initialRoute: initialRoute),
-    ),
-  );
+  // runApp(
+  //   DevicePreview(
+  //     enabled: !kReleaseMode,
+  //     builder: (context) => MyApp(initialRoute: initialRoute),
+  //   ),
+  // );
 
-  // runApp(MyApp(initialRoute: initialRoute));
+  runApp(MyApp(initialRoute: initialRoute));
 
   FlutterNativeSplash.remove();
   configLoading();

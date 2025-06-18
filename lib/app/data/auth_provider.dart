@@ -442,6 +442,7 @@ class AuthenticationProvider extends ChangeNotifier {
     }
   }
 
+
   void clear() {
     _resMessage = "";
     statusCode == null;

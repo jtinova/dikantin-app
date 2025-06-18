@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:dikantin_app_rebuild/app/data/api.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:dikantin_app_rebuild/app/providers/db_provider.dart';
+import 'package:dikantin_app_rebuild/app/data/db_provider.dart';
 import 'package:flutter/material.dart';
 
 class CourierProfileController extends GetxController {
@@ -67,7 +67,7 @@ class CourierProfileController extends GetxController {
       }
 
       final response = await http.get(
-        Uri.parse('$baseURL/courier/profile'),
+        Uri.parse(AppUrl.courierProfile),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -116,7 +116,7 @@ class CourierProfileController extends GetxController {
       }
 
       final response = await http.get(
-        Uri.parse('$baseURL/shipping/stats'),
+        Uri.parse(AppUrl.shippingStats),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -188,7 +188,7 @@ class CourierProfileController extends GetxController {
       }
 
       final response = await http.get(
-        Uri.parse('$baseURL/courier-withdrawals'),
+        Uri.parse(AppUrl.withDrawlHistory),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -238,7 +238,7 @@ class CourierProfileController extends GetxController {
       }
 
       final response = await http.post(
-        Uri.parse('$baseURL/courier/withdraw-balance'),
+        Uri.parse(AppUrl.withDrawlBalance),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -332,7 +332,7 @@ class CourierProfileController extends GetxController {
       }
 
       final response = await http.post(
-        Uri.parse('$baseURL/courier/withdraw-balance'),
+        Uri.parse(AppUrl.withDrawlBalance),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -392,7 +392,6 @@ class CourierProfileController extends GetxController {
     }
   }
 
-  // For backward compatibility
   Future<void> withdrawTodayEarnings() async {
     await withdrawAllBalance();
   }

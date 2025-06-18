@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import '../../../data/api.dart';
 import '../../../routes/app_pages.dart';
 import '../../cart/controllers/cart_controller.dart';
+import '../../home/controllers/home_controller.dart';
 import '../../profile/controllers/profile_controller.dart';
 import '../controllers/checkout_controller.dart';
 
@@ -15,7 +16,6 @@ class CheckoutView extends GetView<CheckoutController> {
   @override
   Widget build(BuildContext context) {
     final ProfileController profileController = Get.put(ProfileController());
-    final CartController cartController = Get.put(CartController());
 
     return Scaffold(
       appBar: AppBar(
@@ -38,6 +38,8 @@ class CheckoutView extends GetView<CheckoutController> {
       body: Obx(() {
         final data = controller.calculateResult.value;
         final user = profileController.users.value;
+
+        final groupedDisplayItems = controller.groupedItemsByCanteen;
 
         return SingleChildScrollView(
           padding: EdgeInsets.symmetric(
@@ -162,7 +164,7 @@ class CheckoutView extends GetView<CheckoutController> {
                   ),
                 ),
               ),
-              ...controller.groupedItemsByCanteen.entries.map((entry) {
+              ...groupedDisplayItems.entries.map((entry) {
                 final kantinNama = entry.key;
                 final items = entry.value;
 
@@ -204,25 +206,71 @@ class CheckoutView extends GetView<CheckoutController> {
                           color: Colors.grey[500],
                         ),
                       ),
-                      ...items.map((item) => ListTile(
-                            leading: ClipRRect(
-                              borderRadius: BorderRadius.circular(10.r),
-                              child: Image.network(
-                                '${AppUrl.baseImageURL}${item['gambar']}',
-                                height: 50.h,
-                                width: 50.w,
-                                fit: BoxFit.cover,
-                              ),
+                      ...items.map((itemMap) {
+                        final String menuIdForController =
+                            itemMap['menu_id_for_controller']?.toString() ?? '';
+                        final TextEditingController? noteCtrl =
+                            menuIdForController.isNotEmpty
+                                ? controller.getCheckoutNoteControllerForItem(
+                                    menuIdForController)
+                                : null;
+
+                        return ListTile(
+                          leading: ClipRRect(
+                            borderRadius: BorderRadius.circular(10.r),
+                            child: Image.network(
+                              '${AppUrl.baseImageURL}${itemMap['gambar']}',
+                              height: 50.h,
+                              width: 50.w,
+                              fit: BoxFit.cover,
                             ),
-                            title: Text(item['nama']),
-                            subtitle: Text("x ${item['qty']}"),
-                            trailing: Text(
-                              "Rp ${controller.formatRupiah(item['subtotal'])}",
-                              style: TextStyle(
-                                fontSize: 14.sp,
+                          ),
+                          title: Text(
+                            itemMap['nama'] ?? 'Nama Menu',
+                            style: TextStyle(fontSize: 15.sp),
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "x ${itemMap['qty'] ?? 0}",
+                                style: TextStyle(fontSize: 15.sp),
                               ),
+                              // Hanya tampilkan jika controller ada
+                              if (noteCtrl != null)
+                                Padding(
+                                  padding: EdgeInsets.only(top: 0.h),
+                                  child: SizedBox(
+                                    height: 20.h,
+                                    child: TextFormField(
+                                      controller: noteCtrl,
+                                      style: TextStyle(fontSize: 13.sp),
+                                      decoration: InputDecoration(
+                                        hintText: "Catatan (opsional)",
+                                        hintStyle: TextStyle(
+                                          fontSize: 13.sp,
+                                          color: Colors.grey,
+                                        ),
+                                        isDense: true,
+                                        border: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Colors.grey.shade400,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                          trailing: Text(
+                            "Rp ${controller.formatRupiah(itemMap['price'] ?? 0)}",
+                            style: TextStyle(
+                              fontSize: 14.sp,
                             ),
-                          )),
+                          ),
+                        );
+                      }),
                       SizedBox(height: 8.h),
                     ],
                   ),
@@ -306,28 +354,28 @@ class CheckoutView extends GetView<CheckoutController> {
                                       Get.back();
                                     },
                                   ),
-                                  CustomRadioTile(
-                                    title: "Ditempat",
-                                    value: "dine_in",
-                                    groupValue:
-                                        controller.selectedDeliveryOption.value,
-                                    onChanged: (value) {
-                                      controller.selectedDeliveryOption.value =
-                                          value!;
-                                      Get.back();
-                                    },
-                                  ),
-                                  CustomRadioTile(
-                                    title: "Diambil",
-                                    value: "pick_up",
-                                    groupValue:
-                                        controller.selectedDeliveryOption.value,
-                                    onChanged: (value) {
-                                      controller.selectedDeliveryOption.value =
-                                          value!;
-                                      Get.back();
-                                    },
-                                  ),
+                                  // CustomRadioTile(
+                                  //   title: "Ditempat",
+                                  //   value: "dine_in",
+                                  //   groupValue:
+                                  //       controller.selectedDeliveryOption.value,
+                                  //   onChanged: (value) {
+                                  //     controller.selectedDeliveryOption.value =
+                                  //         value!;
+                                  //     Get.back();
+                                  //   },
+                                  // ),
+                                  // CustomRadioTile(
+                                  //   title: "Diambil",
+                                  //   value: "pick_up",
+                                  //   groupValue:
+                                  //       controller.selectedDeliveryOption.value,
+                                  //   onChanged: (value) {
+                                  //     controller.selectedDeliveryOption.value =
+                                  //         value!;
+                                  //     Get.back();
+                                  //   },
+                                  // ),
                                 ],
                               ),
                             );
@@ -513,11 +561,11 @@ class CheckoutView extends GetView<CheckoutController> {
                         metodePembayaran: controller.selectedPaymentType.value,
                         gedung: user?.building?.id ?? '',
                         detailLokasi: user?.detailAddress ?? '',
-                        selectedItems: cartController.selectedCartItems,
                       );
 
                       if (success) {
-                        cartController.clearCart();
+                        Get.find<HomeController>().cartItems.clear();
+                        Get.find<CartController>().clearCartSelectionsAndNote();
                         Get.offAllNamed(Routes.NAVIGATION);
                       }
                     },
