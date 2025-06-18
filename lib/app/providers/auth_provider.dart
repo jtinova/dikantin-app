@@ -13,7 +13,7 @@ import 'dart:convert';
 import 'db_provider.dart';
 
 class AuthenticationProvider extends ChangeNotifier {
-  final baseURL = AppUrl.baseURL;
+  final baseURL = AppUrl.baseURLAPI;
 
   String _resMessage = "";
   int? statusCode;
@@ -101,7 +101,7 @@ class AuthenticationProvider extends ChangeNotifier {
     notifyListeners();
 
     // Coba login sebagai customer terlebih dahulu
-    String url = "$baseURL/login";
+    String url = "$baseURL/api/login";
 
     final body = {
       "email": email,
@@ -135,7 +135,7 @@ class AuthenticationProvider extends ChangeNotifier {
         Get.offAllNamed(Routes.NAVIGATION);
       } else {
         // Jika login customer gagal, coba login sebagai kurir
-        String courierUrl = "$baseURL/courier/login";
+        String courierUrl = "$baseURL/api/courier/login";
         http.Response courierReq = await http.post(
           Uri.parse(courierUrl),
           headers: {
@@ -192,7 +192,7 @@ class AuthenticationProvider extends ChangeNotifier {
     EasyLoading.show(status: 'Loading...');
     notifyListeners();
 
-    String url = "$baseURL/send-reset-password";
+    String url = "$baseURL/api/send-reset-password";
 
     final body = {
       "email": email,
@@ -250,7 +250,7 @@ class AuthenticationProvider extends ChangeNotifier {
     EasyLoading.show(status: 'Loading...');
     notifyListeners();
 
-    String url = "$baseURL/verify-otp";
+    String url = "$baseURL/api/verify-otp";
 
     final body = {
       "email": email,
@@ -308,7 +308,7 @@ class AuthenticationProvider extends ChangeNotifier {
     EasyLoading.show(status: 'Loading...');
     notifyListeners();
 
-    String url = "$baseURL/send-reset-password";
+    String url = "$baseURL/api/send-reset-password";
 
     final body = {
       "email": email,
@@ -364,7 +364,7 @@ class AuthenticationProvider extends ChangeNotifier {
     EasyLoading.show(status: 'Loading...');
     notifyListeners();
 
-    String url = "$baseURL/reset-password";
+    String url = "$baseURL/api/reset-password";
 
     final body = {
       "email": email,
@@ -419,7 +419,7 @@ class AuthenticationProvider extends ChangeNotifier {
     EasyLoading.show(status: 'Loading...');
     notifyListeners();
 
-    String url = "$baseURL/logout";
+    String url = "$baseURL/api/logout";
 
     try {
       String? token = await DatabaseProvider().getToken();
