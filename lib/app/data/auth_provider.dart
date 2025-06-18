@@ -122,9 +122,15 @@ class AuthenticationProvider extends ChangeNotifier {
         await DatabaseProvider().saveToken(token);
         Get.offAllNamed(Routes.NAVIGATION);
         return;  // Keluar dari fungsi jika login customer berhasil
+      } else {
+        // Kedua login gagal
+        _resMessage = "Email atau password salah";
       }
 
-      // Jika login customer gagal, coba login sebagai kurir
+      notifyListeners();
+    } on SocketException catch (_) {
+      statusCode = 0;
+      _resMessage = "Koneksi Internet Tidak Tersedia";
       String courierUrl = "$baseURL/courier/login";
       http.Response courierReq = await http.post(
         Uri.parse(courierUrl),
@@ -140,8 +146,49 @@ class AuthenticationProvider extends ChangeNotifier {
         await DatabaseProvider().saveToken(token);
         Get.offAllNamed(Routes.NAVIGATION_COURIER);
       } else {
-        // Kedua login gagal
-        _resMessage = "Email atau password salah";
+        // Handle Login Courier
+        String url = AppUrl.courierSignIn;
+
+        final body = {
+          "email": email,
+          "password": password,
+        };
+        print(body);
+
+        http.Response reqCourier = await http.post(
+          Uri.parse(url),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: json.encode(body),
+        );
+
+        // Store Status Code
+        statusCode = reqCourier.statusCode;
+
+        if (reqCourier.statusCode == 200) {
+          final res = json.decode(reqCourier.body);
+
+          print(reqCourier.body);
+
+          _resMessage = res["message"];
+
+          // Save Token Navigate To Dashboard Courier
+          final token = res["data"]["access_token"];
+
+          await DatabaseProvider().saveToken(token);
+
+          EasyLoading.dismiss();
+          Get.offAllNamed(Routes.NAVIGATION_COURIER);
+        } else {
+          final res = json.decode(reqCourier.body);
+
+          print(res);
+
+          _resMessage = res["message"];
+        }
+
+        notifyListeners();
       }
 
     } catch (e) {
@@ -441,7 +488,6 @@ class AuthenticationProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
-
 
   void clear() {
     _resMessage = "";
