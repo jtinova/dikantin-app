@@ -13,8 +13,6 @@ import 'dart:convert';
 import 'db_provider.dart';
 
 class AuthenticationProvider extends ChangeNotifier {
-  final baseURL = AppUrl.baseURLAPI;
-
   String _resMessage = "";
   int? statusCode;
 
@@ -30,7 +28,7 @@ class AuthenticationProvider extends ChangeNotifier {
     EasyLoading.show(status: 'Loading...');
     notifyListeners();
 
-    String url = "$baseURL/register";
+    String url = AppUrl.signup;
 
     final body = {
       "full_name": fullName,
@@ -107,7 +105,7 @@ class AuthenticationProvider extends ChangeNotifier {
 
     try {
       // 1. Attempt Customer Login
-      String customerUrl = "$baseURL/login"; 
+      String customerUrl = AppUrl.signin; 
       http.Response customerReq = await http.post(
         Uri.parse(customerUrl),
         headers: {'Content-Type': 'application/json'},
@@ -125,7 +123,7 @@ class AuthenticationProvider extends ChangeNotifier {
         Get.offAllNamed(Routes.NAVIGATION);
       } else {
         // 2. If Customer Login Fails, Attempt Courier Login
-        String courierUrl = "$baseURL/courier/login"; 
+        String courierUrl = AppUrl.courierLogin; 
         http.Response courierReq = await http.post(
           Uri.parse(courierUrl),
           headers: {'Content-Type': 'application/json'},
@@ -168,7 +166,7 @@ class AuthenticationProvider extends ChangeNotifier {
     EasyLoading.show(status: 'Loading...');
     notifyListeners();
 
-    String url = "$baseURL/send-reset-password";
+    String url = AppUrl.codeOTP;
 
     final body = {
       "email": email,
@@ -226,7 +224,7 @@ class AuthenticationProvider extends ChangeNotifier {
     EasyLoading.show(status: 'Loading...');
     notifyListeners();
 
-    String url = "$baseURL/verify-otp";
+    String url = AppUrl.verifyOTP;
 
     final body = {
       "email": email,
@@ -284,7 +282,7 @@ class AuthenticationProvider extends ChangeNotifier {
     EasyLoading.show(status: 'Loading...');
     notifyListeners();
 
-    String url = "$baseURL/send-reset-password";
+    String url = AppUrl.codeOTP;
 
     final body = {
       "email": email,
@@ -340,7 +338,7 @@ class AuthenticationProvider extends ChangeNotifier {
     EasyLoading.show(status: 'Loading...');
     notifyListeners();
 
-    String url = "$baseURL/reset-password";
+    String url = AppUrl.resetPassword;
 
     final body = {
       "email": email,
@@ -395,7 +393,7 @@ class AuthenticationProvider extends ChangeNotifier {
     EasyLoading.show(status: 'Loading...');
     notifyListeners();
 
-    String url = "$baseURL/logout";
+    String url = AppUrl.signout;
 
     try {
       String? token = await DatabaseProvider().getToken();
