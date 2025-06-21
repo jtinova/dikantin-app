@@ -100,104 +100,64 @@ class AuthenticationProvider extends ChangeNotifier {
     EasyLoading.show(status: 'Loading...');
     notifyListeners();
 
-    String url = "$baseURL/login";
-    final body = {
+   final body = {
       "email": email,
       "password": password,
     };
 
     try {
-      // Coba login sebagai customer
+      // 1. Attempt Customer Login
+      String customerUrl = "$baseURL/login"; 
       http.Response customerReq = await http.post(
-        Uri.parse(url),
+        Uri.parse(customerUrl),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(body),
       );
 
-      if (customerReq.statusCode == 200) {
-        // Login customer berhasil
-        final res = json.decode(customerReq.body);
-        _resMessage = res["message"];
+      statusCode = customerReq.statusCode;
+      final res = json.decode(customerReq.body);
+
+      if (statusCode == 200) {
+        // Customer Login Successful
+        _resMessage = res["message"] ?? "Login successful";
         final token = res["data"]["access_token"];
         await DatabaseProvider().saveToken(token);
         Get.offAllNamed(Routes.NAVIGATION);
-        return;  // Keluar dari fungsi jika login customer berhasil
       } else {
-        // Kedua login gagal
-        _resMessage = "Email atau password salah";
-      }
+        // 2. If Customer Login Fails, Attempt Courier Login
+        String courierUrl = "$baseURL/courier/login"; 
+        http.Response courierReq = await http.post(
+          Uri.parse(courierUrl),
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode(body),
+        );
+        
+        statusCode = courierReq.statusCode;
+        final courierRes = json.decode(courierReq.body);
 
-      notifyListeners();
+        if (statusCode == 200) {
+          // Courier Login Successful
+          _resMessage = courierRes["message"] ?? "Login successful";
+          final token = courierRes["data"]["access_token"];
+          await DatabaseProvider().saveToken(token);
+          Get.offAllNamed(Routes.NAVIGATION_COURIER);
+        } else {
+          // 3. Both Logins Failed
+          // Use the message from the last attempt (courier) or a generic one.
+          _resMessage = courierRes["message"] ?? "Invalid email or password";
+        }
+      }
     } on SocketException catch (_) {
       statusCode = 0;
       _resMessage = "Koneksi Internet Tidak Tersedia";
-      String courierUrl = "$baseURL/courier/login";
-      http.Response courierReq = await http.post(
-        Uri.parse(courierUrl),
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode(body),
-      );
-
-      if (courierReq.statusCode == 200) {
-        // Login courier berhasil
-        final res = json.decode(courierReq.body);
-        _resMessage = res["message"];
-        final token = res["data"]["access_token"];
-        await DatabaseProvider().saveToken(token);
-        Get.offAllNamed(Routes.NAVIGATION_COURIER);
-      } else {
-        // Handle Login Courier
-        String url = AppUrl.courierSignIn;
-
-        final body = {
-          "email": email,
-          "password": password,
-        };
-        print(body);
-
-        http.Response reqCourier = await http.post(
-          Uri.parse(url),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: json.encode(body),
-        );
-
-        // Store Status Code
-        statusCode = reqCourier.statusCode;
-
-        if (reqCourier.statusCode == 200) {
-          final res = json.decode(reqCourier.body);
-
-          print(reqCourier.body);
-
-          _resMessage = res["message"];
-
-          // Save Token Navigate To Dashboard Courier
-          final token = res["data"]["access_token"];
-
-          await DatabaseProvider().saveToken(token);
-
-          EasyLoading.dismiss();
-          Get.offAllNamed(Routes.NAVIGATION_COURIER);
-        } else {
-          final res = json.decode(reqCourier.body);
-
-          print(res);
-
-          _resMessage = res["message"];
-        }
-
-        notifyListeners();
-      }
-
     } catch (e) {
       statusCode = null;
       _resMessage = "Mohon Coba Lagi";
+
       print(e);
     } finally {
-      EasyLoading.dismiss();  // Dismiss loading di akhir proses
-      notifyListeners();
+      EasyLoading.dismiss();
+      notifyListeners(); 
     }
   }
 

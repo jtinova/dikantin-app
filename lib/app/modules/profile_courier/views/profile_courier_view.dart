@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:dikantin_app_rebuild/app/data/auth_provider.dart';
 import 'package:dikantin_app_rebuild/app/routes/app_pages.dart';
 import 'package:flutter/cupertino.dart';
