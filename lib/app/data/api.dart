@@ -1,6 +1,6 @@
 class AppUrl {
   // Change IP Address before run project
-  static String baseURL = 'http://172.20.10.4:8000';
+  static String baseURL = 'http://192.168.1.7:8000';
   static String baseURLAPI = '$baseURL/api';
   static String baseImageURL = '$baseURL/storage/menu/';
 
@@ -12,7 +12,6 @@ class AppUrl {
   static String resetPassword = "$baseURLAPI/reset-password";
   static String signout = "$baseURLAPI/logout";
   static String courierLogin = "$baseURLAPI/courier/login";
-
 
   // API Home User
   static String locations = '$baseURLAPI/building';

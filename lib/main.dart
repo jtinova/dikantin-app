@@ -1,7 +1,7 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:dikantin_app_rebuild/app/data/auth_provider.dart';
 import 'package:dikantin_app_rebuild/app/theme/theme.dart';
-import 'package:flutter/foundation.dart';
+// import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -21,14 +21,14 @@ void main() async {
   String? token = await DatabaseProvider().getToken();
   String initialRoute = token != null ? Routes.NAVIGATION : Routes.SIGN_IN;
 
-  runApp(
-    DevicePreview(
-      enabled: !kReleaseMode,
-      builder: (context) => MyApp(initialRoute: initialRoute),
-    ),
-  );
+  // runApp(
+  //   DevicePreview(
+  //     enabled: !kReleaseMode,
+  //     builder: (context) => MyApp(initialRoute: initialRoute),
+  //   ),
+  // );
 
-  // runApp(MyApp(initialRoute: initialRoute));
+  runApp(MyApp(initialRoute: initialRoute));
 
   FlutterNativeSplash.remove();
   configLoading();

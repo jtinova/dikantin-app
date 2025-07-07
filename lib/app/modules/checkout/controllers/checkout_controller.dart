@@ -17,11 +17,39 @@ import '../../../models/cart.dart';
 class CheckoutController extends GetxController {
   var selectedDeliveryOption = ''.obs;
   var selectedPaymentType = ''.obs;
+  var tableNumber = ''.obs;
   var calculateResult = Rxn<Map<String, dynamic>>();
   var groupedItemsByCanteen = <String, List<Map<String, dynamic>>>{}.obs;
 
   var itemForCheckout = <CartItem>[].obs;
   var checkoutNoteController = <String, TextEditingController>{}.obs;
+
+  // Menyimpan biaya subtotal menu dan biaya ongkir asli
+  var menuSubtotal = 0.obs;
+  var originalDeliveryFee = 0.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+
+    ever(selectedDeliveryOption, (String option) {
+      if (calculateResult.value != null) {
+        Map<String, dynamic> newResult =
+            Map<String, dynamic>.from(calculateResult.value!);
+
+        if (option == 'deliver') {
+          newResult['biaya_ongkir'] = originalDeliveryFee.value;
+          newResult['total_biaya_pembayaran'] =
+              menuSubtotal.value + originalDeliveryFee.value;
+        } else {
+          newResult['biaya_ongkir'] = 0;
+          newResult['total_biaya_pembayaran'] = menuSubtotal.value;
+        }
+
+        calculateResult.value = newResult;
+      }
+    });
+  }
 
   void initializeCheckoutData(List<CartItem> itemsFromCart) {
     itemForCheckout.assignAll(itemsFromCart);
@@ -124,6 +152,14 @@ class CheckoutController extends GetxController {
 
         calculateResult.value = res['data'];
 
+        int grandTotal = res['data']['total_biaya_pembayaran'] ?? 0;
+        int deliveryFee = res['data']['biaya_ongkir'] ?? 0;
+
+        menuSubtotal.value = grandTotal - deliveryFee;
+        originalDeliveryFee.value = deliveryFee;
+
+        selectedDeliveryOption.trigger(selectedDeliveryOption.value);
+
         if (res['data'] != null && res['data']['details'] != null) {
           groupItemsForDisplay(res['data']['details'] as List<dynamic>);
         }
@@ -224,7 +260,7 @@ class CheckoutController extends GetxController {
       return false;
     }
 
-    if (gedung == '') {
+    if (gedung == '' && tipePesan == 'deliver') {
       EasyLoading.dismiss();
 
       Get.snackbar(
@@ -245,12 +281,33 @@ class CheckoutController extends GetxController {
       );
 
       return false;
-    } else if (detailLokasi == '') {
+    } else if (detailLokasi == '' && tipePesan == 'deliver') {
       EasyLoading.dismiss();
 
       Get.snackbar(
         "Informasi ",
         "Mohon Lengkapi Detail Lokasi",
+        animationDuration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 1650),
+        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+        borderWidth: 5.w,
+        snackPosition: SnackPosition.TOP,
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
+        icon: const Icon(
+          CupertinoIcons.info_circle,
+        ),
+      );
+
+      return false;
+    } else if (tableNumber == '' && tipePesan == 'dine_in') {
+      EasyLoading.dismiss();
+
+      Get.snackbar(
+        "Informasi ",
+        "Mohon Lengkapi Nomor Meja",
         animationDuration: const Duration(milliseconds: 200),
         duration: const Duration(milliseconds: 1650),
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
@@ -319,6 +376,20 @@ class CheckoutController extends GetxController {
       };
     }).toList();
 
+    // Request Body
+    Map<String, dynamic> requestBody = {
+      "tipe_pesanan": tipePesan,
+      "metode_pembayaran": metodePembayaran,
+      "id_gedung": gedung,
+      "detail_tujuan": detailLokasi,
+      "menu": menuPayload,
+    };
+
+    // Tambahkan nomor meja jika pesanan adalah "dine_in"
+    if (tipePesan == 'dine_in') {
+      requestBody['no_meja'] = int.parse(tableNumber.value);
+    }
+
     try {
       http.Response req = await http.post(
         Uri.parse(url),
@@ -326,13 +397,7 @@ class CheckoutController extends GetxController {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
         },
-        body: json.encode({
-          "tipe_pesanan": tipePesan,
-          "metode_pembayaran": metodePembayaran,
-          "id_gedung": gedung,
-          "detail_tujuan": detailLokasi,
-          "menu": menuPayload,
-        }),
+        body: json.encode(requestBody),
       );
 
       if (req.statusCode == 200) {
@@ -450,11 +515,11 @@ class CheckoutController extends GetxController {
   String getDeliveryOptionTitle(String value) {
     switch (value) {
       case 'dine_in':
-        return 'Ditempat';
+        return 'Ditempat (Dine In)';
       case 'deliver':
-        return 'Diantar';
+        return 'Diantar (Delivery)';
       case 'pick_up':
-        return 'Diambil';
+        return 'Diambil (Pick Up)';
       default:
         return 'Pilih Opsi';
     }

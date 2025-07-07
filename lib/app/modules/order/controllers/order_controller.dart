@@ -907,21 +907,21 @@ class OrderController extends GetxController {
   }
 
   Color getStatusColor(String status) {
-  switch (status) {
-    case "pending":
-      return Color(0xFF1E2857);
-    case "cooking":
-      return Colors.orange;
-    case "Siap Diambil":
-      return Colors.deepPurple;
-    case "on_delivery":
-      return Colors.blue;
-    case "done":
-      return Colors.green;
-    case "cancel":
-      return Colors.red;
-    default:
-      return Colors.black;
+    switch (status) {
+      case "pending":
+        return Color(0xFF1E2857);
+      case "cooking":
+        return Colors.orange;
+      case "Siap Diambil":
+        return Colors.lightGreen;
+      case "on_delivery":
+        return Colors.blue;
+      case "done":
+        return Colors.green;
+      case "cancel":
+        return Colors.red;
+      default:
+        return Colors.black;
+    }
   }
-}
 }

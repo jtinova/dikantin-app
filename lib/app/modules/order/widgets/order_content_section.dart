@@ -245,7 +245,7 @@ class OrderContent extends StatelessWidget {
                                 Radius.circular(10.r),
                               ),
                               child: Image.asset(
-                                "assets/images/image_carousel.png",
+                                "assets/images/logo_dikantin.png",
                                 width: 85.w,
                                 height: 80.h,
                                 fit: BoxFit.cover,
@@ -395,7 +395,7 @@ class OrderContent extends StatelessWidget {
                                 Radius.circular(10.r),
                               ),
                               child: Image.asset(
-                                "assets/images/image_carousel.png",
+                                "assets/images/logo_dikantin.png",
                                 width: 85.w,
                                 height: 80.h,
                                 fit: BoxFit.cover,
@@ -584,7 +584,7 @@ class OrderContent extends StatelessWidget {
                                 Radius.circular(10.r),
                               ),
                               child: Image.asset(
-                                "assets/images/image_carousel.png",
+                                "assets/images/logo_dikantin.png",
                                 width: 85.w,
                                 height: 80.h,
                                 fit: BoxFit.cover,

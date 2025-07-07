@@ -81,7 +81,7 @@ class CheckoutView extends GetView<CheckoutController> {
                       ),
                       ListTile(
                         leading: Icon(
-                          Icons.location_on,
+                          CupertinoIcons.map_pin_ellipse,
                           color: Colors.red,
                           size: 28.r,
                         ),
@@ -336,7 +336,7 @@ class CheckoutView extends GetView<CheckoutController> {
                                   ),
                                   SizedBox(height: 15.h),
                                   Text(
-                                    "Pilih Lokasi Pengambilan",
+                                    "Pilih Pengambilan Pesanan",
                                     style: TextStyle(
                                       fontSize: 18.sp,
                                       fontWeight: FontWeight.w600,
@@ -344,7 +344,7 @@ class CheckoutView extends GetView<CheckoutController> {
                                   ),
                                   SizedBox(height: 10.h),
                                   CustomRadioTile(
-                                    title: "Diantar",
+                                    title: "Diantar (Delivery)",
                                     value: "deliver",
                                     groupValue:
                                         controller.selectedDeliveryOption.value,
@@ -354,28 +354,28 @@ class CheckoutView extends GetView<CheckoutController> {
                                       Get.back();
                                     },
                                   ),
-                                  // CustomRadioTile(
-                                  //   title: "Ditempat",
-                                  //   value: "dine_in",
-                                  //   groupValue:
-                                  //       controller.selectedDeliveryOption.value,
-                                  //   onChanged: (value) {
-                                  //     controller.selectedDeliveryOption.value =
-                                  //         value!;
-                                  //     Get.back();
-                                  //   },
-                                  // ),
-                                  // CustomRadioTile(
-                                  //   title: "Diambil",
-                                  //   value: "pick_up",
-                                  //   groupValue:
-                                  //       controller.selectedDeliveryOption.value,
-                                  //   onChanged: (value) {
-                                  //     controller.selectedDeliveryOption.value =
-                                  //         value!;
-                                  //     Get.back();
-                                  //   },
-                                  // ),
+                                  CustomRadioTile(
+                                    title: "Ditempat (Dine In)",
+                                    value: "dine_in",
+                                    groupValue:
+                                        controller.selectedDeliveryOption.value,
+                                    onChanged: (value) {
+                                      controller.selectedDeliveryOption.value =
+                                          value!;
+                                      Get.back();
+                                    },
+                                  ),
+                                  CustomRadioTile(
+                                    title: "Diambil (Pick Up)",
+                                    value: "pick_up",
+                                    groupValue:
+                                        controller.selectedDeliveryOption.value,
+                                    onChanged: (value) {
+                                      controller.selectedDeliveryOption.value =
+                                          value!;
+                                      Get.back();
+                                    },
+                                  ),
                                 ],
                               ),
                             );
@@ -383,6 +383,67 @@ class CheckoutView extends GetView<CheckoutController> {
                         );
                       },
                     ),
+                    Obx(() {
+                      if (controller.selectedDeliveryOption.value ==
+                          "dine_in") {
+                        return Column(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 80.w),
+                              child: Divider(
+                                height: 0.h,
+                                thickness: 0.5,
+                                color: Colors.grey[500],
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 16.w,
+                                vertical: 10.h,
+                              ),
+                              child: TextFormField(
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                  prefixIcon: Icon(
+                                    CupertinoIcons.tickets_fill,
+                                    size: 18.r,
+                                    color: Colors.black87,
+                                  ),
+                                  hintText: "Nomor Meja",
+                                  hintStyle: TextStyle(
+                                    fontSize: 16.sp,
+                                    color: Colors.black54,
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(15.r),
+                                    ),
+                                    borderSide:
+                                        BorderSide(color: Colors.black87),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(15.r),
+                                    ),
+                                    borderSide:
+                                        BorderSide(color: Colors.black87),
+                                  ),
+                                  contentPadding: EdgeInsets.symmetric(
+                                    vertical: 10.h,
+                                    horizontal: 10.w,
+                                  ),
+                                ),
+                                onChanged: (value) {
+                                  controller.tableNumber.value = value;
+                                },
+                              ),
+                            ),
+                          ],
+                        );
+                      } else {
+                        return SizedBox.shrink();
+                      }
+                    }),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 15.w),
                       child: Divider(
