@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, unrelated_type_equality_checks
 
 import 'dart:convert';
 import 'dart:io';
@@ -302,7 +302,7 @@ class CheckoutController extends GetxController {
       );
 
       return false;
-    } else if (tableNumber == '' && tipePesan == 'dine_in') {
+    } else if (tableNumber.isEmpty && tipePesan == 'dine_in') {
       EasyLoading.dismiss();
 
       Get.snackbar(

@@ -25,6 +25,7 @@ class OrderController extends GetxController {
   var shippingOrder = <Order>[].obs;
   var historyOrder = <Order>[].obs;
   var pickUpOrder = <Order>[].obs;
+  var dineInOrder = <Order>[].obs;
 
   var detailOrder = <OrderDetail>[].obs;
   var detailShipping = <OrderDetail>[].obs;
@@ -32,7 +33,6 @@ class OrderController extends GetxController {
   List<String> statusOptions = [
     "Status",
     "Diproses",
-    "Dikirim",
     "Selesai",
     "Dibatalkan",
   ];
@@ -44,8 +44,9 @@ class OrderController extends GetxController {
     super.onInit();
     getProgress();
     getShipping();
-    getHistory();
     getPickUp();
+    getDineIn();
+    getHistory();
   }
 
   Future<void> refreshAll() async {
@@ -55,8 +56,9 @@ class OrderController extends GetxController {
       await Future.wait([
         getProgress(),
         getShipping(),
-        getHistory(),
         getPickUp(),
+        getDineIn(),
+        getHistory(),
       ]);
     } on SocketException catch (_) {
       Get.snackbar(
@@ -317,10 +319,10 @@ class OrderController extends GetxController {
     }
   }
 
-  Future<void> getHistory() async {
+  Future<void> getPickUp() async {
     EasyLoading.show(status: 'Loading...');
 
-    String url = AppUrl.trackingHistory;
+    String url = AppUrl.pickUpOrder;
     String? token = await DatabaseProvider().getToken();
 
     if (token == null) {
@@ -358,11 +360,11 @@ class OrderController extends GetxController {
       if (req.statusCode == 200) {
         final res = json.decode(req.body);
 
-        historyOrder.value = (res['data'] as List)
+        pickUpOrder.value = (res['data'] as List)
             .map((item) => Order.fromJsonProgress(item))
             .toList();
 
-        print(historyOrder);
+        print(pickUpOrder);
       } else {
         final res = json.decode(req.body);
 
@@ -426,10 +428,10 @@ class OrderController extends GetxController {
     }
   }
 
-  Future<void> getPickUp() async {
+  Future<void> getDineIn() async {
     EasyLoading.show(status: 'Loading...');
 
-    String url = AppUrl.pickUpOrder;
+    String url = AppUrl.dineInOrder;
     String? token = await DatabaseProvider().getToken();
 
     if (token == null) {
@@ -467,11 +469,120 @@ class OrderController extends GetxController {
       if (req.statusCode == 200) {
         final res = json.decode(req.body);
 
-        pickUpOrder.value = (res['data'] as List)
+        dineInOrder.value = (res['data'] as List)
             .map((item) => Order.fromJsonProgress(item))
             .toList();
 
-        print(pickUpOrder);
+        print(dineInOrder);
+      } else {
+        final res = json.decode(req.body);
+
+        print(res);
+
+        Get.snackbar(
+          "Informasi ",
+          "Terjadi Kesalahan",
+          animationDuration: const Duration(milliseconds: 200),
+          duration: const Duration(milliseconds: 1650),
+          backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+          borderWidth: 5.w,
+          snackPosition: SnackPosition.TOP,
+          margin: EdgeInsets.symmetric(
+            horizontal: 20.w,
+            vertical: 20.h,
+          ),
+          icon: const Icon(
+            CupertinoIcons.info_circle,
+          ),
+        );
+      }
+    } on SocketException catch (_) {
+      Get.snackbar(
+        "Informasi ",
+        "Koneksi Internet Tidak Tersedia",
+        animationDuration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 1650),
+        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+        borderWidth: 5.w,
+        snackPosition: SnackPosition.TOP,
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
+        icon: const Icon(
+          CupertinoIcons.info_circle,
+        ),
+      );
+    } catch (e) {
+      Get.snackbar(
+        "Informasi ",
+        "Mohon Coba Lagi",
+        animationDuration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 1650),
+        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+        borderWidth: 5.w,
+        snackPosition: SnackPosition.TOP,
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
+        icon: const Icon(
+          CupertinoIcons.info_circle,
+        ),
+      );
+
+      print(e);
+    } finally {
+      EasyLoading.dismiss();
+    }
+  }
+
+  Future<void> getHistory() async {
+    EasyLoading.show(status: 'Loading...');
+
+    String url = AppUrl.trackingHistory;
+    String? token = await DatabaseProvider().getToken();
+
+    if (token == null) {
+      EasyLoading.dismiss();
+
+      Get.snackbar(
+        "Informasi",
+        "Token Tidak Ditemukan",
+        animationDuration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 1650),
+        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+        borderWidth: 5.w,
+        snackPosition: SnackPosition.TOP,
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
+        icon: const Icon(
+          CupertinoIcons.info_circle,
+        ),
+      );
+
+      return;
+    }
+
+    try {
+      http.Response req = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (req.statusCode == 200) {
+        final res = json.decode(req.body);
+
+        historyOrder.value = (res['data'] as List)
+            .map((item) => Order.fromJsonProgress(item))
+            .toList();
+
+        print(historyOrder);
       } else {
         final res = json.decode(req.body);
 
@@ -667,6 +778,8 @@ class OrderController extends GetxController {
   Future<void> getDetailProgress(String id) async {
     EasyLoading.show(status: 'Loading...');
 
+    detailOrder.clear();
+
     String url = "${AppUrl.trackingDetailProgress}$id";
     String? token = await DatabaseProvider().getToken();
 
@@ -773,6 +886,8 @@ class OrderController extends GetxController {
 
   Future<void> getDetailShipping(String id) async {
     EasyLoading.show(status: 'Loading...');
+
+    detailShipping.clear();
 
     String url = "${AppUrl.trackingDetailShipping}$id";
     String? token = await DatabaseProvider().getToken();

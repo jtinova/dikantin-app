@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../../models/order_detail.dart';
 import '../controllers/order_controller.dart';
@@ -105,70 +106,72 @@ class OrderDetailBottom extends StatelessWidget {
             height: 15.h,
             color: Colors.grey,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Nama Kurir",
-                style: TextStyle(
-                  fontSize: 14.sp,
+          if (order.delivery != null) ...[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Nama Kurir",
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                  ),
                 ),
-              ),
-              Text(
-                order.status == "on_delivery"
-                    ? order.delivery!.courierName
-                    : '-',
-                style: TextStyle(
-                  fontSize: 14.sp,
+                Text(
+                  order.status == "on_delivery"
+                      ? order.delivery!.courierName
+                      : '-',
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                  ),
                 ),
-              ),
-            ],
-          ),
-          SizedBox(height: 3.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Waktu Pengiriman",
-                style: TextStyle(
-                  fontSize: 14.sp,
+              ],
+            ),
+            SizedBox(height: 3.h),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Waktu Pengiriman",
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                  ),
                 ),
-              ),
-              Text(
-                order.status == "on_delivery"
-                    ? controller.formatDateTime(order.delivery!.deliveryDate!)
-                    : '-',
-                style: TextStyle(
-                  fontSize: 14.sp,
+                Text(
+                  order.status == "on_delivery"
+                      ? controller.formatDateTime(order.delivery!.deliveryDate!)
+                      : '-',
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                  ),
                 ),
-              ),
-            ],
-          ),
-          SizedBox(height: 3.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Gedung Tujuan",
-                style: TextStyle(
-                  fontSize: 14.sp,
+              ],
+            ),
+            SizedBox(height: 3.h),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Gedung Tujuan",
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                  ),
                 ),
-              ),
-              Text(
-                order.status == "on_delivery"
-                    ? order.delivery!.buildingName
-                    : '-',
-                style: TextStyle(
-                  fontSize: 14.sp,
+                Text(
+                  order.status == "on_delivery"
+                      ? order.delivery!.buildingName
+                      : '-',
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                  ),
                 ),
-              ),
-            ],
-          ),
-          Divider(
-            thickness: 1,
-            height: 15.h,
-            color: Colors.grey,
-          ),
+              ],
+            ),
+            Divider(
+              thickness: 1,
+              height: 15.h,
+              color: Colors.grey,
+            ),
+          ],
           ...order.details.map((item) => Padding(
                 padding: EdgeInsets.symmetric(vertical: 3.h),
                 child: Row(
@@ -278,7 +281,9 @@ class OrderDetailBottom extends StatelessWidget {
             height: 30.h,
             child: ElevatedButton(
               onPressed: () async {
-                if (order.status == "pending") {
+                if (order.status == "done") {
+                  Navigator.pop(context);
+                } else if (order.status == "pending") {
                   Navigator.pop(context);
 
                   showModalBottomSheet(
@@ -295,6 +300,69 @@ class OrderDetailBottom extends StatelessWidget {
                   );
                 } else {
                   Navigator.pop(context);
+
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        final String dialogTitle = order.delivery != null
+                            ? 'Tunjukkan Barcode ke Kurir'
+                            : 'Tunjukkan Barcode ke Kasir';
+                        return AlertDialog(
+                          title: Text(
+                            dialogTitle,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 20.sp,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          content: SizedBox(
+                            width: 190.w,
+                            height: 190.h,
+                            child: Center(
+                              child: Container(
+                                padding: EdgeInsets.all(
+                                  8.w,
+                                ),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.grey.shade300,
+                                    width: 2.w,
+                                  ),
+                                  borderRadius: BorderRadius.circular(10.r),
+                                ),
+                                child: QrImageView(
+                                  data: order.id,
+                                  version: QrVersions.auto,
+                                  size: 180.w,
+                                ),
+                              ),
+                            ),
+                          ),
+                          actions: [
+                            SizedBox(
+                              width: double.infinity,
+                              height: 35.h,
+                              child: ElevatedButton(
+                                onPressed: () => Navigator.pop(context),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Color(0xFF1E2857),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.r),
+                                  ),
+                                ),
+                                child: Text(
+                                  "Tutup",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 15.sp,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      });
                 }
               },
               style: ElevatedButton.styleFrom(
@@ -305,9 +373,11 @@ class OrderDetailBottom extends StatelessWidget {
                 ),
               ),
               child: Text(
-                order.status == "pending"
-                    ? "Batalkan Pesanan"
-                    : "Tunjukkan Barcode",
+                order.status == "done"
+                    ? "Tutup"
+                    : (order.status == "pending"
+                        ? "Batalkan Pesanan"
+                        : "Tunjukkan Barcode"),
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 15.sp,

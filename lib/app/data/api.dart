@@ -32,6 +32,7 @@ class AppUrl {
   static String trackingHistory = '$baseURLAPI/transaction/history';
   static String cancelOrder = '$baseURLAPI/transaction/cancel';
   static String pickUpOrder = '$baseURLAPI/transaction/pick-up';
+  static String dineInOrder = '$baseURLAPI/transaction/dine-in';
 
   // API Profile User
   static String detailUserProfile = '$baseURLAPI/user';

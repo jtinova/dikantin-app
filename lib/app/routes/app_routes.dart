@@ -14,10 +14,11 @@ abstract class Routes {
   static const HOME_COURIER = _Paths.HOME_COURIER;
   static const ORDER = _Paths.ORDER;
   static const PROFILE = _Paths.PROFILE;
+  static const HISTORY_ORDER = _Paths.HISTORY_ORDER;
   static const ABOUT_APP = _Paths.ABOUT_APP;
   static const MY_PROFILE = _Paths.MY_PROFILE;
   static const CHAT = _Paths.CHAT;
-  static const COURIER_DELIVERY_HISTORY = '/courier-delivery-history';
+  static const COURIER_DELIVERY_HISTORY =  _Paths.COURIER_DELIVERY_HISTORY;
   static const CART = _Paths.CART;
   static const CHECKOUT = _Paths.CHECKOUT;
 }
@@ -35,9 +36,11 @@ abstract class _Paths {
   static const ORDER = '/order';
   static const HOME_COURIER = '/home-courier';
   static const PROFILE = '/profile';
+  static const HISTORY_ORDER = '/history-order';
   static const ABOUT_APP = '/about_app';
   static const MY_PROFILE = '/my_profile';
   static const CHAT = '/chat';
   static const CART = '/cart';
   static const CHECKOUT = '/checkout';
+  static const COURIER_DELIVERY_HISTORY = '/courier-delivery-history';
 }

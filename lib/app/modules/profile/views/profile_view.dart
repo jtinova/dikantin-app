@@ -49,8 +49,8 @@ class ProfileView extends GetView<ProfileController> {
                             CircleAvatar(
                               backgroundImage:
                                   AssetImage('assets/images/logo_dikantin.png'),
-                              backgroundColor: Colors.black12,
-                              radius: 48.r,
+                              backgroundColor: Colors.grey[100],
+                              radius: 53.r,
                             ),
                             SizedBox(height: 10.h),
                             Text(
@@ -92,7 +92,7 @@ class ProfileView extends GetView<ProfileController> {
                         );
                       }
                     }),
-                    SizedBox(height: 40.h),
+                    SizedBox(height: 30.h),
                     Card(
                       elevation: 1,
                       margin: EdgeInsets.only(bottom: 10.h),
@@ -101,7 +101,7 @@ class ProfileView extends GetView<ProfileController> {
                       ),
                       child: ListTile(
                         leading: Icon(
-                          CupertinoIcons.pencil,
+                          CupertinoIcons.person_crop_square,
                           color: Colors.black,
                         ),
                         title: Text(
@@ -116,6 +116,56 @@ class ProfileView extends GetView<ProfileController> {
                           size: 16.r,
                         ),
                         onTap: () => Get.toNamed(Routes.MY_PROFILE),
+                      ),
+                    ),
+                    Card(
+                      elevation: 1,
+                      margin: EdgeInsets.only(bottom: 10.h),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                      child: ListTile(
+                        leading: Icon(
+                          CupertinoIcons.square_favorites_alt,
+                          color: Colors.black,
+                        ),
+                        title: Text(
+                          'Menu Favorit',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 18.sp,
+                          ),
+                        ),
+                        trailing: Icon(
+                          Icons.arrow_forward_ios,
+                          size: 16.r,
+                        ),
+                        onTap: null,
+                      ),
+                    ),
+                    Card(
+                      elevation: 1,
+                      margin: EdgeInsets.only(bottom: 10.h),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                      child: ListTile(
+                        leading: Icon(
+                          CupertinoIcons.square_list,
+                          color: Colors.black,
+                        ),
+                        title: Text(
+                          'Riwayat Pesanan',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 18.sp,
+                          ),
+                        ),
+                        trailing: Icon(
+                          Icons.arrow_forward_ios,
+                          size: 16.r,
+                        ),
+                        onTap: () => Get.toNamed(Routes.HISTORY_ORDER),
                       ),
                     ),
                     Card(

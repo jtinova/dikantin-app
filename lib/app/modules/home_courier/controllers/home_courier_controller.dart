@@ -272,6 +272,14 @@ class HomeCourierController extends GetxController {
     )}';
   }
 
+  String capitalizeFirst(String text) {
+    return text
+        .split('_')
+        .map((word) =>
+            word.isNotEmpty ? word[0].toUpperCase() + word.substring(1) : '')
+        .join(' ');
+  }
+
   Future<void> showWithdrawalHistory() async {
     try {
       String? token = await DatabaseProvider().getToken();

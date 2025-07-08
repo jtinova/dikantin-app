@@ -102,7 +102,7 @@ class MyProfile extends StatelessWidget {
                             backgroundImage:
                                 AssetImage('assets/images/logo_dikantin.png'),
                             backgroundColor: Colors.black12,
-                            radius: 50.r,
+                            radius: 53.r,
                           ),
                           SizedBox(height: 10.h),
                           Text(

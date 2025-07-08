@@ -22,9 +22,9 @@ class OrderTabs extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               tabButton("Diproses", 0, controller),
-              tabButton("Diambil", 1, controller),
-              tabButton("Diantar", 2, controller),
-              tabButton("Riwayat", 3, controller),
+              tabButton("Ditempat", 1, controller),
+              tabButton("Diambil", 2, controller),
+              tabButton("Diantar", 3, controller),
             ],
           )),
     );

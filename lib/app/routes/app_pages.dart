@@ -16,6 +16,7 @@ import '../modules/order/bindings/order_binding.dart';
 import '../modules/order/views/order_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
 import '../modules/profile/widgets/about_app_section.dart';
+import '../modules/profile/widgets/history_order_section.dart';
 import '../modules/profile/widgets/my_profile_section.dart';
 import '../modules/profile/views/profile_view.dart';
 import '../modules/reset_password/bindings/reset_password_binding.dart';
@@ -103,6 +104,10 @@ class AppPages {
     GetPage(
       name: _Paths.MY_PROFILE,
       page: () => MyProfile(),
+    ),
+    GetPage(
+      name: _Paths.HISTORY_ORDER,
+      page: () => HistoryOrder(),
     ),
     GetPage(
       name: _Paths.CHAT,
