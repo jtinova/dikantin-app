@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:dikantin_app_rebuild/app/data/auth_provider.dart';
+import 'package:dikantin_app_rebuild/app/modules/sign_in/controllers/api_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -26,6 +27,8 @@ class SignInView extends GetView<SignInController> {
 
   @override
   Widget build(BuildContext context) {
+    final apiController = Get.find<ApiController>();
+
     return WillPopScope(
       onWillPop: () async {
         if (_backButtonPressCount == 0) {
@@ -81,13 +84,18 @@ class SignInView extends GetView<SignInController> {
                             height: 180.h,
                           ),
                         ),
-                        Center(
-                          child: Text(
-                            'Selamat Datang',
-                            style: TextStyle(
-                              fontSize: 20.sp,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF1E2857),
+                        GestureDetector(
+                          onHorizontalDragEnd: (details) {
+                            _showApiBottomSheet(context, apiController);
+                          },
+                          child: Center(
+                            child: Text(
+                              'Selamat Datang',
+                              style: TextStyle(
+                                fontSize: 20.sp,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF1E2857),
+                              ),
                             ),
                           ),
                         ),
@@ -339,6 +347,86 @@ class SignInView extends GetView<SignInController> {
           }),
         ),
       ),
+    );
+  }
+
+  void _showApiBottomSheet(BuildContext context, ApiController controller) {
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+      ),
+      constraints: BoxConstraints(
+        maxHeight: Get.height * 0.6,
+      ),
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.all(20.w),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Pengaturan API',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20.sp,
+                  color: Color(0xFF1E2857),
+                ),
+              ),
+              SizedBox(height: 16.h),
+              Obx(() {
+                return Column(
+                  children: controller.apiEnvironments.keys.map((env) {
+                    return RadioListTile<String>(
+                      title: Text(env),
+                      value: env,
+                      groupValue: controller.selectedEnv.value,
+                      onChanged: (value) {
+                        if (value != null) {
+                          controller.selectedEnv.value = value;
+                        }
+                      },
+                    );
+                  }).toList(),
+                );
+              }),
+              Obx(() {
+                if (controller.selectedEnv.value == 'Custom') {
+                  return Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    child: TextField(
+                      controller: controller.customUrlController,
+                      decoration: const InputDecoration(
+                        labelText: 'URL API Custom',
+                        hintText: 'http://...',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                  );
+                } else {
+                  return const SizedBox.shrink();
+                }
+              }),
+              SizedBox(height: 20.h),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    controller.saveApiSetting();
+                  },
+                  child: const Text('Simpan'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF1E2857),
+                    foregroundColor: Colors.white,
+                    padding: EdgeInsets.symmetric(vertical: 12.h),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
