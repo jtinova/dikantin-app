@@ -88,6 +88,18 @@ class Categories extends StatelessWidget {
               );
             }
 
+            if (controller.categories.isEmpty) {
+              return Center(
+                child: Text(
+                  'Tidak ada kategori tersedia',
+                  style: TextStyle(
+                    fontSize: 17.sp,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              );
+            }
+
             return ListView(
               scrollDirection: Axis.horizontal,
               shrinkWrap: true,
@@ -100,7 +112,7 @@ class Categories extends StatelessWidget {
                   child: GestureDetector(
                     onTap: () {
                       // Fetch menu by category
-                      controller.getMenuByCategory(id: category.id);
+                      controller.filterMenuByCategory(category.id);
 
                       // Highlight this category
                       controller.selectedCategoryId.value = category.id;
@@ -112,8 +124,9 @@ class Categories extends StatelessWidget {
                       children: [
                         CircleAvatar(
                           backgroundImage:
-                              AssetImage('assets/images/image_carousel.png'),
+                              AssetImage('assets/images/logo_dikantin.png'),
                           radius: 30.r,
+                          backgroundColor: Colors.transparent,
                         ),
                         SizedBox(height: 2.5.h),
                         Text(

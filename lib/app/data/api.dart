@@ -1,6 +1,6 @@
 class AppUrl {
   // Change IP Address before run project
-  static String baseURL = 'http://192.168.1.7:8000';
+  static String baseURL = 'https://dikantin-staging.jtinova.com';
   static String baseURLAPI = '$baseURL/api';
   static String baseImageURL = '$baseURL/storage/menu/';
 

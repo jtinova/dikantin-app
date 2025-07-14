@@ -187,6 +187,14 @@ class FoodGrids extends StatelessWidget {
                           width: double.infinity,
                           height: 90.h,
                           fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Image.asset(
+                              'assets/images/logo_dikantin.png',
+                              width: double.infinity,
+                              height: 90.h,
+                              fit: BoxFit.cover,
+                            );
+                          },
                         ),
                       ),
                     ),

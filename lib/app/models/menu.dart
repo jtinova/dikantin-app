@@ -1,25 +1,28 @@
 import '../data/api.dart';
 import 'canteen.dart';
+import 'category.dart';
 
 class Menu {
   final String id;
   final String name;
-  final String image;
+  final String? image;
   final int sellingCost;
   final int mainCost;
   final int stock;
-  final String description;
+  final String? description;
   final Canteen canteen;
+  final Category? category;
 
   Menu({
     required this.id,
     required this.name,
-    required this.image,
+    this.image,
     required this.sellingCost,
     required this.mainCost,
     required this.stock,
-    required this.description,
+    this.description,
     required this.canteen,
+    this.category,
   });
 
   factory Menu.fromJson(Map<String, dynamic> json) {
@@ -32,6 +35,8 @@ class Menu {
       stock: json['stock'],
       description: json['description'],
       canteen: Canteen.fromJson(json['canteen']),
+      category:
+          json['category'] != null ? Category.fromJson(json['category']) : null,
     );
   }
 

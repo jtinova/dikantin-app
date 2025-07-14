@@ -369,17 +369,25 @@ class SignInView extends GetView<SignInController> {
               Text(
                 'Pengaturan API',
                 style: TextStyle(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
                   fontSize: 20.sp,
                   color: Color(0xFF1E2857),
                 ),
               ),
-              SizedBox(height: 16.h),
+              SizedBox(height: 10.h),
               Obx(() {
                 return Column(
                   children: controller.apiEnvironments.keys.map((env) {
                     return RadioListTile<String>(
-                      title: Text(env),
+                      title: Text(
+                        env,
+                        style: TextStyle(
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      contentPadding: EdgeInsets.zero,
+                      dense: true,
                       value: env,
                       groupValue: controller.selectedEnv.value,
                       onChanged: (value) {
@@ -394,12 +402,12 @@ class SignInView extends GetView<SignInController> {
               Obx(() {
                 if (controller.selectedEnv.value == 'Custom') {
                   return Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    padding: EdgeInsets.symmetric(horizontal: 10.w),
                     child: TextField(
                       controller: controller.customUrlController,
                       decoration: const InputDecoration(
                         labelText: 'URL API Custom',
-                        hintText: 'http://...',
+                        hintText: '192.xxx.x.x:xxxx',
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -411,15 +419,23 @@ class SignInView extends GetView<SignInController> {
               SizedBox(height: 20.h),
               SizedBox(
                 width: double.infinity,
+                height: 40.h,
                 child: ElevatedButton(
                   onPressed: () {
                     controller.saveApiSetting();
                   },
-                  child: const Text('Simpan'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFF1E2857),
                     foregroundColor: Colors.white,
                     padding: EdgeInsets.symmetric(vertical: 12.h),
+                  ),
+                  child: Text(
+                    'Simpan',
+                    style: TextStyle(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),

@@ -57,7 +57,7 @@ class Canteens extends StatelessWidget {
               return GestureDetector(
                 onTap: () {
                   // Fetch menu by canteen
-                  controller.getMenuByCanteen(id: canteen.id, context: context);
+                  controller.filterMenuByCanteen(canteen.id);
 
                   // Highlight this canteen
                   controller.selectedCanteenId.value = canteen.id;
@@ -70,7 +70,7 @@ class Canteens extends StatelessWidget {
                     horizontal: 3.w,
                   ),
                   child: Container(
-                    width: 75.w,
+                    width: 80.w,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       shape: BoxShape.rectangle,

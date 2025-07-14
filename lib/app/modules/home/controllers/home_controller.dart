@@ -21,7 +21,7 @@ import '../../../models/category.dart';
 import '../../../models/menu.dart';
 
 class HomeController extends GetxController {
-  var isLoading = false.obs;
+  var isLoading = true.obs;
   var isMenuLoading = false.obs;
   var currentIndex = 0.obs;
   Timer? _debounce;
@@ -33,8 +33,10 @@ class HomeController extends GetxController {
   var buildings = <Building>[].obs;
   var categories = <Category>[].obs;
   var canteens = <Canteen>[].obs;
-  var menus = <Menu>[].obs;
   var cartItems = <CartItem>[].obs;
+
+  var allMenus = <Menu>[].obs;
+  var menus = <Menu>[].obs;
 
   int get cartCount => cartItems.fold(0, (sum, item) => sum + item.quantity);
 
@@ -48,19 +50,19 @@ class HomeController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-    getLocation();
-    getCategories();
-    getCanteen();
+    loadInitialData();
   }
 
-  Future<void> refreshAll() async {
-    EasyLoading.show(status: 'Loading...');
+  Future<void> loadInitialData() async {
+    isLoading.value = true;
+    EasyLoading.show(status: 'Memuat data...');
 
     try {
       await Future.wait([
         getLocation(),
         getCategories(),
         getCanteen(),
+        fetchAllMenus(),
       ]);
     } on SocketException catch (_) {
       Get.snackbar(
@@ -99,8 +101,13 @@ class HomeController extends GetxController {
 
       print(e);
     } finally {
+      isLoading.value = false;
       EasyLoading.dismiss();
     }
+  }
+
+  Future<void> refreshAll() async {
+    await loadInitialData();
   }
 
   Future<void> getLocation() async {
@@ -213,7 +220,7 @@ class HomeController extends GetxController {
       );
 
       print(e);
-    } finally {}
+    }
   }
 
   Future<void> getCategories() async {
@@ -316,7 +323,7 @@ class HomeController extends GetxController {
       );
 
       print(e);
-    } finally {}
+    }
   }
 
   Future<void> getCanteen() async {
@@ -440,7 +447,112 @@ class HomeController extends GetxController {
       );
 
       print(e);
-    } finally {}
+    }
+  }
+
+  Future<void> fetchAllMenus() async {
+    String url = AppUrl.menus;
+    String? token = await DatabaseProvider().getToken();
+
+    if (token == null) {
+      isMenuLoading.value = false;
+
+      Get.snackbar(
+        "Informasi ",
+        "Token Tidak Ditemukan",
+        animationDuration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 1650),
+        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+        borderWidth: 5.w,
+        snackPosition: SnackPosition.TOP,
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
+        icon: const Icon(
+          CupertinoIcons.info_circle,
+        ),
+      );
+
+      return;
+    }
+
+    try {
+      http.Response req = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (req.statusCode == 200) {
+        final res = json.decode(req.body);
+
+        print(res);
+
+        List<dynamic> menuData = res["data"];
+        allMenus.value = menuData.map((item) => Menu.fromJson(item)).toList();
+        menus.value = allMenus;
+      } else {
+        final res = json.decode(req.body);
+
+        print(res);
+
+        Get.snackbar(
+          "Informasi ",
+          "Terjadi Kesalahan",
+          animationDuration: const Duration(milliseconds: 200),
+          duration: const Duration(milliseconds: 1650),
+          backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+          borderWidth: 5.w,
+          snackPosition: SnackPosition.TOP,
+          margin: EdgeInsets.symmetric(
+            horizontal: 20.w,
+            vertical: 20.h,
+          ),
+          icon: const Icon(
+            CupertinoIcons.info_circle,
+          ),
+        );
+      }
+    } on SocketException catch (_) {
+      Get.snackbar(
+        "Informasi ",
+        "Koneksi Internet Tidak Tersedia",
+        animationDuration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 1650),
+        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+        borderWidth: 5.w,
+        snackPosition: SnackPosition.TOP,
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
+        icon: const Icon(
+          CupertinoIcons.info_circle,
+        ),
+      );
+    } catch (e) {
+      Get.snackbar(
+        "Informasi ",
+        "Mohon Coba Lagi",
+        animationDuration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 1650),
+        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+        borderWidth: 5.w,
+        snackPosition: SnackPosition.TOP,
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
+        icon: const Icon(
+          CupertinoIcons.info_circle,
+        ),
+      );
+
+      print(e);
+    }
   }
 
   Future<void> getMenuByCanteen({
@@ -449,117 +561,7 @@ class HomeController extends GetxController {
   }) async {
     isMenuLoading.value = true;
 
-    String url;
-
-    if (id == "all") {
-      url = AppUrl.menus;
-    } else {
-      url = "${AppUrl.menuByCanteen}/$id";
-    }
-
-    String? token = await DatabaseProvider().getToken();
-
-    if (token == null) {
-      isMenuLoading.value = false;
-
-      Get.snackbar(
-        "Informasi ",
-        "Token Tidak Ditemukan",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
-
-      return;
-    }
-
-    try {
-      http.Response req = await http.get(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
-
-      if (req.statusCode == 200) {
-        final res = json.decode(req.body);
-
-        print(res);
-
-        List<dynamic> menuData = res["data"];
-
-        menus.value = menuData.map((item) => Menu.fromJson(item)).toList();
-      } else {
-        final res = json.decode(req.body);
-
-        print(res);
-
-        Get.snackbar(
-          "Informasi ",
-          "Terjadi Kesalahan",
-          animationDuration: const Duration(milliseconds: 200),
-          duration: const Duration(milliseconds: 1650),
-          backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-          borderWidth: 5.w,
-          snackPosition: SnackPosition.TOP,
-          margin: EdgeInsets.symmetric(
-            horizontal: 20.w,
-            vertical: 20.h,
-          ),
-          icon: const Icon(
-            CupertinoIcons.info_circle,
-          ),
-        );
-      }
-    } on SocketException catch (_) {
-      Get.snackbar(
-        "Informasi ",
-        "Koneksi Internet Tidak Tersedia",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
-    } catch (e) {
-      Get.snackbar(
-        "Informasi ",
-        "Mohon Coba Lagi",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
-
-      print(e);
-    } finally {
-      isMenuLoading.value = false;
-    }
+    filterMenuByCanteen(id);
   }
 
   Future<void> getMenuByCategory({
@@ -568,117 +570,7 @@ class HomeController extends GetxController {
   }) async {
     isMenuLoading.value = true;
 
-    String url;
-
-    if (id == "all") {
-      url = AppUrl.categories;
-    } else {
-      url = "${AppUrl.menuByCategory}/$id";
-    }
-
-    String? token = await DatabaseProvider().getToken();
-
-    if (token == null) {
-      isMenuLoading.value = false;
-
-      Get.snackbar(
-        "Informasi ",
-        "Token Tidak Ditemukan",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
-
-      return;
-    }
-
-    try {
-      http.Response req = await http.get(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
-
-      if (req.statusCode == 200) {
-        final res = json.decode(req.body);
-
-        print(res);
-
-        List<dynamic> menuData = res["data"];
-
-        menus.value = menuData.map((item) => Menu.fromJson(item)).toList();
-      } else {
-        final res = json.decode(req.body);
-
-        print(res);
-
-        Get.snackbar(
-          "Informasi ",
-          "Terjadi Kesalahan",
-          animationDuration: const Duration(milliseconds: 200),
-          duration: const Duration(milliseconds: 1650),
-          backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-          borderWidth: 5.w,
-          snackPosition: SnackPosition.TOP,
-          margin: EdgeInsets.symmetric(
-            horizontal: 20.w,
-            vertical: 20.h,
-          ),
-          icon: const Icon(
-            CupertinoIcons.info_circle,
-          ),
-        );
-      }
-    } on SocketException catch (_) {
-      Get.snackbar(
-        "Informasi ",
-        "Koneksi Internet Tidak Tersedia",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
-    } catch (e) {
-      Get.snackbar(
-        "Informasi ",
-        "Mohon Coba Lagi",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
-
-      print(e);
-    } finally {
-      isMenuLoading.value = false;
-    }
+    filterMenuByCategory(id);
   }
 
   Future<void> getSearchMenu({
@@ -797,6 +689,30 @@ class HomeController extends GetxController {
     } finally {
       isMenuLoading.value = false;
     }
+  }
+
+  void filterMenuByCategory(String categoryId) {
+    if (categoryId.isEmpty || categoryId == "all") {
+      menus.value = allMenus;
+    } else {
+      menus.value =
+          allMenus.where((menu) => menu.category?.id == categoryId).toList();
+    }
+    selectedCategoryId.value = categoryId;
+    selectedCanteenId.value = "all";
+    isMenuLoading.value = false;
+  }
+
+  void filterMenuByCanteen(String canteenId) {
+    if (canteenId.isEmpty || canteenId == "all") {
+      menus.value = allMenus;
+    } else {
+      menus.value =
+          allMenus.where((menu) => menu.canteen.id == canteenId).toList();
+    }
+    selectedCanteenId.value = canteenId;
+    selectedCategoryId.value = "";
+    isMenuLoading.value = false;
   }
 
   void addToCart(Menu food, int quantity) {

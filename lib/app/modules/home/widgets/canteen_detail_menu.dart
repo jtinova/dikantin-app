@@ -57,11 +57,20 @@ class MenuDetailBottom extends StatelessWidget {
               food.imageUrl,
               width: double.infinity,
               height: 140.h,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return Image.asset(
+                  'assets/images/logo_dikantin.png',
+                  width: double.infinity,
+                  height: 140.h,
+                  fit: BoxFit.cover,
+                );
+              },
             ),
           ),
           SizedBox(height: 5.h),
           Text(
-            food.description,
+            food.description ?? "Tidak ada deskripsi",
             style: TextStyle(
               fontSize: 15.sp,
               color: Color(0xFF1E2857),

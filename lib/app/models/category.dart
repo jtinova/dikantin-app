@@ -1,12 +1,12 @@
 class Category {
   final String id;
   final String name;
-  final String image;
+  final String? image;
 
   Category({
     required this.id,
     required this.name,
-    required this.image,
+    this.image,
   });
 
   factory Category.fromJson(Map<String, dynamic> json) {
