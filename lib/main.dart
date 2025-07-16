@@ -18,7 +18,7 @@ void main() async {
   await GetStorage.init(); 
   // Check if a token exists before launching the app
   String? token = await DatabaseProvider().getToken();
-  String initialRoute = token != null ? Routes.NAVIGATION : Routes.SIGN_IN;
+  String initialRoute = token != null ? Routes.SIGN_IN : Routes.NAVIGATION;
 
   runApp(MyApp(initialRoute: initialRoute));
 

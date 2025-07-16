@@ -30,10 +30,39 @@ class PesananKantinView extends GetView<PesananController> {
           IconButton(
             icon:  Icon(Icons.question_mark_rounded, color: Color(0xFFFEFEFE),),
             onPressed: () {
-              
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  title: Text(
+                    'Bantuan',
+                    style: TextStyle(
+                      color: Color(0xFF19345E),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  content: SingleChildScrollView(
+                    child: Text(
+                      "• Tekan tab 'Pesanan Masuk' untuk melihat daftar pesanan baru.\n"
+                      "• Tekan tab 'Dimasak' untuk melihat daftar pesanan dimasak.\n"
+                      "• Tekan tombol 'Lihat Detail' untuk melihat detail dari pesanan.\n",
+                      style: TextStyle(fontSize: 15),
+                    ),
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text(
+                        'Tutup',
+                        style: TextStyle(color: Color(0xFF19345E)),
+                      ),
+                    ),
+                  ],
+                ),
+              );
             },
           )
-        ],
+        ],  
       ),
       body: SafeArea(
         child: Container(

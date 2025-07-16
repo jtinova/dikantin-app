@@ -1,0 +1,2 @@
+C:/Users/IRUL/dikantin-app-new/android/app/.cxx/RelWithDebInfo/5b4j12r2/x86_64/CMakeFiles/edit_cache.dir
+C:/Users/IRUL/dikantin-app-new/android/app/.cxx/RelWithDebInfo/5b4j12r2/x86_64/CMakeFiles/rebuild_cache.dir

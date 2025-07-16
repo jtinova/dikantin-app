@@ -1,6 +1,6 @@
 class AppUrl {
   // Change IP Address before run project
-  static const String baseHost = 'http://192.168.43.13:8000';
+  static const String baseHost = 'http://dikantin-staging.jtinova.com';
   static const String baseURL = '$baseHost/api';
 
   // Authentication

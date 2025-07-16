@@ -24,7 +24,44 @@ class MenuKantinView extends GetView<MenuKantinController> {
             fontSize: 20, 
             fontWeight: FontWeight.w500
           ),
-        ),   
+        ), 
+        actions: [
+          IconButton(
+            icon:  Icon(Icons.question_mark_rounded, color: Color(0xFFFEFEFE),),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  title: Text(
+                    'Bantuan',
+                    style: TextStyle(
+                      color: Color(0xFF19345E),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  content: SingleChildScrollView(
+                    child: Text(
+                      "• Tekan tombol 'Ubah Stok' untuk mengubah status menu.\n"
+                      "• Tekan tombol 'Tersedia' untuk mengubah status menjadi Tersedia.\n"
+                      "• Tekan tombol 'Habis' untuk mengubah status menjadi Habis.\n",
+                      style: TextStyle(fontSize: 15),
+                    ),
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text(
+                        'Tutup',
+                        style: TextStyle(color: Color(0xFF19345E)),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          )
+        ],  
       ),
       body: SafeArea(
         child: RefreshIndicator(

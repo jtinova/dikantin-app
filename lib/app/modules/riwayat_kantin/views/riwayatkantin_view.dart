@@ -25,14 +25,41 @@ class RiwayatKantinView extends GetView<RiwayatKantinController> {
             fontWeight: FontWeight.w500
           ),
         ),  
-        // actions: [
-        //   // IconButton(
-        //   //   icon:  Icon(Icons.question_mark_rounded),
-        //   //   onPressed: () {
-              
-        //   //   },
-        //   // )
-        // ],
+        actions: [
+          IconButton(
+            icon:  Icon(Icons.question_mark_rounded, color: Color(0xFFFEFEFE),),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  title: Text(
+                    'Bantuan',
+                    style: TextStyle(
+                      color: Color(0xFF19345E),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  content: SingleChildScrollView(
+                    child: Text(
+                      "• Tekan tombol 'Lihat Detail' untuk melihat detail dari pesanan.\n",
+                      style: TextStyle(fontSize: 15),
+                    ),
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text(
+                        'Tutup',
+                        style: TextStyle(color: Color(0xFF19345E)),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          )
+        ],  
       ),
       body: SafeArea(
         child: Column(

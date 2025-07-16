@@ -5,6 +5,8 @@ import 'package:dikantin_app_rebuild/app/data/api.dart';
 import 'package:flutter/material.dart';
 import 'package:dikantin_app_rebuild/app/models/order_canteen.dart';
 import 'dart:convert';
+import 'dart:async';
+
 
 class PesananController extends GetxController with GetTickerProviderStateMixin {
   RxList<TransactionModel> daftarMenu = <TransactionModel>[].obs;
@@ -12,13 +14,21 @@ class PesananController extends GetxController with GetTickerProviderStateMixin 
 
   RxList<TransactionModel> pesananMasuk = <TransactionModel>[].obs;
   RxList<TransactionModel> pesananDimasak = <TransactionModel>[].obs;
-
+  List<TransactionModel> _lastFetchedMasuk = [];
+  Timer? _autoRefreshTimer;
 
   @override
   void onInit() {
     super.onInit();
     tabController = TabController(length: 2, vsync: this);
     fetchPesanan();
+     _startAutoRefresh();
+  }
+
+  @override
+  void onClose() {
+    _autoRefreshTimer?.cancel();
+    super.onClose();
   }
 
   void refreshData() {
@@ -53,6 +63,21 @@ class PesananController extends GetxController with GetTickerProviderStateMixin 
           }
         }
 
+        if (_lastFetchedMasuk.isNotEmpty && masuk.length > _lastFetchedMasuk.length) {
+          Get.snackbar(
+            "Pesanan Baru",
+            "Ada pesanan baru masuk",
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: Colors.white,
+            colorText: Colors.black,
+            duration: Duration(milliseconds: 2000),
+            margin: EdgeInsets.all(10),
+            borderRadius: 10,
+          );
+        }
+
+        _lastFetchedMasuk = List.from(masuk);
+
         pesananMasuk.assignAll(masuk);
         pesananDimasak.assignAll(dimasak);
       }
@@ -79,16 +104,24 @@ class PesananController extends GetxController with GetTickerProviderStateMixin 
       hideLoadingDialog(); 
 
       if (response.statusCode == 200) {
-        Get.snackbar(
-          "Sukses",
-          "Pesanan Dimasak",
-          snackPosition: SnackPosition.TOP,
-          backgroundColor: Colors.white,
-          colorText: Colors.black,
-          duration: Duration(milliseconds: 2000), 
-          margin: EdgeInsets.all(10),
-          borderRadius: 10,
-        );
+        final tabIndex = tabController.index;
+
+        await fetchPesanan();
+        tabController.index = tabIndex;
+        Get.back();
+
+        Future.delayed(Duration(milliseconds: 300), () {
+          Get.snackbar(
+            "Berhasil",
+            "Pesanan Dimasak",
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: Colors.white,
+            colorText: Colors.black,
+            duration: Duration(milliseconds: 2000),
+            margin: EdgeInsets.all(10),
+            borderRadius: 10,
+          );
+        });
       } else {
         Get.snackbar("Error", data['message'] ?? 'Gagal memproses pesanan');
       }
@@ -97,6 +130,7 @@ class PesananController extends GetxController with GetTickerProviderStateMixin 
       Get.snackbar("Error", "Terjadi kesalahan saat memproses pesanan");
     }
   }
+
 
 
 
@@ -116,17 +150,25 @@ class PesananController extends GetxController with GetTickerProviderStateMixin 
 
       final data = jsonDecode(response.body);
       hideLoadingDialog(); 
-      if (response.statusCode == 200) {
-        Get.snackbar(
-          "Sukses",
-          "Pesanan Selesai",
-          snackPosition: SnackPosition.TOP,
-          backgroundColor: Colors.white,
-          colorText: Colors.black,
-          duration: Duration(milliseconds: 2000), 
-          margin: EdgeInsets.all(10),
-          borderRadius: 10,
-        );
+        if (response.statusCode == 200) {
+          final tabIndex = tabController.index;
+
+        await fetchPesanan();
+        tabController.index = tabIndex;
+        Get.back();
+
+        Future.delayed(Duration(milliseconds: 300), () {
+          Get.snackbar(
+            "Berhasil",
+            "Pesanan Selesai",
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: Colors.white,
+            colorText: Colors.black,
+            duration: Duration(milliseconds: 2000),
+            margin: EdgeInsets.all(10),
+            borderRadius: 10,
+          );
+        });
       } else {
         Get.snackbar("Error", data['message'] ?? 'Gagal memproses pesanan');
       }
@@ -134,6 +176,13 @@ class PesananController extends GetxController with GetTickerProviderStateMixin 
       hideLoadingDialog(); 
       Get.snackbar("Error", "Terjadi kesalahan saat menyelesaikan pesanan");
     } 
+  }
+
+  void _startAutoRefresh() {
+    _autoRefreshTimer?.cancel(); 
+    _autoRefreshTimer = Timer.periodic(Duration(seconds: 30), (_) {
+      fetchPesanan();
+    });
   }
 }
 
@@ -168,3 +217,4 @@ void hideLoadingDialog() {
     Get.back(); 
   }
 }
+

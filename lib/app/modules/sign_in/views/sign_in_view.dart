@@ -208,34 +208,13 @@ class SignInView extends GetView<SignInController> {
                             ]),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 15),
-                          child: Row(
-                            children: [
-                              Spacer(),
-                              GestureDetector(
-                                onTap: () => Get.offAllNamed(Routes.SEND_EMAIL),
-                                child: Center(
-                                  child: const Text(
-                                    "Lupa password?",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                      color: Color(0xFF1E2857),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 50),
                   SizedBox(
                     width: double.infinity,
-                    height: 45,
+                    height: 50,
                     child: Consumer<AuthCanteenProvider>(
                       builder: (context, auth, child) {
                         WidgetsBinding.instance.addPostFrameCallback(
