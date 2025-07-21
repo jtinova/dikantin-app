@@ -1,7 +1,6 @@
 // ignore_for_file: avoid_print
 
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,18 +19,49 @@ class ProfileController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    getDetailUser();
+    loadInitialData();
+  }
+
+  Future<void> loadInitialData() async {
+    EasyLoading.show(status: 'Loading...');
+
+    try {
+      await Future.wait([
+        getDetailUser(),
+      ]);
+    } catch (e) {
+      Get.snackbar(
+        "Informasi ",
+        "Mohon Coba Lagi",
+        animationDuration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 1650),
+        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+        borderWidth: 5.w,
+        snackPosition: SnackPosition.TOP,
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
+        icon: const Icon(
+          CupertinoIcons.info_circle,
+        ),
+      );
+
+      print(e);
+    } finally {
+      EasyLoading.dismiss();
+    }
+  }
+
+  Future<void> refreshAll() async {
+    await loadInitialData();
   }
 
   Future<void> getDetailUser() async {
-    EasyLoading.show(status: 'Loading...');
-
     String url = AppUrl.detailUserProfile;
     String? token = await DatabaseProvider().getToken();
 
     if (token == null) {
-      EasyLoading.dismiss();
-
       Get.snackbar(
         "Informasi ",
         "Token Tidak Ditemukan",
@@ -40,7 +70,7 @@ class ProfileController extends GetxController {
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
         borderWidth: 5.w,
         snackPosition: SnackPosition.TOP,
-         margin: EdgeInsets.symmetric(
+        margin: EdgeInsets.symmetric(
           horizontal: 20.w,
           vertical: 20.h,
         ),
@@ -80,53 +110,17 @@ class ProfileController extends GetxController {
           backgroundColor: const Color.fromARGB(255, 238, 238, 238),
           borderWidth: 5.w,
           snackPosition: SnackPosition.TOP,
-           margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
+          margin: EdgeInsets.symmetric(
+            horizontal: 20.w,
+            vertical: 20.h,
+          ),
           icon: const Icon(
             CupertinoIcons.info_circle,
           ),
         );
       }
-    } on SocketException catch (_) {
-      Get.snackbar(
-        "Informasi ",
-        "Koneksi Internet Tidak Tersedia",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-         margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
     } catch (e) {
-      Get.snackbar(
-        "Informasi ",
-        "Mohon Coba Lagi",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-         margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
-
       print(e);
-    } finally {
-      EasyLoading.dismiss();
     }
   }
 
@@ -153,7 +147,7 @@ class ProfileController extends GetxController {
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
         borderWidth: 5.w,
         snackPosition: SnackPosition.TOP,
-         margin: EdgeInsets.symmetric(
+        margin: EdgeInsets.symmetric(
           horizontal: 20.w,
           vertical: 20.h,
         ),
@@ -199,10 +193,10 @@ class ProfileController extends GetxController {
           colorText: Colors.white,
           borderWidth: 5.w,
           snackPosition: SnackPosition.TOP,
-           margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
+          margin: EdgeInsets.symmetric(
+            horizontal: 20.w,
+            vertical: 20.h,
+          ),
           icon: const Icon(
             CupertinoIcons.info_circle,
             color: Colors.white,
@@ -229,10 +223,10 @@ class ProfileController extends GetxController {
             colorText: Colors.white,
             borderWidth: 5.w,
             snackPosition: SnackPosition.TOP,
-             margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
+            margin: EdgeInsets.symmetric(
+              horizontal: 20.w,
+              vertical: 20.h,
+            ),
             icon: const Icon(
               CupertinoIcons.info_circle,
               color: Colors.white,
@@ -240,23 +234,6 @@ class ProfileController extends GetxController {
           );
         }
       }
-    } on SocketException catch (_) {
-      Get.snackbar(
-        "Informasi ",
-        "Koneksi Internet Tidak Tersedia",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-         margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
     } catch (e) {
       Get.snackbar(
         "Informasi ",
@@ -266,7 +243,7 @@ class ProfileController extends GetxController {
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
         borderWidth: 5.w,
         snackPosition: SnackPosition.TOP,
-         margin: EdgeInsets.symmetric(
+        margin: EdgeInsets.symmetric(
           horizontal: 20.w,
           vertical: 20.h,
         ),

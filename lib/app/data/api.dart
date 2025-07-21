@@ -1,8 +1,9 @@
 class AppUrl {
   // Change IP Address before run project
   static String baseURL = 'https://dikantin-staging.jtinova.com';
-  static String baseURLAPI = '$baseURL/api';
-  static String baseImageURL = '$baseURL/storage/menu/';
+  static String baseURLLocal = 'http://192.168.1.13:8000';
+  static String baseURLAPI = '$baseURLLocal/api';
+  static String baseImageURL = '$baseURLLocal/storage/menu/';
 
   // Authentication User
   static String signin = '$baseURLAPI/login';
@@ -19,8 +20,10 @@ class AppUrl {
   static String canteens = '$baseURLAPI/canteen';
   static String searchMenu = '$baseURLAPI/menu/search';
   static String menus = '$baseURLAPI/menu';
-  static String menuByCanteen = '$baseURLAPI/canteen/menu';
-  static String menuByCategory = '$baseURLAPI/category/menu';
+  static String reviewMenu = '$baseURLAPI/menu/review/';
+  static String menuFavorit = '$baseURLAPI/menu/favorite';
+  static String menuFavoritAdd = '$baseURLAPI/menu/favorite/add';
+  static String menuFavoritRemove = '$baseURLAPI/menu/favorite/remove/';
 
   // API Order User
   static String calculateOrder = '$baseURLAPI/transaction/calculate-order';

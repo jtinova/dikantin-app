@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,12 +8,18 @@ import 'package:skeletonizer/skeletonizer.dart';
 
 import '../controllers/home_controller.dart';
 import 'canteen_detail_menu.dart';
+import 'rating_menu_content.dart';
 
-class FoodGrids extends StatelessWidget {
+class FoodGrids extends StatefulWidget {
   const FoodGrids({super.key, required this.controller});
 
   final HomeController controller;
 
+  @override
+  State<FoodGrids> createState() => _FoodGridsState();
+}
+
+class _FoodGridsState extends State<FoodGrids> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -20,7 +28,7 @@ class FoodGrids extends StatelessWidget {
         horizontal: 10.w,
       ),
       child: Obx(() {
-        if (controller.isLoading.value) {
+        if (widget.controller.isLoading.value) {
           return GridView.builder(
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
@@ -46,18 +54,18 @@ class FoodGrids extends StatelessWidget {
                 child: Card(
                   elevation: 3,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(10.r),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(10),
+                          top: Radius.circular(10.r),
                         ),
                         child: Container(
                           width: double.infinity,
-                          height: 100,
+                          height: 95.h,
                           decoration: BoxDecoration(
                             color: Colors.grey[300],
                           ),
@@ -69,29 +77,29 @@ class FoodGrids extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
-                              height: 15,
-                              width: 100,
+                              height: 15.h,
+                              width: 100.w,
                               decoration: BoxDecoration(
                                 color: Colors.grey[300],
-                                borderRadius: BorderRadius.circular(5),
+                                borderRadius: BorderRadius.circular(5.r),
                               ),
                             ),
-                            SizedBox(height: 5),
+                            SizedBox(height: 5.h),
                             Container(
-                              height: 15,
-                              width: 150,
+                              height: 15.h,
+                              width: 150.w,
                               decoration: BoxDecoration(
                                 color: Colors.grey[300],
-                                borderRadius: BorderRadius.circular(5),
+                                borderRadius: BorderRadius.circular(5.r),
                               ),
                             ),
-                            SizedBox(height: 10),
+                            SizedBox(height: 10.h),
                             Container(
-                              height: 15,
-                              width: 80,
+                              height: 15.h,
+                              width: 80.w,
                               decoration: BoxDecoration(
                                 color: Colors.grey[300],
-                                borderRadius: BorderRadius.circular(5),
+                                borderRadius: BorderRadius.circular(5.r),
                               ),
                             ),
                           ],
@@ -105,7 +113,7 @@ class FoodGrids extends StatelessWidget {
           );
         }
 
-        if (controller.menus.isEmpty) {
+        if (widget.controller.menus.isEmpty) {
           return Padding(
             padding: EdgeInsets.symmetric(vertical: 15.h),
             child: Center(
@@ -121,7 +129,7 @@ class FoodGrids extends StatelessWidget {
         }
 
         return GridView.builder(
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
@@ -138,9 +146,9 @@ class FoodGrids extends StatelessWidget {
               }
             }(),
           ),
-          itemCount: controller.menus.length,
+          itemCount: widget.controller.menus.length,
           itemBuilder: (context, index) {
-            final food = controller.menus[index];
+            final food = widget.controller.menus[index];
             bool isClosed = food.canteen.status == "close";
             bool isOutOfStock = food.stock <= 0;
 
@@ -156,7 +164,7 @@ class FoodGrids extends StatelessWidget {
                   builder: (context) {
                     return MenuDetailBottom(
                       food: food,
-                      controller: controller,
+                      controller: widget.controller,
                     );
                   },
                 );
@@ -169,34 +177,115 @@ class FoodGrids extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ClipRRect(
-                      borderRadius:
-                          BorderRadius.vertical(top: Radius.circular(10.r)),
-                      child: ColorFiltered(
-                        colorFilter: isClosed || isOutOfStock
-                            ? ColorFilter.mode(
-                                Colors.grey,
-                                BlendMode.saturation,
-                              )
-                            : ColorFilter.mode(
-                                Colors.transparent,
-                                BlendMode.saturation,
-                              ),
-                        child: Image.network(
-                          food.imageUrl,
-                          width: double.infinity,
-                          height: 90.h,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Image.asset(
-                              'assets/images/logo_dikantin.png',
+                    Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius:
+                              BorderRadius.vertical(top: Radius.circular(10.r)),
+                          child: ColorFiltered(
+                            colorFilter: isClosed || isOutOfStock
+                                ? const ColorFilter.mode(
+                                    Colors.grey,
+                                    BlendMode.saturation,
+                                  )
+                                : const ColorFilter.mode(
+                                    Colors.transparent,
+                                    BlendMode.saturation,
+                                  ),
+                            child: Image.network(
+                              food.imageUrl,
                               width: double.infinity,
                               height: 90.h,
                               fit: BoxFit.cover,
-                            );
-                          },
+                              errorBuilder: (context, error, stackTrace) {
+                                return Image.asset(
+                                  'assets/images/logo_dikantin.png',
+                                  width: double.infinity,
+                                  height: 90.h,
+                                  fit: BoxFit.cover,
+                                );
+                              },
+                            ),
+                          ),
                         ),
-                      ),
+                        Positioned(
+                          bottom: 5.h,
+                          right: 5.w,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => RatingMenu(
+                                    menuId: food.id,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 6.w,
+                                vertical: 2.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.35),
+                                borderRadius: BorderRadius.circular(10.r),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.star,
+                                    color: Colors.amber,
+                                    size: 16.r,
+                                  ),
+                                  SizedBox(width: 4.w),
+                                  Text(
+                                    food.rating!.toStringAsFixed(2),
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 14.sp,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 5.h,
+                          left: 5.w,
+                          child: Obx(
+                            () {
+                              final isFavorited = widget
+                                  .controller.favoriteMenuId
+                                  .contains(food.id);
+
+                              return GestureDetector(
+                                onTap: () => widget.controller
+                                    .toggleFavoriteStatus(food),
+                                child: Container(
+                                  padding: EdgeInsets.all(3.r),
+                                  decoration: BoxDecoration(
+                                    color: Colors.black.withOpacity(0.35),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    isFavorited
+                                        ? CupertinoIcons.heart_fill
+                                        : CupertinoIcons.heart,
+                                    color: isFavorited
+                                        ? Colors.redAccent
+                                        : Colors.white,
+                                    size: 20.r,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                     Padding(
                       padding: EdgeInsets.only(
@@ -216,9 +305,9 @@ class FoodGrids extends StatelessWidget {
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
-                              Spacer(),
+                              const Spacer(),
                               Text(
-                                controller.capitalizeFirst(food.canteen.status),
+                                isClosed ? 'Tutup' : 'Buka',
                                 style: TextStyle(
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.w500,
@@ -241,7 +330,7 @@ class FoodGrids extends StatelessWidget {
                             Padding(
                               padding: EdgeInsets.only(top: 1.5.h),
                               child: Text(
-                                "Rp ${controller.formatRupiah(food.sellingCost)}",
+                                "Rp ${widget.controller.formatRupiah(food.sellingCost)}",
                                 style: TextStyle(
                                   fontSize: 13.sp,
                                   fontWeight: FontWeight.w500,
@@ -253,7 +342,7 @@ class FoodGrids extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  "Rp ${controller.formatRupiah(food.sellingCost)}",
+                                  "Rp ${widget.controller.formatRupiah(food.sellingCost)}",
                                   style: TextStyle(
                                     fontSize: 13.sp,
                                     fontWeight: FontWeight.w500,
@@ -261,13 +350,14 @@ class FoodGrids extends StatelessWidget {
                                 ),
                                 Obx(
                                   () {
-                                    int quantity = controller.getQuantity(food);
+                                    int quantity =
+                                        widget.controller.getQuantity(food);
                                     return quantity > 0
                                         ? Row(
                                             children: [
                                               GestureDetector(
                                                 onTap: () {
-                                                  controller.updateCart(
+                                                  widget.controller.updateCart(
                                                     food,
                                                     isAdding: false,
                                                   );
@@ -280,7 +370,8 @@ class FoodGrids extends StatelessWidget {
                                                     color: Colors.red,
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                            5.r),
+                                                      5.r,
+                                                    ),
                                                   ),
                                                   child: Icon(
                                                     Icons.remove,
@@ -300,7 +391,7 @@ class FoodGrids extends StatelessWidget {
                                               SizedBox(width: 12.5.w),
                                               GestureDetector(
                                                 onTap: () {
-                                                  controller.updateCart(
+                                                  widget.controller.updateCart(
                                                     food,
                                                     isAdding: true,
                                                   );
@@ -313,7 +404,8 @@ class FoodGrids extends StatelessWidget {
                                                     color: Color(0xFF1E2857),
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                            5.r),
+                                                      5.r,
+                                                    ),
                                                   ),
                                                   child: Icon(
                                                     Icons.add,
@@ -326,16 +418,19 @@ class FoodGrids extends StatelessWidget {
                                           )
                                         : GestureDetector(
                                             onTap: () {
-                                              if (!isClosed || !isOutOfStock) {
-                                                controller.addToCart(food, 1);
+                                              if (!isClosed && !isOutOfStock) {
+                                                widget.controller
+                                                    .addToCart(food, 1);
                                               } else {
                                                 Get.snackbar(
-                                                  "Kantin Tutup",
+                                                  "Kantin Tutup atau Stok Habis",
                                                   "Tidak dapat menambahkan menu ke keranjang",
                                                   animationDuration: Duration(
-                                                      milliseconds: 200),
+                                                    milliseconds: 200,
+                                                  ),
                                                   duration: Duration(
-                                                      milliseconds: 1650),
+                                                    milliseconds: 1650,
+                                                  ),
                                                   backgroundColor: Colors.red,
                                                   borderWidth: 5.w,
                                                   snackPosition:
@@ -359,7 +454,7 @@ class FoodGrids extends StatelessWidget {
                                               decoration: BoxDecoration(
                                                 color: Color(0xFF1E2857),
                                                 borderRadius:
-                                                    BorderRadius.circular(5),
+                                                    BorderRadius.circular(5.r),
                                               ),
                                               child: Icon(
                                                 Icons.add,

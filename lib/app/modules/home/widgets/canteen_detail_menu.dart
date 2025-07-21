@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -5,10 +7,14 @@ import 'package:get/get.dart';
 
 import '../../../models/menu.dart';
 import '../controllers/home_controller.dart';
+import 'rating_menu_content.dart';
 
 class MenuDetailBottom extends StatelessWidget {
-  const MenuDetailBottom(
-      {super.key, required this.food, required this.controller});
+  const MenuDetailBottom({
+    super.key,
+    required this.food,
+    required this.controller,
+  });
 
   final Menu food;
   final HomeController controller;
@@ -21,7 +27,7 @@ class MenuDetailBottom extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: 15.w,
-        vertical: 5.h,
+        vertical: 10.h,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -49,24 +55,110 @@ class MenuDetailBottom extends StatelessWidget {
             ),
           ),
           SizedBox(height: 7.h),
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20.r),
-            ),
-            child: Image.network(
-              food.imageUrl,
-              width: double.infinity,
-              height: 140.h,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return Image.asset(
-                  'assets/images/logo_dikantin.png',
-                  width: double.infinity,
-                  height: 140.h,
-                  fit: BoxFit.cover,
-                );
-              },
-            ),
+          Stack(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10.r),
+                child: ColorFiltered(
+                  colorFilter: isClosed || isOutOfStock
+                      ? const ColorFilter.mode(
+                          Colors.grey,
+                          BlendMode.saturation,
+                        )
+                      : const ColorFilter.mode(
+                          Colors.transparent,
+                          BlendMode.saturation,
+                        ),
+                  child: Image.network(
+                    food.imageUrl,
+                    width: double.infinity,
+                    height: 140.h,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Image.asset(
+                        'assets/images/logo_dikantin.png',
+                        width: double.infinity,
+                        height: 140.h,
+                        fit: BoxFit.cover,
+                      );
+                    },
+                  ),
+                ),
+              ),
+              Positioned(
+                bottom: 5.h,
+                right: 5.w,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RatingMenu(
+                          menuId: food.id,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 6.w,
+                      vertical: 2.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.35),
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                          size: 16.r,
+                        ),
+                        SizedBox(width: 4.w),
+                        Text(
+                          food.rating!.toStringAsFixed(2),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14.sp,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                bottom: 5.h,
+                left: 5.w,
+                child: Obx(
+                  () {
+                    final isFavorited =
+                        controller.favoriteMenuId.contains(food.id);
+
+                    return GestureDetector(
+                      onTap: () => controller.toggleFavoriteStatus(food),
+                      child: Container(
+                        padding: EdgeInsets.all(3.r),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.35),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          isFavorited
+                              ? CupertinoIcons.heart_fill
+                              : CupertinoIcons.heart,
+                          color: isFavorited ? Colors.redAccent : Colors.white,
+                          size: 20.r,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
           SizedBox(height: 5.h),
           Text(
@@ -88,7 +180,7 @@ class MenuDetailBottom extends StatelessWidget {
                 ),
               ),
               Text(
-                controller.capitalizeFirst(food.canteen.status),
+                isClosed ? 'Tutup' : 'Buka',
                 style: TextStyle(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w500,

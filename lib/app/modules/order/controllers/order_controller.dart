@@ -1,7 +1,6 @@
 // ignore_for_file: avoid_print
 
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -42,14 +41,10 @@ class OrderController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    getProgress();
-    getShipping();
-    getPickUp();
-    getDineIn();
-    getHistory();
+    loadInitialData();
   }
 
-  Future<void> refreshAll() async {
+  Future<void> loadInitialData() async {
     EasyLoading.show(status: 'Loading...');
 
     try {
@@ -60,23 +55,6 @@ class OrderController extends GetxController {
         getDineIn(),
         getHistory(),
       ]);
-    } on SocketException catch (_) {
-      Get.snackbar(
-        "Informasi ",
-        "Koneksi Internet Tidak Tersedia",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
     } catch (e) {
       Get.snackbar(
         "Informasi ",
@@ -101,15 +79,15 @@ class OrderController extends GetxController {
     }
   }
 
-  Future<void> getProgress() async {
-    EasyLoading.show(status: 'Loading...');
+  Future<void> refreshAll() async {
+    await loadInitialData();
+  }
 
+  Future<void> getProgress() async {
     String url = AppUrl.trackingProgress;
     String? token = await DatabaseProvider().getToken();
 
     if (token == null) {
-      EasyLoading.dismiss();
-
       Get.snackbar(
         "Informasi",
         "Token Tidak Ditemukan",
@@ -169,56 +147,16 @@ class OrderController extends GetxController {
           ),
         );
       }
-    } on SocketException catch (_) {
-      Get.snackbar(
-        "Informasi ",
-        "Koneksi Internet Tidak Tersedia",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
     } catch (e) {
-      Get.snackbar(
-        "Informasi ",
-        "Mohon Coba Lagi",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
-
       print(e);
-    } finally {
-      EasyLoading.dismiss();
     }
   }
 
   Future<void> getShipping() async {
-    EasyLoading.show(status: 'Loading...');
-
     String url = AppUrl.trackingShipping;
     String? token = await DatabaseProvider().getToken();
 
     if (token == null) {
-      EasyLoading.dismiss();
-
       Get.snackbar(
         "Informasi",
         "Token Tidak Ditemukan",
@@ -278,56 +216,16 @@ class OrderController extends GetxController {
           ),
         );
       }
-    } on SocketException catch (_) {
-      Get.snackbar(
-        "Informasi ",
-        "Koneksi Internet Tidak Tersedia",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
     } catch (e) {
-      Get.snackbar(
-        "Informasi ",
-        "Mohon Coba Lagi",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
-
       print(e);
-    } finally {
-      EasyLoading.dismiss();
     }
   }
 
   Future<void> getPickUp() async {
-    EasyLoading.show(status: 'Loading...');
-
     String url = AppUrl.pickUpOrder;
     String? token = await DatabaseProvider().getToken();
 
     if (token == null) {
-      EasyLoading.dismiss();
-
       Get.snackbar(
         "Informasi",
         "Token Tidak Ditemukan",
@@ -387,56 +285,16 @@ class OrderController extends GetxController {
           ),
         );
       }
-    } on SocketException catch (_) {
-      Get.snackbar(
-        "Informasi ",
-        "Koneksi Internet Tidak Tersedia",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
     } catch (e) {
-      Get.snackbar(
-        "Informasi ",
-        "Mohon Coba Lagi",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
-
       print(e);
-    } finally {
-      EasyLoading.dismiss();
     }
   }
 
   Future<void> getDineIn() async {
-    EasyLoading.show(status: 'Loading...');
-
     String url = AppUrl.dineInOrder;
     String? token = await DatabaseProvider().getToken();
 
     if (token == null) {
-      EasyLoading.dismiss();
-
       Get.snackbar(
         "Informasi",
         "Token Tidak Ditemukan",
@@ -496,56 +354,16 @@ class OrderController extends GetxController {
           ),
         );
       }
-    } on SocketException catch (_) {
-      Get.snackbar(
-        "Informasi ",
-        "Koneksi Internet Tidak Tersedia",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
     } catch (e) {
-      Get.snackbar(
-        "Informasi ",
-        "Mohon Coba Lagi",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
-
       print(e);
-    } finally {
-      EasyLoading.dismiss();
     }
   }
 
   Future<void> getHistory() async {
-    EasyLoading.show(status: 'Loading...');
-
     String url = AppUrl.trackingHistory;
     String? token = await DatabaseProvider().getToken();
 
     if (token == null) {
-      EasyLoading.dismiss();
-
       Get.snackbar(
         "Informasi",
         "Token Tidak Ditemukan",
@@ -605,56 +423,16 @@ class OrderController extends GetxController {
           ),
         );
       }
-    } on SocketException catch (_) {
-      Get.snackbar(
-        "Informasi ",
-        "Koneksi Internet Tidak Tersedia",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
     } catch (e) {
-      Get.snackbar(
-        "Informasi ",
-        "Mohon Coba Lagi",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
-
       print(e);
-    } finally {
-      EasyLoading.dismiss();
     }
   }
 
   Future<void> cancelOrder(String id) async {
-    EasyLoading.show(status: 'Loading...');
-
     String url = AppUrl.cancelOrder;
     String? token = await DatabaseProvider().getToken();
 
     if (token == null) {
-      EasyLoading.dismiss();
-
       Get.snackbar(
         "Informasi ",
         "Token Tidak Ditemukan",
@@ -734,23 +512,6 @@ class OrderController extends GetxController {
 
         print(res);
       }
-    } on SocketException catch (_) {
-      Get.snackbar(
-        "Informasi ",
-        "Koneksi Internet Tidak Tersedia",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
     } catch (e) {
       Get.snackbar(
         "Informasi ",
@@ -770,22 +531,16 @@ class OrderController extends GetxController {
       );
 
       print(e);
-    } finally {
-      EasyLoading.dismiss();
     }
   }
 
   Future<void> getDetailProgress(String id) async {
-    EasyLoading.show(status: 'Loading...');
-
     detailOrder.clear();
 
     String url = "${AppUrl.trackingDetailProgress}$id";
     String? token = await DatabaseProvider().getToken();
 
     if (token == null) {
-      EasyLoading.dismiss();
-
       Get.snackbar(
         "Informasi ",
         "Token Tidak Ditemukan",
@@ -843,23 +598,6 @@ class OrderController extends GetxController {
           ),
         );
       }
-    } on SocketException catch (_) {
-      Get.snackbar(
-        "Informasi ",
-        "Koneksi Internet Tidak Tersedia",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
     } catch (e) {
       Get.snackbar(
         "Informasi ",
@@ -879,22 +617,16 @@ class OrderController extends GetxController {
       );
 
       print(e);
-    } finally {
-      EasyLoading.dismiss();
     }
   }
 
   Future<void> getDetailShipping(String id) async {
-    EasyLoading.show(status: 'Loading...');
-
     detailShipping.clear();
 
     String url = "${AppUrl.trackingDetailShipping}$id";
     String? token = await DatabaseProvider().getToken();
 
     if (token == null) {
-      EasyLoading.dismiss();
-
       Get.snackbar(
         "Informasi ",
         "Token Tidak Ditemukan",
@@ -952,23 +684,6 @@ class OrderController extends GetxController {
           ),
         );
       }
-    } on SocketException catch (_) {
-      Get.snackbar(
-        "Informasi ",
-        "Koneksi Internet Tidak Tersedia",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
     } catch (e) {
       Get.snackbar(
         "Informasi ",
@@ -988,8 +703,6 @@ class OrderController extends GetxController {
       );
 
       print(e);
-    } finally {
-      EasyLoading.dismiss();
     }
   }
 

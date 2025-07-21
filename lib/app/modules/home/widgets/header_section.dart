@@ -11,13 +11,22 @@ import '../../../routes/app_pages.dart';
 import '../../profile/controllers/profile_controller.dart';
 import '../controllers/home_controller.dart';
 
-class Header extends StatelessWidget {
-  Header({super.key, required this.formKey, required this.controller});
-
+class Header extends StatefulWidget {
   final HomeController controller;
-  final profileController = Get.find<ProfileController>();
-
   final GlobalKey<FormBuilderState> formKey;
+
+  const Header({
+    super.key,
+    required this.formKey,
+    required this.controller,
+  });
+
+  @override
+  State<Header> createState() => _HeaderState();
+}
+
+class _HeaderState extends State<Header> {
+  final profileController = Get.put(ProfileController());
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +74,7 @@ class Header extends StatelessWidget {
                   SizedBox(width: 8.w),
                   Expanded(
                     child: Obx(() {
-                      if (controller.isLoading.value) {
+                      if (widget.controller.isLoading.value) {
                         return Skeletonizer(
                           child: Container(
                             margin: EdgeInsets.only(right: 90.w),
@@ -137,7 +146,7 @@ class Header extends StatelessWidget {
                     ],
                   ),
                   child: FormBuilder(
-                    key: formKey,
+                    key: widget.formKey,
                     child: FormBuilderTextField(
                       name: "search",
                       keyboardType: TextInputType.text,
@@ -164,7 +173,7 @@ class Header extends StatelessWidget {
                       ),
                       onChanged: (value) {
                         if (value!.isNotEmpty) {
-                          controller.getSearchMenu(query: value);
+                          widget.controller.getSearchMenu(query: value);
                         }
                       },
                     ),

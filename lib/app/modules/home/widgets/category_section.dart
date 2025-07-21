@@ -126,7 +126,7 @@ class Categories extends StatelessWidget {
                           backgroundImage:
                               AssetImage('assets/images/logo_dikantin.png'),
                           radius: 30.r,
-                          backgroundColor: Colors.transparent,
+                          backgroundColor: Colors.black12,
                         ),
                         SizedBox(height: 2.5.h),
                         Text(

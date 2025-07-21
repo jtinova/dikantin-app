@@ -1,11 +1,11 @@
-import 'package:device_preview/device_preview.dart';
 import 'package:dikantin_app_rebuild/app/data/auth_provider.dart';
+import 'package:dikantin_app_rebuild/app/data/network_provider.dart';
 import 'package:dikantin_app_rebuild/app/theme/theme.dart';
+// import 'package:device_preview/device_preview.dart';
 // import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:get/get.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
@@ -17,21 +17,34 @@ void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
-  // Check if a token exists before launching the app
+  await initServices();
+
   String? token = await DatabaseProvider().getToken();
   String initialRoute = token != null ? Routes.NAVIGATION : Routes.SIGN_IN;
 
-  // runApp(
-  //   DevicePreview(
-  //     enabled: !kReleaseMode,
-  //     builder: (context) => MyApp(initialRoute: initialRoute),
-  //   ),
-  // );
+  await ScreenUtil.ensureScreenSize();
 
-  runApp(MyApp(initialRoute: initialRoute));
+  runApp(
+    //  ChangeNotifierProvider(
+    //   create: (context) => AuthenticationProvider(),
+    //   child: DevicePreview(
+    //     enabled: !kReleaseMode,
+    //     builder: (context) => MyApp(initialRoute: initialRoute),
+    //   ),
+    // ),
+    ChangeNotifierProvider(
+      create: (context) => AuthenticationProvider(),
+      child: MyApp(initialRoute: initialRoute),
+    ),
+  );
 
   FlutterNativeSplash.remove();
   configLoading();
+}
+
+Future<void> initServices() async {
+  Get.put(DatabaseProvider(), permanent: true);
+  Get.put(NetworkProvider(), permanent: true);
 }
 
 void configLoading() {
@@ -55,26 +68,25 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => AuthenticationProvider()),
-        ChangeNotifierProvider(create: (_) => DatabaseProvider())
-      ],
-      child: ScreenUtilInit(
-        designSize: const Size(360, 690),
-        minTextAdapt: true,
-        splitScreenMode: true,
-        child: GetMaterialApp(
-          useInheritedMediaQuery: true,
-          locale: DevicePreview.locale(context),
+    return ScreenUtilInit(
+      designSize: const Size(360, 690),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child) {
+        return GetMaterialApp(
+          // useInheritedMediaQuery: true,
+          // locale: DevicePreview.locale(context),
           title: "Dikantin App Rebuild",
           initialRoute: initialRoute,
           theme: lightMode,
           getPages: AppPages.routes,
-          builder: EasyLoading.init(),
+          builder: (context, widget) {
+            widget = EasyLoading.init()(context, widget);
+            return widget;
+          },
           debugShowCheckedModeBanner: false,
-        ),
-      ),
+        );
+      },
     );
   }
 }

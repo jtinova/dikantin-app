@@ -145,9 +145,9 @@ class HomeCourierView extends GetView<HomeCourierController> {
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
                                                 children: [
-                                                  // Menggunakan file JSON lokal dari assets/images
+                                                  // Menggunakan file JSON lokal dari assets/animations
                                                   Lottie.asset(
-                                                    'assets/images/Animation - 1746119107847.json',
+                                                    'assets/animations/Animation - 1746119107847.json',
                                                     width: 200,
                                                     height: 200,
                                                     fit: BoxFit.contain,

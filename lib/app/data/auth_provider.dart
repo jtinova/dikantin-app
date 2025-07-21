@@ -1,7 +1,5 @@
 // ignore_for_file: avoid_print
 
-import 'dart:io';
-
 import 'package:dikantin_app_rebuild/app/data/api.dart';
 import 'package:dikantin_app_rebuild/app/routes/app_pages.dart';
 import 'package:flutter/widgets.dart';
@@ -76,9 +74,6 @@ class AuthenticationProvider extends ChangeNotifier {
       }
 
       notifyListeners();
-    } on SocketException catch (_) {
-      statusCode = 0;
-      _resMessage = "Koneksi Internet Tidak Tersedia";
     } catch (e) {
       statusCode = null;
       _resMessage = "Mohon Coba Lagi";
@@ -98,14 +93,14 @@ class AuthenticationProvider extends ChangeNotifier {
     EasyLoading.show(status: 'Loading...');
     notifyListeners();
 
-   final body = {
+    final body = {
       "email": email,
       "password": password,
     };
 
     try {
       // 1. Attempt Customer Login
-      String customerUrl = AppUrl.signin; 
+      String customerUrl = AppUrl.signin;
       http.Response customerReq = await http.post(
         Uri.parse(customerUrl),
         headers: {'Content-Type': 'application/json'},
@@ -123,13 +118,13 @@ class AuthenticationProvider extends ChangeNotifier {
         Get.offAllNamed(Routes.NAVIGATION);
       } else {
         // 2. If Customer Login Fails, Attempt Courier Login
-        String courierUrl = AppUrl.courierLogin; 
+        String courierUrl = AppUrl.courierLogin;
         http.Response courierReq = await http.post(
           Uri.parse(courierUrl),
           headers: {'Content-Type': 'application/json'},
           body: json.encode(body),
         );
-        
+
         statusCode = courierReq.statusCode;
         final courierRes = json.decode(courierReq.body);
 
@@ -145,9 +140,6 @@ class AuthenticationProvider extends ChangeNotifier {
           _resMessage = courierRes["message"] ?? "Invalid email or password";
         }
       }
-    } on SocketException catch (_) {
-      statusCode = 0;
-      _resMessage = "Koneksi Internet Tidak Tersedia";
     } catch (e) {
       statusCode = null;
       _resMessage = "Mohon Coba Lagi";
@@ -155,7 +147,7 @@ class AuthenticationProvider extends ChangeNotifier {
       print(e);
     } finally {
       EasyLoading.dismiss();
-      notifyListeners(); 
+      notifyListeners();
     }
   }
 
@@ -202,9 +194,6 @@ class AuthenticationProvider extends ChangeNotifier {
       }
 
       notifyListeners();
-    } on SocketException catch (_) {
-      statusCode = 0;
-      _resMessage = "Koneksi Internet Tidak Tersedia";
     } catch (e) {
       statusCode = null;
       _resMessage = "Mohon Coba Lagi";
@@ -261,9 +250,6 @@ class AuthenticationProvider extends ChangeNotifier {
       }
 
       notifyListeners();
-    } on SocketException catch (_) {
-      statusCode = 0;
-      _resMessage = "Koneksi Internet Tidak Tersedia";
     } catch (e) {
       statusCode = null;
       _resMessage = "Mohon Coba Lagi";
@@ -316,9 +302,6 @@ class AuthenticationProvider extends ChangeNotifier {
       }
 
       notifyListeners();
-    } on SocketException catch (_) {
-      statusCode = 0;
-      _resMessage = "Koneksi Internet Tidak Tersedia";
     } catch (e) {
       statusCode = null;
       _resMessage = "Mohon Coba Lagi";
@@ -375,9 +358,6 @@ class AuthenticationProvider extends ChangeNotifier {
       }
 
       notifyListeners();
-    } on SocketException catch (_) {
-      statusCode = 0;
-      _resMessage = "Koneksi Internet Tidak Tersedia";
     } catch (e) {
       statusCode = null;
       _resMessage = "Mohon Coba Lagi";
@@ -433,9 +413,6 @@ class AuthenticationProvider extends ChangeNotifier {
       }
 
       notifyListeners();
-    } on SocketException catch (_) {
-      statusCode = 0;
-      _resMessage = "Koneksi Internet Tidak Tersedia";
     } catch (e) {
       statusCode = null;
       _resMessage = "Terjadi Kesalahan, Coba Lagi";

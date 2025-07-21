@@ -10,8 +10,11 @@ class Menu {
   final int mainCost;
   final int stock;
   final String? description;
+  final double? rating;
+  final int? ratingCount;
   final Canteen canteen;
   final Category? category;
+  bool isFavorite;
 
   Menu({
     required this.id,
@@ -21,8 +24,11 @@ class Menu {
     required this.mainCost,
     required this.stock,
     this.description,
+    this.rating,
+    this.ratingCount,
     required this.canteen,
     this.category,
+    this.isFavorite = false,
   });
 
   factory Menu.fromJson(Map<String, dynamic> json) {
@@ -34,6 +40,8 @@ class Menu {
       mainCost: json['main_cost'],
       stock: json['stock'],
       description: json['description'],
+      rating: (json['rating'] as num?)?.toDouble(),
+      ratingCount: json['rating_count'],
       canteen: Canteen.fromJson(json['canteen']),
       category:
           json['category'] != null ? Category.fromJson(json['category']) : null,

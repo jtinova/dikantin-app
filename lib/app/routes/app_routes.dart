@@ -21,6 +21,7 @@ abstract class Routes {
   static const COURIER_DELIVERY_HISTORY =  _Paths.COURIER_DELIVERY_HISTORY;
   static const CART = _Paths.CART;
   static const CHECKOUT = _Paths.CHECKOUT;
+  static const FAVORITE_MENU = _Paths.FAVORITE_MENU;
 }
 
 abstract class _Paths {
@@ -43,4 +44,5 @@ abstract class _Paths {
   static const CART = '/cart';
   static const CHECKOUT = '/checkout';
   static const COURIER_DELIVERY_HISTORY = '/courier-delivery-history';
+  static const FAVORITE_MENU = '/favorite-menu';
 }

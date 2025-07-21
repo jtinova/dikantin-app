@@ -38,6 +38,8 @@ class HomeController extends GetxController {
   var allMenus = <Menu>[].obs;
   var menus = <Menu>[].obs;
 
+  final RxSet<String> favoriteMenuId = <String>{}.obs;
+
   int get cartCount => cartItems.fold(0, (sum, item) => sum + item.quantity);
 
   List<String> bannerList = [
@@ -55,32 +57,16 @@ class HomeController extends GetxController {
 
   Future<void> loadInitialData() async {
     isLoading.value = true;
-    EasyLoading.show(status: 'Memuat data...');
+    EasyLoading.show(status: 'Loading...');
 
     try {
       await Future.wait([
         getLocation(),
+        getFavoriteMenu(),
         getCategories(),
         getCanteen(),
         fetchAllMenus(),
       ]);
-    } on SocketException catch (_) {
-      Get.snackbar(
-        "Informasi ",
-        "Koneksi Internet Tidak Tersedia",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
     } catch (e) {
       Get.snackbar(
         "Informasi ",
@@ -184,27 +170,19 @@ class HomeController extends GetxController {
           ),
         );
       }
-    } on SocketException catch (_) {
-      Get.snackbar(
-        "Informasi ",
-        "Koneksi Internet Tidak Tersedia",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
     } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> getFavoriteMenu() async {
+    String url = AppUrl.menuFavorit;
+    String? token = await DatabaseProvider().getToken();
+
+    if (token == null) {
       Get.snackbar(
         "Informasi ",
-        "Mohon Coba Lagi",
+        "Token Tidak Ditemukan",
         animationDuration: const Duration(milliseconds: 200),
         duration: const Duration(milliseconds: 1650),
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
@@ -219,6 +197,47 @@ class HomeController extends GetxController {
         ),
       );
 
+      return;
+    }
+
+    try {
+      http.Response req = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (req.statusCode == 200) {
+        final res = json.decode(req.body);
+        List<dynamic> favoriteList = res["data"];
+
+        final ids = favoriteList.map((item) => item['id'] as String).toSet();
+        favoriteMenuId.assignAll(ids);
+      } else {
+        final res = json.decode(req.body);
+
+        print(res);
+
+        Get.snackbar(
+          "Informasi ",
+          "Terjadi Kesalahan",
+          animationDuration: const Duration(milliseconds: 200),
+          duration: const Duration(milliseconds: 1650),
+          backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+          borderWidth: 5.w,
+          snackPosition: SnackPosition.TOP,
+          margin: EdgeInsets.symmetric(
+            horizontal: 20.w,
+            vertical: 20.h,
+          ),
+          icon: const Icon(
+            CupertinoIcons.info_circle,
+          ),
+        );
+      }
+    } catch (e) {
       print(e);
     }
   }
@@ -287,41 +306,7 @@ class HomeController extends GetxController {
           ),
         );
       }
-    } on SocketException catch (_) {
-      Get.snackbar(
-        "Informasi ",
-        "Koneksi Internet Tidak Tersedia",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
     } catch (e) {
-      Get.snackbar(
-        "Informasi ",
-        "Mohon Coba Lagi",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
-
       print(e);
     }
   }
@@ -384,8 +369,6 @@ class HomeController extends GetxController {
             ),
             ...sortedCanteens,
           ];
-
-          getMenuByCanteen(id: "all", context: Get.context!);
         }
       } else {
         final res = json.decode(req.body);
@@ -411,41 +394,7 @@ class HomeController extends GetxController {
           ),
         );
       }
-    } on SocketException catch (_) {
-      Get.snackbar(
-        "Informasi ",
-        "Koneksi Internet Tidak Tersedia",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
     } catch (e) {
-      Get.snackbar(
-        "Informasi ",
-        "Mohon Coba Lagi",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
-
       print(e);
     }
   }
@@ -492,7 +441,14 @@ class HomeController extends GetxController {
         print(res);
 
         List<dynamic> menuData = res["data"];
-        allMenus.value = menuData.map((item) => Menu.fromJson(item)).toList();
+        List<Menu> fetchedMenus = menuData.map((item) {
+          final menu = Menu.fromJson(item);
+
+          menu.isFavorite = favoriteMenuId.contains(menu.id);
+          return menu;
+        }).toList();
+
+        allMenus.value = fetchedMenus;
         menus.value = allMenus;
       } else {
         final res = json.decode(req.body);
@@ -516,61 +472,9 @@ class HomeController extends GetxController {
           ),
         );
       }
-    } on SocketException catch (_) {
-      Get.snackbar(
-        "Informasi ",
-        "Koneksi Internet Tidak Tersedia",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
     } catch (e) {
-      Get.snackbar(
-        "Informasi ",
-        "Mohon Coba Lagi",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
-
       print(e);
     }
-  }
-
-  Future<void> getMenuByCanteen({
-    required String id,
-    BuildContext? context,
-  }) async {
-    isMenuLoading.value = true;
-
-    filterMenuByCanteen(id);
-  }
-
-  Future<void> getMenuByCategory({
-    required String id,
-    BuildContext? context,
-  }) async {
-    isMenuLoading.value = true;
-
-    filterMenuByCategory(id);
   }
 
   Future<void> getSearchMenu({
@@ -650,23 +554,6 @@ class HomeController extends GetxController {
           ),
         );
       }
-    } on SocketException catch (_) {
-      Get.snackbar(
-        "Informasi ",
-        "Koneksi Internet Tidak Tersedia",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
     } catch (e) {
       Get.snackbar(
         "Informasi ",
@@ -688,6 +575,207 @@ class HomeController extends GetxController {
       print(e);
     } finally {
       isMenuLoading.value = false;
+    }
+  }
+
+  Future<void> toggleFavoriteStatus(Menu menu) async {
+    final bool isCurrentlyFavorite = favoriteMenuId.contains(menu.id);
+    final String menuId = menu.id;
+
+    if (isCurrentlyFavorite) {
+      favoriteMenuId.remove(menuId);
+    } else {
+      favoriteMenuId.add(menuId);
+    }
+
+    int index = allMenus.indexWhere((m) => m.id == menuId);
+    if (index != -1) {
+      allMenus[index].isFavorite = !isCurrentlyFavorite;
+    }
+
+    String? token = await DatabaseProvider().getToken();
+
+    if (token == null) {
+      isMenuLoading.value = false;
+
+      Get.snackbar(
+        "Informasi ",
+        "Token Tidak Ditemukan",
+        animationDuration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 1650),
+        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+        borderWidth: 5.w,
+        snackPosition: SnackPosition.TOP,
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
+        icon: const Icon(
+          CupertinoIcons.info_circle,
+        ),
+      );
+
+      if (isCurrentlyFavorite) {
+        favoriteMenuId.remove(menuId);
+      } else {
+        favoriteMenuId.add(menuId);
+      }
+
+      int index = allMenus.indexWhere((m) => m.id == menuId);
+      if (index != -1) {
+        allMenus[index].isFavorite = !isCurrentlyFavorite;
+      }
+
+      return;
+    }
+
+    try {
+      if (isCurrentlyFavorite) {
+        String url = "${AppUrl.menuFavoritRemove}${menu.id}";
+
+        http.Response req = await http.delete(
+          Uri.parse(url),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+        );
+
+        if (req.statusCode == 200) {
+          final res = json.decode(req.body);
+
+          print(res);
+
+          favoriteMenuId.remove(menu.id);
+        } else {
+          final res = json.decode(req.body);
+
+          print(res);
+
+          Get.snackbar(
+            "Informasi ",
+            "Gagal Menghapus Menu Favorit",
+            animationDuration: const Duration(milliseconds: 200),
+            duration: const Duration(milliseconds: 1650),
+            backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+            borderWidth: 5.w,
+            snackPosition: SnackPosition.TOP,
+            margin: EdgeInsets.symmetric(
+              horizontal: 20.w,
+              vertical: 20.h,
+            ),
+            icon: const Icon(
+              CupertinoIcons.info_circle,
+            ),
+          );
+        }
+      } else {
+        String url = AppUrl.menuFavoritAdd;
+
+        http.Response req = await http.post(
+          Uri.parse(url),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+          body: json.encode({
+            'menu_id': menu.id,
+          }),
+        );
+
+        if (req.statusCode == 201) {
+          final res = json.decode(req.body);
+
+          print(res);
+
+          favoriteMenuId.add(menu.id);
+        } else {
+          final res = json.decode(req.body);
+
+          print(res);
+
+          Get.snackbar(
+            "Informasi ",
+            "Gagal Menambahkan Menu Favorit",
+            animationDuration: const Duration(milliseconds: 200),
+            duration: const Duration(milliseconds: 1650),
+            backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+            borderWidth: 5.w,
+            snackPosition: SnackPosition.TOP,
+            margin: EdgeInsets.symmetric(
+              horizontal: 20.w,
+              vertical: 20.h,
+            ),
+            icon: const Icon(
+              CupertinoIcons.info_circle,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      Get.snackbar(
+        "Informasi ",
+        "Mohon Coba Lagi",
+        animationDuration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 1650),
+        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+        borderWidth: 5.w,
+        snackPosition: SnackPosition.TOP,
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
+        icon: const Icon(
+          CupertinoIcons.info_circle,
+        ),
+      );
+
+      if (isCurrentlyFavorite) {
+        favoriteMenuId.remove(menuId);
+      } else {
+        favoriteMenuId.add(menuId);
+      }
+
+      int index = allMenus.indexWhere((m) => m.id == menuId);
+      if (index != -1) {
+        allMenus[index].isFavorite = !isCurrentlyFavorite;
+      }
+
+      print(e);
+    }
+  }
+
+  Future<Map<String, dynamic>> getRatingMenu(String menuId) async {
+    String url = "${AppUrl.reviewMenu}$menuId";
+    String? token = await DatabaseProvider().getToken();
+
+    if (token == null) {
+      throw Exception('Sesi Anda telah berakhir. Silakan login kembali.');
+    }
+
+    try {
+      http.Response req = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (req.statusCode == 200) {
+        return json.decode(req.body);
+      } else {
+        final res = json.decode(req.body);
+        throw Exception(
+            res['message'] ?? 'Terjadi kesalahan saat memuat data.');
+      }
+    } on SocketException {
+      throw Exception(
+          'Tidak ada koneksi internet. Mohon periksa jaringan Anda.');
+    } catch (e) {
+      print(e);
+      throw Exception(
+          'Terjadi kesalahan yang tidak diketahui. Mohon coba lagi.');
     }
   }
 

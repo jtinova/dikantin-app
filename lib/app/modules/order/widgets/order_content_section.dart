@@ -1,5 +1,4 @@
 // lib/app/modules/order/widgets/order_content_section.dart
-
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
@@ -9,11 +8,15 @@ import 'package:get/get.dart';
 import '../controllers/order_controller.dart';
 import 'order_detail_content.dart';
 
-class OrderContent extends StatelessWidget {
+class OrderContent extends StatefulWidget {
   const OrderContent({super.key, required this.controller});
   final OrderController controller;
 
-  // Widget helper untuk menampilkan pesan saat daftar kosong
+  @override
+  State<OrderContent> createState() => _OrderContentState();
+}
+
+class _OrderContentState extends State<OrderContent> {
   Widget _buildEmptyState(String message) {
     return Stack(
       children: [
@@ -74,7 +77,7 @@ class OrderContent extends StatelessWidget {
                           ),
                           SizedBox(height: 5.h),
                           Text(
-                            controller.formatDateTime(order.date),
+                            widget.controller.formatDateTime(order.date),
                             style: TextStyle(
                               fontSize: 13.sp,
                               color: Colors.black54,
@@ -85,7 +88,8 @@ class OrderContent extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Text(
-                                controller.capitalizeFirst(order.orderType!),
+                                widget.controller
+                                    .capitalizeFirst(order.orderType!),
                                 style: TextStyle(
                                   fontSize: 15.sp,
                                   fontWeight: FontWeight.w500,
@@ -98,19 +102,19 @@ class OrderContent extends StatelessWidget {
                               ),
                               SizedBox(width: 5.w),
                               Text(
-                                controller.capitalizeFirst(order.status),
+                                widget.controller.capitalizeFirst(order.status),
                                 style: TextStyle(
                                   fontSize: 15.sp,
                                   fontWeight: FontWeight.w500,
-                                  color:
-                                      controller.getStatusColor(order.status),
+                                  color: widget.controller
+                                      .getStatusColor(order.status),
                                 ),
                               ),
                             ],
                           ),
                           SizedBox(height: 3.h),
                           Text(
-                            "Harga Total : Rp ${controller.formatRupiah(order.grandTotal)}",
+                            "Harga Total : Rp ${widget.controller.formatRupiah(order.grandTotal)}",
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               fontSize: 15.sp,
@@ -142,16 +146,16 @@ class OrderContent extends StatelessWidget {
                         // Periksa tipe pesanan untuk memanggil fungsi detail yang benar
                         if (order.orderType == 'deliver' &&
                             order.status == 'on_delivery') {
-                          await controller.getDetailShipping(order.id);
+                          await widget.controller.getDetailShipping(order.id);
                         } else {
-                          await controller.getDetailProgress(order.id);
+                          await widget.controller.getDetailProgress(order.id);
                         }
 
                         // Tentukan detail mana yang akan ditampilkan
                         final detailToShow = order.orderType == 'deliver' &&
                                 order.status == 'on_delivery'
-                            ? controller.detailShipping.first
-                            : controller.detailOrder.first;
+                            ? widget.controller.detailShipping.first
+                            : widget.controller.detailOrder.first;
 
                         if (detailToShow != null) {
                           showModalBottomSheet(
@@ -165,7 +169,7 @@ class OrderContent extends StatelessWidget {
                             builder: (context) {
                               return OrderDetailBottom(
                                 order: detailToShow,
-                                controller: controller,
+                                controller: widget.controller,
                               );
                             },
                           );
@@ -210,23 +214,23 @@ class OrderContent extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10.w),
       child: Obx(() {
-        switch (controller.selectedIndex.value) {
+        switch (widget.controller.selectedIndex.value) {
           case 0:
-            return controller.progressOrder.isEmpty
+            return widget.controller.progressOrder.isEmpty
                 ? _buildEmptyState("Tidak ada pesanan diproses")
-                : _buildOrderList(controller.progressOrder, context);
+                : _buildOrderList(widget.controller.progressOrder, context);
           case 1:
-            return controller.dineInOrder.isEmpty
+            return widget.controller.dineInOrder.isEmpty
                 ? _buildEmptyState("Tidak ada pesanan untuk di tempat")
-                : _buildOrderList(controller.dineInOrder, context);
+                : _buildOrderList(widget.controller.dineInOrder, context);
           case 2:
-            return controller.pickUpOrder.isEmpty
+            return widget.controller.pickUpOrder.isEmpty
                 ? _buildEmptyState("Tidak ada pesanan untuk diambil")
-                : _buildOrderList(controller.pickUpOrder, context);
+                : _buildOrderList(widget.controller.pickUpOrder, context);
           case 3:
-            return controller.shippingOrder.isEmpty
+            return widget.controller.shippingOrder.isEmpty
                 ? _buildEmptyState("Tidak ada pesanan untuk diantar")
-                : _buildOrderList(controller.shippingOrder, context);
+                : _buildOrderList(widget.controller.shippingOrder, context);
           default:
             return Container();
         }

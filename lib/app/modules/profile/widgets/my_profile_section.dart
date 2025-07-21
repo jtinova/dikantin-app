@@ -8,9 +8,14 @@ import 'package:get/get.dart';
 import '../../home/controllers/home_controller.dart';
 import '../controllers/profile_controller.dart';
 
-class MyProfile extends StatelessWidget {
-  MyProfile({super.key});
+class MyProfile extends StatefulWidget {
+  const MyProfile({super.key});
 
+  @override
+  State<MyProfile> createState() => _MyProfileState();
+}
+
+class _MyProfileState extends State<MyProfile> {
   final ProfileController controller = Get.put(ProfileController());
   final homeController = Get.find<HomeController>();
   final _formKey = GlobalKey<FormBuilderState>();
@@ -104,15 +109,6 @@ class MyProfile extends StatelessWidget {
                             backgroundColor: Colors.black12,
                             radius: 53.r,
                           ),
-                          SizedBox(height: 10.h),
-                          Text(
-                            "Ubah Foto",
-                            style: TextStyle(
-                              fontSize: 18.sp,
-                              color: Colors.blue,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
                           SizedBox(height: 30.h),
                           _buildFormField(
                             "Nama",
@@ -189,8 +185,10 @@ class MyProfile extends StatelessWidget {
               ),
               borderSide: BorderSide(color: Colors.black87),
             ),
-            contentPadding:
-                EdgeInsets.symmetric(vertical: 15.h, horizontal: 15.w),
+            contentPadding: EdgeInsets.symmetric(
+              vertical: 15.h,
+              horizontal: 15.w,
+            ),
           ),
         ),
         SizedBox(height: 20.h),
