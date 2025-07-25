@@ -40,13 +40,13 @@ class Categories extends StatelessWidget {
               style: TextStyle(
                 fontSize: 17.sp,
                 fontWeight: FontWeight.w600,
-                color: Color(0xFF1E2857),
+                color: Colors.black,
               ),
             );
           }),
         ),
         Container(
-          height: 80.h,
+          height: 82.h,
           width: double.infinity,
           margin: EdgeInsets.symmetric(
             horizontal: 15.w,
@@ -135,9 +135,10 @@ class Categories extends StatelessWidget {
                             fontSize: 15.sp,
                             fontWeight: controller.selectedCategoryId.value ==
                                     category.id
-                                ? FontWeight.w700
+                                ? FontWeight.w600
                                 : FontWeight.w400,
-                            color: Color(0xFF1E2857),
+                            color: Colors.black,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],

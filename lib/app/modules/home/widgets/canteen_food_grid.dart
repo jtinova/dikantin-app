@@ -39,11 +39,11 @@ class _FoodGridsState extends State<FoodGrids> {
               childAspectRatio: () {
                 double width = MediaQuery.of(context).size.width;
                 if (width <= 375) {
-                  return 0.83;
+                  return 0.85;
                 } else if (width <= 414) {
-                  return 0.94;
+                  return 0.96;
                 } else {
-                  return 1.13;
+                  return 1.06;
                 }
               }(),
             ),
@@ -65,7 +65,7 @@ class _FoodGridsState extends State<FoodGrids> {
                         ),
                         child: Container(
                           width: double.infinity,
-                          height: 95.h,
+                          height: 92.h,
                           decoration: BoxDecoration(
                             color: Colors.grey[300],
                           ),
@@ -138,11 +138,11 @@ class _FoodGridsState extends State<FoodGrids> {
             childAspectRatio: () {
               double width = MediaQuery.of(context).size.width;
               if (width <= 375) {
-                return 0.83;
+                return 0.85;
               } else if (width <= 414) {
-                return 0.94;
+                return 0.96;
               } else {
-                return 1.13;
+                return 1.06;
               }
             }(),
           ),

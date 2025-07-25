@@ -83,7 +83,8 @@ class Canteens extends StatelessWidget {
                       canteen.name,
                       style: TextStyle(
                         fontSize: 15.sp,
-                        color: isSelected ? Colors.white : Color(0xFF1E2857),
+                        color: isSelected ? Colors.white : Colors.black,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ),

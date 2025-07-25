@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 
+import 'app/data/api.dart';
 import 'app/data/db_provider.dart';
 import 'app/routes/app_pages.dart';
 
@@ -25,7 +26,7 @@ void main() async {
   await ScreenUtil.ensureScreenSize();
 
   runApp(
-    //  ChangeNotifierProvider(
+    // ChangeNotifierProvider(
     //   create: (context) => AuthenticationProvider(),
     //   child: DevicePreview(
     //     enabled: !kReleaseMode,
@@ -45,6 +46,7 @@ void main() async {
 Future<void> initServices() async {
   Get.put(DatabaseProvider(), permanent: true);
   Get.put(NetworkProvider(), permanent: true);
+  Get.put(ApiConfigService(), permanent: true);
 }
 
 void configLoading() {
@@ -74,15 +76,29 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       builder: (context, child) {
         return GetMaterialApp(
-          // useInheritedMediaQuery: true,
+          useInheritedMediaQuery: true,
           // locale: DevicePreview.locale(context),
           title: "Dikantin App Rebuild",
           initialRoute: initialRoute,
           theme: lightMode,
           getPages: AppPages.routes,
           builder: (context, widget) {
+            final mediaQuery = MediaQuery.of(context);
+            final newMediaQuery = mediaQuery.copyWith(
+              size: Size(
+                mediaQuery.size.width,
+                mediaQuery.size.height,
+              ),
+              textScaler: TextScaler.linear(
+                0.85,
+              ),
+            );
+
             widget = EasyLoading.init()(context, widget);
-            return widget;
+            return MediaQuery(
+              data: newMediaQuery,
+              child: widget,
+            );
           },
           debugShowCheckedModeBanner: false,
         );

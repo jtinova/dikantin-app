@@ -8,6 +8,8 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiController extends GetxController {
+  final ApiConfigService _apiConfigService = Get.find();
+
   final Map<String, String> apiEnvironments = {
     'Production': 'https://dikantin.com',
     'Staging': 'https://dikantin-staging.jtinova.com',
@@ -29,7 +31,7 @@ class ApiController extends GetxController {
   Future<void> loadApiSetting() async {
     final prefs = await SharedPreferences.getInstance();
     selectedEnv.value = prefs.getString('api_env') ?? 'Production';
-    
+
     customUrl.value = prefs.getString('api_custom_url') ?? '';
     customUrlController.text = customUrl.value;
     updateBaseUrl();
@@ -68,14 +70,16 @@ class ApiController extends GetxController {
   }
 
   void updateBaseUrl() {
+    String newUrl;
+
     if (selectedEnv.value == 'Custom') {
-      AppUrl.baseURL = 'http://${customUrl.value}';
+      newUrl = 'http://${customUrl.value}';
     } else {
-      AppUrl.baseURL = apiEnvironments[selectedEnv.value]!;
+      newUrl = apiEnvironments[selectedEnv.value]!;
     }
 
-    AppUrl.baseURLAPI = '${AppUrl.baseURL}/api';
-    print("🚀 API URL changed to: ${AppUrl.baseURL}");
+    _apiConfigService.updateBaseUrl(newUrl);
+    print("🚀 API URL changed to: ${_apiConfigService.baseURL.value}");
   }
 
   @override

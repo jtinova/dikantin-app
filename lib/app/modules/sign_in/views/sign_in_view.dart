@@ -353,6 +353,7 @@ class SignInView extends GetView<SignInController> {
   void _showApiBottomSheet(BuildContext context, ApiController controller) {
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
       ),
@@ -361,85 +362,91 @@ class SignInView extends GetView<SignInController> {
       ),
       builder: (context) {
         return Padding(
-          padding: EdgeInsets.all(20.w),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Pengaturan API',
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 20.sp,
-                  color: Color(0xFF1E2857),
+          padding: EdgeInsets.only(
+            left: 20.w,
+            right: 20.w,
+            top: 20.h,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 20.h,
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Pengaturan API',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 20.sp,
+                    color: Color(0xFF1E2857),
+                  ),
                 ),
-              ),
-              SizedBox(height: 10.h),
-              Obx(() {
-                return Column(
-                  children: controller.apiEnvironments.keys.map((env) {
-                    return RadioListTile<String>(
-                      title: Text(
-                        env,
-                        style: TextStyle(
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.w500,
+                SizedBox(height: 10.h),
+                Obx(() {
+                  return Column(
+                    children: controller.apiEnvironments.keys.map((env) {
+                      return RadioListTile<String>(
+                        title: Text(
+                          env,
+                          style: TextStyle(
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        contentPadding: EdgeInsets.zero,
+                        dense: true,
+                        value: env,
+                        groupValue: controller.selectedEnv.value,
+                        onChanged: (value) {
+                          if (value != null) {
+                            controller.selectedEnv.value = value;
+                          }
+                        },
+                      );
+                    }).toList(),
+                  );
+                }),
+                Obx(() {
+                  if (controller.selectedEnv.value == 'Custom') {
+                    return Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10.w),
+                      child: TextField(
+                        controller: controller.customUrlController,
+                        decoration: const InputDecoration(
+                          labelText: 'URL API Custom',
+                          hintText: '192.xxx.x.x:xxxx',
+                          border: OutlineInputBorder(),
                         ),
                       ),
-                      contentPadding: EdgeInsets.zero,
-                      dense: true,
-                      value: env,
-                      groupValue: controller.selectedEnv.value,
-                      onChanged: (value) {
-                        if (value != null) {
-                          controller.selectedEnv.value = value;
-                        }
-                      },
                     );
-                  }).toList(),
-                );
-              }),
-              Obx(() {
-                if (controller.selectedEnv.value == 'Custom') {
-                  return Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10.w),
-                    child: TextField(
-                      controller: controller.customUrlController,
-                      decoration: const InputDecoration(
-                        labelText: 'URL API Custom',
-                        hintText: '192.xxx.x.x:xxxx',
-                        border: OutlineInputBorder(),
-                      ),
+                  } else {
+                    return const SizedBox.shrink();
+                  }
+                }),
+                SizedBox(height: 15.h),
+                SizedBox(
+                  width: double.infinity,
+                  height: 40.h,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      controller.saveApiSetting();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFF1E2857),
+                      foregroundColor: Colors.white,
                     ),
-                  );
-                } else {
-                  return const SizedBox.shrink();
-                }
-              }),
-              SizedBox(height: 20.h),
-              SizedBox(
-                width: double.infinity,
-                height: 40.h,
-                child: ElevatedButton(
-                  onPressed: () {
-                    controller.saveApiSetting();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF1E2857),
-                    foregroundColor: Colors.white,
-                    padding: EdgeInsets.symmetric(vertical: 12.h),
-                  ),
-                  child: Text(
-                    'Simpan',
-                    style: TextStyle(
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white,
+                    child: Text(
+                      'Simpan',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },

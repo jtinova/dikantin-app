@@ -50,7 +50,7 @@ class MenuDetailBottom extends StatelessWidget {
               style: TextStyle(
                 fontSize: 17.sp,
                 fontWeight: FontWeight.w600,
-                color: Color(0xFF1E2857),
+                color: Colors.black,
               ),
             ),
           ),
@@ -165,7 +165,7 @@ class MenuDetailBottom extends StatelessWidget {
             food.description ?? "Tidak ada deskripsi",
             style: TextStyle(
               fontSize: 15.sp,
-              color: Color(0xFF1E2857),
+              color: Colors.black,
             ),
           ),
           SizedBox(height: 10.h),
@@ -176,7 +176,7 @@ class MenuDetailBottom extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w500,
-                  color: Color(0xFF1E2857),
+                  color: Colors.black,
                 ),
               ),
               Text(
@@ -196,7 +196,7 @@ class MenuDetailBottom extends StatelessWidget {
               style: TextStyle(
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w500,
-                color: Color(0xFF1E2857),
+                color: Colors.black,
               ),
             )
           else
@@ -207,7 +207,7 @@ class MenuDetailBottom extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w500,
-                    color: Color(0xFF1E2857),
+                    color: Colors.black,
                   ),
                 ),
                 Spacer(),
