@@ -48,12 +48,12 @@ class TransactionModel {
       dateTime: json['date'] ?? '',
       status: json['status'] ?? '',
       orderType: json['order_type'] ?? '',
-      deskNumber: json['desk_number'] ?? '',
+      deskNumber: int.tryParse(json['desk_number'].toString()) ?? 0,
       details: (json['details'] as List)
           .map((e) => OrderDetail.fromJson(e))
           .toList(),
-      totalQty: json['total_qty'] ?? 0,
-      mainCost: json['total_main_cost'] ?? 0,
+      totalQty: int.tryParse(json['total_qty'].toString()) ?? 0,
+      mainCost: int.tryParse(json['total_main_cost'].toString()) ?? 0,
     );
   }
 }
@@ -79,13 +79,13 @@ class OrderDetail {
 
   factory OrderDetail.fromJson(Map<String, dynamic> json) {
     return OrderDetail(
-      id: json['id'],
-      menuId: json['menu_id'],
+      id: json['id'].toString(),
+      menuId: json['menu_id'].toString(),
       name: json['name'] ?? '',
-      qty: json['qty'] ?? 0,
-      harga: json['main_cost'] ?? 0,
+      qty: int.tryParse(json['qty'].toString()) ?? 0,
+      harga: int.tryParse(json['main_cost'].toString()) ?? 0,
       status: json['status'] ?? '',
-      image: json['image'],
+      image: json['image'] ?? '',
     );
   }
 

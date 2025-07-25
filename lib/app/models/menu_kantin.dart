@@ -14,7 +14,7 @@ class MenuModel {
     required this.image,
     required this.sellingCost,
     required this.mainCost,
-    this.isAvailable = true, 
+    this.isAvailable = false, 
   });
 
   factory MenuModel.fromJson(Map<String, dynamic> json) {

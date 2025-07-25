@@ -8,6 +8,7 @@ import '../controllers/profile_controller.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../controllers/profile_controller.dart';
@@ -25,7 +26,7 @@ class MyProfile extends StatelessWidget {
           "Profil Kantin",
           style: TextStyle(
             color: Colors.black,
-            fontSize: 20,
+            fontSize: 17.sp,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -48,7 +49,7 @@ class MyProfile extends StatelessWidget {
           final canteen = controller.users.value; // Tipe: Canteen?
 
           return Padding(
-            padding: const EdgeInsets.all(25),
+            padding: EdgeInsets.all(10.w),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -57,10 +58,10 @@ class MyProfile extends StatelessWidget {
                     backgroundImage:
                         AssetImage('assets/images/logo_dikantin.png'),
                     backgroundColor: Colors.black12,
-                    radius: 50,
+                    radius: 50.r,
                   ),
                 ),
-                const SizedBox(height: 30),
+                SizedBox(height: 30.h),
 
                 _buildReadOnlyField("Nama Kantin", canteen?.name ?? ''),
                 _buildReadOnlyField("Email", canteen?.email ?? ''),
@@ -78,21 +79,21 @@ class MyProfile extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(label,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-        const SizedBox(height: 5),
+            style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500)),
+        SizedBox(height: 5.h),
         TextFormField(
           enabled: false,
           initialValue: value,
           decoration: InputDecoration(
             disabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(12.r),
               borderSide: const BorderSide(color: Colors.grey),
             ),
             contentPadding:
-                const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+                EdgeInsets.symmetric(vertical: 14.h, horizontal: 12.w),
           ),
         ),
-        const SizedBox(height: 20),
+        SizedBox(height: 14.h),
       ],
     );
   }

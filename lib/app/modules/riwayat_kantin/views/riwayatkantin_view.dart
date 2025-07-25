@@ -1,6 +1,7 @@
 import 'package:dikantin_app_rebuild/app/models/history_canteen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../controllers/riwayatkantin_controller.dart';
 import '../views/detail_pesanan.dart';
 
@@ -15,13 +16,13 @@ class RiwayatKantinView extends GetView<RiwayatKantinController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF19345E),
+        backgroundColor: Color(0xFF1E2857),
         elevation: 0,
         title: Text(
           "Riwayat Pesanan",
           style: TextStyle(
             color: Colors.white,
-            fontSize: 20, 
+            fontSize: 17.sp, 
             fontWeight: FontWeight.w500
           ),
         ),  
@@ -43,7 +44,7 @@ class RiwayatKantinView extends GetView<RiwayatKantinController> {
                   content: SingleChildScrollView(
                     child: Text(
                       "• Tekan tombol 'Lihat Detail' untuk melihat detail dari pesanan.\n",
-                      style: TextStyle(fontSize: 15),
+                      style: TextStyle(fontSize: 15.sp),
                     ),
                   ),
                   actions: [
@@ -88,40 +89,40 @@ class RiwayatPesanan extends StatelessWidget {
           controller.refreshData();
         },
         child: ListView.builder(
-              padding: EdgeInsets.all(14),
+              padding: EdgeInsets.all(12.w),
               itemCount: data.length,
               itemBuilder: (context, index) {
                 var item = data[index];
                 return Card(
-                  margin: EdgeInsets.only(bottom: 16),
+                  margin: EdgeInsets.only(bottom: 10.h),
                   child: Padding(
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+                    EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                     child: Column(
                       children: [
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(8.r),
                               child: Image.network(
                                 item.menu.first.imagePath,
-                                width: 70,
-                                height: 70,
+                                width: 60.w,
+                                height: 60.h,
                                 fit: BoxFit.cover,
                                 errorBuilder: (context, error, stackTrace) => Container(
-                                  width: 70,
-                                  height: 70,
+                                  width: 60.w,
+                                  height: 60.h,
                                   color: Colors.grey[200],
-                                  child: const Icon(
+                                  child: Icon(
                                     Icons.error,
                                     color: Colors.redAccent,
-                                    size: 30,
+                                    size: 24.sp,
                                   ),
                                 ),
                               ),
                             ),
-                            SizedBox(width: 10),
+                            SizedBox(width: 10.w),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -130,29 +131,29 @@ class RiwayatPesanan extends StatelessWidget {
                                     item.transactionCode,
                                     style: TextStyle(
                                         color: Color(0xFF403E3E),
-                                        fontSize: 16,
+                                        fontSize: 15.sp,
                                         fontWeight: FontWeight.w600),
                                   ),
-                                  SizedBox(height: 5),
+                                  SizedBox(height: 5.h),
                                   Row(
                                     children: [
                                       Text(
                                         item.date,
                                         style: TextStyle(
                                           color: Color(0xFF7C7C7C),
-                                          fontSize: 13,
+                                          fontSize: 12.sp,
                                         ),
                                       ),
                                     ],
                                   ),
-                                  SizedBox(height: 5),
+                                  SizedBox(height: 5.h),
                                   Text(
                                     item.menu
                                         .map((menu) =>
                                             "${menu.qty} ${menu.name}")
                                         .join(", "),
                                     style: TextStyle(
-                                        color: Color(0xFF585858), fontSize: 15),
+                                        color: Color(0xFF585858), fontSize: 13.sp),
                                   ),
                                 ],
                               ),
@@ -160,14 +161,14 @@ class RiwayatPesanan extends StatelessWidget {
                           ],
                         ),
                         Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          padding: EdgeInsets.symmetric(vertical: 10.h),
                           child: Divider(
                             color: Color(0xFFD9D9D9),
-                            height: 1,
+                            height: 1.h,
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(top: 2),
+                          padding: EdgeInsets.only(top: 2.h),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -178,13 +179,13 @@ class RiwayatPesanan extends StatelessWidget {
                                     "Rp ${item.totalMainCost}",
                                     style: TextStyle(
                                         color: Color(0xFF403E3E),
-                                        fontSize: 15,
+                                        fontSize: 14.sp,
                                         fontWeight: FontWeight.w600),
                                   ),
                                   Text(
                                     "Pembayaran: ${item.paymentMethodLabel}",
                                     style: TextStyle(
-                                        color: Color(0xFF7C7C7C), fontSize: 14),
+                                        color: Color(0xFF7C7C7C), fontSize: 13.sp),
                                   ),
                                 ],
                               ),
@@ -196,14 +197,14 @@ class RiwayatPesanan extends StatelessWidget {
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Color(0xFF19345E),
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
+                                    borderRadius: BorderRadius.circular(20.r),
                                   ),
                                 ),
                                 child: Text(
                                   "Lihat Detail",
                                   style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: 15,
+                                      fontSize: 14.sp,
                                       fontWeight: FontWeight.w500),
                                 ),
                               )
@@ -223,93 +224,3 @@ class RiwayatPesanan extends StatelessWidget {
     );
   }
 }
-
-// class Filter extends StatelessWidget {
-//   const Filter({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final RiwayatKantinController controller = Get.find<RiwayatKantinController>();
-
-//     return Padding(
-//       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
-//       child: Row(
-//         children: [
-//           Expanded(
-//             child: PopupMenuButton(
-//               onSelected: (value) {
-//                 controller.selectedItem.value = value; 
-//               },
-//               itemBuilder: (context) => [
-//                 PopupMenuItem(value: "Semua", child: Text("Semua")),
-//                 PopupMenuItem(value: "Selesai", child: Text("Selesai")),
-//                 PopupMenuItem(value: "Dibatalkan", child: Text("Dibatalkan")),
-//               ],
-//               child: Container(
-//                 padding: EdgeInsets.all(5),
-//                 decoration: BoxDecoration(
-//                   color: Colors.white,
-//                   border: Border.all(color: Colors.grey, width: 1),
-//                   borderRadius: BorderRadius.circular(6)
-//                 ),
-//                 child: Row(
-//                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                   children: [
-//                     Obx(() => Text(
-//                       controller.selectedItem.value,
-//                       style: TextStyle(
-//                         color: Color(0xFF6B7280), fontSize: 14, fontWeight: FontWeight.w500),
-//                     )),
-//                     Icon(Icons.arrow_drop_down, color: Colors.grey),
-//                   ],
-//                 ),
-//               ),
-//             ),
-//           ),
-//           SizedBox(width: 10,),
-//           Expanded(
-//             child: GestureDetector(
-//               onTap: () async {
-//                 DateTime? pickedDate = await showDatePicker(
-//                   context: context,
-//                   initialDate: DateTime.now(),
-//                   firstDate: DateTime(2000),
-//                   lastDate: DateTime(2100),
-//                 );
-
-//                 if (pickedDate != null) {
-//                   controller.selectedDate.value =
-//                       "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
-//                 }
-//               },
-//               child: Container(
-//                 padding: EdgeInsets.all(5),
-//                 decoration: BoxDecoration(
-//                   color: Colors.white,
-//                   border: Border.all(color: Colors.grey, width: 1),
-//                   borderRadius: BorderRadius.circular(6),
-//                 ),
-//                 child: Row(
-//                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                   children: [
-//                     Obx(() => Text(
-//                       controller.selectedDate.value.isNotEmpty
-//                           ? controller.selectedDate.value
-//                           : "Pilih Tanggal",
-//                       style: TextStyle(
-//                         color: Color(0xFF6B7280),
-//                         fontSize: 14,
-//                         fontWeight: FontWeight.w500,
-//                       ),
-//                     )),
-//                     Icon(Icons.calendar_today, color: Colors.grey, size: 20),
-//                   ],
-//                 ),
-//               ),
-//             ),
-//           )
-//         ],
-//       ),
-//     );
-//   }
-// }

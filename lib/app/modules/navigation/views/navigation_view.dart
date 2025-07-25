@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../home_kantin/views/home_kantin_view.dart';
 import '../../profile/views/profile_view.dart';
@@ -41,9 +42,9 @@ class NavigationView extends GetView<NavigationController> {
             animationDuration: const Duration(milliseconds: 200),
             duration: const Duration(milliseconds: 1650),
             backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-            borderWidth: 5.0,
+            borderWidth: 5.0.w,
             snackPosition: SnackPosition.TOP,
-            margin: const EdgeInsets.all(20.0),
+            margin: EdgeInsets.all(16.w),
             icon: const Icon(
               CupertinoIcons.info_circle,
             ),
@@ -93,17 +94,17 @@ class NavigationView extends GetView<NavigationController> {
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
+              topLeft: Radius.circular(20.r),
+              topRight: Radius.circular(20.r),
             ),
             child: BottomAppBar(
               shape: CircularNotchedRectangle(),
               color: Colors.white,
-              notchMargin: 10,
+              notchMargin: 10.w,
               elevation: 0,
-              height: 74,
+              height: 58.h,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                padding: EdgeInsets.symmetric(horizontal: 12.w),
                 child: Obx(
                   () => Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -163,14 +164,14 @@ class NavigationView extends GetView<NavigationController> {
                   ? Color(0xFF1E2857)
                   : Colors.grey,
             ),
-            const SizedBox(height: 5),
+            SizedBox(height: 4.h),
             Text(
               label,
               style: TextStyle(
                 color: controller.currentPage.value == page
                     ? Color(0xFF1E2857)
                     : Colors.grey,
-                fontSize: 13,
+                fontSize: 11.sp,
                 fontWeight: controller.currentPage.value == page
                     ? FontWeight.w500
                     : null,

@@ -4,6 +4,8 @@ import 'dart:async';
 
 import 'package:dikantin_app_rebuild/app/data/auth_provider.dart';
 import 'package:dikantin_app_rebuild/app/data/auth_canteen_provider.dart';
+import 'package:dikantin_app_rebuild/app/modules/sign_in/controllers/api_controller.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -33,6 +35,7 @@ class SignInView extends GetView<SignInController> {
 
   @override
   Widget build(BuildContext context) {
+    final apiController = Get.find<ApiController>();
     return WillPopScope(
       onWillPop: () async {
         if (_backButtonPressCount == 0) {
@@ -48,9 +51,9 @@ class SignInView extends GetView<SignInController> {
             animationDuration: const Duration(milliseconds: 200),
             duration: const Duration(milliseconds: 1650),
             backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-            borderWidth: 5.0,
+            borderWidth: 5.0.w,
             snackPosition: SnackPosition.TOP,
-            margin: const EdgeInsets.all(20.0),
+            margin: EdgeInsets.all(20.0.w),
             icon: const Icon(
               CupertinoIcons.info_circle,
             ),
@@ -69,7 +72,7 @@ class SignInView extends GetView<SignInController> {
                 ? const AlwaysScrollableScrollPhysics()
                 : const NeverScrollableScrollPhysics(),
             child: Padding(
-              padding: const EdgeInsets.all(20),
+              padding: EdgeInsets.all(16.w),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,30 +80,36 @@ class SignInView extends GetView<SignInController> {
                   Center(
                     child: Image.asset(
                       'assets/images/logo_dikantin.png',
-                      width: 180,
-                      height: 180,
+                      width: 170.w,
+                      height: 170.h,
                     ),
                   ),
-                  Center(
-                    child: const Text(
-                      'Selamat Datang',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF1E2857),
+                  GestureDetector(
+                    onHorizontalDragEnd: (details) {
+                      _showApiBottomSheet(context, apiController);
+                    },
+                    child: Center(
+                      child: Text(
+                        'Selamat Datang',
+                        style: TextStyle(
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF1E2857),
+                        ),
                       ),
                     ),
                   ),
                   Center(
-                    child: const Text(
+                    child: Text(
                       'Masuk ke akun anda untuk melanjutkan',
+                      textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 16.sp,
                         color: Colors.black54,
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20.h),
                   FormBuilder(
                     key: _formKey,
                     child: Column(
@@ -111,38 +120,38 @@ class SignInView extends GetView<SignInController> {
                           name: "email",
                           keyboardType: TextInputType.emailAddress,
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 16.sp,
                             color: Colors.black87,
                           ),
                           scrollPadding: EdgeInsets.only(
                             bottom: MediaQuery.of(context).viewInsets.bottom,
                           ),
                           decoration: InputDecoration(
-                            prefixIcon: const Icon(
+                            prefixIcon: Icon(
                               CupertinoIcons.mail,
-                              size: 18,
+                              size: 17.sp,
                               color: Colors.black87,
                             ),
-                            hintText: "Masukan email",
+                            hintText: "Email",
                             hintStyle: TextStyle(
-                              fontSize: 18,
+                              fontSize: 16.sp,
                               color: Colors.black54,
                             ),
-                            enabledBorder: const OutlineInputBorder(
+                            enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.all(
-                                Radius.circular(15),
+                                Radius.circular(15.r),
                               ),
                               borderSide: BorderSide(color: Colors.black87),
                             ),
-                            focusedBorder: const OutlineInputBorder(
+                            focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.all(
-                                Radius.circular(15),
+                                Radius.circular(15.r),
                               ),
                               borderSide: BorderSide(color: Colors.black87),
                             ),
-                            contentPadding: const EdgeInsets.symmetric(
-                              vertical: 15,
-                              horizontal: 15,
+                            contentPadding: EdgeInsets.symmetric(
+                              vertical: 12.h,
+                              horizontal: 10.w,
                             ),
                           ),
                           validator: FormBuilderValidators.compose([
@@ -150,22 +159,22 @@ class SignInView extends GetView<SignInController> {
                             FormBuilderValidators.email(),
                           ]),
                         ),
-                        const SizedBox(height: 15),
+                        SizedBox(height: 10.h),
                         Obx(
                           () => FormBuilderTextField(
                             name: "password",
                             keyboardType: TextInputType.visiblePassword,
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 16.sp,
                               color: Colors.black87,
                             ),
                             scrollPadding: EdgeInsets.only(
                               bottom: MediaQuery.of(context).viewInsets.bottom,
                             ),
                             decoration: InputDecoration(
-                              prefixIcon: const Icon(
+                              prefixIcon: Icon(
                                 CupertinoIcons.lock,
-                                size: 18,
+                                size: 17.sp,
                                 color: Colors.black87,
                               ),
                               suffixIcon: IconButton(
@@ -173,33 +182,33 @@ class SignInView extends GetView<SignInController> {
                                   _obscureText.value
                                       ? CupertinoIcons.eye
                                       : CupertinoIcons.eye_slash,
-                                  size: 18.0,
+                                  size: 17.sp,
                                   color: Colors.black87,
                                 ),
                                 onPressed: () {
                                   _obscureText.toggle();
                                 },
                               ),
-                              hintText: "Masukan password",
+                              hintText: "Password",
                               hintStyle: TextStyle(
-                                fontSize: 18,
+                                fontSize: 16.sp,
                                 color: Colors.black54,
                               ),
-                              enabledBorder: const OutlineInputBorder(
+                              enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.all(
-                                  Radius.circular(15),
+                                  Radius.circular(15.r),
                                 ),
                                 borderSide: BorderSide(color: Colors.black87),
                               ),
-                              focusedBorder: const OutlineInputBorder(
+                              focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.all(
-                                  Radius.circular(15),
+                                  Radius.circular(15.r),
                                 ),
                                 borderSide: BorderSide(color: Colors.black87),
                               ),
-                              contentPadding: const EdgeInsets.symmetric(
-                                vertical: 15,
-                                horizontal: 15,
+                              contentPadding: EdgeInsets.symmetric(
+                                vertical: 12.h,
+                                horizontal: 10.w,
                               ),
                             ),
                             obscureText: _obscureText.value,
@@ -211,10 +220,10 @@ class SignInView extends GetView<SignInController> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 50),
+                  SizedBox(height: 30.h),
                   SizedBox(
                     width: double.infinity,
-                    height: 50,
+                    height: 40.h,
                     child: Consumer<AuthCanteenProvider>(
                       builder: (context, auth, child) {
                         WidgetsBinding.instance.addPostFrameCallback(
@@ -230,9 +239,9 @@ class SignInView extends GetView<SignInController> {
                                     ? Colors.green
                                     : Colors.red,
                                 colorText: Colors.white,
-                                borderWidth: 5.0,
+                                borderWidth: 5.0.w,
                                 snackPosition: SnackPosition.TOP,
-                                margin: const EdgeInsets.all(20.0),
+                                margin: EdgeInsets.all(20.w),
                                 icon: const Icon(
                                   CupertinoIcons.info_circle,
                                   color: Colors.white,
@@ -263,13 +272,14 @@ class SignInView extends GetView<SignInController> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color(0xFF1E2857),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
+                              borderRadius: BorderRadius.circular(15.r),
                             ),
+                            minimumSize: Size(double.infinity, 50.h),
                           ),
                           child: Text(
                             "Masuk",
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 17.sp,
                               fontWeight: FontWeight.w500,
                               color: Colors.white,
                             ),
@@ -278,13 +288,109 @@ class SignInView extends GetView<SignInController> {
                       },
                     ),
                   ),
-                  const SizedBox(height: 70),
+                  SizedBox(height: 70.h),
                 ],
               ),
             ),
           ),
         ),
       ),
+    );
+  }
+
+  void _showApiBottomSheet(BuildContext context, ApiController controller) {
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+      ),
+      constraints: BoxConstraints(
+        maxHeight: Get.height * 0.6,
+      ),
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.all(20.w),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Pengaturan API',
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20.sp,
+                  color: Color(0xFF1E2857),
+                ),
+              ),
+              SizedBox(height: 10.h),
+              Obx(() {
+                return Column(
+                  children: controller.apiEnvironments.keys.map((env) {
+                    return RadioListTile<String>(
+                      title: Text(
+                        env,
+                        style: TextStyle(
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      contentPadding: EdgeInsets.zero,
+                      dense: true,
+                      value: env,
+                      groupValue: controller.selectedEnv.value,
+                      onChanged: (value) {
+                        if (value != null) {
+                          controller.selectedEnv.value = value;
+                        }
+                      },
+                    );
+                  }).toList(),
+                );
+              }),
+              Obx(() {
+                if (controller.selectedEnv.value == 'Custom') {
+                  return Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10.w),
+                    child: TextField(
+                      controller: controller.customUrlController,
+                      decoration: const InputDecoration(
+                        labelText: 'URL API Custom',
+                        hintText: '192.xxx.x.x:xxxx',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                  );
+                } else {
+                  return const SizedBox.shrink();
+                }
+              }),
+              SizedBox(height: 20.h),
+              SizedBox(
+                width: double.infinity,
+                height: 40.h,
+                child: ElevatedButton(
+                  onPressed: () {
+                    controller.saveApiSetting();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF1E2857),
+                    foregroundColor: Colors.white,
+                    padding: EdgeInsets.symmetric(vertical: 12.h),
+                  ),
+                  child: Text(
+                    'Simpan',
+                    style: TextStyle(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

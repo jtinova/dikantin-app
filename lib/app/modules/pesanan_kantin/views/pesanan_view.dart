@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../controllers/pesanan_controller.dart';
 import 'package:animations/animations.dart';
 import 'detail_pesanan.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:dikantin_app_rebuild/app/models/order_canteen.dart';
 
 
@@ -16,13 +17,13 @@ class PesananKantinView extends GetView<PesananController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF19345E),
+        backgroundColor: Color(0xFF1E2857),
         elevation: 0,
         title: Text(
           "Pesanan",
           style: TextStyle(
             color: Colors.white,
-            fontSize: 20, 
+            fontSize: 17.sp, 
             fontWeight: FontWeight.w500
           ),
         ),  
@@ -33,7 +34,7 @@ class PesananKantinView extends GetView<PesananController> {
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
                   title: Text(
                     'Bantuan',
                     style: TextStyle(
@@ -46,7 +47,7 @@ class PesananKantinView extends GetView<PesananController> {
                       "• Tekan tab 'Pesanan Masuk' untuk melihat daftar pesanan baru.\n"
                       "• Tekan tab 'Dimasak' untuk melihat daftar pesanan dimasak.\n"
                       "• Tekan tombol 'Lihat Detail' untuk melihat detail dari pesanan.\n",
-                      style: TextStyle(fontSize: 15),
+                      style: TextStyle(fontSize: 15.sp),
                     ),
                   ),
                   actions: [
@@ -90,7 +91,7 @@ class Header extends StatelessWidget {
     return Container(
       color: Color(0xFFFEFEFE),
       child: TabBar(
-        padding: EdgeInsets.symmetric(vertical: 8),
+        padding: EdgeInsets.symmetric(vertical: 8.h),
         controller: controller.tabController,
         isScrollable: false,
         labelColor: Color(0xFF19345E),
@@ -121,40 +122,39 @@ class Pesanan extends StatelessWidget {
           },
         child: ListView.builder(
           physics: AlwaysScrollableScrollPhysics(),
-          padding: EdgeInsets.all(14),
+          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
           itemCount: data.length,
           itemBuilder: (context, index) {
             var item = data[index];
             return Card(
-              margin: EdgeInsets.only(bottom: 16),
+              margin: EdgeInsets.only(bottom: 10.h),
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                 child: Column(
                   children: [
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(8.r),
                           child: Image.network(
                             item.details.first.imagePath,
-                            width: 70,
-                            height: 70,
+                            width: 60.w,
+                            height: 60.h,
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) => Container(
-                              width: 70,
-                              height: 70,
+                              width: 60.w,
+                              height: 60.h,
                               color: Colors.grey[200],
-                              child: const Icon(
+                              child: Icon(
                                 Icons.error,
                                 color: Colors.redAccent,
-                                size: 30,
+                                size: 24.sp,
                               ),
                             ),
                           ),
                         ),
-                        SizedBox(width: 10),
+                        SizedBox(width: 10.w),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -163,29 +163,29 @@ class Pesanan extends StatelessWidget {
                                 item.transactionCode,
                                 style: TextStyle(
                                     color: Color(0xFF403E3E),
-                                    fontSize: 16,
+                                    fontSize: 15.sp,
                                     fontWeight: FontWeight.w600),
                               ),
-                              SizedBox(height: 5),
+                              SizedBox(height: 5.h),
                               Row(
                                 children: [
                                   Text(
                                     item.dateTime,
                                     style: TextStyle(
                                       color: Color(0xFF7C7C7C),
-                                      fontSize: 13,
+                                      fontSize: 12.sp,
                                     ),
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 5),
+                              SizedBox(height: 5.h),
                               Text(
                                 item.details
                                     .map((menu) =>
                                         "${menu.qty} ${menu.name}")
                                     .join(", "),
                                 style: TextStyle(
-                                    color: Color(0xFF585858), fontSize: 15),
+                                    color: Color(0xFF585858), fontSize: 13.sp),
                               ),
                             ],
                           ),
@@ -193,14 +193,14 @@ class Pesanan extends StatelessWidget {
                       ],
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      padding: EdgeInsets.symmetric(vertical: 10.h),
                       child: Divider(
                         color: Color(0xFFD9D9D9),
-                        height: 1,
+                        height: 1.h,
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 2),
+                      padding: EdgeInsets.only(top: 2.h),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -211,13 +211,13 @@ class Pesanan extends StatelessWidget {
                                 "Rp ${item.mainCost}",
                                 style: TextStyle(
                                     color: Color(0xFF403E3E),
-                                    fontSize: 15,
+                                    fontSize: 14.sp,
                                     fontWeight: FontWeight.w600),
                               ),
                               Text(
                                 "${item.totalQty} Pesanan",
                                 style: TextStyle(
-                                    color: Color(0xFF7C7C7C), fontSize: 13),
+                                    color: Color(0xFF7C7C7C), fontSize: 13.sp),
                               ),
                             ],
                           ),
@@ -229,14 +229,14 @@ class Pesanan extends StatelessWidget {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Color(0xFF19345E),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
+                                borderRadius: BorderRadius.circular(20.r),
                               ),
                             ),
                             child: Text(
                               "Lihat Detail",
                               style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 15,
+                                  fontSize: 14.sp,
                                   fontWeight: FontWeight.w500),
                             ),
                           )

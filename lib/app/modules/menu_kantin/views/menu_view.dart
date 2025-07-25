@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/menu_controller.dart';
 import 'package:animations/animations.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:dikantin_app_rebuild/app/models/menu_kantin.dart';
 
@@ -15,13 +16,13 @@ class MenuKantinView extends GetView<MenuKantinController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF19345E),
+        backgroundColor: Color(0xFF1E2857),
         elevation: 0,
         title: Text(
           "Daftar Menu",
           style: TextStyle(
             color: Colors.white,
-            fontSize: 20, 
+            fontSize: 17.sp, 
             fontWeight: FontWeight.w500
           ),
         ), 
@@ -45,7 +46,7 @@ class MenuKantinView extends GetView<MenuKantinController> {
                       "• Tekan tombol 'Ubah Stok' untuk mengubah status menu.\n"
                       "• Tekan tombol 'Tersedia' untuk mengubah status menjadi Tersedia.\n"
                       "• Tekan tombol 'Habis' untuk mengubah status menjadi Habis.\n",
-                      style: TextStyle(fontSize: 15),
+                      style: TextStyle(fontSize: 15.sp),
                     ),
                   ),
                   actions: [
@@ -89,7 +90,7 @@ class TabBar extends StatelessWidget {
     final MenuKantinController controller = Get.find<MenuKantinController>();
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 14),
+      padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 14.w),
       child: DefaultTabController(
         length: 3,
         child: Column(
@@ -108,23 +109,14 @@ class TabBar extends StatelessWidget {
               ),
               // borderWidth: 1,
               // unselectedBorderColor: Colors.blue,
-              radius: 100,
-              contentPadding: EdgeInsets.symmetric(horizontal: 20),
+              radius: 100.r,
+              contentPadding: EdgeInsets.symmetric(horizontal: 20.w),
               tabs: [
                 Tab(text: "Semua"),
                 Tab(text: "Makanan"),
                 Tab(text: "Minuman"),
               ]
             ),
-            // Expanded(
-            //   child: TabBarView(
-            //     children: [
-            //       Center(child: Text("Content for All")),
-            //       Center(child: Text("Content for Experience Consulting")),
-            //       Center(child: Text("Content for Front Office Transformation")),
-            //     ],
-            //   ),
-            // ),
           ],
         ),
       ),
@@ -141,12 +133,12 @@ class ListMenu extends StatelessWidget {
 
     Widget buildListView(RxList<MenuModel> data) {
       return Obx(() => ListView.builder(
-        padding: EdgeInsets.all(14),
+        padding: EdgeInsets.all(10.w),
         itemCount: data.length,
         itemBuilder: (context, index) {
           var menu = data[index]; 
           return Padding(
-            padding: const EdgeInsets.all(12),
+            padding: EdgeInsets.symmetric(vertical: 10.h),
             child: Column(
               children: [
                 Row(
@@ -157,38 +149,38 @@ class ListMenu extends StatelessWidget {
                       clipBehavior: Clip.none,
                       children: [
                         ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(8.r),
                           child: ColorFiltered(
                             colorFilter: menu.isAvailable
                                 ? const ColorFilter.mode(Colors.transparent, BlendMode.multiply)
                                 : const ColorFilter.mode(Colors.grey, BlendMode.saturation),
                             child: Image.network(
                               menu.imagePath,
-                              width: 70,
-                              height: 70,
+                              width: 60.w,
+                              height: 60.h,
                               fit: BoxFit.cover,
                               errorBuilder: (context, error, stackTrace) => Container(
-                                width: 70,
-                                height: 70,
+                                width: 60.w,
+                                height: 60.h,
                                 color: Colors.grey[200],
-                                child: const Icon(
+                                child: Icon(
                                   Icons.error,
                                   color: Colors.redAccent,
-                                  size: 30,
+                                  size: 24.sp,
                                 ),
                               ),
                             ),
                           ),
                         ),
                         Positioned(
-                          bottom: -14, 
+                          bottom: -10.h, 
                           child: Container(
                             alignment: Alignment.center,
                             child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                               decoration: BoxDecoration(
                                 color: Colors.white,
-                                borderRadius: BorderRadius.circular(50),
+                                borderRadius: BorderRadius.circular(50.r),
                                 boxShadow: [
                                   BoxShadow(
                                     color: Colors.black.withOpacity(0.2),
@@ -199,10 +191,10 @@ class ListMenu extends StatelessWidget {
                               ),
                               child: Text(
                                 menu.status,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: Color(0xFF1E2857),
                                   fontWeight: FontWeight.w600,
-                                  fontSize: 12,
+                                  fontSize: 10.sp,
                                 ),
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -211,7 +203,7 @@ class ListMenu extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(width: 10),
+                    SizedBox(width: 10.w),
                     Expanded(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -222,12 +214,12 @@ class ListMenu extends StatelessWidget {
                               children: [
                                 Text(
                                   menu.name,
-                                  style: TextStyle(color: Color(0xFF403E3E), fontSize: 16, fontWeight: FontWeight.w600),
+                                  style: TextStyle(color: Color(0xFF403E3E), fontSize: 15.sp, fontWeight: FontWeight.w600),
                                 ),
-                                SizedBox(height: 5),
+                                SizedBox(height: 3.h),
                                 Text(
                                   menu.hargaFormatted,
-                                  style: TextStyle(color: Colors.grey[400], fontSize: 15, fontWeight: FontWeight.w500),
+                                  style: TextStyle(color: Colors.grey[400], fontSize: 14.sp, fontWeight: FontWeight.w500),
                                 ),
                               ],
                             ),
@@ -239,17 +231,17 @@ class ListMenu extends StatelessWidget {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF19345E),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
+                                borderRadius: BorderRadius.circular(20.r),
                               ),
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8), 
+                              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8).h, 
                               minimumSize: const Size(0, 0),
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             ),
-                            child: const Text(
+                            child: Text(
                               "Ubah Stok",
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 13,
+                                fontSize: 13.sp,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -281,7 +273,7 @@ class ListMenu extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text('Status Saat Ini: ${menuItem.status}'),
-              SizedBox(height: 16),
+              SizedBox(height: 16.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -292,7 +284,7 @@ class ListMenu extends StatelessWidget {
                     },
                     child: Text('Tersedia'),
                   ),
-                  SizedBox(width: 10),
+                  SizedBox(width: 10.w),
                   ElevatedButton(
                     onPressed: () {
                       Get.find<MenuKantinController>().updateMenuStock(menuItem.id, false); 

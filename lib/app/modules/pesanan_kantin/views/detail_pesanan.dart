@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/pesanan_controller.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:dikantin_app_rebuild/app/models/order_canteen.dart';
 
 class DetailPesananView extends GetView<PesananController> {
@@ -18,12 +19,12 @@ class DetailPesananView extends GetView<PesananController> {
         backgroundColor: Colors.white,
         elevation: 0,
         leading: Container(
-          margin: EdgeInsets.all(10),
+          margin: EdgeInsets.all(8.w),
           decoration: BoxDecoration(
-              color: Color(0xFF19345E),
-              borderRadius: BorderRadius.circular(10)),
+              color: Color(0xFF1E2857),
+              borderRadius: BorderRadius.circular(10.r)),
           child: IconButton(
-              iconSize: 15,
+              iconSize: 15.sp,
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -36,7 +37,7 @@ class DetailPesananView extends GetView<PesananController> {
           "Rincian Pesanan",
           style: TextStyle(
               color: Color(0xFF403E3E),
-              fontSize: 20,
+              fontSize: 17.sp,
               fontWeight: FontWeight.w500),
         ),
         centerTitle: true,
@@ -52,7 +53,7 @@ class DetailPesananView extends GetView<PesananController> {
       bottomNavigationBar: data.status == 'done'
     ? SizedBox.shrink()
     : Padding(
-        padding: const EdgeInsets.only(bottom: 20),
+        padding: EdgeInsets.only(bottom: 14.h),
         child: BottomAppBar(
           elevation: 0,
           color: Colors.transparent,
@@ -73,10 +74,10 @@ class DetailPesananView extends GetView<PesananController> {
             },
             child: Container(
               width: double.infinity,
-              padding: EdgeInsets.all(12),
+              padding: EdgeInsets.symmetric(vertical: 10.h),
               decoration: BoxDecoration(
-                color: Color(0xFF19345E),
-                borderRadius: BorderRadius.circular(10),
+                color: Color(0xFF1E2857),
+                borderRadius: BorderRadius.circular(10.r),
               ),
               alignment: Alignment.center,
               child: Text(
@@ -87,7 +88,7 @@ class DetailPesananView extends GetView<PesananController> {
                         : "",
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 17,
+                  fontSize: 16.sp,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -107,9 +108,9 @@ class Pesanan extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.only(top: 20, left: 12, right: 12, bottom: 12),
+      margin: EdgeInsets.only(top: 16.h, left: 10.w, right: 10.w, bottom: 12.h),
       child: Padding(
-        padding: const EdgeInsets.all(18),
+        padding: EdgeInsets.all(16.w),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -120,13 +121,13 @@ class Pesanan extends StatelessWidget {
                   item.transactionCode,
                   style: TextStyle(
                       color: Color(0xFF403E3E),
-                      fontSize: 15,
+                      fontSize: 14.sp,
                       fontWeight: FontWeight.w500),
                 ),
                 Text(
                   item.customerName,
                   style:
-                      TextStyle(color: Color(0xFF403E3E), fontSize: 14),
+                      TextStyle(color: Color(0xFF403E3E), fontSize: 13.sp),
                 ),
               ],
             ),
@@ -136,12 +137,12 @@ class Pesanan extends StatelessWidget {
                 Text(
                   item.orderTypeLabel,
                   style:
-                      TextStyle(color: Color(0xFF403E3E), fontSize: 14),
+                      TextStyle(color: Color(0xFF403E3E), fontSize: 13.sp),
                 ),
                 Text(
                   "Meja: ${item.deskNumber}",
                   style:
-                      TextStyle(color: Color(0xFF403E3E), fontSize: 14),
+                      TextStyle(color: Color(0xFF403E3E), fontSize: 13.sp),
                 ),
               ],
             )
@@ -160,18 +161,18 @@ class ListPesanan extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.all(12),
+      margin: EdgeInsets.all(10.w),
       child: Padding(
-        padding: const EdgeInsets.all(18),
+        padding: EdgeInsets.all(16.w),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               "Pesanan",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500),
             ),
-            SizedBox(height: 15),
+            SizedBox(height: 4.h),
             ListView.builder(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
@@ -181,30 +182,30 @@ class ListPesanan extends StatelessWidget {
                   return Column(
                     children: [
                       Padding(
-                        padding: EdgeInsets.symmetric(vertical: 8),
+                        padding: EdgeInsets.symmetric(vertical: 6.h),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(8.r),
                               child: Image.network(
                                 pesanan.imagePath,
-                                width: 70,
-                                height: 70,
+                                width: 60.w,
+                                height: 60.h,
                                 fit: BoxFit.cover,
                                 errorBuilder: (context, error, stackTrace) => Container(
-                                  width: 70,
-                                  height: 70,
+                                  width: 60.w,
+                                  height: 60.h,
                                   color: Colors.grey[200],
-                                  child: const Icon(
+                                  child: Icon(
                                     Icons.error,
                                     color: Colors.redAccent,
-                                    size: 30,
+                                    size: 24.sp,
                                   ),
                                 ),
                               ),
                             ),
-                            SizedBox(width: 10),
+                            SizedBox(width: 10.w),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -212,12 +213,12 @@ class ListPesanan extends StatelessWidget {
                                   Text(
                                     pesanan.name,
                                     style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: 15.sp,
                                       color: Color(0xFF403E3E),
                                       fontWeight: FontWeight.w400,
                                     ),
                                   ),
-                                  SizedBox(height: 4),
+                                  SizedBox(height: 2.h),
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -225,7 +226,7 @@ class ListPesanan extends StatelessWidget {
                                       Text(
                                         "Rp ${pesanan.harga}",
                                         style: TextStyle(
-                                          fontSize: 15,
+                                          fontSize: 14.sp,
                                           color: Color(0xFF403E3E),
                                           fontWeight: FontWeight.w600,
                                         ),
@@ -233,7 +234,7 @@ class ListPesanan extends StatelessWidget {
                                       Text(
                                         "X ${pesanan.qty}",
                                         style: TextStyle(
-                                          fontSize: 15,
+                                          fontSize: 14.sp,
                                           color: Color(0xFF403E3E),
                                           fontWeight: FontWeight.w600,
                                         ),
@@ -247,8 +248,8 @@ class ListPesanan extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 8, bottom: 12),
-                        child: Divider(color: Color(0xFFD9D9D9), height: 1),
+                        padding: EdgeInsets.symmetric(vertical: 8.h),
+                        child: Divider(color: Color(0xFFD9D9D9), height: 1.h),
                       ),
                     ],
                   );
@@ -258,13 +259,13 @@ class ListPesanan extends StatelessWidget {
               children: [
                 Text(
                   "Total Pembayaran",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w500),
                 ),
                 Text(
                   "Rp ${item.mainCost}",
                   style: TextStyle(
                       color: Color(0xFF403E3E),
-                      fontSize: 17,
+                      fontSize: 15.sp,
                       fontWeight: FontWeight.w500),
                 ),
               ],
@@ -276,35 +277,3 @@ class ListPesanan extends StatelessWidget {
   }
 }
 
-// class Catatan extends StatelessWidget {
-//   const Catatan({super.key, required this.catatan});
-
-//   final String catatan;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       width: double.infinity,
-//       margin: EdgeInsets.all(12),
-//       child: Card(
-//         child: Padding(
-//           padding: const EdgeInsets.all(18),
-//           child: Column(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-//               Text(
-//                 "Catatan",
-//                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-//               ),
-//               SizedBox(height: 6),
-//               Text(
-//                 catatan.isNotEmpty ? catatan : "-",
-//                 style: TextStyle(color: Color(0xFF403E3E), fontSize: 16),
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }

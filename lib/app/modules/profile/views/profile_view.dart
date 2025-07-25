@@ -1,6 +1,7 @@
-import 'package:dikantin_app_rebuild/app/data/auth_provider.dart';
+import 'package:dikantin_app_rebuild/app/data/auth_canteen_provider.dart';
 import 'package:dikantin_app_rebuild/app/routes/app_pages.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -22,65 +23,65 @@ class ProfileView extends GetView<ProfileController> {
         title: Text(
           'Profile',
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 17.sp,
             color: Colors.black,
             fontWeight: FontWeight.w500,
           ),
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(15),
+        padding: EdgeInsets.all(12.w),
         child: Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: 40),
+              SizedBox(height: 35.h),
               GestureDetector(
                 onTap: () => Get.toNamed(Routes.MY_PROFILE),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  padding: EdgeInsets.symmetric(horizontal: 4.w),
                   child: Row(
                     children: [
                       Icon(
                         CupertinoIcons.pencil,
                         color: Colors.grey,
                       ),
-                      SizedBox(width: 10),
+                      SizedBox(width: 8.w),
                       Text(
                         'Profile Saya',
                         style: TextStyle(
                           color: Colors.black,
-                          fontSize: 18,
+                          fontSize: 17.sp,
                         ),
                       ),
                     ],
                   ),
                 ),
               ),
-              SizedBox(height: 25),
+              SizedBox(height: 18.h),
               GestureDetector(
                 onTap: () => Get.toNamed(Routes.ABOUT_APP),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  padding: EdgeInsets.symmetric(horizontal: 4.w),
                   child: Row(
                     children: [
                       Icon(
                         CupertinoIcons.info_circle,
                         color: Colors.grey,
                       ),
-                      SizedBox(width: 10),
+                      SizedBox(width: 8.w),
                       Text(
                         'Informasi Aplikasi',
                         style: TextStyle(
                           color: Colors.black,
-                          fontSize: 18,
+                          fontSize: 17.sp,
                         ),
                       ),
                     ],
                   ),
                 ),
               ),
-              SizedBox(height: 25),
+              SizedBox(height: 18.h),
               GestureDetector(
                 onTap: () {
                   showDialog(
@@ -106,7 +107,7 @@ class ProfileView extends GetView<ProfileController> {
                               ),
                             ),
                           ),
-                          Consumer<AuthenticationProvider>(
+                          Consumer<AuthCanteenProvider>(
                               builder: (context, auth, child) {
                             WidgetsBinding.instance.addPostFrameCallback(
                               (_) {
@@ -122,9 +123,9 @@ class ProfileView extends GetView<ProfileController> {
                                         ? Colors.green
                                         : Colors.red,
                                     colorText: Colors.white,
-                                    borderWidth: 5.0,
+                                    borderWidth: 5.0.w,
                                     snackPosition: SnackPosition.TOP,
-                                    margin: const EdgeInsets.all(20.0),
+                                    margin: EdgeInsets.all(20.0.w),
                                     icon: const Icon(
                                       CupertinoIcons.info_circle,
                                       color: Colors.white,
@@ -137,7 +138,7 @@ class ProfileView extends GetView<ProfileController> {
                             );
                             return TextButton(
                               onPressed: () {
-                                auth.logoutUser();
+                                auth.logoutCanteen();
                               },
                               child: Text(
                                 "Logout",
@@ -153,19 +154,19 @@ class ProfileView extends GetView<ProfileController> {
                   );
                 },
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  padding: EdgeInsets.symmetric(horizontal: 4.w),
                   child: Row(
                     children: [
                       Icon(
                         CupertinoIcons.square_arrow_left,
                         color: Colors.red,
                       ),
-                      SizedBox(width: 10),
+                      SizedBox(width: 8.w),
                       Text(
                         'Keluar',
                         style: TextStyle(
                           color: Colors.red,
-                          fontSize: 18,
+                          fontSize: 17.sp,
                         ),
                       ),
                     ],
