@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
 class ApiConfigService extends GetxService {
-  final RxString baseURL = '192.168.1.7:8000'.obs;
+  final RxString baseURL = 'https://dikantin-staging.jtinova.com'.obs;
 
   void updateBaseUrl(String newUrl) {
     baseURL.value = newUrl;
@@ -14,7 +14,7 @@ class AppUrl {
   static String get _baseURL => _apiConfig.baseURL.value;
 
   static String get baseURLAPI => '$_baseURL/api';
-  static String get baseImageURL => '$_baseURL/storage/menu/';
+  static String get baseImageURL => '$_baseURL/';
 
   // Authentication User
   static String get signin => '$baseURLAPI/login';
@@ -42,7 +42,8 @@ class AppUrl {
   static String get trackingProgress => '$baseURLAPI/transaction/progress';
   static String get trackingDetailProgress => '$baseURLAPI/transaction/';
   static String get trackingShipping => '$baseURLAPI/transaction/shipping';
-  static String get trackingDetailShipping => '$baseURLAPI/transaction/shipping/';
+  static String get trackingDetailShipping =>
+      '$baseURLAPI/transaction/shipping/';
   static String get trackingHistory => '$baseURLAPI/transaction/history';
   static String get cancelOrder => '$baseURLAPI/transaction/cancel';
   static String get pickUpOrder => '$baseURLAPI/transaction/pick-up';
@@ -67,4 +68,7 @@ class AppUrl {
   // API WithDraw Courier
   static String get withDrawlBalance => '$baseURLAPI/courier/withdraw-balance';
   static String get withDrawlHistory => '$baseURLAPI/courier-withdrawals';
+
+  // API fcm
+  static String get notification => '$baseURLAPI/fcm/notification';
 }

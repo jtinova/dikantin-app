@@ -1,6 +1,9 @@
 import 'package:dikantin_app_rebuild/app/data/auth_provider.dart';
 import 'package:dikantin_app_rebuild/app/data/network_provider.dart';
+import 'package:dikantin_app_rebuild/app/service/fcm_service.dart';
 import 'package:dikantin_app_rebuild/app/theme/theme.dart';
+import 'package:dikantin_app_rebuild/firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
 // import 'package:device_preview/device_preview.dart';
 // import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +20,12 @@ import 'app/routes/app_pages.dart';
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  await NotificationService.initialize();
 
   await initServices();
 
@@ -78,7 +87,7 @@ class MyApp extends StatelessWidget {
         return GetMaterialApp(
           useInheritedMediaQuery: true,
           // locale: DevicePreview.locale(context),
-          title: "Dikantin App Rebuild",
+          title: "Dikantin",
           initialRoute: initialRoute,
           theme: lightMode,
           getPages: AppPages.routes,
