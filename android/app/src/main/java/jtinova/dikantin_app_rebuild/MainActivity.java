@@ -1,4 +1,4 @@
-package jtinova.dikantin_app_rebuild;
+package com.dikantin.dikantin_o_l_d;
 
 import io.flutter.embedding.android.FlutterActivity;
 

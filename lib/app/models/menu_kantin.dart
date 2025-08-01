@@ -1,4 +1,4 @@
-import 'package:dikantin_app_rebuild/app/data/api.dart';
+import 'package:dikantin_partner/app/data/api.dart';
 
 class MenuModel {
   final String id;
@@ -6,7 +6,7 @@ class MenuModel {
   final String image;
   final int sellingCost;
   final int mainCost;
-  bool isAvailable; 
+  bool isAvailable;
 
   MenuModel({
     required this.id,
@@ -14,7 +14,7 @@ class MenuModel {
     required this.image,
     required this.sellingCost,
     required this.mainCost,
-    this.isAvailable = false, 
+    this.isAvailable = false,
   });
 
   factory MenuModel.fromJson(Map<String, dynamic> json) {
@@ -24,12 +24,11 @@ class MenuModel {
       image: json['image'],
       sellingCost: json['selling_cost'],
       mainCost: json['main_cost'],
-      isAvailable: json['stock'] > 0, 
+      isAvailable: json['stock'] > 0,
     );
   }
 
   String get hargaFormatted => "Rp $mainCost";
   String get status => isAvailable ? "Tersedia" : "Habis";
   String get imagePath => "${AppUrl.imageMenu}$image";
-
 }

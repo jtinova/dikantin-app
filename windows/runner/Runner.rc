@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "jtinova" "\0"
-            VALUE "FileDescription", "dikantin_app_rebuild" "\0"
+            VALUE "FileDescription", "dikantin_partner" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "dikantin_app_rebuild" "\0"
+            VALUE "InternalName", "dikantin_partner" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2025 jtinova. All rights reserved." "\0"
-            VALUE "OriginalFilename", "dikantin_app_rebuild.exe" "\0"
-            VALUE "ProductName", "dikantin_app_rebuild" "\0"
+            VALUE "OriginalFilename", "dikantin_partner.exe" "\0"
+            VALUE "ProductName", "dikantin_partner" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

@@ -2,13 +2,13 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:dikantin_app_rebuild/app/data/db_provider.dart';
-import 'package:dikantin_app_rebuild/app/models/history_canteen.dart';
-import 'package:dikantin_app_rebuild/app/data/api.dart';
+import 'package:dikantin_partner/app/data/db_provider.dart';
+import 'package:dikantin_partner/app/models/history_canteen.dart';
+import 'package:dikantin_partner/app/data/api.dart';
 
 class HomeKantinController extends GetxController {
   RxList<HistoryModel> daftarMenu = <HistoryModel>[].obs;
-  var canteenName= 'Kantin'.obs;
+  var canteenName = 'Kantin'.obs;
   var totalIncomeToday = 0.obs;
   var totalIncomeMonth = 0.obs;
   var totalOrderServed = 0.obs;
@@ -19,7 +19,7 @@ class HomeKantinController extends GetxController {
   void onInit() {
     super.onInit();
     canteenProfile();
-    incomeToday(); 
+    incomeToday();
     incomeMonth();
     orderServed();
     orderDone();
@@ -28,11 +28,11 @@ class HomeKantinController extends GetxController {
 
   void refreshData() {
     canteenProfile();
-    incomeToday(); 
+    incomeToday();
     incomeMonth();
     orderServed();
     orderDone();
-    fetchHistory(); 
+    fetchHistory();
   }
 
   Future<void> canteenProfile() async {
@@ -40,7 +40,7 @@ class HomeKantinController extends GetxController {
 
     try {
       final response = await http.get(
-        Uri.parse(AppUrl.profilCanteen), 
+        Uri.parse(AppUrl.profilCanteen),
         headers: {
           'Authorization': 'Bearer $token',
           'Accept': 'application/json',
@@ -59,7 +59,7 @@ class HomeKantinController extends GetxController {
   }
 
   Future<void> updateCanteenStatus(String status) async {
-    final token = await DatabaseProvider().getToken(); 
+    final token = await DatabaseProvider().getToken();
     final url = Uri.parse(AppUrl.statusCanteen);
 
     try {
@@ -70,7 +70,7 @@ class HomeKantinController extends GetxController {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
-        body: jsonEncode({'status': status}), 
+        body: jsonEncode({'status': status}),
       );
 
       final data = jsonDecode(response.body);
@@ -90,7 +90,7 @@ class HomeKantinController extends GetxController {
 
     try {
       final response = await http.get(
-        Uri.parse(AppUrl.incomeToday), 
+        Uri.parse(AppUrl.incomeToday),
         headers: {
           'Authorization': 'Bearer $token',
           'Accept': 'application/json',
@@ -113,7 +113,7 @@ class HomeKantinController extends GetxController {
 
     try {
       final response = await http.get(
-        Uri.parse(AppUrl.incomeMonth), 
+        Uri.parse(AppUrl.incomeMonth),
         headers: {
           'Authorization': 'Bearer $token',
           'Accept': 'application/json',
@@ -136,7 +136,7 @@ class HomeKantinController extends GetxController {
 
     try {
       final response = await http.get(
-        Uri.parse(AppUrl.orderServed), 
+        Uri.parse(AppUrl.orderServed),
         headers: {
           'Authorization': 'Bearer $token',
           'Accept': 'application/json',
@@ -159,7 +159,7 @@ class HomeKantinController extends GetxController {
 
     try {
       final response = await http.get(
-        Uri.parse(AppUrl.orderDone), 
+        Uri.parse(AppUrl.orderDone),
         headers: {
           'Authorization': 'Bearer $token',
           'Accept': 'application/json',
@@ -192,7 +192,8 @@ class HomeKantinController extends GetxController {
         final result = jsonDecode(response.body);
         final List data = result['data'];
 
-        final histories = data.map((json) => HistoryModel.fromJson(json)).toList();
+        final histories =
+            data.map((json) => HistoryModel.fromJson(json)).toList();
         daftarMenu.assignAll(histories);
       } else {
         print("Gagal mengambil riwayat transaksi: ${response.body}");
@@ -201,5 +202,4 @@ class HomeKantinController extends GetxController {
       print("Error fetchHistory: $e");
     }
   }
-
 }

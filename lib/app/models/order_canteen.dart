@@ -1,4 +1,4 @@
-import 'package:dikantin_app_rebuild/app/data/api.dart';
+import 'package:dikantin_partner/app/data/api.dart';
 
 class TransactionModel {
   final String id;
@@ -20,6 +20,7 @@ class TransactionModel {
         return 'Tidak Diketahui';
     }
   }
+
   final int deskNumber;
   final List<OrderDetail> details;
   final int totalQty;

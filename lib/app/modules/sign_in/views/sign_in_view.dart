@@ -2,9 +2,9 @@
 
 import 'dart:async';
 
-import 'package:dikantin_app_rebuild/app/data/auth_provider.dart';
-import 'package:dikantin_app_rebuild/app/data/auth_canteen_provider.dart';
-import 'package:dikantin_app_rebuild/app/modules/sign_in/controllers/api_controller.dart';
+import 'package:dikantin_partner/app/data/auth_provider.dart';
+import 'package:dikantin_partner/app/data/auth_canteen_provider.dart';
+import 'package:dikantin_partner/app/modules/sign_in/controllers/api_controller.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

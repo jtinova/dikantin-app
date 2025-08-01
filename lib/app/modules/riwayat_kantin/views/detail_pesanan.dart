@@ -1,4 +1,4 @@
-import 'package:dikantin_app_rebuild/app/models/history_canteen.dart';
+import 'package:dikantin_partner/app/models/history_canteen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -43,14 +43,13 @@ class DetailPesananView extends GetView<RiwayatKantinController> {
         centerTitle: true,
       ),
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Pesanan(item: data),
-            ListPesanan(item: data),
-          ],
-        )
-      ),
+          child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Pesanan(item: data),
+          ListPesanan(item: data),
+        ],
+      )),
     );
   }
 }
@@ -126,91 +125,94 @@ class ListPesanan extends StatelessWidget {
             ),
             SizedBox(height: 4.h),
             ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: item.menu.length,
-              itemBuilder: (context, index) {
-                var pesanan = item.menu[index];
-                return Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 6.h),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(8.r),
-                            child: Image.network(
-                              pesanan.imagePath,
-                              width: 60.w,
-                              height: 60.h,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) => Container(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: item.menu.length,
+                itemBuilder: (context, index) {
+                  var pesanan = item.menu[index];
+                  return Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 6.h),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8.r),
+                              child: Image.network(
+                                pesanan.imagePath,
                                 width: 60.w,
                                 height: 60.h,
-                                color: Colors.grey[200],
-                                child: Icon(
-                                  Icons.error,
-                                  color: Colors.redAccent,
-                                  size: 24.sp,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Container(
+                                  width: 60.w,
+                                  height: 60.h,
+                                  color: Colors.grey[200],
+                                  child: Icon(
+                                    Icons.error,
+                                    color: Colors.redAccent,
+                                    size: 24.sp,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          SizedBox(width: 10.w),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  pesanan.name,
-                                  style: TextStyle(
-                                    fontSize: 14.sp,
-                                    color: Color(0xFF403E3E),
-                                    fontWeight: FontWeight.w400,
+                            SizedBox(width: 10.w),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    pesanan.name,
+                                    style: TextStyle(
+                                      fontSize: 14.sp,
+                                      color: Color(0xFF403E3E),
+                                      fontWeight: FontWeight.w400,
+                                    ),
                                   ),
-                                ),
-                                SizedBox(height: 2.h),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Rp ${pesanan.mainCost}",
-                                      style: TextStyle(
-                                        fontSize: 14.sp,
-                                        color: Color(0xFF403E3E),
-                                        fontWeight: FontWeight.w600,
+                                  SizedBox(height: 2.h),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Rp ${pesanan.mainCost}",
+                                        style: TextStyle(
+                                          fontSize: 14.sp,
+                                          color: Color(0xFF403E3E),
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
-                                    ),
-                                    Text(
-                                      "X ${pesanan.qty}",
-                                      style: TextStyle(
-                                        fontSize: 14.sp,
-                                        color: Color(0xFF403E3E),
-                                        fontWeight: FontWeight.w600,
+                                      Text(
+                                        "X ${pesanan.qty}",
+                                        style: TextStyle(
+                                          fontSize: 14.sp,
+                                          color: Color(0xFF403E3E),
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 5.h),
-                      child: Divider(color: Color(0xFFD9D9D9), height: 1.h),
-                    ),
-                  ],
-                );
-              }),
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 5.h),
+                        child: Divider(color: Color(0xFFD9D9D9), height: 1.h),
+                      ),
+                    ],
+                  );
+                }),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   "Total Modal",
-                  style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w500),
+                  style:
+                      TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w500),
                 ),
                 Text(
                   "Rp ${item.totalMainCost}",

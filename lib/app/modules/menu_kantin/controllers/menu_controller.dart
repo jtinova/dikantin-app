@@ -1,11 +1,11 @@
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:dikantin_app_rebuild/app/models/menu_kantin.dart';
+import 'package:dikantin_partner/app/models/menu_kantin.dart';
 import 'dart:convert';
 
-import 'package:dikantin_app_rebuild/app/data/db_provider.dart';
-import 'package:dikantin_app_rebuild/app/data/api.dart';
+import 'package:dikantin_partner/app/data/db_provider.dart';
+import 'package:dikantin_partner/app/data/api.dart';
 
 class MenuKantinController extends GetxController {
   RxList<MenuModel> daftarMenu = <MenuModel>[].obs;
@@ -22,7 +22,7 @@ class MenuKantinController extends GetxController {
 
   Future<void> fetchMenus() async {
     final token = await DatabaseProvider().getToken();
-    final url = Uri.parse(AppUrl.menuCanteen); 
+    final url = Uri.parse(AppUrl.menuCanteen);
 
     try {
       final response = await http.get(
@@ -37,7 +37,8 @@ class MenuKantinController extends GetxController {
         final jsonData = jsonDecode(response.body);
         final List<dynamic> data = jsonData['data'];
 
-        daftarMenu.value = data.map((item) => MenuModel.fromJson(item)).toList();
+        daftarMenu.value =
+            data.map((item) => MenuModel.fromJson(item)).toList();
       } else {
         print("Gagal ambil menu: ${response.statusCode}");
       }
@@ -48,7 +49,7 @@ class MenuKantinController extends GetxController {
 
   Future<void> updateMenuStock(String id, bool newStatus) async {
     final token = await DatabaseProvider().getToken();
-      final url = Uri.parse(AppUrl.updateStock); 
+    final url = Uri.parse(AppUrl.updateStock);
 
     try {
       final response = await http.patch(
@@ -59,7 +60,7 @@ class MenuKantinController extends GetxController {
         },
         body: {
           'menu_id': id,
-          'stock': newStatus ? '1' : '0', 
+          'stock': newStatus ? '1' : '0',
         },
       );
 
@@ -70,7 +71,7 @@ class MenuKantinController extends GetxController {
           updatedMenu.isAvailable = newStatus;
           daftarMenu[index] = updatedMenu;
           // daftarMenu[index].isAvailable = newStatus;
-          // daftarMenu.refresh(); 
+          // daftarMenu.refresh();
         }
       } else {
         print("Gagal update stock: ${response.body}");
@@ -80,4 +81,3 @@ class MenuKantinController extends GetxController {
     }
   }
 }
-

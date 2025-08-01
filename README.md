@@ -1,4 +1,4 @@
-# dikantin_app_rebuild
+# dikantin_partner
 
 A new Flutter project.
 

@@ -12,7 +12,7 @@ import '../../../data/api.dart';
 import '../../../models/user.dart';
 import '../../../data/db_provider.dart';
 
-import 'package:dikantin_app_rebuild/app/models/canteen.dart';
+import 'package:dikantin_partner/app/models/canteen.dart';
 
 class ProfileController extends GetxController {
   var isLoading = false.obs;

@@ -1,14 +1,14 @@
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:dikantin_app_rebuild/app/data/db_provider.dart';
-import 'package:dikantin_app_rebuild/app/data/api.dart';
+import 'package:dikantin_partner/app/data/db_provider.dart';
+import 'package:dikantin_partner/app/data/api.dart';
 import 'package:flutter/material.dart';
-import 'package:dikantin_app_rebuild/app/models/order_canteen.dart';
+import 'package:dikantin_partner/app/models/order_canteen.dart';
 import 'dart:convert';
 import 'dart:async';
 
-
-class PesananController extends GetxController with GetTickerProviderStateMixin {
+class PesananController extends GetxController
+    with GetTickerProviderStateMixin {
   RxList<TransactionModel> daftarMenu = <TransactionModel>[].obs;
   late TabController tabController;
 
@@ -22,7 +22,7 @@ class PesananController extends GetxController with GetTickerProviderStateMixin 
     super.onInit();
     tabController = TabController(length: 2, vsync: this);
     fetchPesanan();
-     _startAutoRefresh();
+    _startAutoRefresh();
   }
 
   @override
@@ -63,7 +63,8 @@ class PesananController extends GetxController with GetTickerProviderStateMixin 
           }
         }
 
-        if (_lastFetchedMasuk.isNotEmpty && masuk.length > _lastFetchedMasuk.length) {
+        if (_lastFetchedMasuk.isNotEmpty &&
+            masuk.length > _lastFetchedMasuk.length) {
           Get.snackbar(
             "Pesanan Baru",
             "Ada pesanan baru masuk",
@@ -101,7 +102,7 @@ class PesananController extends GetxController with GetTickerProviderStateMixin 
       );
 
       final data = jsonDecode(response.body);
-      hideLoadingDialog(); 
+      hideLoadingDialog();
 
       if (response.statusCode == 200) {
         final tabIndex = tabController.index;
@@ -126,13 +127,10 @@ class PesananController extends GetxController with GetTickerProviderStateMixin 
         Get.snackbar("Error", data['message'] ?? 'Gagal memproses pesanan');
       }
     } catch (e) {
-      hideLoadingDialog(); 
+      hideLoadingDialog();
       Get.snackbar("Error", "Terjadi kesalahan saat memproses pesanan");
     }
   }
-
-
-
 
   Future<void> updateOrderComplete(String detailId) async {
     try {
@@ -149,9 +147,9 @@ class PesananController extends GetxController with GetTickerProviderStateMixin 
       );
 
       final data = jsonDecode(response.body);
-      hideLoadingDialog(); 
-        if (response.statusCode == 200) {
-          final tabIndex = tabController.index;
+      hideLoadingDialog();
+      if (response.statusCode == 200) {
+        final tabIndex = tabController.index;
 
         await fetchPesanan();
         tabController.index = tabIndex;
@@ -173,13 +171,13 @@ class PesananController extends GetxController with GetTickerProviderStateMixin 
         Get.snackbar("Error", data['message'] ?? 'Gagal memproses pesanan');
       }
     } catch (e) {
-      hideLoadingDialog(); 
+      hideLoadingDialog();
       Get.snackbar("Error", "Terjadi kesalahan saat menyelesaikan pesanan");
-    } 
+    }
   }
 
   void _startAutoRefresh() {
-    _autoRefreshTimer?.cancel(); 
+    _autoRefreshTimer?.cancel();
     _autoRefreshTimer = Timer.periodic(Duration(seconds: 30), (_) {
       fetchPesanan();
     });
@@ -211,10 +209,8 @@ void showLoadingDialog() {
   );
 }
 
-
 void hideLoadingDialog() {
   if (Get.isDialogOpen == true) {
-    Get.back(); 
+    Get.back();
   }
 }
-

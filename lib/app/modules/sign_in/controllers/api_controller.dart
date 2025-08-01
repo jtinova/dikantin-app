@@ -1,5 +1,5 @@
-import 'package:dikantin_app_rebuild/app/data/api.dart';
-import 'package:dikantin_app_rebuild/app/data/auth_canteen_provider.dart';
+import 'package:dikantin_partner/app/data/api.dart';
+import 'package:dikantin_partner/app/data/auth_canteen_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -28,7 +28,7 @@ class ApiController extends GetxController {
   Future<void> loadApiSetting() async {
     final prefs = await SharedPreferences.getInstance();
     selectedEnv.value = prefs.getString('api_env') ?? 'Production';
-    
+
     customUrl.value = prefs.getString('api_custom_url') ?? '';
     customUrlController.text = customUrl.value;
     updateBaseUrl();
@@ -48,7 +48,7 @@ class ApiController extends GetxController {
       customUrl.value = rawAPI;
     }
     updateBaseUrl();
-      if (Get.isRegistered<AuthCanteenProvider>()) {
+    if (Get.isRegistered<AuthCanteenProvider>()) {
       Get.delete<AuthCanteenProvider>();
     }
     Get.put(AuthCanteenProvider());

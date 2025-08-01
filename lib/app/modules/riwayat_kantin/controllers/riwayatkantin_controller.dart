@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:dikantin_app_rebuild/app/data/db_provider.dart';
-import 'package:dikantin_app_rebuild/app/data/api.dart';
+import 'package:dikantin_partner/app/data/db_provider.dart';
+import 'package:dikantin_partner/app/data/api.dart';
 import 'package:flutter/material.dart';
-import 'package:dikantin_app_rebuild/app/models/history_canteen.dart';
+import 'package:dikantin_partner/app/models/history_canteen.dart';
 import 'dart:convert';
 
 class RiwayatKantinController extends GetxController {
@@ -34,7 +34,8 @@ class RiwayatKantinController extends GetxController {
         final result = jsonDecode(response.body);
         final List data = result['data'];
 
-        final histories = data.map((json) => HistoryModel.fromJson(json)).toList();
+        final histories =
+            data.map((json) => HistoryModel.fromJson(json)).toList();
         daftarMenu.assignAll(histories);
       } else {
         print("Gagal mengambil riwayat transaksi: ${response.body}");

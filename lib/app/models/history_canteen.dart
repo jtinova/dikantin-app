@@ -1,4 +1,4 @@
-import 'package:dikantin_app_rebuild/app/data/api.dart';
+import 'package:dikantin_partner/app/data/api.dart';
 
 class HistoryModel {
   final String transactionId;
@@ -17,6 +17,7 @@ class HistoryModel {
         return 'Tidak Diketahui';
     }
   }
+
   final String status;
   String get statusLabel {
     switch (status) {
@@ -32,6 +33,7 @@ class HistoryModel {
         return 'Tidak Diketahui';
     }
   }
+
   final String date;
   final List<HistoryMenuItem> menu;
 
@@ -57,7 +59,9 @@ class HistoryModel {
       paymentMethod: json['payment_method'] ?? '',
       status: json['status'] ?? '',
       date: json['date'] ?? '',
-      menu: (json['menu'] as List).map((e) => HistoryMenuItem.fromJson(e)).toList(),
+      menu: (json['menu'] as List)
+          .map((e) => HistoryMenuItem.fromJson(e))
+          .toList(),
     );
   }
 }

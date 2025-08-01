@@ -2,8 +2,8 @@
 
 import 'dart:io';
 
-import 'package:dikantin_app_rebuild/app/data/api.dart';
-import 'package:dikantin_app_rebuild/app/routes/app_pages.dart';
+import 'package:dikantin_partner/app/data/api.dart';
+import 'package:dikantin_partner/app/routes/app_pages.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -140,7 +140,6 @@ class AuthenticationProvider extends ChangeNotifier {
     }
   }
 
-  
   void clear() {
     _resMessage = "";
     statusCode == null;

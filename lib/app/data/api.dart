@@ -3,7 +3,7 @@ class AppUrl {
   static String baseHost = 'https://dikantin-staging.jtinova.com';
   static String baseLocalURL = 'http://192.168.1.18:8000';
   static String baseURL = '$baseHost/api';
-  static String imageMenu = '$baseHost/storage/';
+  static String imageMenu = '$baseHost/';
 
   // Authentication
   static String signin = '$baseURL/login';

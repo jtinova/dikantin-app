@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/pesanan_controller.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:dikantin_app_rebuild/app/models/order_canteen.dart';
+import 'package:dikantin_partner/app/models/order_canteen.dart';
 
 class DetailPesananView extends GetView<PesananController> {
   DetailPesananView({super.key});
@@ -51,51 +51,51 @@ class DetailPesananView extends GetView<PesananController> {
         ],
       )),
       bottomNavigationBar: data.status == 'done'
-    ? SizedBox.shrink()
-    : Padding(
-        padding: EdgeInsets.only(bottom: 14.h),
-        child: BottomAppBar(
-          elevation: 0,
-          color: Colors.transparent,
-          child: GestureDetector(
-            onTap: () async {
-              final detailId = data.details.first.id;
-              final tabIndex = controller.tabController.index;
+          ? SizedBox.shrink()
+          : Padding(
+              padding: EdgeInsets.only(bottom: 14.h),
+              child: BottomAppBar(
+                elevation: 0,
+                color: Colors.transparent,
+                child: GestureDetector(
+                  onTap: () async {
+                    final detailId = data.details.first.id;
+                    final tabIndex = controller.tabController.index;
 
-              if (data.status == 'pending') {
-                await controller.updateOrderProcess(detailId);
-              } else if (data.status == 'cooking') {
-                await controller.updateOrderComplete(detailId);
-              }
+                    if (data.status == 'pending') {
+                      await controller.updateOrderProcess(detailId);
+                    } else if (data.status == 'cooking') {
+                      await controller.updateOrderComplete(detailId);
+                    }
 
-              controller.tabController.index = tabIndex;
-              await controller.fetchPesanan();
-              Get.back();
-            },
-            child: Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(vertical: 10.h),
-              decoration: BoxDecoration(
-                color: Color(0xFF1E2857),
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-              alignment: Alignment.center,
-              child: Text(
-                data.status == 'pending'
-                    ? "Masak"
-                    : data.status == 'cooking'
-                        ? "Selesaikan"
-                        : "",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w500,
+                    controller.tabController.index = tabIndex;
+                    await controller.fetchPesanan();
+                    Get.back();
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(vertical: 10.h),
+                    decoration: BoxDecoration(
+                      color: Color(0xFF1E2857),
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      data.status == 'pending'
+                          ? "Masak"
+                          : data.status == 'cooking'
+                              ? "Selesaikan"
+                              : "",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
-          ),
-        ),
-      ),
     );
   }
 }
@@ -126,8 +126,7 @@ class Pesanan extends StatelessWidget {
                 ),
                 Text(
                   item.customerName,
-                  style:
-                      TextStyle(color: Color(0xFF403E3E), fontSize: 13.sp),
+                  style: TextStyle(color: Color(0xFF403E3E), fontSize: 13.sp),
                 ),
               ],
             ),
@@ -136,13 +135,11 @@ class Pesanan extends StatelessWidget {
               children: [
                 Text(
                   item.orderTypeLabel,
-                  style:
-                      TextStyle(color: Color(0xFF403E3E), fontSize: 13.sp),
+                  style: TextStyle(color: Color(0xFF403E3E), fontSize: 13.sp),
                 ),
                 Text(
                   "Meja: ${item.deskNumber}",
-                  style:
-                      TextStyle(color: Color(0xFF403E3E), fontSize: 13.sp),
+                  style: TextStyle(color: Color(0xFF403E3E), fontSize: 13.sp),
                 ),
               ],
             )
@@ -193,7 +190,8 @@ class ListPesanan extends StatelessWidget {
                                 width: 60.w,
                                 height: 60.h,
                                 fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) => Container(
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Container(
                                   width: 60.w,
                                   height: 60.h,
                                   color: Colors.grey[200],
@@ -259,7 +257,8 @@ class ListPesanan extends StatelessWidget {
               children: [
                 Text(
                   "Total Pembayaran",
-                  style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w500),
+                  style:
+                      TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w500),
                 ),
                 Text(
                   "Rp ${item.mainCost}",
@@ -276,4 +275,3 @@ class ListPesanan extends StatelessWidget {
     );
   }
 }
-
