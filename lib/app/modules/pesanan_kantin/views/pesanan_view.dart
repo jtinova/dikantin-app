@@ -166,7 +166,7 @@ class Pesanan extends StatelessWidget {
                                     fontSize: 15.sp,
                                     fontWeight: FontWeight.w600),
                               ),
-                              SizedBox(height: 5.h),
+                              SizedBox(height: 3.h),
                               Row(
                                 children: [
                                   Text(
@@ -178,7 +178,7 @@ class Pesanan extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 5.h),
+                              SizedBox(height: 3.h),
                               Text(
                                 item.details
                                     .map((menu) =>
@@ -193,7 +193,7 @@ class Pesanan extends StatelessWidget {
                       ],
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: 10.h),
+                      padding: EdgeInsets.symmetric(vertical: 6.h),
                       child: Divider(
                         color: Color(0xFFD9D9D9),
                         height: 1.h,

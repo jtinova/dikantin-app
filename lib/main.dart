@@ -66,7 +66,7 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       builder: (context, child) {
         return GetMaterialApp(
-          title: "Dikantin App Rebuild",
+          title: "Dikantin Partner",
           initialRoute: initialRoute,
           theme: lightMode,
           getPages: AppPages.routes,

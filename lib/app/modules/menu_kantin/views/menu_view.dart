@@ -224,25 +224,28 @@ class ListMenu extends StatelessWidget {
                               ],
                             ),
                           ),
-                          ElevatedButton(
-                            onPressed: () {
-                              _showStockDialog(context, menu); 
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF19345E),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20.r),
+                          Padding(
+                            padding: EdgeInsets.only(left: 4.w),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                _showStockDialog(context, menu); 
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF19345E),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.r),
+                                ),
+                                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8).h, 
+                                minimumSize: const Size(0, 0),
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               ),
-                              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8).h, 
-                              minimumSize: const Size(0, 0),
-                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            ),
-                            child: Text(
-                              "Ubah Stok",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 13.sp,
-                                fontWeight: FontWeight.w500,
+                              child: Text(
+                                "Ubah Stok",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 13.sp,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ),
                           )

@@ -213,7 +213,7 @@ class ListPesanan extends StatelessWidget {
                                   Text(
                                     pesanan.name,
                                     style: TextStyle(
-                                      fontSize: 15.sp,
+                                      fontSize: 14.sp,
                                       color: Color(0xFF403E3E),
                                       fontWeight: FontWeight.w400,
                                     ),
@@ -248,7 +248,7 @@ class ListPesanan extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(vertical: 8.h),
+                        padding: EdgeInsets.symmetric(vertical: 5.h),
                         child: Divider(color: Color(0xFFD9D9D9), height: 1.h),
                       ),
                     ],
