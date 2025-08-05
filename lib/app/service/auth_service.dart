@@ -1,14 +1,16 @@
 // ignore_for_file: avoid_print
 
-import 'package:dikantin_app_rebuild/app/data/api.dart';
+import 'package:dikantin_app_rebuild/app/service/api_service.dart';
 import 'package:dikantin_app_rebuild/app/routes/app_pages.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import 'db_provider.dart';
+import 'api_client_service.dart';
+import 'db_service.dart';
 
 class AuthenticationProvider extends ChangeNotifier {
   String _resMessage = "";
@@ -21,7 +23,6 @@ class AuthenticationProvider extends ChangeNotifier {
     required String email,
     required String phoneNumber,
     required String password,
-    BuildContext? context,
   }) async {
     EasyLoading.show(status: 'Loading...');
     notifyListeners();
@@ -88,7 +89,6 @@ class AuthenticationProvider extends ChangeNotifier {
   void loginUser({
     required String email,
     required String password,
-    BuildContext? context,
   }) async {
     EasyLoading.show(status: 'Loading...');
     notifyListeners();
@@ -116,6 +116,10 @@ class AuthenticationProvider extends ChangeNotifier {
         final token = res["data"]["access_token"];
         await DatabaseProvider().saveToken(token);
         Get.offAllNamed(Routes.NAVIGATION);
+
+        final fcmToken = await FirebaseMessaging.instance.getToken();
+        storeFCMToken(fcmToken: fcmToken!);
+        print("FCM Token: $fcmToken");
       } else {
         // 2. If Customer Login Fails, Attempt Courier Login
         String courierUrl = AppUrl.courierLogin;
@@ -153,7 +157,6 @@ class AuthenticationProvider extends ChangeNotifier {
 
   void sendEmailOTP({
     required String email,
-    BuildContext? context,
   }) async {
     EasyLoading.show(status: 'Loading...');
     notifyListeners();
@@ -208,7 +211,6 @@ class AuthenticationProvider extends ChangeNotifier {
   void verifyCodeOTP({
     required String email,
     required String otp,
-    BuildContext? context,
   }) async {
     EasyLoading.show(status: 'Loading...');
     notifyListeners();
@@ -263,7 +265,6 @@ class AuthenticationProvider extends ChangeNotifier {
 
   void resendEmailOTP({
     required String email,
-    BuildContext? context,
   }) async {
     EasyLoading.show(status: 'Loading...');
     notifyListeners();
@@ -316,7 +317,6 @@ class AuthenticationProvider extends ChangeNotifier {
   void resetPassword({
     required String email,
     required String newPassword,
-    BuildContext? context,
   }) async {
     EasyLoading.show(status: 'Loading...');
     notifyListeners();
@@ -376,20 +376,7 @@ class AuthenticationProvider extends ChangeNotifier {
     String url = AppUrl.signout;
 
     try {
-      String? token = await DatabaseProvider().getToken();
-
-      if (token == null) {
-        _resMessage = "Token tidak ditemukan";
-        return;
-      }
-
-      http.Response req = await http.post(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
+      final req = await ApiClient.post(url);
 
       // Store Status Code
       statusCode = req.statusCode;
@@ -421,6 +408,33 @@ class AuthenticationProvider extends ChangeNotifier {
     } finally {
       EasyLoading.dismiss();
       notifyListeners();
+    }
+  }
+
+  void storeFCMToken({
+    required String fcmToken,
+  }) async {
+    String url = AppUrl.storeFCMToken;
+
+    final body = {
+      "token": fcmToken,
+    };
+    print(body);
+
+    try {
+      final req = await ApiClient.post(url, body: body);
+
+      if (req.statusCode == 200) {
+        final res = json.decode(req.body);
+
+        print(res);
+      } else {
+        final res = json.decode(req.body);
+
+        print(res);
+      }
+    } catch (e) {
+      print(e);
     }
   }
 

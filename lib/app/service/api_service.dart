@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
 class ApiConfigService extends GetxService {
-  final RxString baseURL = 'https://dikantin-staging.jtinova.com'.obs;
+  final RxString baseURL = 'http://192.168.1.37:8000'.obs;
 
   void updateBaseUrl(String newUrl) {
     baseURL.value = newUrl;
@@ -24,6 +24,7 @@ class AppUrl {
   static String get resetPassword => "$baseURLAPI/reset-password";
   static String get signout => "$baseURLAPI/logout";
   static String get courierLogin => "$baseURLAPI/courier/login";
+  static String get storeFCMToken => "$baseURLAPI/fcm-token";
 
   // API Home User
   static String get locations => '$baseURLAPI/building';
@@ -42,8 +43,7 @@ class AppUrl {
   static String get trackingProgress => '$baseURLAPI/transaction/progress';
   static String get trackingDetailProgress => '$baseURLAPI/transaction/';
   static String get trackingShipping => '$baseURLAPI/transaction/shipping';
-  static String get trackingDetailShipping =>
-      '$baseURLAPI/transaction/shipping/';
+  static String get trackingDetailShipping => '$baseURLAPI/transaction/shipping/';
   static String get trackingHistory => '$baseURLAPI/transaction/history';
   static String get cancelOrder => '$baseURLAPI/transaction/cancel';
   static String get pickUpOrder => '$baseURLAPI/transaction/pick-up';

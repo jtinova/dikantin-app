@@ -9,11 +9,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
-import '../../../data/api.dart';
-import '../../../data/db_provider.dart';
+import '../../../service/api_client_service.dart';
+import '../../../service/api_service.dart';
 import '../../../models/building.dart';
 import '../../../models/canteen.dart';
 import '../../../models/cart.dart';
@@ -98,37 +97,9 @@ class HomeController extends GetxController {
 
   Future<void> getLocation() async {
     String url = AppUrl.locations;
-    String? token = await DatabaseProvider().getToken();
-
-    if (token == null) {
-      Get.snackbar(
-        "Informasi ",
-        "Token Tidak Ditemukan",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
-
-      return;
-    }
 
     try {
-      http.Response req = await http.get(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
+      final req = await ApiClient.get(url);
 
       if (req.statusCode == 200) {
         final res = json.decode(req.body);
@@ -177,37 +148,9 @@ class HomeController extends GetxController {
 
   Future<void> getFavoriteMenu() async {
     String url = AppUrl.menuFavorit;
-    String? token = await DatabaseProvider().getToken();
-
-    if (token == null) {
-      Get.snackbar(
-        "Informasi ",
-        "Token Tidak Ditemukan",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
-
-      return;
-    }
 
     try {
-      http.Response req = await http.get(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
+      final req = await ApiClient.get(url);
 
       if (req.statusCode == 200) {
         final res = json.decode(req.body);
@@ -244,37 +187,9 @@ class HomeController extends GetxController {
 
   Future<void> getCategories() async {
     String url = AppUrl.categories;
-    String? token = await DatabaseProvider().getToken();
-
-    if (token == null) {
-      Get.snackbar(
-        "Informasi ",
-        "Token Tidak Ditemukan",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
-
-      return;
-    }
 
     try {
-      http.Response req = await http.get(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
+      final req = await ApiClient.get(url);
 
       if (req.statusCode == 200) {
         final res = json.decode(req.body);
@@ -313,37 +228,9 @@ class HomeController extends GetxController {
 
   Future<void> getCanteen() async {
     String url = AppUrl.canteens;
-    String? token = await DatabaseProvider().getToken();
-
-    if (token == null) {
-      Get.snackbar(
-        "Informasi ",
-        "Token Tidak Ditemukan",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
-
-      return;
-    }
 
     try {
-      http.Response req = await http.get(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
+      final req = await ApiClient.get(url);
 
       if (req.statusCode == 200) {
         final res = json.decode(req.body);
@@ -401,39 +288,9 @@ class HomeController extends GetxController {
 
   Future<void> fetchAllMenus() async {
     String url = AppUrl.menus;
-    String? token = await DatabaseProvider().getToken();
-
-    if (token == null) {
-      isMenuLoading.value = false;
-
-      Get.snackbar(
-        "Informasi ",
-        "Token Tidak Ditemukan",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
-
-      return;
-    }
 
     try {
-      http.Response req = await http.get(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
+      final req = await ApiClient.get(url);
 
       if (req.statusCode == 200) {
         final res = json.decode(req.body);
@@ -490,39 +347,8 @@ class HomeController extends GetxController {
 
     String url = "${AppUrl.searchMenu}?query=$query";
 
-    String? token = await DatabaseProvider().getToken();
-
-    if (token == null) {
-      isMenuLoading.value = false;
-
-      Get.snackbar(
-        "Informasi ",
-        "Token Tidak Ditemukan",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
-
-      return;
-    }
-
     try {
-      http.Response req = await http.get(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
+      final req = await ApiClient.get(url);
 
       if (req.statusCode == 200) {
         final res = json.decode(req.body);
@@ -593,53 +419,21 @@ class HomeController extends GetxController {
       allMenus[index].isFavorite = !isCurrentlyFavorite;
     }
 
-    String? token = await DatabaseProvider().getToken();
+    if (isCurrentlyFavorite) {
+      favoriteMenuId.remove(menuId);
+    } else {
+      favoriteMenuId.add(menuId);
+    }
 
-    if (token == null) {
-      isMenuLoading.value = false;
-
-      Get.snackbar(
-        "Informasi ",
-        "Token Tidak Ditemukan",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
-
-      if (isCurrentlyFavorite) {
-        favoriteMenuId.remove(menuId);
-      } else {
-        favoriteMenuId.add(menuId);
-      }
-
-      int index = allMenus.indexWhere((m) => m.id == menuId);
-      if (index != -1) {
-        allMenus[index].isFavorite = !isCurrentlyFavorite;
-      }
-
-      return;
+    if (index != -1) {
+      allMenus[index].isFavorite = !isCurrentlyFavorite;
     }
 
     try {
       if (isCurrentlyFavorite) {
         String url = "${AppUrl.menuFavoritRemove}${menu.id}";
 
-        http.Response req = await http.delete(
-          Uri.parse(url),
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer $token',
-          },
-        );
+        final req = await ApiClient.delete(url);
 
         if (req.statusCode == 200) {
           final res = json.decode(req.body);
@@ -672,15 +466,11 @@ class HomeController extends GetxController {
       } else {
         String url = AppUrl.menuFavoritAdd;
 
-        http.Response req = await http.post(
-          Uri.parse(url),
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer $token',
-          },
-          body: json.encode({
+        final req = await ApiClient.post(
+          url,
+          body: {
             'menu_id': menu.id,
-          }),
+          },
         );
 
         if (req.statusCode == 201) {
@@ -747,20 +537,9 @@ class HomeController extends GetxController {
 
   Future<Map<String, dynamic>> getRatingMenu(String menuId) async {
     String url = "${AppUrl.reviewMenu}$menuId";
-    String? token = await DatabaseProvider().getToken();
-
-    if (token == null) {
-      throw Exception('Sesi Anda telah berakhir. Silakan login kembali.');
-    }
 
     try {
-      http.Response req = await http.get(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
+      final req = await ApiClient.get(url);
 
       if (req.statusCode == 200) {
         return json.decode(req.body);

@@ -16,6 +16,8 @@ ThemeData lightMode = ThemeData(
     backgroundColor: Colors.white,
     foregroundColor: Colors.black,
     elevation: 0,
+    scrolledUnderElevation: 0,
+    surfaceTintColor: Colors.transparent,
   ),
   fontFamily: 'Poppins',
   textSelectionTheme: const TextSelectionThemeData(

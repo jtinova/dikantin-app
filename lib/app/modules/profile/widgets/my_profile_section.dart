@@ -1,3 +1,5 @@
+// ignore_for_file: strict_top_level_inference
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -16,8 +18,8 @@ class MyProfile extends StatefulWidget {
 }
 
 class _MyProfileState extends State<MyProfile> {
-  final ProfileController controller = Get.put(ProfileController());
-  final homeController = Get.find<HomeController>();
+  final ProfileController controller = Get.find<ProfileController>();
+  final HomeController homeController = Get.find<HomeController>();
   final _formKey = GlobalKey<FormBuilderState>();
 
   @override
@@ -109,7 +111,7 @@ class _MyProfileState extends State<MyProfile> {
                             backgroundColor: Colors.black12,
                             radius: 53.r,
                           ),
-                          SizedBox(height: 30.h),
+                          SizedBox(height: 25.h),
                           _buildFormField(
                             "Nama",
                             "name",
@@ -134,7 +136,7 @@ class _MyProfileState extends State<MyProfile> {
                             "Detail Lokasi",
                             "detail_address",
                             user?.detailAddress,
-                            CupertinoIcons.location_solid,
+                            CupertinoIcons.map_pin_ellipse,
                           ),
                         ],
                       ),
@@ -158,7 +160,7 @@ class _MyProfileState extends State<MyProfile> {
         Text(
           label,
           style: TextStyle(
-            fontSize: 18.sp,
+            fontSize: 16.sp,
             color: Colors.black,
           ),
         ),
@@ -179,6 +181,10 @@ class _MyProfileState extends State<MyProfile> {
               color: icon == CupertinoIcons.mail ? Colors.grey : Colors.black87,
             ),
             hintText: "Masukkan $label",
+            hintStyle: TextStyle(
+              fontSize: 16.sp,
+              color: Colors.grey,
+            ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.all(
                 Radius.circular(15.r),
@@ -202,26 +208,34 @@ class _MyProfileState extends State<MyProfile> {
       children: [
         Text(
           "Lokasi Gedung",
-          style: TextStyle(fontSize: 18.sp, color: Colors.black),
+          style: TextStyle(
+            fontSize: 16.sp,
+            color: Colors.black,
+          ),
         ),
         SizedBox(height: 5.h),
         Obx(() {
           if (homeController.buildings.isEmpty) {
-            return Text("Memuat daftar gedung...");
+            return const Text("Memuat daftar gedung...");
           }
+
+          final initialBuildingId =
+              (user?.building?.id != null && user.building.id.isNotEmpty)
+                  ? user.building.id
+                  : homeController.buildings.first.id;
 
           return FormBuilderDropdown<String>(
             name: "building_id",
-            initialValue: user?.building?.id,
+            initialValue: initialBuildingId,
             decoration: InputDecoration(
               prefixIcon: Icon(
                 CupertinoIcons.location_solid,
                 size: 18.r,
+                color: Colors.black87,
               ),
-              hintText: "Pilih Lokasi",
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(15.r)),
-                borderSide: BorderSide(color: Colors.black87),
+                borderSide: const BorderSide(color: Colors.black87),
               ),
               contentPadding:
                   EdgeInsets.symmetric(vertical: 15.h, horizontal: 15.w),
@@ -231,9 +245,11 @@ class _MyProfileState extends State<MyProfile> {
                 value: building.id,
                 child: Text(
                   building.name,
+                  maxLines: 2,
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w400,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               );
@@ -242,7 +258,6 @@ class _MyProfileState extends State<MyProfile> {
               final selected = homeController.buildings.firstWhereOrNull(
                 (b) => b.id == value,
               );
-
               homeController.selectedLocation.value =
                   selected?.name ?? 'Pilih Lokasi';
             },

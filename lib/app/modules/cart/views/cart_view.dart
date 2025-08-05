@@ -114,8 +114,8 @@ class CartView extends GetView<CartController> {
                                 errorBuilder: (context, error, stackTrace) {
                                   return Image.asset(
                                     'assets/images/logo_dikantin.png',
-                                     height: 60.h,
-                                width: 60.w,
+                                    height: 60.h,
+                                    width: 60.w,
                                     fit: BoxFit.cover,
                                   );
                                 },

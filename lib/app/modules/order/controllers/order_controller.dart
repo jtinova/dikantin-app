@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, use_build_context_synchronously
 
 import 'dart:convert';
 
@@ -7,13 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
-import '../../../data/api.dart';
-import '../../../data/db_provider.dart';
+import '../../../service/api_client_service.dart';
+import '../../../service/api_service.dart';
 import '../../../models/order.dart';
 import '../../../models/order_detail.dart';
+import '../widgets/order_detail_content.dart';
 
 class OrderController extends GetxController {
   var selectedIndex = 0.obs;
@@ -42,6 +42,133 @@ class OrderController extends GetxController {
   void onInit() {
     super.onInit();
     loadInitialData();
+  }
+
+  void handleNotificationArguments(Map<String, dynamic> arguments) {
+    if (arguments.containsKey('transaction_id')) {
+      final String transactionId = arguments['transaction_id'];
+      final String orderType = arguments['order_type'] ?? '';
+
+      if (arguments.containsKey('target_sub_tab')) {
+        selectedIndex.value = arguments['target_sub_tab'];
+      }
+
+      _showOrderDetailFromNotification(transactionId, orderType);
+    }
+  }
+
+  Future<void> _showOrderDetailFromNotification(
+      String orderId, String orderType) async {
+    EasyLoading.show(status: 'Loading...');
+
+    if (orderType == 'delivery') {
+      await getDetailShipping(orderId);
+    } else {
+      await getDetailProgress(orderId);
+    }
+
+    EasyLoading.dismiss();
+
+    final detailToShow = (orderType == 'delivery' && detailShipping.isNotEmpty)
+        ? detailShipping.first
+        : (detailOrder.isNotEmpty ? detailOrder.first : null);
+
+    if (detailToShow != null) {
+      if (Get.context != null) {
+        showModalBottomSheet(
+          context: Get.context!,
+          isScrollControlled: true,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(15.r),
+            ),
+          ),
+          builder: (context) {
+            return OrderDetailBottom(
+              order: detailToShow,
+              controller: this,
+            );
+          },
+        );
+      }
+    } else {
+      Get.snackbar(
+        "Informasi",
+        "Tidak dapat menemukan detail pesanan dari notifikasi.",
+        animationDuration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 1650),
+        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+        borderWidth: 5.w,
+        snackPosition: SnackPosition.TOP,
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
+        icon: const Icon(
+          CupertinoIcons.info_circle,
+        ),
+      );
+    }
+  }
+
+  Future<void> handleHistoryNotificationArguments(
+      BuildContext context, dynamic arguments) async {
+    final arguments = Get.arguments;
+    if (arguments is Map<String, dynamic> &&
+        arguments.containsKey('transaction_id')) {
+      final String orderId = arguments['transaction_id'];
+      final String orderType = arguments['order_type'] ?? '';
+
+      EasyLoading.show(status: 'Loading...');
+
+      if (orderType == 'delivery') {
+        await getDetailShipping(orderId);
+      } else {
+        await getDetailProgress(orderId);
+      }
+
+      EasyLoading.dismiss();
+
+      final detailToShow =
+          (orderType == 'delivery' && detailShipping.isNotEmpty)
+              ? detailShipping.first
+              : (detailOrder.isNotEmpty ? detailOrder.first : null);
+
+      if (detailToShow != null) {
+        showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(15.r),
+            ),
+          ),
+          builder: (context) {
+            return OrderDetailBottom(
+              order: detailToShow,
+              controller: this,
+            );
+          },
+        );
+      } else {
+        Get.snackbar(
+          "Informasi",
+          "Tidak dapat menemukan detail pesanan dari notifikasi.",
+          animationDuration: const Duration(milliseconds: 200),
+          duration: const Duration(milliseconds: 1650),
+          backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+          borderWidth: 5.w,
+          snackPosition: SnackPosition.TOP,
+          margin: EdgeInsets.symmetric(
+            horizontal: 20.w,
+            vertical: 20.h,
+          ),
+          icon: const Icon(
+            CupertinoIcons.info_circle,
+          ),
+        );
+      }
+    }
   }
 
   Future<void> loadInitialData() async {
@@ -85,37 +212,9 @@ class OrderController extends GetxController {
 
   Future<void> getProgress() async {
     String url = AppUrl.trackingProgress;
-    String? token = await DatabaseProvider().getToken();
-
-    if (token == null) {
-      Get.snackbar(
-        "Informasi",
-        "Token Tidak Ditemukan",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
-
-      return;
-    }
 
     try {
-      http.Response req = await http.get(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
+      final req = await ApiClient.get(url);
 
       if (req.statusCode == 200) {
         final res = json.decode(req.body);
@@ -154,37 +253,9 @@ class OrderController extends GetxController {
 
   Future<void> getShipping() async {
     String url = AppUrl.trackingShipping;
-    String? token = await DatabaseProvider().getToken();
-
-    if (token == null) {
-      Get.snackbar(
-        "Informasi",
-        "Token Tidak Ditemukan",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
-
-      return;
-    }
 
     try {
-      http.Response req = await http.get(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
+      final req = await ApiClient.get(url);
 
       if (req.statusCode == 200) {
         final res = json.decode(req.body);
@@ -223,37 +294,9 @@ class OrderController extends GetxController {
 
   Future<void> getPickUp() async {
     String url = AppUrl.pickUpOrder;
-    String? token = await DatabaseProvider().getToken();
-
-    if (token == null) {
-      Get.snackbar(
-        "Informasi",
-        "Token Tidak Ditemukan",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
-
-      return;
-    }
 
     try {
-      http.Response req = await http.get(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
+      final req = await ApiClient.get(url);
 
       if (req.statusCode == 200) {
         final res = json.decode(req.body);
@@ -292,37 +335,9 @@ class OrderController extends GetxController {
 
   Future<void> getDineIn() async {
     String url = AppUrl.dineInOrder;
-    String? token = await DatabaseProvider().getToken();
-
-    if (token == null) {
-      Get.snackbar(
-        "Informasi",
-        "Token Tidak Ditemukan",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
-
-      return;
-    }
 
     try {
-      http.Response req = await http.get(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
+      final req = await ApiClient.get(url);
 
       if (req.statusCode == 200) {
         final res = json.decode(req.body);
@@ -361,37 +376,9 @@ class OrderController extends GetxController {
 
   Future<void> getHistory() async {
     String url = AppUrl.trackingHistory;
-    String? token = await DatabaseProvider().getToken();
-
-    if (token == null) {
-      Get.snackbar(
-        "Informasi",
-        "Token Tidak Ditemukan",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
-
-      return;
-    }
 
     try {
-      http.Response req = await http.get(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
+      final req = await ApiClient.get(url);
 
       if (req.statusCode == 200) {
         final res = json.decode(req.body);
@@ -430,41 +417,11 @@ class OrderController extends GetxController {
 
   Future<void> cancelOrder(String id) async {
     String url = AppUrl.cancelOrder;
-    String? token = await DatabaseProvider().getToken();
-
-    if (token == null) {
-      Get.snackbar(
-        "Informasi ",
-        "Token Tidak Ditemukan",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
-
-      return;
-    }
 
     try {
-      http.Response req = await http.post(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-        body: json.encode(
-          {
-            "transaction_detail_id": id,
-          },
-        ),
+      final req = await ApiClient.post(
+        url,
+        body: {"transaction_detail_id": id},
       );
 
       if (req.statusCode == 200) {
@@ -538,44 +495,21 @@ class OrderController extends GetxController {
     detailOrder.clear();
 
     String url = "${AppUrl.trackingDetailProgress}$id";
-    String? token = await DatabaseProvider().getToken();
-
-    if (token == null) {
-      Get.snackbar(
-        "Informasi ",
-        "Token Tidak Ditemukan",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
-
-      return;
-    }
 
     try {
-      http.Response req = await http.get(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
+      final req = await ApiClient.get(url);
 
       if (req.statusCode == 200) {
         final res = json.decode(req.body);
+        dynamic data = res['data'];
 
-        final detail = OrderDetail.fromJson(res['data']);
-
-        detailOrder.value = [detail];
+        if (data is List && data.isNotEmpty) {
+          final detail = OrderDetail.fromJson(data.first);
+          detailOrder.value = [detail];
+        } else if (data is Map<String, dynamic>) {
+          final detail = OrderDetail.fromJson(data);
+          detailOrder.value = [detail];
+        }
       } else {
         final res = json.decode(req.body);
 
@@ -624,44 +558,21 @@ class OrderController extends GetxController {
     detailShipping.clear();
 
     String url = "${AppUrl.trackingDetailShipping}$id";
-    String? token = await DatabaseProvider().getToken();
-
-    if (token == null) {
-      Get.snackbar(
-        "Informasi ",
-        "Token Tidak Ditemukan",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
-
-      return;
-    }
 
     try {
-      http.Response req = await http.get(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
+      final req = await ApiClient.get(url);
 
       if (req.statusCode == 200) {
         final res = json.decode(req.body);
+        dynamic data = res['data'];
 
-        final detail = OrderDetail.fromJsonShipping(res['data']);
-
-        detailShipping.value = [detail];
+        if (data is List && data.isNotEmpty) {
+          final detail = OrderDetail.fromJsonShipping(data.first);
+          detailShipping.value = [detail];
+        } else if (data is Map<String, dynamic>) {
+          final detail = OrderDetail.fromJsonShipping(data);
+          detailShipping.value = [detail];
+        }
       } else {
         final res = json.decode(req.body);
 
@@ -730,7 +641,7 @@ class OrderController extends GetxController {
 
       return '$day/$month/$year | $hour:$minute';
     } catch (e) {
-      return 'Invalid Date';
+      return '-';
     }
   }
 
@@ -741,6 +652,8 @@ class OrderController extends GetxController {
       case "cooking":
         return Colors.orange;
       case "Siap Diambil":
+        return Colors.lightGreen;
+      case "Pesanan Siap":
         return Colors.lightGreen;
       case "on_delivery":
         return Colors.blue;

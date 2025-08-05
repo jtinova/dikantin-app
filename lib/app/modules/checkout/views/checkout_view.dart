@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import '../../../data/api.dart';
+import '../../../service/api_service.dart';
 import '../../../routes/app_pages.dart';
 import '../../cart/controllers/cart_controller.dart';
 import '../../home/controllers/home_controller.dart';
@@ -220,9 +220,17 @@ class CheckoutView extends GetView<CheckoutController> {
                             borderRadius: BorderRadius.circular(10.r),
                             child: Image.network(
                               '${AppUrl.baseImageURL}${itemMap['gambar']}',
-                              height: 50.h,
-                              width: 50.w,
+                              height: 60.h,
+                              width: 60.w,
                               fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Image.asset(
+                                  'assets/images/logo_dikantin.png',
+                                  height: 60.h,
+                                  width: 60.w,
+                                  fit: BoxFit.cover,
+                                );
+                              },
                             ),
                           ),
                           title: Text(
@@ -345,7 +353,7 @@ class CheckoutView extends GetView<CheckoutController> {
                                   SizedBox(height: 10.h),
                                   CustomRadioTile(
                                     title: "Diantar (Delivery)",
-                                    value: "deliver",
+                                    value: "delivery",
                                     groupValue:
                                         controller.selectedDeliveryOption.value,
                                     onChanged: (value) {
@@ -366,8 +374,8 @@ class CheckoutView extends GetView<CheckoutController> {
                                     },
                                   ),
                                   CustomRadioTile(
-                                    title: "Diambil (Pick Up)",
-                                    value: "pick_up",
+                                    title: "Diambil (Take Away)",
+                                    value: "take_away",
                                     groupValue:
                                         controller.selectedDeliveryOption.value,
                                     onChanged: (value) {
@@ -527,7 +535,7 @@ class CheckoutView extends GetView<CheckoutController> {
                                   ),
                                   CustomRadioTile(
                                     title: "QRIS",
-                                    value: "credit_card",
+                                    value: "qris",
                                     groupValue:
                                         controller.selectedPaymentType.value,
                                     onChanged: (value) {
@@ -627,7 +635,10 @@ class CheckoutView extends GetView<CheckoutController> {
                       if (success) {
                         Get.find<HomeController>().cartItems.clear();
                         Get.find<CartController>().clearCartSelectionsAndNote();
-                        Get.offAllNamed(Routes.NAVIGATION);
+                        Get.offAllNamed(
+                          Routes.NAVIGATION,
+                          arguments: {'target_page': 1},
+                        );
                       }
                     },
                     style: ElevatedButton.styleFrom(

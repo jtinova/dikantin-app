@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -28,15 +25,9 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -65,4 +56,34 @@ class DefaultFirebaseOptions {
     storageBucket: 'dikantin-polije.firebasestorage.app',
     iosBundleId: 'jtinova.dikantinAppRebuild',
   );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyBI-TpdTZSdync7THK3Fpz7NZ7sU3kmtjs',
+    appId: '1:413380334875:web:db48d1d95136d2db55efbe',
+    messagingSenderId: '413380334875',
+    projectId: 'dikantin-polije',
+    authDomain: 'dikantin-polije.firebaseapp.com',
+    storageBucket: 'dikantin-polije.firebasestorage.app',
+    measurementId: 'G-Y5HJ3CVYV6',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyAprXWx3FV1G_MrbXJU_hpuVBndnisuXV8',
+    appId: '1:413380334875:ios:5836de48c8d69e4d55efbe',
+    messagingSenderId: '413380334875',
+    projectId: 'dikantin-polije',
+    storageBucket: 'dikantin-polije.firebasestorage.app',
+    iosBundleId: 'jtinova.dikantinAppRebuild',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyBI-TpdTZSdync7THK3Fpz7NZ7sU3kmtjs',
+    appId: '1:413380334875:web:4496955d529fdfb355efbe',
+    messagingSenderId: '413380334875',
+    projectId: 'dikantin-polije',
+    authDomain: 'dikantin-polije.firebaseapp.com',
+    storageBucket: 'dikantin-polije.firebasestorage.app',
+    measurementId: 'G-76W2YTTQ9F',
+  );
+
 }

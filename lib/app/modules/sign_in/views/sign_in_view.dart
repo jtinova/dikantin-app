@@ -2,7 +2,7 @@
 
 import 'dart:async';
 
-import 'package:dikantin_app_rebuild/app/data/auth_provider.dart';
+import 'package:dikantin_app_rebuild/app/service/auth_service.dart';
 import 'package:dikantin_app_rebuild/app/modules/sign_in/controllers/api_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -277,7 +277,7 @@ class SignInView extends GetView<SignInController> {
                               );
 
                               return ElevatedButton(
-                                onPressed: () {
+                                onPressed: () async {
                                   if (_formKey.currentState!.validate()) {
                                     _formKey.currentState!.save();
                                     final formData =
@@ -290,7 +290,6 @@ class SignInView extends GetView<SignInController> {
                                     auth.loginUser(
                                       email: email.toString().trim(),
                                       password: password.toString().trim(),
-                                      context: context,
                                     );
                                   }
                                 },

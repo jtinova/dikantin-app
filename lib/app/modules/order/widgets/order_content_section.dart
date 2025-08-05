@@ -144,7 +144,7 @@ class _OrderContentState extends State<OrderContent> {
                     ElevatedButton(
                       onPressed: () async {
                         // Periksa tipe pesanan untuk memanggil fungsi detail yang benar
-                        if (order.orderType == 'deliver' &&
+                        if (order.orderType == 'delivery' &&
                             order.status == 'on_delivery') {
                           await widget.controller.getDetailShipping(order.id);
                         } else {
@@ -152,7 +152,7 @@ class _OrderContentState extends State<OrderContent> {
                         }
 
                         // Tentukan detail mana yang akan ditampilkan
-                        final detailToShow = order.orderType == 'deliver' &&
+                        final detailToShow = order.orderType == 'delivery' &&
                                 order.status == 'on_delivery'
                             ? widget.controller.detailShipping.first
                             : widget.controller.detailOrder.first;

@@ -1,5 +1,5 @@
-import 'package:dikantin_app_rebuild/app/data/auth_provider.dart';
-import 'package:dikantin_app_rebuild/app/data/network_provider.dart';
+import 'package:dikantin_app_rebuild/app/service/auth_service.dart';
+import 'package:dikantin_app_rebuild/app/service/network_service.dart';
 import 'package:dikantin_app_rebuild/app/service/fcm_service.dart';
 import 'package:dikantin_app_rebuild/app/theme/theme.dart';
 import 'package:dikantin_app_rebuild/firebase_options.dart';
@@ -13,8 +13,9 @@ import 'package:get/get.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 
-import 'app/data/api.dart';
-import 'app/data/db_provider.dart';
+import 'app/modules/sign_in/controllers/api_controller.dart';
+import 'app/service/api_service.dart';
+import 'app/service/db_service.dart';
 import 'app/routes/app_pages.dart';
 
 void main() async {
@@ -32,8 +33,6 @@ void main() async {
   String? token = await DatabaseProvider().getToken();
   String initialRoute = token != null ? Routes.NAVIGATION : Routes.SIGN_IN;
 
-  await ScreenUtil.ensureScreenSize();
-
   runApp(
     // ChangeNotifierProvider(
     //   create: (context) => AuthenticationProvider(),
@@ -49,13 +48,13 @@ void main() async {
   );
 
   FlutterNativeSplash.remove();
-  configLoading();
 }
 
 Future<void> initServices() async {
   Get.put(DatabaseProvider(), permanent: true);
   Get.put(NetworkProvider(), permanent: true);
   Get.put(ApiConfigService(), permanent: true);
+  Get.put(ApiController(), permanent: true);
 }
 
 void configLoading() {
@@ -66,10 +65,9 @@ void configLoading() {
     ..indicatorType = EasyLoadingIndicatorType.threeBounce
     ..userInteractions = false
     ..dismissOnTap = false
-    ..indicatorSize = 25.sp
+    ..indicatorSize = 30.sp
     ..textStyle = TextStyle(
-      fontSize: 35.sp,
-      fontWeight: FontWeight.w500,
+      fontSize: 15.sp,
     );
 }
 
@@ -84,6 +82,8 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
+        configLoading();
+
         return GetMaterialApp(
           useInheritedMediaQuery: true,
           // locale: DevicePreview.locale(context),

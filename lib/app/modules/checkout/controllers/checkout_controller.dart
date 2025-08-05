@@ -7,12 +7,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
-import '../../../data/api.dart';
-import '../../../data/db_provider.dart';
+import '../../../service/api_client_service.dart';
+import '../../../service/api_service.dart';
 import '../../../models/cart.dart';
+import '../../order/controllers/order_controller.dart';
 
 class CheckoutController extends GetxController {
   var selectedDeliveryOption = ''.obs;
@@ -37,7 +37,7 @@ class CheckoutController extends GetxController {
         Map<String, dynamic> newResult =
             Map<String, dynamic>.from(calculateResult.value!);
 
-        if (option == 'deliver') {
+        if (option == 'delivery') {
           newResult['biaya_ongkir'] = originalDeliveryFee.value;
           newResult['total_biaya_pembayaran'] =
               menuSubtotal.value + originalDeliveryFee.value;
@@ -100,30 +100,6 @@ class CheckoutController extends GetxController {
     EasyLoading.show(status: 'Loading...');
 
     String url = AppUrl.calculateOrder;
-    String? token = await DatabaseProvider().getToken();
-
-    if (token == null) {
-      EasyLoading.dismiss();
-
-      Get.snackbar(
-        "Informasi ",
-        "Token Tidak Ditemukan",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
-
-      return;
-    }
 
     List<Map<String, dynamic>> menuPayload = selectedItems.map((item) {
       String? note =
@@ -136,13 +112,9 @@ class CheckoutController extends GetxController {
     }).toList();
 
     try {
-      http.Response req = await http.post(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-        body: json.encode({"menu": menuPayload}),
+      final req = await ApiClient.post(
+        url,
+        body: {"menu": menuPayload},
       );
 
       if (req.statusCode == 200) {
@@ -235,32 +207,8 @@ class CheckoutController extends GetxController {
     EasyLoading.show(status: 'Loading...');
 
     String url = AppUrl.createOrder;
-    String? token = await DatabaseProvider().getToken();
 
-    if (token == null) {
-      EasyLoading.dismiss();
-
-      Get.snackbar(
-        "Informasi ",
-        "Token Tidak Ditemukan",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
-
-      return false;
-    }
-
-    if (gedung == '' && tipePesan == 'deliver') {
+    if (gedung == '' && tipePesan == 'delivery') {
       EasyLoading.dismiss();
 
       Get.snackbar(
@@ -281,7 +229,7 @@ class CheckoutController extends GetxController {
       );
 
       return false;
-    } else if (detailLokasi == '' && tipePesan == 'deliver') {
+    } else if (detailLokasi == '' && tipePesan == 'delivery') {
       EasyLoading.dismiss();
 
       Get.snackbar(
@@ -391,19 +339,20 @@ class CheckoutController extends GetxController {
     }
 
     try {
-      http.Response req = await http.post(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-        body: json.encode(requestBody),
+      final req = await ApiClient.post(
+        url,
+        body: requestBody,
       );
 
       if (req.statusCode == 200) {
         final res = json.decode(req.body);
 
         print(res);
+
+        if (Get.isRegistered<OrderController>()) {
+          final orderController = Get.find<OrderController>();
+          await orderController.refreshAll();
+        }
 
         Get.snackbar(
           "Pesanan Berhasil",
@@ -516,10 +465,10 @@ class CheckoutController extends GetxController {
     switch (value) {
       case 'dine_in':
         return 'Ditempat (Dine In)';
-      case 'deliver':
+      case 'delivery':
         return 'Diantar (Delivery)';
-      case 'pick_up':
-        return 'Diambil (Pick Up)';
+      case 'take_away':
+        return 'Diambil (Take Away)';
       default:
         return 'Pilih Opsi';
     }
@@ -529,7 +478,7 @@ class CheckoutController extends GetxController {
     switch (value) {
       case 'cash':
         return 'Cash';
-      case 'credit_card':
+      case 'qris':
         return 'QRIS';
       default:
         return 'Pilih Opsi';

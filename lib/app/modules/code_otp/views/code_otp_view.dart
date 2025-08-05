@@ -2,7 +2,7 @@
 
 import 'dart:async';
 
-import 'package:dikantin_app_rebuild/app/data/auth_provider.dart';
+import 'package:dikantin_app_rebuild/app/service/auth_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -168,7 +168,6 @@ class CodeOtpView extends GetView<CodeOtpController> {
                                 .verifyCodeOTP(
                               email: email.toString().trim(),
                               otp: _otpCode.toString().trim(),
-                              context: context,
                             );
                           },
                         ),
@@ -215,7 +214,6 @@ class CodeOtpView extends GetView<CodeOtpController> {
                                 auth.verifyCodeOTP(
                                   email: email.toString().trim(),
                                   otp: _otpCode.toString().trim(),
-                                  context: context,
                                 );
                               } else {
                                 Get.snackbar(
