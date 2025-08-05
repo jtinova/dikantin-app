@@ -4,14 +4,11 @@ import 'package:get/get.dart';
 
 import '../controllers/order_controller.dart';
 import '../widgets/order_content_section.dart';
-import '../widgets/order_filter_section.dart';
+// import '../widgets/order_filter_section.dart';
 import '../widgets/order_tab_section.dart';
 
 class OrderView extends GetView<OrderController> {
-  OrderView({super.key});
-
-  @override
-  final OrderController controller = Get.put(OrderController());
+  const OrderView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -42,8 +39,8 @@ class OrderView extends GetView<OrderController> {
                 child: Column(
                   children: [
                     OrderTabs(controller: controller),
-                    SizedBox(height: 10.h),
-                    OrderFilters(controller: controller),
+                    // SizedBox(height: 10.h),
+                    // OrderFilters(controller: controller),
                     SizedBox(height: 5.h),
                     Expanded(
                       child: OrderContent(controller: controller),

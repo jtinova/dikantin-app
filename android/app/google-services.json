@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "413380334875",
+    "project_id": "dikantin-polije",
+    "storage_bucket": "dikantin-polije.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:413380334875:android:184c28d88342b4ef55efbe",
+        "android_client_info": {
+          "package_name": "com.dikantin.dikantin_o_l_d"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAefeJNZ2uAcozzSQ2neWGmVs0ME9xrNLc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:413380334875:android:d7af4f5d6d2075bc55efbe",
+        "android_client_info": {
+          "package_name": "com.tefa.dikantin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAefeJNZ2uAcozzSQ2neWGmVs0ME9xrNLc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

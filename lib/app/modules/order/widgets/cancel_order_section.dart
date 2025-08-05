@@ -207,6 +207,10 @@ class _CancelOrderState extends State<CancelOrder> {
                     cancelAbleItems
                         .removeWhere((item) => item.id == itemToRemove.id);
                   });
+
+                  if (cancelAbleItems.isEmpty) {
+                    Navigator.of(context).pop();
+                  }
                 }
               },
             ),

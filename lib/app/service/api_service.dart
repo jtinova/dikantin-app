@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
 class ApiConfigService extends GetxService {
-  final RxString baseURL = '192.168.1.7:8000'.obs;
+  final RxString baseURL = 'http://192.168.1.37:8000'.obs;
 
   void updateBaseUrl(String newUrl) {
     baseURL.value = newUrl;
@@ -14,7 +14,7 @@ class AppUrl {
   static String get _baseURL => _apiConfig.baseURL.value;
 
   static String get baseURLAPI => '$_baseURL/api';
-  static String get baseImageURL => '$_baseURL/storage/menu/';
+  static String get baseImageURL => '$_baseURL/';
 
   // Authentication User
   static String get signin => '$baseURLAPI/login';
@@ -24,6 +24,7 @@ class AppUrl {
   static String get resetPassword => "$baseURLAPI/reset-password";
   static String get signout => "$baseURLAPI/logout";
   static String get courierLogin => "$baseURLAPI/courier/login";
+  static String get storeFCMToken => "$baseURLAPI/fcm-token";
 
   // API Home User
   static String get locations => '$baseURLAPI/building';
@@ -67,4 +68,7 @@ class AppUrl {
   // API WithDraw Courier
   static String get withDrawlBalance => '$baseURLAPI/courier/withdraw-balance';
   static String get withDrawlHistory => '$baseURLAPI/courier-withdrawals';
+
+  // API fcm
+  static String get notification => '$baseURLAPI/fcm/notification';
 }

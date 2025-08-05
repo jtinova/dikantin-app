@@ -10,8 +10,10 @@ class OrderDetail {
   final int grandTotal;
   final String date;
   final String status;
+  final String paymentType;
   final List<Order> details;
   final Delivery? delivery;
+  final String ?orderType;
 
   OrderDetail({
     required this.id,
@@ -22,8 +24,10 @@ class OrderDetail {
     required this.grandTotal,
     required this.date,
     required this.status,
+    required this.paymentType,
     required this.details,
     this.delivery,
+    this.orderType
   });
 
   // For Detail Progress
@@ -37,6 +41,8 @@ class OrderDetail {
       grandTotal: json['grand_total'] ?? 0,
       date: json['date'] ?? '',
       status: json['status'] ?? '',
+      paymentType: json['payment_method'] ?? '',
+      orderType: json['order_type'] ?? '',
       details: (json['details'] as List<dynamic>?)
               ?.map((item) => Order.fromJson(item))
               .toList() ??
@@ -55,6 +61,8 @@ class OrderDetail {
       grandTotal: json['grand_total'] ?? 0,
       date: json['date'] ?? '',
       status: json['status'] ?? '',
+      paymentType: json['payment_method'] ?? '',
+      orderType: json['order_type'] ?? '',
       details: (json['details'] as List<dynamic>?)
               ?.map((item) => Order.fromJson(item))
               .toList() ??

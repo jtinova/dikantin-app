@@ -2,6 +2,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
@@ -16,7 +17,16 @@ class HistoryOrder extends StatefulWidget {
 }
 
 class _HistoryOrderState extends State<HistoryOrder> {
-  final OrderController controller = Get.put(OrderController());
+  final OrderController controller = Get.find<OrderController>();
+
+  @override
+  void initState() {
+    super.initState();
+    final arguments = Get.arguments;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.handleHistoryNotificationArguments(context, arguments);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +60,11 @@ class _HistoryOrderState extends State<HistoryOrder> {
           () {
             return RefreshIndicator(
               onRefresh: () async {
+                EasyLoading.show(status: 'Loading...');
+
                 await controller.getHistory();
+
+                EasyLoading.dismiss();
               },
               child: controller.historyOrder.isEmpty
                   ? Stack(
@@ -175,10 +189,28 @@ class _HistoryOrderState extends State<HistoryOrder> {
                                     const Spacer(),
                                     ElevatedButton(
                                       onPressed: () async {
-                                        await controller
-                                            .getDetailProgress(order.id);
+                                        controller.detailOrder.clear();
+                                        controller.detailShipping.clear();
 
-                                        if (controller.detailOrder.isNotEmpty) {
+                                        if (order.orderType == 'delivery' &&
+                                            order.status == 'done') {
+                                          await controller
+                                              .getDetailShipping(order.id);
+                                        } else {
+                                          await controller
+                                              .getDetailProgress(order.id);
+                                        }
+                                        final detailToShow = (order.orderType ==
+                                                    'delivery' &&
+                                                order.status == 'done' &&
+                                                controller
+                                                    .detailShipping.isNotEmpty)
+                                            ? controller.detailShipping.first
+                                            : (controller.detailOrder.isNotEmpty
+                                                ? controller.detailOrder.first
+                                                : null);
+
+                                        if (detailToShow != null) {
                                           showModalBottomSheet(
                                             context: context,
                                             isScrollControlled: true,
@@ -190,8 +222,7 @@ class _HistoryOrderState extends State<HistoryOrder> {
                                             ),
                                             builder: (context) {
                                               return OrderDetailBottom(
-                                                order: controller
-                                                    .detailOrder.first,
+                                                order: detailToShow,
                                                 controller: controller,
                                               );
                                             },

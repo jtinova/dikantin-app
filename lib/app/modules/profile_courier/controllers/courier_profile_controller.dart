@@ -1,15 +1,15 @@
 // ignore_for_file: avoid_print
 
 import 'dart:convert';
-import 'package:dikantin_app_rebuild/app/data/api.dart';
+import 'package:dikantin_app_rebuild/app/service/api_service.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
-import 'package:dikantin_app_rebuild/app/data/db_provider.dart';
 import 'package:flutter/material.dart';
+
+import '../../../service/api_client_service.dart';
 
 class CourierProfileController extends GetxController {
   final baseURL = AppUrl.baseURLAPI;
-  
+
   var isLoading = true.obs;
   var courierData = {}.obs;
   var withdrawalHistory = [].obs;
@@ -31,7 +31,7 @@ class CourierProfileController extends GetxController {
       'pending_deliveries': 0,
       'delivered_deliveries': 0,
     };
-    
+
     initializeData();
   }
 
@@ -59,40 +59,36 @@ class CourierProfileController extends GetxController {
     try {
       print("=== Starting getProfile ===");
       isLoading(true);
-      String? token = await DatabaseProvider().getToken();
-      
-      if (token == null) {
-        print("Token tidak ditemukan");
-        return;
-      }
 
-      final response = await http.get(
-        Uri.parse(AppUrl.courierProfile),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
+      final response = await ApiClient.get(AppUrl.courierProfile);
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         if (data['status'] == 'success') {
-          print("Profile data today_earnings: ${data['data']['today_earnings']}");
+          print(
+              "Profile data today_earnings: ${data['data']['today_earnings']}");
           print("Profile data total_balance: ${data['data']['total_balance']}");
-          
+
           // Jika total_balance 0 tapi today_earnings ada, maka update total_balance
           var profileData = Map<String, dynamic>.from(data['data']);
-          final todayEarnings = double.tryParse(data['data']['today_earnings']?.toString() ?? '0') ?? 0;
-          final totalBalance = double.tryParse(data['data']['total_balance']?.toString() ?? '0') ?? 0;
-          
+          final todayEarnings = double.tryParse(
+                  data['data']['today_earnings']?.toString() ?? '0') ??
+              0;
+          final totalBalance = double.tryParse(
+                  data['data']['total_balance']?.toString() ?? '0') ??
+              0;
+
           if (totalBalance == 0 && todayEarnings > 0) {
             profileData['total_balance'] = todayEarnings;
-            print("Updating total_balance to match today_earnings: $todayEarnings");
+            print(
+                "Updating total_balance to match today_earnings: $todayEarnings");
           }
-          
+
           courierData.value = profileData;
-          print("CourierData after getProfile - today_earnings: ${courierData['today_earnings']}");
-          print("CourierData after getProfile - total_balance: ${courierData['total_balance']}");
+          print(
+              "CourierData after getProfile - today_earnings: ${courierData['today_earnings']}");
+          print(
+              "CourierData after getProfile - total_balance: ${courierData['total_balance']}");
           // Jangan update pending_deliveries dan delivered_deliveries di sini
           // karena akan diupdate oleh getPendingOrders()
         }
@@ -108,40 +104,35 @@ class CourierProfileController extends GetxController {
   Future<void> getDeliveryStats() async {
     try {
       print("=== Starting getDeliveryStats ===");
-      String? token = await DatabaseProvider().getToken();
-      
-      if (token == null) {
-        print("Token tidak ditemukan");
-        return;
-      }
 
-      final response = await http.get(
-        Uri.parse(AppUrl.shippingStats),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
+      final response = await ApiClient.get(AppUrl.shippingStats);
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         if (data['status'] == 'success') {
-          print("Delivery stats today_earnings: ${data['data']['today_earnings']}");
-          print("Delivery stats total_balance: ${data['data']['total_balance']}");
-          
+          print(
+              "Delivery stats today_earnings: ${data['data']['today_earnings']}");
+          print(
+              "Delivery stats total_balance: ${data['data']['total_balance']}");
+
           // Hanya update jika data tidak null dan valid
-          if (data['data']['today_earnings'] != null || data['data']['total_balance'] != null) {
+          if (data['data']['today_earnings'] != null ||
+              data['data']['total_balance'] != null) {
             var updatedData = Map<String, dynamic>.from(courierData);
-            
+
             // Update today_earnings hanya jika tidak null
             if (data['data']['today_earnings'] != null) {
-              final statsTodayEarnings = double.tryParse(data['data']['today_earnings']?.toString() ?? '0') ?? 0;
-              final currentTodayEarnings = double.tryParse(courierData['today_earnings']?.toString() ?? '0') ?? 0;
-              
+              final statsTodayEarnings = double.tryParse(
+                      data['data']['today_earnings']?.toString() ?? '0') ??
+                  0;
+              final currentTodayEarnings = double.tryParse(
+                      courierData['today_earnings']?.toString() ?? '0') ??
+                  0;
+
               print("Current today_earnings: $currentTodayEarnings");
               print("Stats today_earnings: $statsTodayEarnings");
               print("Current total_balance: ${courierData['total_balance']}");
-              
+
               if (statsTodayEarnings > 0 || currentTodayEarnings == 0) {
                 updatedData['today_earnings'] = statsTodayEarnings;
                 print("Updating today_earnings to: $statsTodayEarnings");
@@ -149,12 +140,16 @@ class CourierProfileController extends GetxController {
                 print("Keeping current today_earnings: $currentTodayEarnings");
               }
             }
-            
+
             // Update total_balance hanya jika tidak null
             if (data['data']['total_balance'] != null) {
-              final statsTotalBalance = double.tryParse(data['data']['total_balance']?.toString() ?? '0') ?? 0;
-              final currentTotalBalance = double.tryParse(courierData['total_balance']?.toString() ?? '0') ?? 0;
-              
+              final statsTotalBalance = double.tryParse(
+                      data['data']['total_balance']?.toString() ?? '0') ??
+                  0;
+              final currentTotalBalance = double.tryParse(
+                      courierData['total_balance']?.toString() ?? '0') ??
+                  0;
+
               if (statsTotalBalance > 0 || currentTotalBalance == 0) {
                 updatedData['total_balance'] = statsTotalBalance;
                 print("Updating total_balance to: $statsTotalBalance");
@@ -162,10 +157,12 @@ class CourierProfileController extends GetxController {
                 print("Keeping current total_balance: $currentTotalBalance");
               }
             }
-            
+
             courierData.value = updatedData;
-            print("Final courierData today_earnings: ${courierData['today_earnings']}");
-            print("Final courierData total_balance: ${courierData['total_balance']}");
+            print(
+                "Final courierData today_earnings: ${courierData['today_earnings']}");
+            print(
+                "Final courierData total_balance: ${courierData['total_balance']}");
           } else {
             print("Skipping update because stats data is null");
           }
@@ -180,26 +177,15 @@ class CourierProfileController extends GetxController {
   Future<void> getWithdrawalHistory() async {
     try {
       print("=== Starting getWithdrawalHistory ===");
-      String? token = await DatabaseProvider().getToken();
-      
-      if (token == null) {
-        print("Token tidak ditemukan");
-        return;
-      }
 
-      final response = await http.get(
-        Uri.parse(AppUrl.withDrawlHistory),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
+      final response = await ApiClient.get(AppUrl.withDrawlHistory);
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         if (data['status'] == 'success') {
           withdrawalHistory.value = data['data'];
-          print("Today earnings after getWithdrawalHistory: ${courierData['today_earnings']}");
+          print(
+              "Today earnings after getWithdrawalHistory: ${courierData['today_earnings']}");
         }
       }
       print("=== Finished getWithdrawalHistory ===");
@@ -207,25 +193,19 @@ class CourierProfileController extends GetxController {
       print("Error getting withdrawal history: $e");
     }
   }
-  
+
   Future<void> withdrawAllBalance() async {
     try {
       isLoading(true);
-      
+
       // Pastikan data konsisten sebelum penarikan
       ensureDataConsistency();
-      
-      String? token = await DatabaseProvider().getToken();
-      
-      if (token == null) {
-        print("Token tidak ditemukan");
-        return;
-      }
 
       // Ambil total balance yang sudah diupdate
-      final totalBalance = double.tryParse(courierData['total_balance']?.toString() ?? '0') ?? 0;
+      final totalBalance =
+          double.tryParse(courierData['total_balance']?.toString() ?? '0') ?? 0;
       print("Withdrawing total balance: $totalBalance");
-      
+
       if (totalBalance <= 0) {
         Get.snackbar(
           'Gagal',
@@ -237,30 +217,25 @@ class CourierProfileController extends GetxController {
         return;
       }
 
-      final response = await http.post(
-        Uri.parse(AppUrl.withDrawlBalance),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-        body: jsonEncode({
-          'withdraw_all': true
-        }),
+      final response = await ApiClient.post(
+        AppUrl.withDrawlBalance,
+        body: {'withdraw_all': true},
       );
 
       final data = json.decode(response.body);
-      
+
       if (response.statusCode == 200) {
         if (data['status'] == 'success') {
           // Update saldo kurir
           var updatedData = Map<String, dynamic>.from(courierData);
           updatedData['total_balance'] = data['data']['current_balance'];
-          updatedData['today_earnings'] = 0; // Reset today_earnings setelah penarikan
+          updatedData['today_earnings'] =
+              0; // Reset today_earnings setelah penarikan
           courierData.value = updatedData;
-          
+
           // Refresh riwayat penarikan
           await getWithdrawalHistory();
-          
+
           Get.snackbar(
             'Sukses',
             'Penarikan dana berhasil dilakukan',
@@ -304,14 +279,15 @@ class CourierProfileController extends GetxController {
         );
         return;
       }
-      
+
       // Pastikan data konsisten sebelum penarikan
       ensureDataConsistency();
-      
-      final totalBalance = double.tryParse(courierData['total_balance']?.toString() ?? '0') ?? 0;
+
+      final totalBalance =
+          double.tryParse(courierData['total_balance']?.toString() ?? '0') ?? 0;
       print("Available total balance: $totalBalance");
       print("Requested withdrawal amount: $amount");
-      
+
       if (amount > totalBalance) {
         Get.snackbar(
           'Gagal',
@@ -322,45 +298,34 @@ class CourierProfileController extends GetxController {
         );
         return;
       }
-      
-      isLoading(true);
-      String? token = await DatabaseProvider().getToken();
-      
-      if (token == null) {
-        print("Token tidak ditemukan");
-        return;
-      }
 
-      final response = await http.post(
-        Uri.parse(AppUrl.withDrawlBalance),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-        body: jsonEncode({
-          'amount': amount
-        }),
-      );
+      isLoading(true);
+
+      final response = await ApiClient.post(AppUrl.withDrawlBalance,
+          body: {'amount': amount});
 
       final data = json.decode(response.body);
-      
+
       if (response.statusCode == 200) {
         if (data['status'] == 'success') {
           // Update saldo kurir
           var updatedData = Map<String, dynamic>.from(courierData);
           updatedData['total_balance'] = data['data']['current_balance'];
-          
+
           // Update today_earnings jika penarikan sama dengan today_earnings
-          final currentTodayEarnings = double.tryParse(courierData['today_earnings']?.toString() ?? '0') ?? 0;
+          final currentTodayEarnings = double.tryParse(
+                  courierData['today_earnings']?.toString() ?? '0') ??
+              0;
           if (amount >= currentTodayEarnings) {
-            updatedData['today_earnings'] = 0; // Reset today_earnings jika semua ditarik
+            updatedData['today_earnings'] =
+                0; // Reset today_earnings jika semua ditarik
           }
-          
+
           courierData.value = updatedData;
-          
+
           // Refresh riwayat penarikan
           await getWithdrawalHistory();
-          
+
           Get.snackbar(
             'Sukses',
             'Penarikan dana berhasil dilakukan',
@@ -396,69 +361,51 @@ class CourierProfileController extends GetxController {
     await withdrawAllBalance();
   }
 
-  String formatCurrency(double amount) {
-    return 'Rp ${amount.toStringAsFixed(0).replaceAllMapped(
-      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-      (Match m) => '${m[1]}.',
-    )}';
-  }
-  
-  double? parseCurrency(String value) {
-    if (value.isEmpty) return 0;
-    
-    // Hapus 'Rp ', spasi, dan titik ribuan
-    String cleaned = value.replaceAll('Rp ', '').replaceAll('.', '').replaceAll(' ', '');
-    
-    return double.tryParse(cleaned);
-  }
-
   Future<void> getPendingOrders() async {
     try {
       print("=== Starting getPendingOrders ===");
-      String? token = await DatabaseProvider().getToken();
-      
-      if (token == null) {
-        print("Token tidak ditemukan");
-        return;
-      }
 
-      final response = await http.get(
-        Uri.parse('$baseURL/api/shipping/pending'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
+      final response = await ApiClient.get(AppUrl.pendingOrders);
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         if (data['status'] == 'success') {
           orderList.value = data['data'];
-          
+
           // Memisahkan order berdasarkan status
-          pendingOrders.value = orderList.where((order) => order['status'] == 'pending').toList();
-          deliveredOrders.value = orderList.where((order) => order['status'] == 'delivered').toList();
-          
+          pendingOrders.value =
+              orderList.where((order) => order['status'] == 'pending').toList();
+          deliveredOrders.value = orderList
+              .where((order) => order['status'] == 'delivered')
+              .toList();
+
           // Update courierData dengan jumlah pesanan yang benar, tanpa menimpa data lain
           var updatedData = Map<String, dynamic>.from(courierData);
           updatedData['pending_deliveries'] = pendingOrders.length;
           updatedData['delivered_deliveries'] = deliveredOrders.length;
-          
+
           // Pastikan total_balance konsisten dengan today_earnings
-          final currentTodayEarnings = double.tryParse(courierData['today_earnings']?.toString() ?? '0') ?? 0;
-          final currentTotalBalance = double.tryParse(courierData['total_balance']?.toString() ?? '0') ?? 0;
-          
+          final currentTodayEarnings = double.tryParse(
+                  courierData['today_earnings']?.toString() ?? '0') ??
+              0;
+          final currentTotalBalance = double.tryParse(
+                  courierData['total_balance']?.toString() ?? '0') ??
+              0;
+
           if (currentTodayEarnings > 0 && currentTotalBalance == 0) {
             updatedData['total_balance'] = currentTodayEarnings;
-            print("Updating total_balance to match today_earnings in getPendingOrders: $currentTodayEarnings");
+            print(
+                "Updating total_balance to match today_earnings in getPendingOrders: $currentTodayEarnings");
           }
-          
+
           courierData.value = updatedData;
-          
+
           print("Pending orders count: ${pendingOrders.length}");
           print("Delivered orders count: ${deliveredOrders.length}");
-          print("Today earnings after getPendingOrders: ${courierData['today_earnings']}");
-          print("Total balance after getPendingOrders: ${courierData['total_balance']}");
+          print(
+              "Today earnings after getPendingOrders: ${courierData['today_earnings']}");
+          print(
+              "Total balance after getPendingOrders: ${courierData['total_balance']}");
         }
       }
       print("=== Finished getPendingOrders ===");
@@ -467,11 +414,29 @@ class CourierProfileController extends GetxController {
     }
   }
 
-  // Method untuk memastikan konsistensi data
+  String formatCurrency(double amount) {
+    return 'Rp ${amount.toStringAsFixed(0).replaceAllMapped(
+          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+          (Match m) => '${m[1]}.',
+        )}';
+  }
+
+  double? parseCurrency(String value) {
+    if (value.isEmpty) return 0;
+
+    // Hapus 'Rp ', spasi, dan titik ribuan
+    String cleaned =
+        value.replaceAll('Rp ', '').replaceAll('.', '').replaceAll(' ', '');
+
+    return double.tryParse(cleaned);
+  }
+
   void ensureDataConsistency() {
-    final todayEarnings = double.tryParse(courierData['today_earnings']?.toString() ?? '0') ?? 0;
-    final totalBalance = double.tryParse(courierData['total_balance']?.toString() ?? '0') ?? 0;
-    
+    final todayEarnings =
+        double.tryParse(courierData['today_earnings']?.toString() ?? '0') ?? 0;
+    final totalBalance =
+        double.tryParse(courierData['total_balance']?.toString() ?? '0') ?? 0;
+
     if (todayEarnings > 0 && totalBalance == 0) {
       var updatedData = Map<String, dynamic>.from(courierData);
       updatedData['total_balance'] = todayEarnings;

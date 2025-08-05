@@ -27,7 +27,7 @@ class Order {
     this.note,
   });
 
-  // For detail response 
+  // For detail response
   factory Order.fromJson(Map<String, dynamic> json) {
     return Order(
       id: json['id'],
@@ -41,10 +41,11 @@ class Order {
       date: '',
       status: json['status'],
       note: json['note'] ?? '',
+      orderType: json['order_type'],
     );
   }
 
-  // For response 
+  // For response
   factory Order.fromJsonProgress(Map<String, dynamic> json) {
     return Order(
       id: json['id'],

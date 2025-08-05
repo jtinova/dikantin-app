@@ -117,35 +117,70 @@ class OrderDetailBottom extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  order.status == "on_delivery"
-                      ? order.delivery!.courierName
-                      : '-',
+                  order.delivery!.courierName,
                   style: TextStyle(
                     fontSize: 14.sp,
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 3.h),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Waktu Pengiriman",
-                  style: TextStyle(
-                    fontSize: 14.sp,
+            if (order.delivery!.status == "delivered") ...[
+              SizedBox(height: 3.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Waktu Pengiriman",
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                    ),
                   ),
-                ),
-                Text(
-                  order.status == "on_delivery"
-                      ? controller.formatDateTime(order.delivery!.deliveryDate!)
-                      : '-',
-                  style: TextStyle(
-                    fontSize: 14.sp,
+                  Text(
+                    controller.formatDateTime(order.delivery!.deliveryDate!),
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                    ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
+            ] else if (order.delivery!.status == "completed") ...[
+              SizedBox(height: 3.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Waktu Pengiriman",
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                    ),
+                  ),
+                  Text(
+                    controller.formatDateTime(order.delivery!.deliveryDate!),
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 3.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Waktu Selesai",
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                    ),
+                  ),
+                  Text(
+                    controller.formatDateTime(order.delivery!.arrivalDate!),
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                    ),
+                  ),
+                ],
+              ),
+            ],
             SizedBox(height: 3.h),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -157,9 +192,7 @@ class OrderDetailBottom extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  order.status == "on_delivery"
-                      ? order.delivery!.buildingName
-                      : '-',
+                  order.delivery!.buildingName,
                   style: TextStyle(
                     fontSize: 14.sp,
                   ),
@@ -260,6 +293,24 @@ class OrderDetailBottom extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
+                "Metode Pembayaran",
+                style: TextStyle(
+                  fontSize: 14.sp,
+                ),
+              ),
+              Text(
+                controller.capitalizeFirst(order.paymentType),
+                style: TextStyle(
+                  fontSize: 14.sp,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 3.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
                 "Total Biaya",
                 style: TextStyle(
                   fontSize: 15.sp,
@@ -281,7 +332,9 @@ class OrderDetailBottom extends StatelessWidget {
             height: 30.h,
             child: ElevatedButton(
               onPressed: () async {
-                if (order.status == "done") {
+                if (order.status == "done" ||
+                    order.status == "cancel" ||
+                    order.status == "cooking") {
                   Navigator.pop(context);
                 } else if (order.status == "pending") {
                   Navigator.pop(context);
@@ -373,7 +426,9 @@ class OrderDetailBottom extends StatelessWidget {
                 ),
               ),
               child: Text(
-                order.status == "done"
+                order.status == "done" ||
+                        order.status == "cancel" ||
+                        order.status == "cooking"
                     ? "Tutup"
                     : (order.status == "pending"
                         ? "Batalkan Pesanan"

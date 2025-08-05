@@ -1,4 +1,4 @@
-import 'package:dikantin_app_rebuild/app/data/auth_provider.dart';
+import 'package:dikantin_app_rebuild/app/service/auth_service.dart';
 import 'package:dikantin_app_rebuild/app/routes/app_pages.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,10 +10,7 @@ import 'package:provider/provider.dart';
 import '../controllers/profile_controller.dart';
 
 class ProfileView extends GetView<ProfileController> {
-  ProfileView({super.key});
-
-  @override
-  final ProfileController controller = Get.put(ProfileController());
+  const ProfileView({super.key});
 
   @override
   Widget build(BuildContext context) {

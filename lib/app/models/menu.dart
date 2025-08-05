@@ -1,4 +1,4 @@
-import '../data/api.dart';
+import '../service/api_service.dart';
 import 'canteen.dart';
 import 'category.dart';
 

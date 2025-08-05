@@ -7,11 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 
-import '../../../data/api.dart';
+import '../../../service/api_client_service.dart';
+import '../../../service/api_service.dart';
 import '../../../models/user.dart';
-import '../../../data/db_provider.dart';
 
 class ProfileController extends GetxController {
   var users = Rxn<User>();
@@ -59,37 +58,9 @@ class ProfileController extends GetxController {
 
   Future<void> getDetailUser() async {
     String url = AppUrl.detailUserProfile;
-    String? token = await DatabaseProvider().getToken();
-
-    if (token == null) {
-      Get.snackbar(
-        "Informasi ",
-        "Token Tidak Ditemukan",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
-
-      return;
-    }
 
     try {
-      http.Response req = await http.get(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
+      final req = await ApiClient.get(url);
 
       if (req.statusCode == 200) {
         final res = json.decode(req.body);
@@ -134,30 +105,6 @@ class ProfileController extends GetxController {
     EasyLoading.show(status: 'Loading...');
 
     String url = AppUrl.updateUserData;
-    String? token = await DatabaseProvider().getToken();
-
-    if (token == null) {
-      EasyLoading.dismiss();
-
-      Get.snackbar(
-        "Informasi ",
-        "Token Tidak Ditemukan",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
-
-      return;
-    }
 
     final body = {
       "full_name": fullName,
@@ -168,14 +115,7 @@ class ProfileController extends GetxController {
     print(body);
 
     try {
-      http.Response req = await http.put(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-        body: json.encode(body),
-      );
+      final req = await ApiClient.put(url, body: body);
 
       if (req.statusCode == 200) {
         final res = json.decode(req.body);

@@ -15,8 +15,6 @@ import '../widgets/header_section.dart';
 
 class HomeView extends GetView<HomeController> {
   HomeView({super.key});
-  @override
-  final HomeController controller = Get.put(HomeController());
 
   final _formKey = GlobalKey<FormBuilderState>();
 

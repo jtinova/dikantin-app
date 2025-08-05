@@ -23,8 +23,6 @@ class NavigationView extends GetView<NavigationController> {
 
   @override
   Widget build(BuildContext context) {
-    controller.init();
-
     return WillPopScope(
       onWillPop: () async {
         if (_backButtonPressCount == 0) {

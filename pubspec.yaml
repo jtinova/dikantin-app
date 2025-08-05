@@ -2,7 +2,7 @@ name: dikantin_app_rebuild
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -56,12 +56,15 @@ dependencies:
   qr_flutter: ^4.1.0
   flutter_rating_bar: ^4.0.1
   connectivity_plus: ^6.1.4
+  firebase_messaging: ^16.0.0
+  firebase_core: ^4.0.0
+  flutter_local_notifications: ^19.4.0
 
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
   image_path: "assets/logo/logoLauncher.png"
-  min_sdk_android: 21
+  min_sdk_android: 23
 
 dev_dependencies:
   flutter_test:
@@ -79,7 +82,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

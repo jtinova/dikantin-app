@@ -1,17 +1,17 @@
 // ignore_for_file: avoid_print, invalid_use_of_protected_member
 
 import 'dart:convert';
-import 'package:dikantin_app_rebuild/app/data/api.dart';
+import 'package:dikantin_app_rebuild/app/service/api_service.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
-import 'package:dikantin_app_rebuild/app/data/db_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:flutter/services.dart';
 
+import '../../../service/api_client_service.dart';
+
 class HomeCourierController extends GetxController {
   final baseURL = AppUrl.baseURLAPI;
-  
+
   var isLoading = true.obs;
   var courierData = {}.obs;
   var orderList = [].obs;
@@ -42,20 +42,8 @@ class HomeCourierController extends GetxController {
   Future<void> getProfile() async {
     try {
       isLoading(true);
-      String? token = await DatabaseProvider().getToken();
-      
-      if (token == null) {
-        print("Token tidak ditemukan");
-        return;
-      }
 
-      final response = await http.get(
-        Uri.parse(AppUrl.courierProfile),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
+      final response = await ApiClient.get(AppUrl.courierProfile);
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
@@ -72,26 +60,7 @@ class HomeCourierController extends GetxController {
 
   Future<void> getPendingOrders() async {
     try {
-      String? token = await DatabaseProvider().getToken();
-      
-      if (token == null) {
-        print("Token tidak ditemukan");
-        return;
-      }
-
-      print("Token yang digunakan: $token");
-      print("Token length: ${token.length}");
-
-      final headers = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      };
-      print("Request headers: $headers");
-
-      final response = await http.get(
-        Uri.parse(AppUrl.pendingOrders),
-        headers: headers,
-      );
+      final response = await ApiClient.get(AppUrl.pendingOrders);
 
       print("Request URL: ${Uri.parse(AppUrl.pendingOrders)}");
       print("Response Status Code: ${response.statusCode}");
@@ -103,11 +72,14 @@ class HomeCourierController extends GetxController {
         print("Decoded Data: $data");
         if (data['status'] == 'success') {
           orderList.value = data['data'];
-          
+
           // Memisahkan order berdasarkan status
-          pendingOrders.value = orderList.where((order) => order['status'] == 'pending').toList();
-          deliveredOrders.value = orderList.where((order) => order['status'] == 'delivered').toList();
-          
+          pendingOrders.value =
+              orderList.where((order) => order['status'] == 'pending').toList();
+          deliveredOrders.value = orderList
+              .where((order) => order['status'] == 'delivered')
+              .toList();
+
           print("Order List: ${orderList.value}");
           print("Pending Orders: ${pendingOrders.value}");
           print("Delivered Orders: ${deliveredOrders.value}");
@@ -123,20 +95,7 @@ class HomeCourierController extends GetxController {
 
   Future<Map<String, dynamic>> getOrderDetail(String orderId) async {
     try {
-      String? token = await DatabaseProvider().getToken();
-      
-      if (token == null) {
-        print("Token tidak ditemukan");
-        return {};
-      }
-
-      final response = await http.get(
-        Uri.parse('${AppUrl.detailOrder}/$orderId'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
+      final response = await ApiClient.get('${AppUrl.detailOrder}/$orderId');
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
@@ -153,22 +112,9 @@ class HomeCourierController extends GetxController {
 
   Future<void> updateOrderToDelivered(String orderId) async {
     try {
-      String? token = await DatabaseProvider().getToken();
-      
-      if (token == null) {
-        print("Token tidak ditemukan");
-        return;
-      }
-
-      final response = await http.patch(
-        Uri.parse(AppUrl.deliveryOrder),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-        body: json.encode({
-          'id_order_delivery': orderId,
-        }),
+      final response = await ApiClient.patch(
+        AppUrl.deliveryOrder,
+        body: {'id_order_delivery': orderId},
       );
 
       if (response.statusCode == 200) {
@@ -187,43 +133,24 @@ class HomeCourierController extends GetxController {
       final barcodeScanResult = await scanBarcode();
       if (barcodeScanResult == null) {
         // Jika user membatalkan scan
-        Get.snackbar(
-          'Dibatalkan', 
-          'Pemindaian barcode dibatalkan',
-          backgroundColor: Colors.orange,
-          colorText: Colors.white,
-          snackPosition: SnackPosition.BOTTOM
-        );
-        return;
-      }
-      
-      String? token = await DatabaseProvider().getToken();
-      
-      if (token == null) {
-        print("Token tidak ditemukan");
+        Get.snackbar('Dibatalkan', 'Pemindaian barcode dibatalkan',
+            backgroundColor: Colors.orange,
+            colorText: Colors.white,
+            snackPosition: SnackPosition.BOTTOM);
         return;
       }
 
-      final response = await http.patch(
-        Uri.parse(AppUrl.completeOrder),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-        body: json.encode({
-          'id_order_delivery': orderId,
-        }),
+      final response = await ApiClient.patch(
+        AppUrl.completeOrder,
+        body: {'id_order_delivery': orderId},
       );
 
       if (response.statusCode == 200) {
         await getPendingOrders(); // Refresh order list
-        Get.snackbar(
-          'Sukses', 
-          'Pesanan berhasil diselesaikan',
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-          snackPosition: SnackPosition.BOTTOM
-        );
+        Get.snackbar('Sukses', 'Pesanan berhasil diselesaikan',
+            backgroundColor: Colors.green,
+            colorText: Colors.white,
+            snackPosition: SnackPosition.BOTTOM);
       }
     } catch (e) {
       print("Error completing order: $e");
@@ -234,7 +161,11 @@ class HomeCourierController extends GetxController {
     try {
       final ScanResult result = await BarcodeScanner.scan(
         options: ScanOptions(
-          restrictFormat: [BarcodeFormat.qr, BarcodeFormat.code39, BarcodeFormat.code128],
+          restrictFormat: [
+            BarcodeFormat.qr,
+            BarcodeFormat.code39,
+            BarcodeFormat.code128
+          ],
           useCamera: -1,
           autoEnableFlash: false,
           android: AndroidOptions(
@@ -243,7 +174,7 @@ class HomeCourierController extends GetxController {
           ),
         ),
       );
-      
+
       if (result.type == ResultType.Cancelled) {
         return null;
       } else {
@@ -251,13 +182,10 @@ class HomeCourierController extends GetxController {
       }
     } on PlatformException catch (e) {
       print("Error saat scan barcode: $e");
-      Get.snackbar(
-        'Error', 
-        'Gagal membuka pemindai barcode: ${e.message}',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-        snackPosition: SnackPosition.BOTTOM
-      );
+      Get.snackbar('Error', 'Gagal membuka pemindai barcode: ${e.message}',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM);
       return null;
     } catch (e) {
       print("Error umum: $e");
@@ -267,9 +195,9 @@ class HomeCourierController extends GetxController {
 
   String formatCurrency(double amount) {
     return 'Rp ${amount.toStringAsFixed(0).replaceAllMapped(
-      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-      (Match m) => '${m[1]}.',
-    )}';
+          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+          (Match m) => '${m[1]}.',
+        )}';
   }
 
   String capitalizeFirst(String text) {
@@ -282,20 +210,7 @@ class HomeCourierController extends GetxController {
 
   Future<void> showWithdrawalHistory() async {
     try {
-      String? token = await DatabaseProvider().getToken();
-      
-      if (token == null) {
-        print("Token tidak ditemukan");
-        return;
-      }
-
-      final response = await http.get(
-        Uri.parse(AppUrl.withDrawlHistory),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
+      final response = await ApiClient.get(AppUrl.withDrawlHistory);
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
@@ -331,8 +246,11 @@ class HomeCourierController extends GetxController {
                         itemBuilder: (context, index) {
                           var withdrawal = data['data'][index];
                           return ListTile(
-                            title: Text(formatCurrency(
-                                double.tryParse(withdrawal['withdrawal_amount']?.toString() ?? '0') ?? 0)),
+                            title: Text(formatCurrency(double.tryParse(
+                                    withdrawal['withdrawal_amount']
+                                            ?.toString() ??
+                                        '0') ??
+                                0)),
                             subtitle: Text(withdrawal['withdrawal_date'] ?? ''),
                           );
                         },

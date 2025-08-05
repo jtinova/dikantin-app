@@ -1,10 +1,10 @@
 // ignore_for_file: avoid_print
 
 import 'dart:convert';
-import 'package:dikantin_app_rebuild/app/data/api.dart';
-import 'package:dikantin_app_rebuild/app/data/db_provider.dart';
+import 'package:dikantin_app_rebuild/app/service/api_service.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
+
+import '../../../service/api_client_service.dart';
 
 class CourierDeliveryHistoryController extends GetxController {
   final baseURL = AppUrl.baseURLAPI;
@@ -20,20 +20,8 @@ class CourierDeliveryHistoryController extends GetxController {
   Future<void> getDeliveryHistory() async {
     try {
       isLoading(true);
-      String? token = await DatabaseProvider().getToken();
       
-      if (token == null) {
-        print("Token tidak ditemukan");
-        return;
-      }
-
-      final response = await http.get(
-        Uri.parse(AppUrl.shippingHistory),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
+      final response = await ApiClient.get(AppUrl.shippingHistory);
 
       print("Request URL: ${Uri.parse(AppUrl.shippingHistory)}");
       print("Response status: ${response.statusCode}");
