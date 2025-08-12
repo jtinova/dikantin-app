@@ -45,13 +45,13 @@ class OrderController extends GetxController {
   }
 
   void handleNotificationArguments(Map<String, dynamic> arguments) {
+    if (arguments.containsKey('target_sub_tab')) {
+      selectedIndex.value = arguments['target_sub_tab'];
+    }
+
     if (arguments.containsKey('transaction_id')) {
       final String transactionId = arguments['transaction_id'];
       final String orderType = arguments['order_type'] ?? '';
-
-      if (arguments.containsKey('target_sub_tab')) {
-        selectedIndex.value = arguments['target_sub_tab'];
-      }
 
       _showOrderDetailFromNotification(transactionId, orderType);
     }
@@ -113,7 +113,6 @@ class OrderController extends GetxController {
 
   Future<void> handleHistoryNotificationArguments(
       BuildContext context, dynamic arguments) async {
-    final arguments = Get.arguments;
     if (arguments is Map<String, dynamic> &&
         arguments.containsKey('transaction_id')) {
       final String orderId = arguments['transaction_id'];
@@ -614,6 +613,92 @@ class OrderController extends GetxController {
       );
 
       print(e);
+    }
+  }
+
+  Future<void> addRating({
+    required String transactionDetailId,
+    required int rating,
+    String? comment,
+  }) async {
+    EasyLoading.show(status: 'Loading...');
+
+    String url = AppUrl.addRating;
+    final body = {
+      "transaction_detail_id": transactionDetailId,
+      "rating": rating,
+      "comment": comment,
+    };
+
+    print(transactionDetailId);
+
+    try {
+      final req = await ApiClient.post(url, body: body);
+      final res = json.decode(req.body);
+
+      if (req.statusCode == 201 || req.statusCode == 200) {
+        Get.back();
+        await refreshAll();
+
+        Get.snackbar(
+          "Informasi ",
+          res["message"],
+          animationDuration: const Duration(milliseconds: 200),
+          duration: const Duration(milliseconds: 1650),
+          backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+          borderWidth: 5.w,
+          snackPosition: SnackPosition.TOP,
+          margin: EdgeInsets.symmetric(
+            horizontal: 20.w,
+            vertical: 20.h,
+          ),
+          icon: const Icon(
+            CupertinoIcons.info_circle,
+          ),
+        );
+      } else {
+        final res = json.decode(req.body);
+
+        print(res);
+
+        Get.snackbar(
+          "Informasi ",
+          res["message"],
+          animationDuration: const Duration(milliseconds: 200),
+          duration: const Duration(milliseconds: 1650),
+          backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+          borderWidth: 5.w,
+          snackPosition: SnackPosition.TOP,
+          margin: EdgeInsets.symmetric(
+            horizontal: 20.w,
+            vertical: 20.h,
+          ),
+          icon: const Icon(
+            CupertinoIcons.info_circle,
+          ),
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        "Informasi ",
+        "Mohon Coba Lagi",
+        animationDuration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 1650),
+        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+        borderWidth: 5.w,
+        snackPosition: SnackPosition.TOP,
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
+        icon: const Icon(
+          CupertinoIcons.info_circle,
+        ),
+      );
+
+      print(e);
+    } finally {
+      EasyLoading.dismiss();
     }
   }
 

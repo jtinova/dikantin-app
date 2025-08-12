@@ -11,6 +11,9 @@ class Order {
   final String status;
   final String? orderType;
   final String? note;
+  final int? updateCount;
+  final int? rating;
+  final String? comment;
 
   Order({
     required this.id,
@@ -25,6 +28,9 @@ class Order {
     required this.status,
     this.orderType,
     this.note,
+    this.updateCount,
+    this.rating,
+    this.comment,
   });
 
   // For detail response
@@ -42,6 +48,9 @@ class Order {
       status: json['status'],
       note: json['note'] ?? '',
       orderType: json['order_type'],
+      updateCount: json['update_count'] ?? 0,
+      rating: json['rating'],
+      comment: json['comment'],
     );
   }
 
@@ -59,6 +68,9 @@ class Order {
       date: json['date'],
       status: json['status'],
       orderType: json['order_type'],
+      updateCount: json['update_count'] ?? 0,
+      rating: json['rating'],
+      comment: json['comment'],
     );
   }
 
@@ -74,6 +86,9 @@ class Order {
       'grand_total': grandTotal,
       'date': date,
       'status': status,
+      'update_count': updateCount,
+      'rating': rating,
+      'comment': comment
     };
   }
 }

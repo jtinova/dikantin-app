@@ -15,13 +15,7 @@ class FavoriteMenu extends StatefulWidget {
 
 class _FavoriteMenuState extends State<FavoriteMenu> {
   final HomeController controller = Get.find<HomeController>();
-
-  @override
-  void initState() {
-    super.initState();
-    controller.getFavoriteMenu();
-  }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(

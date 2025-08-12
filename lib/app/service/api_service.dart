@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
 class ApiConfigService extends GetxService {
-  final RxString baseURL = 'http://192.168.1.37:8000'.obs;
+  final RxString baseURL = 'https://dikantin-staging.jtinova.com'.obs;
 
   void updateBaseUrl(String newUrl) {
     baseURL.value = newUrl;
@@ -36,6 +36,7 @@ class AppUrl {
   static String get menuFavorit => '$baseURLAPI/menu/favorite';
   static String get menuFavoritAdd => '$baseURLAPI/menu/favorite/add';
   static String get menuFavoritRemove => '$baseURLAPI/menu/favorite/remove/';
+  static String get addRating => '$baseURLAPI/rating';
 
   // API Order User
   static String get calculateOrder => '$baseURLAPI/transaction/calculate-order';

@@ -637,7 +637,7 @@ class CheckoutView extends GetView<CheckoutController> {
                         Get.find<CartController>().clearCartSelectionsAndNote();
                         Get.offAllNamed(
                           Routes.NAVIGATION,
-                          arguments: {'target_page': 1},
+                          arguments: {'target_page': 1, 'target_sub_tab': 0},
                         );
                       }
                     },

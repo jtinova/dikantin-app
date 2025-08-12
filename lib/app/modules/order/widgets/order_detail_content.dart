@@ -2,9 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../../models/order_detail.dart';
+import '../../profile/widgets/rating_menu_section.dart';
 import '../controllers/order_controller.dart';
 import 'cancel_order_section.dart';
 
@@ -211,6 +213,7 @@ class OrderDetailBottom extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Expanded(
+                      flex: 3,
                       child: Tooltip(
                         message: item.name,
                         child: Text(
@@ -224,6 +227,7 @@ class OrderDetailBottom extends StatelessWidget {
                       ),
                     ),
                     Expanded(
+                      flex: 2,
                       child: Text(
                         "x ${item.qty}",
                         style: TextStyle(
@@ -232,6 +236,7 @@ class OrderDetailBottom extends StatelessWidget {
                       ),
                     ),
                     Expanded(
+                      flex: 3,
                       child: Text(
                         controller.capitalizeFirst(item.status),
                         style: TextStyle(
@@ -239,12 +244,79 @@ class OrderDetailBottom extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Text(
-                      "Rp ${controller.formatRupiah(item.salesSubtotal)}",
-                      style: TextStyle(
-                        fontSize: 14.sp,
+                    if (order.status == 'done') ...[
+                      Expanded(
+                        flex: 3,
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: Builder(
+                            builder: (context) {
+                              final bool hasRated =
+                                  item.rating != null && item.rating! > 0;
+
+                              final bool canUpdate =
+                                  (item.updateCount ?? 0) < 1;
+
+                              String buttonText;
+                              final bool isUpdateAction = hasRated && canUpdate;
+
+                              if (!hasRated) {
+                                buttonText = "Nilai";
+                              } else if (canUpdate) {
+                                buttonText = "Ubah Nilai";
+                              } else {
+                                buttonText = "Lihat Nilai";
+                              }
+
+                              final bool isReadOnly = hasRated && !canUpdate;
+
+                              return TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+
+                                  Get.to(() => RatingMenu(
+                                        transactionDetailId: item.id,
+                                        menuId: item.id,
+                                        menuName: item.name,
+                                        isReadOnly: isReadOnly,
+                                        isUpdate: isUpdateAction,
+                                        orderDate: order.date,
+                                        initialRating:
+                                            (item.rating ?? 0).toDouble(),
+                                        initialComment: item.comment ?? '',
+                                      ));
+                                },
+                                style: TextButton.styleFrom(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 5.w),
+                                  minimumSize: Size.zero,
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                  alignment: Alignment.centerRight,
+                                ),
+                                child: Text(
+                                  buttonText,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
                       ),
-                    ),
+                    ] else ...[
+                      Expanded(
+                        flex: 3,
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            "Rp ${controller.formatRupiah(item.salesSubtotal)}",
+                            style: TextStyle(fontSize: 14.sp),
+                          ),
+                        ),
+                      ),
+                    ],
                   ],
                 ),
               )),

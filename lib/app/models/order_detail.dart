@@ -13,7 +13,7 @@ class OrderDetail {
   final String paymentType;
   final List<Order> details;
   final Delivery? delivery;
-  final String ?orderType;
+  final String? orderType;
 
   OrderDetail({
     required this.id,
@@ -27,7 +27,7 @@ class OrderDetail {
     required this.paymentType,
     required this.details,
     this.delivery,
-    this.orderType
+    this.orderType,
   });
 
   // For Detail Progress
