@@ -1,3 +1,6 @@
+// lib/app/modules/profile/widgets/favorite_menu_section.dart
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dikantin_app_rebuild/app/modules/home/controllers/home_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +18,13 @@ class FavoriteMenu extends StatefulWidget {
 
 class _FavoriteMenuState extends State<FavoriteMenu> {
   final HomeController controller = Get.find<HomeController>();
-  
+
+  @override
+  void initState() {
+    super.initState();
+    controller.getFavoriteMenuForProfile();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,11 +54,12 @@ class _FavoriteMenuState extends State<FavoriteMenu> {
       ),
       body: Obx(
         () {
-          final favoriteMenus = controller.allMenus
-              .where((menu) => controller.favoriteMenuId.contains(menu.id))
-              .toList();
-
-          if (favoriteMenus.isEmpty) {
+          if (controller.isMenuLoading.value) {
+            return Center(
+              child: CupertinoActivityIndicator(),
+            );
+          }
+          if (controller.favoriteMenus.isEmpty) {
             return Center(
               child: Text(
                 'Belum Ada Menu Favorit',
@@ -62,14 +72,20 @@ class _FavoriteMenuState extends State<FavoriteMenu> {
           }
 
           return RefreshIndicator(
-            onRefresh: () => controller.getFavoriteMenu(),
-            child: ListView.builder(
+            onRefresh: () => controller.getFavoriteMenuForProfile(),
+            child: ListView.separated(
               padding: EdgeInsets.all(10.r),
-              itemCount: favoriteMenus.length,
+              itemCount: controller.favoriteMenus.length,
+              separatorBuilder: (context, index) => Divider(
+                color: Colors.black26,
+                thickness: 1,
+                height: 5.h,
+              ),
               itemBuilder: (context, index) {
-                final menu = favoriteMenus[index];
-                final isClosed = menu.canteen.status == 'close';
+                final menu = controller.favoriteMenus[index];
+                bool isClosed = menu.canteen.status == 'close';
                 bool isOutOfStock = menu.stock <= 0;
+                bool isUnavailable = isClosed || isOutOfStock;
 
                 return GestureDetector(
                   onTap: () {
@@ -96,28 +112,24 @@ class _FavoriteMenuState extends State<FavoriteMenu> {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(10.r),
                           child: ColorFiltered(
-                            colorFilter: isClosed || isOutOfStock
-                                ? const ColorFilter.mode(
-                                    Colors.grey,
-                                    BlendMode.saturation,
-                                  )
-                                : const ColorFilter.mode(
-                                    Colors.transparent,
-                                    BlendMode.saturation,
-                                  ),
-                            child: Image.network(
-                              menu.imageUrl,
-                              width: 100.w,
-                              height: 100.h,
+                            colorFilter: ColorFilter.mode(
+                              isUnavailable ? Colors.grey : Colors.transparent,
+                              BlendMode.saturation,
+                            ),
+                            child: CachedNetworkImage(
+                              imageUrl: menu.imageUrl,
+                              width: 90.w,
+                              height: 90.h,
                               fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Image.asset(
-                                  'assets/images/logo_dikantin.png',
-                                  width: 100.w,
-                                  height: 100.h,
-                                  fit: BoxFit.cover,
-                                );
-                              },
+                              placeholder: (context, url) => Center(
+                                child: CupertinoActivityIndicator(),
+                              ),
+                              errorWidget: (context, url, error) => Image.asset(
+                                'assets/images/logo_dikantin.png',
+                                width: 90.w,
+                                height: 90.h,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
                         ),
@@ -212,7 +224,7 @@ class _FavoriteMenuState extends State<FavoriteMenu> {
                                       : CupertinoIcons.heart,
                                   color: isFavorited
                                       ? Colors.redAccent
-                                      : Colors.white,
+                                      : Colors.grey,
                                   size: 30.r,
                                 ),
                               ),

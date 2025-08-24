@@ -1,4 +1,6 @@
-// ignore_for_file: avoid_print, collection_methods_unrelated_type
+// lib/app/modules/home/controllers/home_controller.dart
+
+// ignore_for_file: avoid_print, collection_methods_unrelated_type, unused_local_variable
 
 import 'dart:async';
 import 'dart:convert';
@@ -21,22 +23,31 @@ import '../../../models/menu.dart';
 
 class HomeController extends GetxController {
   var isLoading = true.obs;
+  var isDataLoaded = false.obs;
   var isMenuLoading = false.obs;
   var currentIndex = 0.obs;
-  Timer? _debounce;
 
   var selectedLocation = 'Pilih Lokasi'.obs;
   var selectedCategoryId = ''.obs;
   var selectedCanteenId = 'all'.obs;
+
+  var currentPage = 1.obs;
+  var lastPage = 1.obs;
+  var isLoadingMore = false.obs;
+  var allMenuLoaded = false.obs;
 
   var buildings = <Building>[].obs;
   var categories = <Category>[].obs;
   var canteens = <Canteen>[].obs;
   var cartItems = <CartItem>[].obs;
 
-  var allMenus = <Menu>[].obs;
   var menus = <Menu>[].obs;
+  var allMenus = <Menu>[].obs;
 
+  bool _isThrottled = false;
+  Timer? _throttleTimer, _debounce;
+
+  final RxList<Menu> favoriteMenus = <Menu>[].obs;
   final RxSet<String> favoriteMenuId = <String>{}.obs;
 
   int get cartCount => cartItems.fold(0, (sum, item) => sum + item.quantity);
@@ -49,23 +60,26 @@ class HomeController extends GetxController {
   ];
 
   @override
-  void onInit() async {
+  void onInit() {
     super.onInit();
     loadInitialData();
   }
 
   Future<void> loadInitialData() async {
+    if (isDataLoaded.value) return;
+
     isLoading.value = true;
     EasyLoading.show(status: 'Loading...');
 
     try {
       await Future.wait([
         getLocation(),
-        getFavoriteMenu(),
+        getFavoriteMenuForHome(),
         getCategories(),
         getCanteen(),
-        fetchAllMenus(),
+        fetchAllMenus(isRefresh: true),
       ]);
+      isDataLoaded.value = true;
     } catch (e) {
       Get.snackbar(
         "Informasi ",
@@ -92,7 +106,215 @@ class HomeController extends GetxController {
   }
 
   Future<void> refreshAll() async {
-    await loadInitialData();
+    isLoading.value = true;
+    EasyLoading.show(status: 'Loading...');
+
+    try {
+      selectedCategoryId.value = '';
+      selectedCanteenId.value = 'all';
+
+      await Future.wait([
+        getLocation(),
+        getFavoriteMenuForHome(),
+        getCategories(),
+        getCanteen(),
+        fetchAllMenus(isRefresh: true),
+      ]);
+    } catch (e) {
+      Get.snackbar(
+        "Informasi ",
+        "Mohon Coba Lagi",
+        animationDuration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 1650),
+        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+        borderWidth: 5.w,
+        snackPosition: SnackPosition.TOP,
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
+        icon: const Icon(
+          CupertinoIcons.info_circle,
+        ),
+      );
+
+      print(e);
+    } finally {
+      isLoading.value = false;
+      EasyLoading.dismiss();
+    }
+  }
+
+  Future<void> fetchAllMenus({bool isRefresh = false}) async {
+    if (isRefresh) {
+      currentPage.value = 1;
+      lastPage.value = 1;
+      menus.clear();
+      allMenus.clear();
+      isLoadingMore.value = false;
+      allMenuLoaded.value = false;
+    }
+
+    if (isLoadingMore.value || allMenuLoaded.value) return;
+
+    if (!isRefresh) {
+      isLoadingMore.value = true;
+    } else {
+      isMenuLoading.value = true;
+    }
+
+    String url = "${AppUrl.menus}?page=${currentPage.value}";
+
+    try {
+      final req = await ApiClient.get(url);
+
+      if (req.statusCode == 429) {
+        return;
+      }
+
+      if (req.statusCode == 200) {
+        final res = json.decode(req.body);
+        List<dynamic> menuData = res["data"]["menus"];
+        List<Menu> fetchedMenus = menuData.map((item) {
+          final menu = Menu.fromJson(item);
+          menu.isFavorite = favoriteMenuId.contains(menu.id);
+          return menu;
+        }).toList();
+
+        if (isRefresh) {
+          menus.assignAll(fetchedMenus);
+        } else {
+          menus.addAll(fetchedMenus);
+        }
+        allMenus.addAll(fetchedMenus);
+
+        lastPage.value = res["data"]["pagination"]["last_page"];
+        if (currentPage.value >= lastPage.value) {
+          allMenuLoaded.value = true;
+        }
+        currentPage.value++;
+      } else {
+        final res = json.decode(req.body);
+
+        print(res);
+
+        Get.snackbar(
+          "Informasi ",
+          "Mohon Coba Lagi",
+          animationDuration: const Duration(milliseconds: 200),
+          duration: const Duration(milliseconds: 1650),
+          backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+          borderWidth: 5.w,
+          snackPosition: SnackPosition.TOP,
+          margin: EdgeInsets.symmetric(
+            horizontal: 20.w,
+            vertical: 20.h,
+          ),
+          icon: const Icon(
+            CupertinoIcons.info_circle,
+          ),
+        );
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+      isLoading.value = false;
+      isMenuLoading.value = false;
+      isLoadingMore.value = false;
+    }
+  }
+
+  Future<void> getSearchMenu({required String query}) async {
+    if (query.isEmpty) {
+      refreshAll();
+      return;
+    }
+
+    isMenuLoading.value = true;
+    String url = "${AppUrl.searchMenu}?query=$query";
+
+    try {
+      final req = await ApiClient.get(url);
+
+      if (req.statusCode == 429) {
+        return;
+      }
+
+      if (req.statusCode == 200) {
+        final res = json.decode(req.body);
+        List<dynamic> menuData = res["data"];
+        menus.value = menuData.map((item) => Menu.fromJson(item)).toList();
+      } else {
+        final res = json.decode(req.body);
+        print(res);
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+      isMenuLoading.value = false;
+    }
+  }
+
+  Future<void> getMenuByCategory(String categoryId) async {
+    isMenuLoading.value = true;
+    menus.clear();
+    String url = "${AppUrl.menuByCategory}/$categoryId";
+
+    try {
+      final req = await ApiClient.get(url);
+
+      if (req.statusCode == 200) {
+        if (req.statusCode == 429) {
+          return;
+        }
+
+        final res = json.decode(req.body);
+        List<dynamic> menuData = res["data"];
+        menus.value = menuData.map((item) {
+          final menu = Menu.fromJson(item);
+          menu.isFavorite = favoriteMenuId.contains(menu.id);
+          return menu;
+        }).toList();
+      } else {
+        final res = json.decode(req.body);
+        print(res);
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+      isMenuLoading.value = false;
+    }
+  }
+
+  Future<void> getMenuByCanteen(String canteenId) async {
+    isMenuLoading.value = true;
+    menus.clear();
+    String url = "${AppUrl.menuByCanteen}/$canteenId";
+
+    try {
+      final req = await ApiClient.get(url);
+
+      if (req.statusCode == 429) {
+        return;
+      }
+
+      if (req.statusCode == 200) {
+        final res = json.decode(req.body);
+        List<dynamic> menuData = res["data"];
+        menus.value = menuData.map((item) {
+          final menu = Menu.fromJson(item);
+          menu.isFavorite = favoriteMenuId.contains(menu.id);
+          return menu;
+        }).toList();
+      } else {
+        final res = json.decode(req.body);
+        print(res);
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+      isMenuLoading.value = false;
+    }
   }
 
   Future<void> getLocation() async {
@@ -146,7 +368,7 @@ class HomeController extends GetxController {
     }
   }
 
-  Future<void> getFavoriteMenu() async {
+  Future<void> getFavoriteMenuForHome() async {
     String url = AppUrl.menuFavorit;
 
     try {
@@ -182,6 +404,46 @@ class HomeController extends GetxController {
       }
     } catch (e) {
       print(e);
+    }
+  }
+
+  Future<void> getFavoriteMenuForProfile() async {
+    isMenuLoading.value = true;
+    try {
+      final req = await ApiClient.get(AppUrl.menuFavorit);
+
+      if (req.statusCode == 200) {
+        final res = json.decode(req.body);
+        List<dynamic> menuData = res["data"];
+
+        favoriteMenus.value =
+            menuData.map((item) => Menu.fromJson(item)).toList();
+      } else {
+        final res = json.decode(req.body);
+
+        print(res);
+
+        Get.snackbar(
+          "Informasi",
+          "Terjadi Kesalahan",
+          animationDuration: const Duration(milliseconds: 200),
+          duration: const Duration(milliseconds: 1650),
+          backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+          borderWidth: 5.w,
+          snackPosition: SnackPosition.TOP,
+          margin: EdgeInsets.symmetric(
+            horizontal: 20.w,
+            vertical: 20.h,
+          ),
+          icon: const Icon(
+            CupertinoIcons.info_circle,
+          ),
+        );
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+      isMenuLoading.value = false;
     }
   }
 
@@ -286,130 +548,13 @@ class HomeController extends GetxController {
     }
   }
 
-  Future<void> fetchAllMenus() async {
-    String url = AppUrl.menus;
-
-    try {
-      final req = await ApiClient.get(url);
-
-      if (req.statusCode == 200) {
-        final res = json.decode(req.body);
-
-        print(res);
-
-        List<dynamic> menuData = res["data"];
-        List<Menu> fetchedMenus = menuData.map((item) {
-          final menu = Menu.fromJson(item);
-
-          menu.isFavorite = favoriteMenuId.contains(menu.id);
-          return menu;
-        }).toList();
-
-        allMenus.value = fetchedMenus;
-        menus.value = allMenus;
-      } else {
-        final res = json.decode(req.body);
-
-        print(res);
-
-        Get.snackbar(
-          "Informasi ",
-          "Terjadi Kesalahan",
-          animationDuration: const Duration(milliseconds: 200),
-          duration: const Duration(milliseconds: 1650),
-          backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-          borderWidth: 5.w,
-          snackPosition: SnackPosition.TOP,
-          margin: EdgeInsets.symmetric(
-            horizontal: 20.w,
-            vertical: 20.h,
-          ),
-          icon: const Icon(
-            CupertinoIcons.info_circle,
-          ),
-        );
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  Future<void> getSearchMenu({
-    required String query,
-    BuildContext? context,
-  }) async {
-    if (query.isEmpty) {
-      menus.clear();
-      return;
-    }
-
-    isMenuLoading.value = true;
-
-    String url = "${AppUrl.searchMenu}?query=$query";
-
-    try {
-      final req = await ApiClient.get(url);
-
-      if (req.statusCode == 200) {
-        final res = json.decode(req.body);
-
-        print(res);
-
-        List<dynamic> menuData = res["data"];
-
-        menus.value = menuData.map((item) => Menu.fromJson(item)).toList();
-      } else {
-        final res = json.decode(req.body);
-
-        print(res);
-
-        Get.snackbar(
-          "Informasi ",
-          "Terjadi Kesalahan",
-          animationDuration: const Duration(milliseconds: 200),
-          duration: const Duration(milliseconds: 1650),
-          backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-          borderWidth: 5.w,
-          snackPosition: SnackPosition.TOP,
-          margin: EdgeInsets.symmetric(
-            horizontal: 20.w,
-            vertical: 20.h,
-          ),
-          icon: const Icon(
-            CupertinoIcons.info_circle,
-          ),
-        );
-      }
-    } catch (e) {
-      Get.snackbar(
-        "Informasi ",
-        "Mohon Coba Lagi",
-        animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
-        borderWidth: 5.w,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        icon: const Icon(
-          CupertinoIcons.info_circle,
-        ),
-      );
-
-      print(e);
-    } finally {
-      isMenuLoading.value = false;
-    }
-  }
-
   Future<void> toggleFavoriteStatus(Menu menu) async {
     final bool isCurrentlyFavorite = favoriteMenuId.contains(menu.id);
     final String menuId = menu.id;
 
     if (isCurrentlyFavorite) {
       favoriteMenuId.remove(menuId);
+      favoriteMenus.removeWhere((m) => m.id == menuId);
     } else {
       favoriteMenuId.add(menuId);
     }
@@ -419,15 +564,7 @@ class HomeController extends GetxController {
       allMenus[index].isFavorite = !isCurrentlyFavorite;
     }
 
-    if (isCurrentlyFavorite) {
-      favoriteMenuId.remove(menuId);
-    } else {
-      favoriteMenuId.add(menuId);
-    }
-
-    if (index != -1) {
-      allMenus[index].isFavorite = !isCurrentlyFavorite;
-    }
+    menus.refresh();
 
     try {
       if (isCurrentlyFavorite) {
@@ -439,12 +576,16 @@ class HomeController extends GetxController {
           final res = json.decode(req.body);
 
           print(res);
-
-          favoriteMenuId.remove(menu.id);
         } else {
           final res = json.decode(req.body);
 
           print(res);
+
+          favoriteMenuId.add(menuId);
+          favoriteMenus.add(menu);
+          if (index != -1) {
+            menus[index].isFavorite = true;
+          }
 
           Get.snackbar(
             "Informasi ",
@@ -477,12 +618,16 @@ class HomeController extends GetxController {
           final res = json.decode(req.body);
 
           print(res);
-
-          favoriteMenuId.add(menu.id);
         } else {
           final res = json.decode(req.body);
 
           print(res);
+
+          favoriteMenuId.remove(menuId);
+          favoriteMenus.removeWhere((m) => m.id == menuId);
+          if (index != -1) {
+            menus[index].isFavorite = false;
+          }
 
           Get.snackbar(
             "Informasi ",
@@ -521,17 +666,23 @@ class HomeController extends GetxController {
       );
 
       if (isCurrentlyFavorite) {
-        favoriteMenuId.remove(menuId);
-      } else {
         favoriteMenuId.add(menuId);
-      }
-
-      int index = allMenus.indexWhere((m) => m.id == menuId);
-      if (index != -1) {
-        allMenus[index].isFavorite = !isCurrentlyFavorite;
+        favoriteMenus.add(menu);
+        if (index != -1) {
+          menus[index].isFavorite = true;
+        }
+      } else {
+        favoriteMenuId.remove(menuId);
+        favoriteMenus.removeWhere((m) => m.id == menuId);
+        if (index != -1) {
+          menus[index].isFavorite = false;
+        }
       }
 
       print(e);
+    } finally {
+      favoriteMenus.refresh();
+      menus.refresh();
     }
   }
 
@@ -559,27 +710,41 @@ class HomeController extends GetxController {
   }
 
   void filterMenuByCategory(String categoryId) {
-    if (categoryId.isEmpty || categoryId == "all") {
-      menus.value = allMenus;
-    } else {
-      menus.value =
-          allMenus.where((menu) => menu.category?.id == categoryId).toList();
-    }
-    selectedCategoryId.value = categoryId;
+    if (_isThrottled) return;
+
+    _isThrottled = true;
+    _throttleTimer = Timer(const Duration(milliseconds: 500), () {
+      _isThrottled = false;
+    });
+
     selectedCanteenId.value = "all";
-    isMenuLoading.value = false;
+    selectedCategoryId.value = categoryId;
+    getMenuByCategory(categoryId);
   }
 
   void filterMenuByCanteen(String canteenId) {
-    if (canteenId.isEmpty || canteenId == "all") {
-      menus.value = allMenus;
-    } else {
-      menus.value =
-          allMenus.where((menu) => menu.canteen.id == canteenId).toList();
-    }
-    selectedCanteenId.value = canteenId;
+    if (_isThrottled) return;
+
+    _isThrottled = true;
+    _throttleTimer = Timer(const Duration(milliseconds: 500), () {
+      _isThrottled = false;
+    });
+
     selectedCategoryId.value = "";
-    isMenuLoading.value = false;
+    selectedCanteenId.value = canteenId;
+
+    if (canteenId == "all") {
+      fetchAllMenus(isRefresh: true);
+    } else {
+      getMenuByCanteen(canteenId);
+    }
+  }
+
+  void handleSearch(String query) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      getSearchMenu(query: query);
+    });
   }
 
   void addToCart(Menu food, int quantity) {
@@ -649,13 +814,6 @@ class HomeController extends GetxController {
     currentIndex.value = index;
   }
 
-  void handleSearch(String query) {
-    if (_debounce?.isActive ?? false) _debounce!.cancel();
-    _debounce = Timer(const Duration(milliseconds: 500), () {
-      getSearchMenu(query: query);
-    });
-  }
-
   int getQuantity(Menu food) {
     final existingItem =
         cartItems.firstWhereOrNull((item) => item.menu.id == food.id);
@@ -695,5 +853,12 @@ class HomeController extends GetxController {
       grouped[canteenName]!.add(item);
     }
     return grouped;
+  }
+
+  @override
+  void onClose() {
+    _debounce?.cancel();
+    _throttleTimer?.cancel();
+    super.onClose();
   }
 }

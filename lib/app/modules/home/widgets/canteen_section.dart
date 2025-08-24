@@ -70,7 +70,7 @@ class Canteens extends StatelessWidget {
                     horizontal: 3.w,
                   ),
                   child: Container(
-                    width: 80.w,
+                    width: 90.w,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       shape: BoxShape.rectangle,

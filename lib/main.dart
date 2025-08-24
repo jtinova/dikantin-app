@@ -31,8 +31,16 @@ void main() async {
   await initServices();
 
   String? token = await DatabaseProvider().getToken();
-  String initialRoute = token != null ? Routes.NAVIGATION : Routes.SIGN_IN;
+  String initialRoute = Routes.SIGN_IN;
 
+  if (token != null) {
+    String? role = await DatabaseProvider().getRole();
+    if (role == 'courier') {
+      initialRoute = Routes.NAVIGATION_COURIER;
+    } else {
+      initialRoute = Routes.NAVIGATION;
+    }
+  }
   runApp(
     // ChangeNotifierProvider(
     //   create: (context) => AuthenticationProvider(),
@@ -78,7 +86,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: const Size(360, 690),
+      designSize: Size(360, 690),
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {

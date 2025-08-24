@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -218,19 +219,21 @@ class CheckoutView extends GetView<CheckoutController> {
                         return ListTile(
                           leading: ClipRRect(
                             borderRadius: BorderRadius.circular(10.r),
-                            child: Image.network(
-                              '${AppUrl.baseImageURL}${itemMap['gambar']}',
+                            child: CachedNetworkImage(
+                              imageUrl:
+                                  '${AppUrl.baseImageURL}${itemMap['gambar']}',
                               height: 60.h,
                               width: 60.w,
                               fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Image.asset(
-                                  'assets/images/logo_dikantin.png',
-                                  height: 60.h,
-                                  width: 60.w,
-                                  fit: BoxFit.cover,
-                                );
-                              },
+                              placeholder: (context, url) => Center(
+                                child: CupertinoActivityIndicator(),
+                              ), 
+                              errorWidget: (context, url, error) => Image.asset(
+                                'assets/images/logo_dikantin.png',
+                                width: double.infinity,
+                                height: 60.h,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
                           title: Text(

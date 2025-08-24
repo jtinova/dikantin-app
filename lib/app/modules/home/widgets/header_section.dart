@@ -172,7 +172,7 @@ class _HeaderState extends State<Header> {
                         ),
                       ),
                       onChanged: (value) {
-                        if (value!.isNotEmpty) {
+                        if (value != null && value.isNotEmpty) {
                           widget.controller.getSearchMenu(query: value);
                         }
                       },

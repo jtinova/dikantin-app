@@ -1,5 +1,6 @@
 // ignore_for_file: deprecated_member_use
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -23,6 +24,7 @@ class MenuDetailBottom extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isClosed = food.canteen.status == "close";
     bool isOutOfStock = food.stock <= 0;
+    bool isUnavailable = isClosed || isOutOfStock;
 
     return Padding(
       padding: EdgeInsets.symmetric(
@@ -58,30 +60,28 @@ class MenuDetailBottom extends StatelessWidget {
           Stack(
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.circular(10.r),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10.r),
+                ),
                 child: ColorFiltered(
-                  colorFilter: isClosed || isOutOfStock
-                      ? const ColorFilter.mode(
-                          Colors.grey,
-                          BlendMode.saturation,
-                        )
-                      : const ColorFilter.mode(
-                          Colors.transparent,
-                          BlendMode.saturation,
-                        ),
-                  child: Image.network(
-                    food.imageUrl,
+                  colorFilter: ColorFilter.mode(
+                    isUnavailable ? Colors.grey : Colors.transparent,
+                    BlendMode.saturation,
+                  ),
+                  child: CachedNetworkImage(
+                    imageUrl: food.imageUrl,
                     width: double.infinity,
-                    height: 140.h,
+                    height: 180.h,
                     fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Image.asset(
-                        'assets/images/logo_dikantin.png',
-                        width: double.infinity,
-                        height: 140.h,
-                        fit: BoxFit.cover,
-                      );
-                    },
+                    placeholder: (context, url) => Center(
+                      child: CupertinoActivityIndicator(),
+                    ),
+                    errorWidget: (context, url, error) => Image.asset(
+                      'assets/images/logo_dikantin.png',
+                      width: double.infinity,
+                      height: 180.h,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),
@@ -190,7 +190,7 @@ class MenuDetailBottom extends StatelessWidget {
             ],
           ),
           SizedBox(height: 5.h),
-          if (isOutOfStock || isClosed)
+          if (isUnavailable)
             Text(
               "Harga: Rp ${controller.formatRupiah(food.sellingCost)}",
               style: TextStyle(

@@ -63,7 +63,7 @@ class _RatingMenuState extends State<RatingMenu> {
 
             if (data is List && data.isEmpty) {
               return const Center(
-                  child: Text('Belum ada ulasan untuk menu ini.'));
+                  child: Text('Belum ada ulasan untuk menu ini.'),);
             }
 
             if (data is Map<String, dynamic>) {

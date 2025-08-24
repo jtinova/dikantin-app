@@ -28,7 +28,6 @@ class HomeCourierController extends GetxController {
 
   // Metode untuk pindah ke tab konfirmasi
   void goToConfirmationTab() {
-    // Gunakan DefaultTabController untuk berpindah tab
     if (Get.context != null) {
       Future.delayed(Duration(milliseconds: 100), () {
         final tabController = DefaultTabController.of(Get.context!);
@@ -62,27 +61,16 @@ class HomeCourierController extends GetxController {
     try {
       final response = await ApiClient.get(AppUrl.pendingOrders);
 
-      print("Request URL: ${Uri.parse(AppUrl.pendingOrders)}");
-      print("Response Status Code: ${response.statusCode}");
-      print("Response Headers: ${response.headers}");
-      print("Response Body: ${response.body}");
-
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        print("Decoded Data: $data");
         if (data['status'] == 'success') {
           orderList.value = data['data'];
 
-          // Memisahkan order berdasarkan status
           pendingOrders.value =
               orderList.where((order) => order['status'] == 'pending').toList();
           deliveredOrders.value = orderList
               .where((order) => order['status'] == 'delivered')
               .toList();
-
-          print("Order List: ${orderList.value}");
-          print("Pending Orders: ${pendingOrders.value}");
-          print("Delivered Orders: ${deliveredOrders.value}");
         }
       } else {
         print("Error response: ${response.statusCode} - ${response.body}");
@@ -118,42 +106,64 @@ class HomeCourierController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-        await getPendingOrders(); // Refresh order list
-        // Pindahkan pesanan dari tab "Untuk Dikirim" ke tab "Konfirmasi"
-        goToConfirmationTab(); // Pindah ke tab Konfirmasi
+        await getPendingOrders();
+        goToConfirmationTab();
       }
     } catch (e) {
       print("Error updating order status: $e");
     }
   }
 
-  Future<void> completeOrder(String orderId) async {
+  Future<void> completeOrder() async {
     try {
-      // Scan barcode terlebih dahulu
       final barcodeScanResult = await scanBarcode();
-      if (barcodeScanResult == null) {
-        // Jika user membatalkan scan
-        Get.snackbar('Dibatalkan', 'Pemindaian barcode dibatalkan',
-            backgroundColor: Colors.orange,
-            colorText: Colors.white,
-            snackPosition: SnackPosition.BOTTOM);
+      if (barcodeScanResult == null || barcodeScanResult.isEmpty) {
+        Get.snackbar(
+          'Dibatalkan',
+          'Pemindaian barcode dibatalkan atau kosong.',
+          backgroundColor: Colors.orange,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.TOP,
+        );
         return;
       }
 
       final response = await ApiClient.patch(
         AppUrl.completeOrder,
-        body: {'id_order_delivery': orderId},
+        body: {'transaction_id': barcodeScanResult},
       );
 
       if (response.statusCode == 200) {
-        await getPendingOrders(); // Refresh order list
-        Get.snackbar('Sukses', 'Pesanan berhasil diselesaikan',
-            backgroundColor: Colors.green,
-            colorText: Colors.white,
-            snackPosition: SnackPosition.BOTTOM);
+        await getPendingOrders();
+        Get.snackbar(
+          'Sukses',
+          'Pesanan berhasil diselesaikan',
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.TOP,
+        );
+      } else {
+        final res = json.decode(response.body);
+
+        print("Error completing order: $res");
+
+        Get.snackbar(
+          'Gagal',
+          'Gagal menyelesaikan pesanan. Kode QR mungkin tidak valid.',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.TOP,
+        );
       }
     } catch (e) {
       print("Error completing order: $e");
+      Get.snackbar(
+        'Error',
+        'Terjadi kesalahan saat menyelesaikan pesanan.',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        snackPosition: SnackPosition.TOP,
+      );
     }
   }
 
@@ -163,8 +173,6 @@ class HomeCourierController extends GetxController {
         options: ScanOptions(
           restrictFormat: [
             BarcodeFormat.qr,
-            BarcodeFormat.code39,
-            BarcodeFormat.code128
           ],
           useCamera: -1,
           autoEnableFlash: false,
@@ -182,10 +190,13 @@ class HomeCourierController extends GetxController {
       }
     } on PlatformException catch (e) {
       print("Error saat scan barcode: $e");
-      Get.snackbar('Error', 'Gagal membuka pemindai barcode: ${e.message}',
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-          snackPosition: SnackPosition.BOTTOM);
+      Get.snackbar(
+        'Error',
+        'Gagal membuka pemindai barcode: ${e.message}',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        snackPosition: SnackPosition.TOP,
+      );
       return null;
     } catch (e) {
       print("Error umum: $e");

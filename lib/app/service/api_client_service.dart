@@ -11,76 +11,143 @@ import 'package:dikantin_app_rebuild/app/service/auth_service.dart';
 import 'package:dikantin_app_rebuild/app/service/db_service.dart';
 
 class ApiClient {
+  static final Set<String> _activeRequests = {};
+
   static Future<http.Response> get(String url) async {
-    final token = await DatabaseProvider().getToken();
-    if (!_isTokenValid(token)) {
-      _triggerLogout();
-      return http.Response(json.encode({'message': 'Token tidak valid'}), 401);
+    if (_activeRequests.contains(url)) {
+      return http.Response(
+          json.encode({'message': 'Request in progress'}), 429);
     }
-    final response =
-        await http.get(Uri.parse(url), headers: _getHeaders(token));
-    _handleResponse(response);
-    return response;
+
+    _activeRequests.add(url);
+
+    try {
+      final token = await DatabaseProvider().getToken();
+      if (!_isTokenValid(token)) {
+        _triggerLogout();
+        return http.Response(
+            json.encode({'message': 'Token tidak valid'}), 401);
+      }
+      final response =
+          await http.get(Uri.parse(url), headers: _getHeaders(token));
+      _handleResponse(response);
+      return response;
+    } finally {
+      _activeRequests.remove(url);
+    }
   }
 
-  static Future<http.Response> post(String url,
-      {Map<String, dynamic>? body}) async {
-    final token = await DatabaseProvider().getToken();
-    if (!_isTokenValid(token)) {
-      _triggerLogout();
-      return http.Response(json.encode({'message': 'Token tidak valid'}), 401);
+  static Future<http.Response> post(
+    String url, {
+    Map<String, dynamic>? body,
+  }) async {
+    if (_activeRequests.contains(url)) {
+      return http.Response(
+          json.encode({'message': 'Request in progress'}), 429);
     }
-    final response = await http.post(
-      Uri.parse(url),
-      headers: _getHeaders(token),
-      body: json.encode(body),
-    );
-    _handleResponse(response);
-    return response;
+
+    _activeRequests.add(url);
+
+    try {
+      final token = await DatabaseProvider().getToken();
+      if (!_isTokenValid(token)) {
+        _triggerLogout();
+        return http.Response(
+            json.encode({'message': 'Token tidak valid'}), 401);
+      }
+      final response = await http.post(
+        Uri.parse(url),
+        headers: _getHeaders(token),
+        body: json.encode(body),
+      );
+      _handleResponse(response);
+      return response;
+    } finally {
+      _activeRequests.remove(url);
+    }
   }
 
-  static Future<http.Response> put(String url,
-      {Map<String, dynamic>? body}) async {
-    final token = await DatabaseProvider().getToken();
-    if (!_isTokenValid(token)) {
-      _triggerLogout();
-      return http.Response(json.encode({'message': 'Token tidak valid'}), 401);
+  static Future<http.Response> put(
+    String url, {
+    Map<String, dynamic>? body,
+  }) async {
+    if (_activeRequests.contains(url)) {
+      return http.Response(
+          json.encode({'message': 'Request in progress'}), 429);
     }
-    final response = await http.put(
-      Uri.parse(url),
-      headers: _getHeaders(token),
-      body: json.encode(body),
-    );
-    _handleResponse(response);
-    return response;
+
+    _activeRequests.add(url);
+    try {
+      final token = await DatabaseProvider().getToken();
+      if (!_isTokenValid(token)) {
+        _triggerLogout();
+        return http.Response(
+            json.encode({'message': 'Token tidak valid'}), 401);
+      }
+      final response = await http.put(
+        Uri.parse(url),
+        headers: _getHeaders(token),
+        body: json.encode(body),
+      );
+      _handleResponse(response);
+      return response;
+    } finally {
+      _activeRequests.remove(url);
+    }
   }
 
-  static Future<http.Response> patch(String url,
-      {Map<String, dynamic>? body}) async {
-    final token = await DatabaseProvider().getToken();
-    if (!_isTokenValid(token)) {
-      _triggerLogout();
-      return http.Response(json.encode({'message': 'Token tidak valid'}), 401);
+  static Future<http.Response> patch(
+    String url, {
+    Map<String, dynamic>? body,
+  }) async {
+    if (_activeRequests.contains(url)) {
+      return http.Response(
+          json.encode({'message': 'Request in progress'}), 429);
     }
-    final response = await http.patch(
-      Uri.parse(url),
-      headers: _getHeaders(token),
-      body: json.encode(body),
-    );
-    _handleResponse(response);
-    return response;
+
+    _activeRequests.add(url);
+
+    try {
+      final token = await DatabaseProvider().getToken();
+      if (!_isTokenValid(token)) {
+        _triggerLogout();
+        return http.Response(
+            json.encode({'message': 'Token tidak valid'}), 401);
+      }
+      final response = await http.patch(
+        Uri.parse(url),
+        headers: _getHeaders(token),
+        body: json.encode(body),
+      );
+      _handleResponse(response);
+      return response;
+    } finally {
+      _activeRequests.remove(url);
+    }
   }
 
   static Future<http.Response> delete(String url) async {
-    final token = await DatabaseProvider().getToken();
-    if (!_isTokenValid(token)) {
-      _triggerLogout();
-      return http.Response(json.encode({'message': 'Token tidak valid'}), 401);
+    if (_activeRequests.contains(url)) {
+      return http.Response(
+          json.encode({'message': 'Request in progress'}), 429);
     }
-    final response =
-        await http.delete(Uri.parse(url), headers: _getHeaders(token));
-    _handleResponse(response);
-    return response;
+
+    _activeRequests.add(url);
+
+    try {
+      final token = await DatabaseProvider().getToken();
+      if (!_isTokenValid(token)) {
+        _triggerLogout();
+        return http.Response(
+            json.encode({'message': 'Token tidak valid'}), 401);
+      }
+      final response =
+          await http.delete(Uri.parse(url), headers: _getHeaders(token));
+      _handleResponse(response);
+      return response;
+    } finally {
+      _activeRequests.remove(url);
+    }
   }
 
   static Map<String, String> _getHeaders(String? token) {

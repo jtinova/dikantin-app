@@ -24,12 +24,14 @@ class AppUrl {
   static String get resetPassword => "$baseURLAPI/reset-password";
   static String get signout => "$baseURLAPI/logout";
   static String get courierLogin => "$baseURLAPI/courier/login";
-  static String get storeFCMToken => "$baseURLAPI/fcm-token";
+  static String get storeFCMToken => "$baseURLAPI/fcm";
 
   // API Home User
   static String get locations => '$baseURLAPI/building';
   static String get categories => '$baseURLAPI/category';
+  static String get menuByCategory => '$baseURLAPI/category/menu';
   static String get canteens => '$baseURLAPI/canteen';
+  static String get menuByCanteen => '$baseURLAPI/canteen/menu';
   static String get searchMenu => '$baseURLAPI/menu/search';
   static String get menus => '$baseURLAPI/menu';
   static String get reviewMenu => '$baseURLAPI/menu/review/';

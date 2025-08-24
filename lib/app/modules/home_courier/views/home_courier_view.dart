@@ -443,7 +443,7 @@ class HomeCourierView extends GetView<HomeCourierController> {
   }
 
   void showOrderDetail(BuildContext context, Map<String, dynamic> order) async {
-    // Fetch detailed information
+    // Lanjutkan untuk mengambil detail lainnya dari API
     final details = await controller.getOrderDetail(order['id'].toString());
 
     showModalBottomSheet(
@@ -530,7 +530,8 @@ class HomeCourierView extends GetView<HomeCourierController> {
             if (order['status'] == 'delivered')
               ElevatedButton(
                 onPressed: () {
-                  controller.completeOrder(order['id'].toString());
+                  // Cukup panggil completeOrder tanpa parameter
+                  controller.completeOrder();
                   Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(

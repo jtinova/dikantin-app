@@ -7,6 +7,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../service/db_service.dart';
+import '../../home/controllers/home_controller.dart';
+import '../../order/controllers/order_controller.dart';
+import '../../profile/controllers/profile_controller.dart';
+
 class ApiController extends GetxController {
   final ApiConfigService _apiConfigService = Get.find();
 
@@ -48,6 +53,18 @@ class ApiController extends GetxController {
     }
     updateBaseUrl();
     Get.back();
+
+    await Get.find<DatabaseProvider>().clearAuthData();
+
+    if (Get.isRegistered<HomeController>()) {
+      Get.delete<HomeController>(force: true);
+    }
+    if (Get.isRegistered<OrderController>()) {
+      Get.delete<OrderController>(force: true);
+    }
+    if (Get.isRegistered<ProfileController>()) {
+      Get.delete<ProfileController>(force: true);
+    }
 
     Get.snackbar(
       'Sukses',

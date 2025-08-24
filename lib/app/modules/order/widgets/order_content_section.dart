@@ -1,6 +1,7 @@
 // lib/app/modules/order/widgets/order_content_section.dart
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -89,7 +90,7 @@ class _OrderContentState extends State<OrderContent> {
                             children: [
                               Text(
                                 widget.controller
-                                    .capitalizeFirst(order.orderType!),
+                                    .capitalizeFirst(order.orderType ?? 'N/A'),
                                 style: TextStyle(
                                   fontSize: 15.sp,
                                   fontWeight: FontWeight.w500,
@@ -152,10 +153,13 @@ class _OrderContentState extends State<OrderContent> {
                         }
 
                         // Tentukan detail mana yang akan ditampilkan
-                        final detailToShow = order.orderType == 'delivery' &&
-                                order.status == 'on_delivery'
+                        final detailToShow = (order.orderType == 'delivery' &&
+                                order.status == 'on_delivery' &&
+                                widget.controller.detailShipping.isNotEmpty)
                             ? widget.controller.detailShipping.first
-                            : widget.controller.detailOrder.first;
+                            : (widget.controller.detailOrder.isNotEmpty
+                                ? widget.controller.detailOrder.first
+                                : null);
 
                         if (detailToShow != null) {
                           showModalBottomSheet(
@@ -177,6 +181,27 @@ class _OrderContentState extends State<OrderContent> {
                           Get.snackbar(
                             "Informasi",
                             "Detail pesanan tidak ditemukan",
+                            animationDuration: Duration(
+                              milliseconds: 200,
+                            ),
+                            duration: Duration(
+                              milliseconds: 1650,
+                            ),
+                            backgroundColor: Color.fromARGB(
+                              255,
+                              238,
+                              238,
+                              238,
+                            ),
+                            borderWidth: 5.w,
+                            snackPosition: SnackPosition.TOP,
+                            margin: EdgeInsets.symmetric(
+                              horizontal: 20.w,
+                              vertical: 20.h,
+                            ),
+                            icon: Icon(
+                              CupertinoIcons.info_circle,
+                            ),
                           );
                         }
                       },

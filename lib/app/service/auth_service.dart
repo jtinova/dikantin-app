@@ -18,7 +18,7 @@ class AuthenticationProvider extends ChangeNotifier {
 
   String get resMessage => _resMessage;
 
-  void registerUser({
+  Future<void> registerUser({
     required String fullName,
     required String email,
     required String phoneNumber,
@@ -86,7 +86,7 @@ class AuthenticationProvider extends ChangeNotifier {
     }
   }
 
-  void loginUser({
+  Future<void> loginUser({
     required String email,
     required String password,
   }) async {
@@ -115,11 +115,14 @@ class AuthenticationProvider extends ChangeNotifier {
         _resMessage = res["message"] ?? "Login successful";
         final token = res["data"]["access_token"];
         await DatabaseProvider().saveToken(token);
+        await DatabaseProvider().saveRole('customer');
         Get.offAllNamed(Routes.NAVIGATION);
 
         final fcmToken = await FirebaseMessaging.instance.getToken();
-        storeFCMToken(fcmToken: fcmToken!);
-        print("FCM Token: $fcmToken");
+        if (fcmToken != null) {
+          storeFCMToken(fcmToken: fcmToken, role: 'customer');
+          print("FCM Token: $fcmToken");
+        }
       } else {
         // 2. If Customer Login Fails, Attempt Courier Login
         String courierUrl = AppUrl.courierLogin;
@@ -137,7 +140,14 @@ class AuthenticationProvider extends ChangeNotifier {
           _resMessage = courierRes["message"] ?? "Login successful";
           final token = courierRes["data"]["access_token"];
           await DatabaseProvider().saveToken(token);
+          await DatabaseProvider().saveRole('courier');
           Get.offAllNamed(Routes.NAVIGATION_COURIER);
+
+          final fcmToken = await FirebaseMessaging.instance.getToken();
+          if (fcmToken != null) {
+            storeFCMToken(fcmToken: fcmToken, role: 'courier');
+            print("FCM Token: $fcmToken");
+          }
         } else {
           // 3. Both Logins Failed
           // Use the message from the last attempt (courier) or a generic one.
@@ -155,7 +165,7 @@ class AuthenticationProvider extends ChangeNotifier {
     }
   }
 
-  void sendEmailOTP({
+  Future<void> sendEmailOTP({
     required String email,
   }) async {
     EasyLoading.show(status: 'Loading...');
@@ -208,7 +218,7 @@ class AuthenticationProvider extends ChangeNotifier {
     }
   }
 
-  void verifyCodeOTP({
+  Future<void> verifyCodeOTP({
     required String email,
     required String otp,
   }) async {
@@ -263,7 +273,7 @@ class AuthenticationProvider extends ChangeNotifier {
     }
   }
 
-  void resendEmailOTP({
+  Future<void> resendEmailOTP({
     required String email,
   }) async {
     EasyLoading.show(status: 'Loading...');
@@ -314,7 +324,7 @@ class AuthenticationProvider extends ChangeNotifier {
     }
   }
 
-  void resetPassword({
+  Future<void> resetPassword({
     required String email,
     required String newPassword,
   }) async {
@@ -369,7 +379,7 @@ class AuthenticationProvider extends ChangeNotifier {
     }
   }
 
-  void logoutUser() async {
+  Future<void> logoutUser() async {
     EasyLoading.show(status: 'Loading...');
     notifyListeners();
 
@@ -386,7 +396,7 @@ class AuthenticationProvider extends ChangeNotifier {
 
         print(res);
 
-        await DatabaseProvider().clearToken();
+        await DatabaseProvider().clearAuthData();
 
         _resMessage = "Logout Berhasil";
 
@@ -411,30 +421,30 @@ class AuthenticationProvider extends ChangeNotifier {
     }
   }
 
-  void storeFCMToken({
+  Future<void> storeFCMToken({
     required String fcmToken,
+    required String role,
   }) async {
     String url = AppUrl.storeFCMToken;
 
     final body = {
-      "token": fcmToken,
+      "fcm_token": fcmToken,
+      "role": role,
     };
-    print(body);
+    print("Sending FCM Token with body: $body");
 
     try {
-      final req = await ApiClient.post(url, body: body);
+      final req = await ApiClient.put(url, body: body);
 
       if (req.statusCode == 200) {
         final res = json.decode(req.body);
-
-        print(res);
+        print("FCM Token stored successfully: $res");
       } else {
         final res = json.decode(req.body);
-
-        print(res);
+        print("Failed to store FCM Token: $res");
       }
     } catch (e) {
-      print(e);
+      print("Error storing FCM Token: $e");
     }
   }
 

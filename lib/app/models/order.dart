@@ -49,8 +49,8 @@ class Order {
       note: json['note'] ?? '',
       orderType: json['order_type'],
       updateCount: json['update_count'] ?? 0,
-      rating: json['rating'],
-      comment: json['comment'],
+      rating: json['rating'] ?? 0,
+      comment: json['comment'] ?? '',
     );
   }
 
