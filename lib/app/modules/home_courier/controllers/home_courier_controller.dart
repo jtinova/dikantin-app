@@ -9,7 +9,8 @@ import 'package:flutter/services.dart';
 
 import '../../../service/api_client_service.dart';
 
-class HomeCourierController extends GetxController {
+class HomeCourierController extends GetxController
+    with GetTickerProviderStateMixin {
   final baseURL = AppUrl.baseURLAPI;
 
   var isLoading = true.obs;
@@ -19,23 +20,24 @@ class HomeCourierController extends GetxController {
   var deliveredOrders = [].obs;
   var isBalanceVisible = false.obs;
 
+  late TabController tabController;
+
   @override
   void onInit() {
     super.onInit();
+    tabController = TabController(length: 2, vsync: this);
     getProfile();
     getPendingOrders();
   }
 
-  // Metode untuk pindah ke tab konfirmasi
+  @override
+  void onClose() {
+    tabController.dispose();
+    super.onClose();
+  }
+
   void goToConfirmationTab() {
-    if (Get.context != null) {
-      Future.delayed(Duration(milliseconds: 100), () {
-        final tabController = DefaultTabController.of(Get.context!);
-        if (tabController != null) {
-          tabController.animateTo(1);
-        }
-      });
-    }
+    tabController.animateTo(1);
   }
 
   Future<void> getProfile() async {

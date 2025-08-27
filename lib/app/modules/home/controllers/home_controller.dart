@@ -255,41 +255,24 @@ class HomeController extends GetxController {
     }
   }
 
-  Future<void> getMenuByCategory(String categoryId) async {
-    isMenuLoading.value = true;
-    menus.clear();
-    String url = "${AppUrl.menuByCategory}/$categoryId";
-
-    try {
-      final req = await ApiClient.get(url);
-
-      if (req.statusCode == 200) {
-        if (req.statusCode == 429) {
-          return;
-        }
-
-        final res = json.decode(req.body);
-        List<dynamic> menuData = res["data"];
-        menus.value = menuData.map((item) {
-          final menu = Menu.fromJson(item);
-          menu.isFavorite = favoriteMenuId.contains(menu.id);
-          return menu;
-        }).toList();
-      } else {
-        final res = json.decode(req.body);
-        print(res);
-      }
-    } catch (e) {
-      print(e);
-    } finally {
-      isMenuLoading.value = false;
+  Future<void> getMenuByCategory(String categoryId, {bool isRefresh = false}) async {
+    if (isRefresh) {
+      currentPage.value = 1;
+      lastPage.value = 1;
+      menus.clear();
+      isLoadingMore.value = false;
+      allMenuLoaded.value = false;
     }
-  }
 
-  Future<void> getMenuByCanteen(String canteenId) async {
-    isMenuLoading.value = true;
-    menus.clear();
-    String url = "${AppUrl.menuByCanteen}/$canteenId";
+    if (isLoadingMore.value || allMenuLoaded.value) return;
+
+    if (!isRefresh) {
+      isLoadingMore.value = true;
+    } else {
+      isMenuLoading.value = true;
+    }
+
+    String url = "${AppUrl.menuByCategory}/$categoryId?page=${currentPage.value}";
 
     try {
       final req = await ApiClient.get(url);
@@ -300,12 +283,25 @@ class HomeController extends GetxController {
 
       if (req.statusCode == 200) {
         final res = json.decode(req.body);
-        List<dynamic> menuData = res["data"];
-        menus.value = menuData.map((item) {
+        
+        List<dynamic> menuData = res["data"]["menus"];
+        List<Menu> fetchedMenus = menuData.map((item) {
           final menu = Menu.fromJson(item);
           menu.isFavorite = favoriteMenuId.contains(menu.id);
           return menu;
         }).toList();
+
+        if (isRefresh) {
+          menus.assignAll(fetchedMenus);
+        } else {
+          menus.addAll(fetchedMenus);
+        }
+
+        lastPage.value = res["data"]["pagination"]["last_page"];
+        if (currentPage.value >= lastPage.value) {
+          allMenuLoaded.value = true;
+        }
+        currentPage.value++;
       } else {
         final res = json.decode(req.body);
         print(res);
@@ -314,6 +310,66 @@ class HomeController extends GetxController {
       print(e);
     } finally {
       isMenuLoading.value = false;
+      isLoadingMore.value = false;
+    }
+  }
+
+  Future<void> getMenuByCanteen(String canteenId, {bool isRefresh = false}) async {
+    if (isRefresh) {
+      currentPage.value = 1;
+      lastPage.value = 1;
+      menus.clear();
+      isLoadingMore.value = false;
+      allMenuLoaded.value = false;
+    }
+
+    if (isLoadingMore.value || allMenuLoaded.value) return;
+
+    if (!isRefresh) {
+      isLoadingMore.value = true;
+    } else {
+      isMenuLoading.value = true;
+    }
+
+    String url = "${AppUrl.menuByCanteen}/$canteenId?page=${currentPage.value}";
+
+    try {
+      final req = await ApiClient.get(url);
+
+      if (req.statusCode == 429) {
+        return;
+      }
+
+      if (req.statusCode == 200) {
+        final res = json.decode(req.body);
+        List<dynamic> menuData = res["data"]["menus"];
+
+        List<Menu> fetchedMenus = menuData.map((item) {
+          final menu = Menu.fromJson(item);
+          menu.isFavorite = favoriteMenuId.contains(menu.id);
+          return menu;
+        }).toList();
+
+        if (isRefresh) {
+          menus.assignAll(fetchedMenus);
+        } else {
+          menus.addAll(fetchedMenus);
+        }
+
+        lastPage.value = res["data"]["pagination"]["last_page"];
+        if (currentPage.value >= lastPage.value) {
+          allMenuLoaded.value = true;
+        }
+        currentPage.value++;
+      } else {
+        final res = json.decode(req.body);
+        print(res);
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+      isMenuLoading.value = false;
+      isLoadingMore.value = false;
     }
   }
 
@@ -686,6 +742,27 @@ class HomeController extends GetxController {
     }
   }
 
+  Future<void> trackInteraction(String interactionType, {String? menuId}) async {
+    String url = AppUrl.trackingActivity;
+    final body = {
+      'interaction_type': interactionType,
+      'menu_id': menuId,
+    };
+
+    try {
+      final req = await ApiClient.post(url, body: body);
+
+      if (req.statusCode == 200) {
+        print('Interaction tracked successfully: $interactionType');
+      } else {
+        final res = json.decode(req.body);
+        print('Failed to track interaction: $res');
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
   Future<Map<String, dynamic>> getRatingMenu(String menuId) async {
     String url = "${AppUrl.reviewMenu}$menuId";
 
@@ -719,7 +796,8 @@ class HomeController extends GetxController {
 
     selectedCanteenId.value = "all";
     selectedCategoryId.value = categoryId;
-    getMenuByCategory(categoryId);
+    getMenuByCategory(categoryId, isRefresh: true);
+
   }
 
   void filterMenuByCanteen(String canteenId) {
@@ -736,7 +814,7 @@ class HomeController extends GetxController {
     if (canteenId == "all") {
       fetchAllMenus(isRefresh: true);
     } else {
-      getMenuByCanteen(canteenId);
+      getMenuByCanteen(canteenId, isRefresh: true);
     }
   }
 
@@ -769,6 +847,9 @@ class HomeController extends GetxController {
       );
       return;
     }
+
+    // Tracking Interaction
+    trackInteraction('add_to_cart', menuId: food.id);
 
     final existingIndex =
         cartItems.indexWhere((item) => item.menu.id == food.id);

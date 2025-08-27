@@ -89,6 +89,12 @@ class _FavoriteMenuState extends State<FavoriteMenu> {
 
                 return GestureDetector(
                   onTap: () {
+                    // Tracking Interaction
+                    controller.trackInteraction(
+                      'view_detail_menu',
+                      menuId: menu.id,
+                    );
+
                     showModalBottomSheet(
                       context: context,
                       shape: RoundedRectangleBorder(

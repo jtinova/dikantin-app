@@ -114,251 +114,235 @@ class HomeCourierView extends GetView<HomeCourierController> {
                     ),
                   ),
 
-                  // Menggunakan widget DefaultTabController sebagai gantinya
+                  // HAPUS DefaultTabController dari sini
                   Expanded(
-                    child: DefaultTabController(
-                      length: 2,
-                      child: Column(
-                        children: [
-                          // Tab untuk kategori pesanan
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 15),
-                            child: customTabBar(),
-                          ),
+                    child: Column(
+                      children: [
+                        // Tab untuk kategori pesanan
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 15),
+                          child: customTabBar(),
+                        ),
 
-                          // Daftar pesanan berdasarkan tab
-                          Expanded(
-                            child: TabBarView(
-                              children: [
-                                // Tab 1: Untuk Dikirim
-                                RefreshIndicator(
-                                  onRefresh: () async {
-                                    await controller.getPendingOrders();
-                                    await controller.getProfile();
-                                  },
-                                  child: controller.pendingOrders.isEmpty
-                                      ? ListView(
-                                          children: [
-                                            SizedBox(height: 50),
-                                            Center(
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
+                        // Daftar pesanan berdasarkan tab
+                        Expanded(
+                          // Gunakan controller dari GetX
+                          child: TabBarView(
+                            controller: controller.tabController,
+                            children: [
+                              // Tab 1: Untuk Dikirim
+                              RefreshIndicator(
+                                onRefresh: () async {
+                                  await controller.getPendingOrders();
+                                  await controller.getProfile();
+                                },
+                                child: controller.pendingOrders.isEmpty
+                                    ? ListView(
+                                        children: [
+                                          SizedBox(height: 50),
+                                          Center(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                // Menggunakan file JSON lokal dari assets/animations
+                                                Lottie.asset(
+                                                  'assets/animations/Animation - 1746119107847.json',
+                                                  width: 200,
+                                                  height: 200,
+                                                  fit: BoxFit.contain,
+                                                  errorBuilder: (context,
+                                                      error, stackTrace) {
+                                                    print(
+                                                        "Error loading Lottie: $error");
+                                                    return Icon(
+                                                      CupertinoIcons.cube_box,
+                                                      size: 80,
+                                                      color: Colors.grey,
+                                                    );
+                                                  },
+                                                ),
+                                                SizedBox(height: 16),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    : ListView.builder(
+                                        itemCount:
+                                            controller.pendingOrders.length,
+                                        padding: EdgeInsets.all(10),
+                                        itemBuilder: (context, index) {
+                                          final order =
+                                              controller.pendingOrders[index];
+                                          return Card(
+                                            margin:
+                                                EdgeInsets.only(bottom: 10),
+                                            child: ListTile(
+                                              onTap: () {
+                                                showOrderDetail(
+                                                    context, order);
+                                              },
+                                              title: Text(
+                                                order['building_name'] ??
+                                                    'Lokasi tidak tersedia',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              subtitle: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 children: [
-                                                  // Menggunakan file JSON lokal dari assets/animations
-                                                  Lottie.asset(
-                                                    'assets/animations/Animation - 1746119107847.json',
-                                                    width: 200,
-                                                    height: 200,
-                                                    fit: BoxFit.contain,
-                                                    errorBuilder: (context,
-                                                        error, stackTrace) {
-                                                      print(
-                                                          "Error loading Lottie: $error");
-                                                      return Icon(
-                                                        CupertinoIcons.cube_box,
-                                                        size: 80,
-                                                        color: Colors.grey,
-                                                      );
-                                                    },
+                                                  Text(
+                                                    controller.formatCurrency(
+                                                        (order['grand_total'] ??
+                                                                0)
+                                                            .toDouble()),
                                                   ),
-                                                  SizedBox(height: 16),
-                                                  // Text(
-                                                  //   'Belum ada pesanan yang harus di pickup',
-                                                  //   style: TextStyle(
-                                                  //     fontSize: 16,
-                                                  //     color: Colors.grey[600],
-                                                  //   ),
-                                                  // ),
+                                                  Text(
+                                                    order['destination_detail'] ??
+                                                        'Detail lokasi tidak tersedia',
+                                                    style: TextStyle(
+                                                      color: Colors.grey[600],
+                                                    ),
+                                                  ),
                                                 ],
                                               ),
-                                            ),
-                                          ],
-                                        )
-                                      : ListView.builder(
-                                          itemCount:
-                                              controller.pendingOrders.length,
-                                          padding: EdgeInsets.all(10),
-                                          itemBuilder: (context, index) {
-                                            final order =
-                                                controller.pendingOrders[index];
-                                            return Card(
-                                              margin:
-                                                  EdgeInsets.only(bottom: 10),
-                                              child: ListTile(
-                                                onTap: () {
-                                                  showOrderDetail(
-                                                      context, order);
-                                                },
-                                                title: Text(
-                                                  order['building_name'] ??
-                                                      'Lokasi tidak tersedia',
+                                              trailing: Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 8,
+                                                    vertical: 4),
+                                                decoration: BoxDecoration(
+                                                  color: getStatusColor(
+                                                      order['status']),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          12),
+                                                ),
+                                                child: Text(
+                                                  getStatusText(
+                                                      order['status']),
                                                   style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                subtitle: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      controller.formatCurrency(
-                                                          (order['grand_total'] ??
-                                                                  0)
-                                                              .toDouble()),
-                                                    ),
-                                                    Text(
-                                                      order['destination_detail'] ??
-                                                          'Detail lokasi tidak tersedia',
-                                                      style: TextStyle(
-                                                        color: Colors.grey[600],
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                trailing: Container(
-                                                  padding: EdgeInsets.symmetric(
-                                                      horizontal: 8,
-                                                      vertical: 4),
-                                                  decoration: BoxDecoration(
-                                                    color: getStatusColor(
-                                                        order['status']),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12),
-                                                  ),
-                                                  child: Text(
-                                                    getStatusText(
-                                                        order['status']),
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 12,
-                                                    ),
+                                                    color: Colors.white,
+                                                    fontSize: 12,
                                                   ),
                                                 ),
                                               ),
-                                            );
-                                          },
-                                        ),
-                                ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                              ),
 
-                                // Tab 2: Konfirmasi
-                                RefreshIndicator(
-                                  onRefresh: () async {
-                                    await controller.getPendingOrders();
-                                    await controller.getProfile();
-                                  },
-                                  child: controller.deliveredOrders.isEmpty
-                                      ? ListView(
-                                          children: [
-                                            SizedBox(height: 50),
-                                            Center(
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
+                              // Tab 2: Konfirmasi
+                              RefreshIndicator(
+                                onRefresh: () async {
+                                  await controller.getPendingOrders();
+                                  await controller.getProfile();
+                                },
+                                child: controller.deliveredOrders.isEmpty
+                                    ? ListView(
+                                        children: [
+                                          SizedBox(height: 50),
+                                          Center(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Lottie.asset(
+                                                  'assets/images/Animation - 1746119107847.json',
+                                                  width: 200,
+                                                  height: 200,
+                                                  fit: BoxFit.contain,
+                                                  errorBuilder: (context,
+                                                      error, stackTrace) {
+                                                    print(
+                                                        "Error loading Lottie: $error");
+                                                    return Icon(
+                                                      CupertinoIcons
+                                                          .check_mark_circled,
+                                                      size: 80,
+                                                      color: Colors.grey,
+                                                    );
+                                                  },
+                                                ),
+                                                SizedBox(height: 16),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    : ListView.builder(
+                                        itemCount:
+                                            controller.deliveredOrders.length,
+                                        padding: EdgeInsets.all(10),
+                                        itemBuilder: (context, index) {
+                                          final order = controller
+                                              .deliveredOrders[index];
+                                          return Card(
+                                            margin:
+                                                EdgeInsets.only(bottom: 10),
+                                            child: ListTile(
+                                              onTap: () {
+                                                showOrderDetail(
+                                                    context, order);
+                                              },
+                                              title: Text(
+                                                order['building_name'] ??
+                                                    'Lokasi tidak tersedia',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              subtitle: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 children: [
-                                                  // Menggunakan file JSON lokal dari assets/images
-                                                  Lottie.asset(
-                                                    'assets/images/Animation - 1746119107847.json',
-                                                    width: 200,
-                                                    height: 200,
-                                                    fit: BoxFit.contain,
-                                                    errorBuilder: (context,
-                                                        error, stackTrace) {
-                                                      print(
-                                                          "Error loading Lottie: $error");
-                                                      return Icon(
-                                                        CupertinoIcons
-                                                            .check_mark_circled,
-                                                        size: 80,
-                                                        color: Colors.grey,
-                                                      );
-                                                    },
+                                                  Text(
+                                                    controller.formatCurrency(
+                                                        (order['grand_total'] ??
+                                                                0)
+                                                            .toDouble()),
                                                   ),
-                                                  SizedBox(height: 16),
-                                                  // Text(
-                                                  //   'Belum ada pesanan yang perlu dikonfirmasi',
-                                                  //   style: TextStyle(
-                                                  //     fontSize: 16,
-                                                  //     color: Colors.grey[600],
-                                                  //   ),
-                                                  // ),
+                                                  Text(
+                                                    order['destination_detail'] ??
+                                                        'Detail lokasi tidak tersedia',
+                                                    style: TextStyle(
+                                                      color: Colors.grey[600],
+                                                    ),
+                                                  ),
                                                 ],
                                               ),
-                                            ),
-                                          ],
-                                        )
-                                      : ListView.builder(
-                                          itemCount:
-                                              controller.deliveredOrders.length,
-                                          padding: EdgeInsets.all(10),
-                                          itemBuilder: (context, index) {
-                                            final order = controller
-                                                .deliveredOrders[index];
-                                            return Card(
-                                              margin:
-                                                  EdgeInsets.only(bottom: 10),
-                                              child: ListTile(
-                                                onTap: () {
-                                                  showOrderDetail(
-                                                      context, order);
-                                                },
-                                                title: Text(
-                                                  order['building_name'] ??
-                                                      'Lokasi tidak tersedia',
+                                              trailing: Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 8,
+                                                    vertical: 4),
+                                                decoration: BoxDecoration(
+                                                  color: getStatusColor(
+                                                      order['status']),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          12),
+                                                ),
+                                                child: Text(
+                                                  getStatusText(
+                                                      order['status']),
                                                   style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                subtitle: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      controller.formatCurrency(
-                                                          (order['grand_total'] ??
-                                                                  0)
-                                                              .toDouble()),
-                                                    ),
-                                                    Text(
-                                                      order['destination_detail'] ??
-                                                          'Detail lokasi tidak tersedia',
-                                                      style: TextStyle(
-                                                        color: Colors.grey[600],
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                trailing: Container(
-                                                  padding: EdgeInsets.symmetric(
-                                                      horizontal: 8,
-                                                      vertical: 4),
-                                                  decoration: BoxDecoration(
-                                                    color: getStatusColor(
-                                                        order['status']),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12),
-                                                  ),
-                                                  child: Text(
-                                                    getStatusText(
-                                                        order['status']),
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 12,
-                                                    ),
+                                                    color: Colors.white,
+                                                    fontSize: 12,
                                                   ),
                                                 ),
                                               ),
-                                            );
-                                          },
-                                        ),
-                                ),
-                              ],
-                            ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -372,73 +356,59 @@ class HomeCourierView extends GetView<HomeCourierController> {
 
   // Widget TabBar Custom
   Widget customTabBar() {
-    return StatefulBuilder(builder: (context, setState) {
-      final tabController = DefaultTabController.of(context);
-
-      // Tambahkan listener untuk update tampilan saat tab berubah
-      void updateState() {
-        setState(() {});
-      }
-
-      // Pasang dan lepas listener
-      if (tabController != null) {
-        // Bersihkan listener lama bila ada
-        tabController.removeListener(updateState);
-        // Pasang listener baru
-        tabController.addListener(updateState);
-      }
-
-      return Container(
-        height: 45,
-        decoration: BoxDecoration(
-          color: Colors.grey[300],
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: tabItem(index: 0, title: 'Untuk Dikirim'),
-            ),
-            Expanded(
-              child: tabItem(index: 1, title: 'Konfirmasi'),
-            ),
-          ],
-        ),
-      );
-    });
+    return AnimatedBuilder(
+      // Dengarkan perubahan dari controller
+      animation: controller.tabController.animation!,
+      builder: (context, child) {
+        return Container(
+          height: 45,
+          decoration: BoxDecoration(
+            color: Colors.grey[300],
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: tabItem(index: 0, title: 'Untuk Dikirim'),
+              ),
+              Expanded(
+                child: tabItem(index: 1, title: 'Konfirmasi'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   // Widget Item Tab
   Widget tabItem({required int index, required String title}) {
-    return Builder(
-      builder: (context) {
-        final tabController = DefaultTabController.of(context);
-        final bool isSelected = tabController.index == index;
+    // Cek apakah tab ini yang sedang dipilih
+    final bool isSelected = controller.tabController.index == index;
 
-        return GestureDetector(
-          onTap: () {
-            tabController.animateTo(index);
-          },
-          child: AnimatedContainer(
-            duration: Duration(milliseconds: 200),
-            margin: EdgeInsets.all(3),
-            decoration: BoxDecoration(
-              color: isSelected ? Color(0xFF1E2857) : Colors.transparent,
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: Center(
-              child: Text(
-                title,
-                style: TextStyle(
-                  color: isSelected ? Colors.white : Color(0xFF1E2857),
-                  fontWeight: FontWeight.w500,
-                  fontSize: 14,
-                ),
-              ),
+    return GestureDetector(
+      onTap: () {
+        // Pindah tab menggunakan controller dari GetX
+        controller.tabController.animateTo(index);
+      },
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 200),
+        margin: EdgeInsets.all(3),
+        decoration: BoxDecoration(
+          color: isSelected ? Color(0xFF1E2857) : Colors.transparent,
+          borderRadius: BorderRadius.circular(6),
+        ),
+        child: Center(
+          child: Text(
+            title,
+            style: TextStyle(
+              color: isSelected ? Colors.white : Color(0xFF1E2857),
+              fontWeight: FontWeight.w500,
+              fontSize: 14,
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 

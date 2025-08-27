@@ -152,6 +152,12 @@ class FoodGrids extends StatelessWidget {
 
                   return GestureDetector(
                     onTap: () {
+                      // Tracking Interaction
+                      controller.trackInteraction(
+                        'view_detail_menu',
+                        menuId: food.id,
+                      );
+
                       showModalBottomSheet(
                         context: context,
                         shape: RoundedRectangleBorder(
@@ -301,7 +307,7 @@ class FoodGrids extends StatelessWidget {
                                       style: TextStyle(
                                         fontSize: 14.sp,
                                         fontWeight: FontWeight.w500,
-                                        color:  Colors.black,
+                                        color: Colors.black,
                                       ),
                                     ),
                                     const Spacer(),
@@ -324,7 +330,7 @@ class FoodGrids extends StatelessWidget {
                                     fontSize: 15.sp,
                                     overflow: TextOverflow.ellipsis,
                                     fontWeight: FontWeight.w600,
-                                    color:  Colors.black,
+                                    color: Colors.black,
                                   ),
                                 ),
                                 SizedBox(height: 7.h),
@@ -401,7 +407,8 @@ class FoodGrids extends StatelessWidget {
                                                         decoration:
                                                             BoxDecoration(
                                                           color: const Color(
-                                                              0xFF1E2857,),
+                                                            0xFF1E2857,
+                                                          ),
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(

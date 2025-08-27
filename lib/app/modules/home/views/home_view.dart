@@ -41,20 +41,24 @@ class _HomeViewState extends State<HomeView> {
   }
 
   void _onScroll() {
-    bool isFilterActive = controller.selectedCanteenId.value != 'all' ||
-        controller.selectedCategoryId.value.isNotEmpty;
-
-    final searchField = _formKey.currentState?.fields['search'];
-    bool isSearchActive =
-        searchField?.value != null && (searchField?.value as String).isNotEmpty;
-
-    if (isFilterActive || isSearchActive) {
-      return;
-    }
-
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent * 0.9) {
-      controller.fetchAllMenus();
+          
+      final searchField = _formKey.currentState?.fields['search'];
+      bool isSearchActive = searchField?.value != null &&
+          (searchField?.value as String).isNotEmpty;
+
+      if (isSearchActive) {
+        return;
+      }
+
+      if (controller.selectedCategoryId.value.isNotEmpty) {
+        controller.getMenuByCategory(controller.selectedCategoryId.value);
+      } else if (controller.selectedCanteenId.value != 'all') {
+        controller.getMenuByCanteen(controller.selectedCanteenId.value);
+      } else {
+        controller.fetchAllMenus();
+      }
     }
   }
 

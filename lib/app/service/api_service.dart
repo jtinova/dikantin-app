@@ -26,6 +26,9 @@ class AppUrl {
   static String get courierLogin => "$baseURLAPI/courier/login";
   static String get storeFCMToken => "$baseURLAPI/fcm";
 
+  // Tracking User
+  static String get trackingActivity => '$baseURLAPI/user/interaction';
+
   // API Home User
   static String get locations => '$baseURLAPI/building';
   static String get categories => '$baseURLAPI/category';
