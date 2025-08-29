@@ -402,31 +402,44 @@ class OrderDetailBottom extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             height: 30.h,
-            child: ElevatedButton(
-              onPressed: () async {
-                if (order.status == "done" ||
-                    order.status == "cancel" ||
-                    order.status == "cooking") {
-                  Navigator.pop(context);
-                } else if (order.status == "pending") {
-                  Navigator.pop(context);
+            child: Builder(
+              builder: (context) {
+                final bool canCancel =
+                    order.details.any((item) => item.status == 'pending');
+                    
+                final bool isShowBarcode = order.status != "done" &&
+                    order.status != "cancel" &&
+                    order.status != "pending" &&
+                    order.status != "cooking";
 
-                  showModalBottomSheet(
-                    context: context,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(20),
+                String buttonText;
+                Color buttonColor;
+                VoidCallback onPressedAction;
+
+                if (canCancel) {
+                  buttonText = "Batalkan Pesanan";
+                  buttonColor = Colors.red;
+                  onPressedAction = () {
+                    Navigator.pop(context);
+                    showModalBottomSheet(
+                      context: context,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(20),
+                        ),
                       ),
-                    ),
-                    builder: (context) => CancelOrder(
-                      controller: controller,
-                      order: order,
-                    ),
-                  );
-                } else {
-                  Navigator.pop(context);
-
-                  showDialog(
+                      builder: (context) => CancelOrder(
+                        controller: controller,
+                        order: order,
+                      ),
+                    );
+                  };
+                } else if (isShowBarcode) {
+                  buttonText = "Tunjukkan Barcode";
+                  buttonColor = Color(0xFF1E2857);
+                  onPressedAction = () {
+                    Navigator.pop(context);
+                    showDialog(
                       context: context,
                       builder: (BuildContext context) {
                         final String dialogTitle = order.delivery != null
@@ -487,29 +500,34 @@ class OrderDetailBottom extends StatelessWidget {
                             ),
                           ],
                         );
-                      });
+                      },
+                    );
+                  };
+                } else {
+                  buttonText = "Tutup";
+                  buttonColor = Color(0xFF1E2857);
+                  onPressedAction = () {
+                    Navigator.pop(context);
+                  };
                 }
+
+                return ElevatedButton(
+                  onPressed: onPressedAction,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: buttonColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.r),
+                    ),
+                  ),
+                  child: Text(
+                    buttonText,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15.sp,
+                    ),
+                  ),
+                );
               },
-              style: ElevatedButton.styleFrom(
-                backgroundColor:
-                    order.status == "pending" ? Colors.red : Color(0xFF1E2857),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.r),
-                ),
-              ),
-              child: Text(
-                order.status == "done" ||
-                        order.status == "cancel" ||
-                        order.status == "cooking"
-                    ? "Tutup"
-                    : (order.status == "pending"
-                        ? "Batalkan Pesanan"
-                        : "Tunjukkan Barcode"),
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 15.sp,
-                ),
-              ),
             ),
           ),
         ],
