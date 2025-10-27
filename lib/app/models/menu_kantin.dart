@@ -6,7 +6,7 @@ class MenuModel {
   final String image;
   final int sellingCost;
   final int mainCost;
-  bool isAvailable;
+  int stock; 
 
   MenuModel({
     required this.id,
@@ -14,7 +14,7 @@ class MenuModel {
     required this.image,
     required this.sellingCost,
     required this.mainCost,
-    this.isAvailable = false,
+    required this.stock,
   });
 
   factory MenuModel.fromJson(Map<String, dynamic> json) {
@@ -24,11 +24,12 @@ class MenuModel {
       image: json['image'],
       sellingCost: json['selling_cost'],
       mainCost: json['main_cost'],
-      isAvailable: json['stock'] > 0,
+      stock: json['stock'], 
     );
   }
 
-  String get hargaFormatted => "Rp $mainCost";
-  String get status => isAvailable ? "Tersedia" : "Habis";
+  int get hargaFormatted => mainCost;
+  String get statusLabel => stock > 0 ? "Stok: $stock" : "Habis";
+  bool get isAvailable => stock > 0;
   String get imagePath => "${AppUrl.imageMenu}$image";
 }

@@ -1,10 +1,12 @@
+// ignore_for_file: avoid_print
+
 import 'package:get/get.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:dikantin_partner/app/data/db_provider.dart';
 import 'package:dikantin_partner/app/models/history_canteen.dart';
 import 'package:dikantin_partner/app/data/api.dart';
+import 'package:intl/intl.dart';
 
 class HomeKantinController extends GetxController {
   RxList<HistoryModel> daftarMenu = <HistoryModel>[].obs;
@@ -49,12 +51,25 @@ class HomeKantinController extends GetxController {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
+        final canteenData = data['data'];
+        print(data);
+
         canteenName.value = data['data']['name'];
+
+        String backendStatus = canteenData['status'] ?? 'close';
+
+        if (backendStatus == 'open') {
+          selectedItem.value = 'Buka';
+        } else {
+          selectedItem.value = 'Tutup';
+        }
       } else {
         print("Gagal ambil name: ${response.body}");
+        selectedItem.value = 'Tutup';
       }
     } catch (e) {
       print("Error canteenProfile: $e");
+      selectedItem.value = 'Tutup';
     }
   }
 
@@ -201,5 +216,10 @@ class HomeKantinController extends GetxController {
     } catch (e) {
       print("Error fetchHistory: $e");
     }
+  }
+
+  String formatRupiah(int price) {
+    final formatCurrency = NumberFormat("#,##0", "id_ID");
+    return formatCurrency.format(price);
   }
 }

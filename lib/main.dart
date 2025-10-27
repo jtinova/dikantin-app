@@ -81,8 +81,22 @@ class MyApp extends StatelessWidget {
           theme: lightMode,
           getPages: AppPages.routes,
           builder: (context, widget) {
+            final mediaQuery = MediaQuery.of(context);
+            final newMediaQuery = mediaQuery.copyWith(
+              size: Size(
+                mediaQuery.size.width,
+                mediaQuery.size.height,
+              ),
+              textScaler: TextScaler.linear(
+                0.85,
+              ),
+            );
+
             widget = EasyLoading.init()(context, widget);
-            return widget;
+            return MediaQuery(
+              data: newMediaQuery,
+              child: widget,
+            );
           },
           debugShowCheckedModeBanner: false,
         );

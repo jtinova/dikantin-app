@@ -47,7 +47,10 @@ class DetailPesananView extends GetView<RiwayatKantinController> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Pesanan(item: data),
-          ListPesanan(item: data),
+          ListPesanan(
+            item: data,
+            controller: controller,
+          ),
         ],
       )),
     );
@@ -105,9 +108,10 @@ class Pesanan extends StatelessWidget {
 }
 
 class ListPesanan extends StatelessWidget {
-  const ListPesanan({super.key, required this.item});
+  const ListPesanan({super.key, required this.item, required this.controller});
 
   final HistoryModel item;
+  final RiwayatKantinController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -176,7 +180,7 @@ class ListPesanan extends StatelessWidget {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        "Rp ${pesanan.mainCost}",
+                                        "Rp ${controller.formatRupiah(pesanan.mainCost)}",
                                         style: TextStyle(
                                           fontSize: 14.sp,
                                           color: Color(0xFF403E3E),
@@ -192,6 +196,17 @@ class ListPesanan extends StatelessWidget {
                                         ),
                                       ),
                                     ],
+                                  ),
+                                  SizedBox(height: 2.h),
+                                  Text(
+                                    pesanan.note!.isNotEmpty
+                                        ? "Catatan: ${pesanan.note}"
+                                        : "Catatan: -",
+                                    style: TextStyle(
+                                      fontSize: 14.sp,
+                                      color: Color(0xFF403E3E),
+                                      fontWeight: FontWeight.w400,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -215,11 +230,12 @@ class ListPesanan extends StatelessWidget {
                       TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w500),
                 ),
                 Text(
-                  "Rp ${item.totalMainCost}",
+                  "Rp ${controller.formatRupiah(item.totalMainCost)}",
                   style: TextStyle(
-                      color: Color(0xFF403E3E),
-                      fontSize: 15.sp,
-                      fontWeight: FontWeight.w500),
+                    color: Color(0xFF403E3E),
+                    fontSize: 15.sp,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ],
             ),

@@ -180,17 +180,19 @@ class RiwayatPesanan extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "Rp ${item.totalMainCost}",
+                                      "Rp ${controller.formatRupiah(item.totalMainCost)}",
                                       style: TextStyle(
-                                          color: Color(0xFF403E3E),
-                                          fontSize: 14.sp,
-                                          fontWeight: FontWeight.w600),
+                                        color: Color(0xFF403E3E),
+                                        fontSize: 14.sp,
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     ),
                                     Text(
                                       "Pembayaran: ${item.paymentMethodLabel}",
                                       style: TextStyle(
-                                          color: Color(0xFF7C7C7C),
-                                          fontSize: 13.sp),
+                                        color: Color(0xFF7C7C7C),
+                                        fontSize: 13.sp,
+                                      ),
                                     ),
                                   ],
                                 ),

@@ -1,17 +1,10 @@
 // ignore_for_file: avoid_print
 
 import 'dart:convert';
-import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-
 import '../../../data/api.dart';
-import '../../../models/user.dart';
 import '../../../data/db_provider.dart';
-
 import 'package:dikantin_partner/app/models/canteen.dart';
 
 class ProfileController extends GetxController {

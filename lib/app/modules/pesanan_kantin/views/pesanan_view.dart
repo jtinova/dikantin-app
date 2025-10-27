@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/pesanan_controller.dart';
@@ -46,8 +48,9 @@ class PesananKantinView extends GetView<PesananController> {
                   ),
                   content: SingleChildScrollView(
                     child: Text(
-                      "• Tekan tab 'Pesanan Masuk' untuk melihat daftar pesanan baru.\n"
+                      "• Tekan tab 'Masuk' untuk melihat daftar pesanan baru.\n"
                       "• Tekan tab 'Dimasak' untuk melihat daftar pesanan dimasak.\n"
+                      "• Tekan tab 'Selesai' untuk melihat daftar pesanan diantar yang selesai dimasak.\n"
                       "• Tekan tombol 'Lihat Detail' untuk melihat detail dari pesanan.\n",
                       style: TextStyle(fontSize: 15.sp),
                     ),
@@ -102,8 +105,9 @@ class Header extends StatelessWidget {
         indicatorWeight: 2.5,
         indicatorSize: TabBarIndicatorSize.tab,
         tabs: [
-          Tab(text: "Pesanan Masuk"),
+          Tab(text: "Masuk"),
           Tab(text: "Dimasak"),
+          Tab(text: "Selesai"),
         ],
       ),
     );
@@ -117,166 +121,236 @@ class Pesanan extends StatelessWidget {
   Widget build(BuildContext context) {
     final PesananController controller = Get.find<PesananController>();
 
-    Widget buildListView(RxList<TransactionModel> data) {
+    Widget buildListView(RxList<TransactionModel> data, String emptyMessage) {
       return Obx(() => RefreshIndicator(
             onRefresh: () async {
               controller.refreshData();
             },
-            child: ListView.builder(
-              physics: AlwaysScrollableScrollPhysics(),
-              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-              itemCount: data.length,
-              itemBuilder: (context, index) {
-                var item = data[index];
-                return Card(
-                  margin: EdgeInsets.only(bottom: 10.h),
-                  child: Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-                    child: Column(
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(8.r),
-                              child: Image.network(
-                                item.details.first.imagePath,
-                                width: 60.w,
-                                height: 60.h,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) =>
-                                    Container(
-                                  width: 60.w,
-                                  height: 60.h,
-                                  color: Colors.grey[200],
-                                  child: Icon(
-                                    Icons.error,
-                                    color: Colors.redAccent,
-                                    size: 24.sp,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 10.w),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    item.transactionCode,
-                                    style: TextStyle(
-                                        color: Color(0xFF403E3E),
-                                        fontSize: 15.sp,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                  SizedBox(height: 3.h),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        item.dateTime,
-                                        style: TextStyle(
-                                          color: Color(0xFF7C7C7C),
-                                          fontSize: 12.sp,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 3.h),
-                                  Text(
-                                    item.details
-                                        .map((menu) =>
-                                            "${menu.qty} ${menu.name}")
-                                        .join(", "),
-                                    style: TextStyle(
-                                        color: Color(0xFF585858),
-                                        fontSize: 13.sp),
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(vertical: 6.h),
-                          child: Divider(
-                            color: Color(0xFFD9D9D9),
-                            height: 1.h,
+            child: data.isEmpty
+                ? Stack(
+                    children: [
+                      ListView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                      ),
+                      Center(
+                        child: Text(
+                          emptyMessage,
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 16.sp,
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 2.h),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      ),
+                    ],
+                  )
+                : ListView.builder(
+                    physics: AlwaysScrollableScrollPhysics(),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                    itemCount: data.length,
+                    itemBuilder: (context, index) {
+                      var item = data[index];
+                      return Card(
+                        margin: EdgeInsets.only(bottom: 10.h),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 16.w, vertical: 12.h),
+                          child: Column(
                             children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Text(
-                                    "Rp ${item.mainCost}",
-                                    style: TextStyle(
-                                        color: Color(0xFF403E3E),
-                                        fontSize: 14.sp,
-                                        fontWeight: FontWeight.w600),
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(8.r),
+                                    child: item.details.isNotEmpty
+                                        ? Image.network(
+                                            item.details.first.imagePath,
+                                            width: 60.w,
+                                            height: 60.h,
+                                            fit: BoxFit.cover,
+                                            errorBuilder:
+                                                (context, error, stackTrace) =>
+                                                    Container(
+                                              width: 60.w,
+                                              height: 60.h,
+                                              color: Colors.grey[200],
+                                              child: Icon(
+                                                Icons.error,
+                                                color: Colors.redAccent,
+                                                size: 24.sp,
+                                              ),
+                                            ),
+                                          )
+                                        : Container(
+                                            width: 60.w,
+                                            height: 60.h,
+                                            color: Colors.grey[200],
+                                            child: Icon(
+                                                Icons.image_not_supported,
+                                                color: Colors.grey,
+                                                size: 24.sp),
+                                          ),
                                   ),
-                                  Text(
-                                    "${item.totalQty} Pesanan",
-                                    style: TextStyle(
-                                        color: Color(0xFF7C7C7C),
-                                        fontSize: 13.sp),
-                                  ),
+                                  SizedBox(width: 10.w),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Expanded(
+                                              child: Text(
+                                                item.transactionCode,
+                                                style: TextStyle(
+                                                  color: Color(0xFF403E3E),
+                                                  fontSize: 15.sp,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                            SizedBox(width: 5.w),
+                                            Container(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 6.w,
+                                                  vertical: 2.h),
+                                              decoration: BoxDecoration(
+                                                color: Color(0xFF1E2857)
+                                                    .withOpacity(0.1),
+                                                borderRadius:
+                                                    BorderRadius.circular(4.r),
+                                              ),
+                                              child: Text(
+                                                item.orderTypeLabel,
+                                                style: TextStyle(
+                                                  color: Color(0xFF1E2857),
+                                                  fontSize: 11.sp,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 3.h),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              item.dateTime,
+                                              style: TextStyle(
+                                                color: Color(0xFF7C7C7C),
+                                                fontSize: 12.sp,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 3.h),
+                                        Text(
+                                          item.details
+                                              .map((menu) =>
+                                                  "${menu.qty} ${menu.name}")
+                                              .join(", "),
+                                          style: TextStyle(
+                                            color: Color(0xFF585858),
+                                            fontSize: 13.sp,
+                                          ),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ],
+                                    ),
+                                  )
                                 ],
                               ),
-                              ElevatedButton(
-                                onPressed: () {
-                                  Get.to(() => DetailPesananView(),
-                                      arguments: item);
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Color(0xFF19345E),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20.r),
-                                  ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(vertical: 6.h),
+                                child: Divider(
+                                  color: Color(0xFFD9D9D9),
+                                  height: 1.h,
                                 ),
-                                child: Text(
-                                  "Lihat Detail",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.w500),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 2.h),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Rp ${controller.formatRupiah(item.mainCost)}",
+                                          style: TextStyle(
+                                            color: Color(0xFF403E3E),
+                                            fontSize: 14.sp,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        Text(
+                                          "${item.totalQty} Pesanan",
+                                          style: TextStyle(
+                                            color: Color(0xFF7C7C7C),
+                                            fontSize: 13.sp,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        Get.to(() => DetailPesananView(),
+                                            arguments: item);
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Color(0xFF19345E),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20.r),
+                                        ),
+                                      ),
+                                      child: Text(
+                                        "Lihat Detail",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    )
+                                  ],
                                 ),
                               )
                             ],
                           ),
-                        )
-                      ],
-                    ),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
           ));
     }
 
-    return Expanded(
-      child: PageTransitionSwitcher(
-        duration: Duration(milliseconds: 1000),
-        transitionBuilder: (child, animation, secondaryAnimation) {
-          return SharedAxisTransition(
-            animation: animation,
-            secondaryAnimation: secondaryAnimation,
-            transitionType: SharedAxisTransitionType.horizontal,
-            child: child,
-          );
-        },
-        child: TabBarView(
-          key: ValueKey(controller.tabController.index),
-          controller: controller.tabController,
-          children: [
-            buildListView(controller.pesananMasuk),
-            buildListView(controller.pesananDimasak),
-          ],
-        ),
+    return PageTransitionSwitcher(
+      duration: Duration(milliseconds: 300),
+      transitionBuilder: (child, animation, secondaryAnimation) {
+        return SharedAxisTransition(
+          animation: animation,
+          secondaryAnimation: secondaryAnimation,
+          transitionType: SharedAxisTransitionType.horizontal,
+          child: child,
+        );
+      },
+      child: TabBarView(
+        key: ValueKey(controller.tabController.index),
+        controller: controller.tabController,
+        children: [
+          buildListView(controller.pesananMasuk, "Belum ada pesanan masuk"),
+          buildListView(controller.pesananDimasak,
+              "Tidak ada pesanan yang sedang dimasak"),
+          buildListView(controller.pesananSelesai,
+              "Tidak ada pesanan yang selesai dimasak"),
+        ],
       ),
     );
   }

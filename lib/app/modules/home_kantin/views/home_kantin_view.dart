@@ -1,4 +1,3 @@
-import 'package:dikantin_partner/app/modules/riwayat_kantin/views/riwayatkantin_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/home_kantin_controller.dart';
@@ -20,20 +19,21 @@ class HomeKantinView extends GetView<HomeKantinController> {
         toolbarHeight: 0,
       ),
       body: SafeArea(
-          child: RefreshIndicator(
-        onRefresh: () async {
-          controller.refreshData();
-        },
-        child: Container(
-          color: Color(0xFFFEFEFE),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Header(),
-            ],
+        child: RefreshIndicator(
+          onRefresh: () async {
+            controller.refreshData();
+          },
+          child: Container(
+            color: Color(0xFFFEFEFE),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(child: Header()),
+              ],
+            ),
           ),
         ),
-      )),
+      ),
     );
   }
 }
@@ -45,10 +45,9 @@ class Header extends StatelessWidget {
   Widget build(BuildContext context) {
     final HomeKantinController controller = Get.find<HomeKantinController>();
 
-    return Expanded(
-      child: Stack(children: [
+    return Column(
+      children: [
         Container(
-          height: 400.h,
           width: double.infinity,
           alignment: Alignment.centerLeft,
           color: Color(0xFF1E2857),
@@ -315,11 +314,7 @@ class Header extends StatelessWidget {
             ),
           ),
         ),
-        Positioned(
-          top: 300.h,
-          bottom: 0.h,
-          left: 0.w,
-          right: 0.w,
+        Expanded(
           child: Container(
             decoration: BoxDecoration(
               color: Colors.white,
@@ -351,8 +346,8 @@ class Header extends StatelessWidget {
               ],
             ),
           ),
-        )
-      ]),
+        ),
+      ],
     );
   }
 }
@@ -455,17 +450,19 @@ class RiwayatPesanan extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "Rp ${item.totalMainCost}",
+                                  "Rp ${controller.formatRupiah(item.totalMainCost)}",
                                   style: TextStyle(
-                                      color: Color(0xFF403E3E),
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.w600),
+                                    color: Color(0xFF403E3E),
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                                 Text(
                                   "Pembayaran: ${item.paymentMethodLabel}",
                                   style: TextStyle(
-                                      color: Color(0xFF7C7C7C),
-                                      fontSize: 13.sp),
+                                    color: Color(0xFF7C7C7C),
+                                    fontSize: 13.sp,
+                                  ),
                                 ),
                               ],
                             ),
@@ -480,8 +477,6 @@ class RiwayatPesanan extends StatelessWidget {
           ));
     }
 
-    return Expanded(
-      child: buildListView(controller.daftarMenu),
-    );
+    return buildListView(controller.daftarMenu);
   }
 }

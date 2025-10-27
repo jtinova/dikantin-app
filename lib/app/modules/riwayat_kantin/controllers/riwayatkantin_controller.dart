@@ -1,10 +1,13 @@
+// ignore_for_file: avoid_print
+
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:dikantin_partner/app/data/db_provider.dart';
 import 'package:dikantin_partner/app/data/api.dart';
-import 'package:flutter/material.dart';
 import 'package:dikantin_partner/app/models/history_canteen.dart';
 import 'dart:convert';
+
+import 'package:intl/intl.dart';
 
 class RiwayatKantinController extends GetxController {
   RxList<HistoryModel> daftarMenu = <HistoryModel>[].obs;
@@ -43,5 +46,10 @@ class RiwayatKantinController extends GetxController {
     } catch (e) {
       print("Error fetchHistory: $e");
     }
+  }
+
+  String formatRupiah(int price) {
+    final formatCurrency = NumberFormat("#,##0", "id_ID");
+    return formatCurrency.format(price);
   }
 }

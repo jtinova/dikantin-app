@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:dikantin_partner/app/data/db_provider.dart';
@@ -7,6 +9,8 @@ import 'package:dikantin_partner/app/models/order_canteen.dart';
 import 'dart:convert';
 import 'dart:async';
 
+import 'package:intl/intl.dart';
+
 class PesananController extends GetxController
     with GetTickerProviderStateMixin {
   RxList<TransactionModel> daftarMenu = <TransactionModel>[].obs;
@@ -14,13 +18,17 @@ class PesananController extends GetxController
 
   RxList<TransactionModel> pesananMasuk = <TransactionModel>[].obs;
   RxList<TransactionModel> pesananDimasak = <TransactionModel>[].obs;
+  RxList<TransactionModel> pesananSelesai = <TransactionModel>[].obs;
+
   List<TransactionModel> _lastFetchedMasuk = [];
   Timer? _autoRefreshTimer;
+
+  bool _isInitialFetchComplete = false;
 
   @override
   void onInit() {
     super.onInit();
-    tabController = TabController(length: 2, vsync: this);
+    tabController = TabController(length: 3, vsync: this);
     fetchPesanan();
     _startAutoRefresh();
   }
@@ -28,6 +36,7 @@ class PesananController extends GetxController
   @override
   void onClose() {
     _autoRefreshTimer?.cancel();
+    tabController.dispose();
     super.onClose();
   }
 
@@ -48,30 +57,47 @@ class PesananController extends GetxController
 
       if (response.statusCode == 200) {
         final result = jsonDecode(response.body);
+        print(result);
+        
         final List data = result['data'];
 
         List<TransactionModel> masuk = [];
         List<TransactionModel> dimasak = [];
+        List<TransactionModel> selesai = [];
 
         for (var item in data) {
           final transaction = TransactionModel.fromJson(item);
 
-          if (transaction.status == 'pending') {
+          if (transaction.status == 'on_delivery' && transaction.orderType == 'delivery') {
+            selesai.add(transaction);
+          } else if (transaction.status == 'pending') {
             masuk.add(transaction);
           } else if (transaction.status == 'cooking') {
             dimasak.add(transaction);
           }
         }
 
-        if (_lastFetchedMasuk.isNotEmpty &&
-            masuk.length > _lastFetchedMasuk.length) {
+        bool hasNewOrder = false;
+        if (_isInitialFetchComplete) {
+          if (_lastFetchedMasuk.isEmpty && masuk.isNotEmpty) {
+            hasNewOrder = true;
+          } else if (masuk.length > _lastFetchedMasuk.length) {
+            var oldIds = _lastFetchedMasuk.map((t) => t.id).toSet();
+            var newIds = masuk.map((t) => t.id).toSet();
+            if (newIds.difference(oldIds).isNotEmpty) {
+              hasNewOrder = true;
+            }
+          }
+        }
+
+        if (hasNewOrder) {
           Get.snackbar(
             "Pesanan Baru",
             "Ada pesanan baru masuk",
             snackPosition: SnackPosition.TOP,
             backgroundColor: Colors.white,
             colorText: Colors.black,
-            duration: Duration(milliseconds: 2000),
+            duration: Duration(milliseconds: 2500),
             margin: EdgeInsets.all(10),
             borderRadius: 10,
           );
@@ -81,9 +107,18 @@ class PesananController extends GetxController
 
         pesananMasuk.assignAll(masuk);
         pesananDimasak.assignAll(dimasak);
+        pesananSelesai.assignAll(selesai);
+
+        if (!_isInitialFetchComplete) {
+          _isInitialFetchComplete = true;
+        }
       }
     } catch (e) {
       print("Error fetchPesanan: $e");
+
+      if (!_isInitialFetchComplete) {
+        _isInitialFetchComplete = true;
+      }
     }
   }
 
@@ -176,11 +211,41 @@ class PesananController extends GetxController
     }
   }
 
+  Future<TransactionModel?> fetchTransactionById(String transactionId) async {
+    try {
+      final token = await DatabaseProvider().getToken();
+      final response = await http.get(
+        Uri.parse(AppUrl.orderDetailCanteen + transactionId),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final result = jsonDecode(response.body);
+        final data = result['data'];
+        return TransactionModel.fromJson(data);
+      } else {
+        print("Gagal mengambil detail transaksi: ${response.body}");
+        return null;
+      }
+    } catch (e) {
+      print("Error fetchTransactionById: $e");
+      return null;
+    }
+  }
+
   void _startAutoRefresh() {
     _autoRefreshTimer?.cancel();
     _autoRefreshTimer = Timer.periodic(Duration(seconds: 30), (_) {
       fetchPesanan();
     });
+  }
+
+  String formatRupiah(int price) {
+    final formatCurrency = NumberFormat("#,##0", "id_ID");
+    return formatCurrency.format(price);
   }
 }
 

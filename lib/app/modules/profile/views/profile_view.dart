@@ -35,6 +35,56 @@ class ProfileView extends GetView<ProfileController> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              Obx(() {
+                if (controller.users.value != null) {
+                  return Column(
+                    children: [
+                      CircleAvatar(
+                        backgroundImage:
+                            AssetImage('assets/images/logo_dikantin.png'),
+                        backgroundColor: Colors.grey[100],
+                        radius: 53.r,
+                      ),
+                      SizedBox(height: 10.h),
+                      Text(
+                        controller.users.value!.name,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      Text(
+                        controller.users.value!.email,
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 14.sp,
+                        ),
+                      ),
+                    ],
+                  );
+                } else {
+                  return Column(
+                    children: [
+                      CircleAvatar(
+                        backgroundImage:
+                            AssetImage('assets/images/logo_dikantin.png'),
+                        backgroundColor: Colors.black12,
+                        radius: 48.r,
+                      ),
+                      SizedBox(height: 10.h),
+                      Text(
+                        "Data User Tidak Ditemukan",
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  );
+                }
+              }),
               SizedBox(height: 35.h),
               GestureDetector(
                 onTap: () => Get.toNamed(Routes.MY_PROFILE),

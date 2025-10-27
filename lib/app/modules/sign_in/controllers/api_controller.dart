@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:dikantin_partner/app/data/api.dart';
 import 'package:dikantin_partner/app/data/auth_canteen_provider.dart';
 import 'package:flutter/cupertino.dart';

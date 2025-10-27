@@ -8,19 +8,6 @@ class TransactionModel {
   final String dateTime;
   final String status;
   final String orderType;
-  String get orderTypeLabel {
-    switch (orderType) {
-      case 'dine_in':
-        return 'Makan di Tempat';
-      case 'deliver':
-        return 'Diantar';
-      case 'pick_up':
-        return 'Ambil Sendiri';
-      default:
-        return 'Tidak Diketahui';
-    }
-  }
-
   final int deskNumber;
   final List<OrderDetail> details;
   final int totalQty;
@@ -57,6 +44,19 @@ class TransactionModel {
       mainCost: int.tryParse(json['total_main_cost'].toString()) ?? 0,
     );
   }
+
+  String get orderTypeLabel {
+    switch (orderType) {
+      case 'dine_in':
+        return 'Makan di Tempat';
+      case 'delivery':
+        return 'Diantar';
+      case 'take_away':
+        return 'Ambil Sendiri';
+      default:
+        return 'Tidak Diketahui';
+    }
+  }
 }
 
 class OrderDetail {
@@ -67,6 +67,7 @@ class OrderDetail {
   final int harga;
   final String status;
   final String image;
+  final String? note;  
 
   OrderDetail({
     required this.id,
@@ -76,6 +77,7 @@ class OrderDetail {
     required this.harga,
     required this.status,
     required this.image,
+    this.note,
   });
 
   factory OrderDetail.fromJson(Map<String, dynamic> json) {
@@ -87,8 +89,11 @@ class OrderDetail {
       harga: int.tryParse(json['main_cost'].toString()) ?? 0,
       status: json['status'] ?? '',
       image: json['image'] ?? '',
+      note: json['note'] ?? '',
     );
   }
 
   String get imagePath => "${AppUrl.imageMenu}$image";
 }
+
+

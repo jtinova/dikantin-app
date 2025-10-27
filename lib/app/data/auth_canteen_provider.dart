@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:dikantin_partner/app/data/api.dart';
 import 'package:dikantin_partner/app/routes/app_pages.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -18,7 +19,7 @@ class AuthCanteenProvider extends ChangeNotifier {
 
   String get resMessage => _resMessage;
 
-  void loginCanteen({
+  Future<void> loginCanteen({
     required String email,
     required String password,
     BuildContext? context,
@@ -51,17 +52,20 @@ class AuthCanteenProvider extends ChangeNotifier {
         print(req.body);
 
         _resMessage = res["message"];
-
         final token = res["data"]["access_token"];
 
         await DatabaseProvider().saveToken(token);
-
         Get.offAllNamed(Routes.NAVIGATION);
+
+        final fcmToken = await FirebaseMessaging.instance.getToken();
+        if (fcmToken != null) {
+          storeFCMToken(fcmToken: fcmToken, role: 'Kantin');
+          print("FCM Token: $fcmToken");
+        }
       } else {
         final res = json.decode(req.body);
 
         print(res);
-
         _resMessage = res["message"];
       }
 
@@ -80,7 +84,7 @@ class AuthCanteenProvider extends ChangeNotifier {
     }
   }
 
-  void logoutCanteen() async {
+  Future<void> logoutCanteen() async {
     EasyLoading.show(status: 'Loading...');
     notifyListeners();
 
@@ -135,6 +139,42 @@ class AuthCanteenProvider extends ChangeNotifier {
     } finally {
       EasyLoading.dismiss();
       notifyListeners();
+    }
+  }
+
+  Future<void> storeFCMToken({
+    required String fcmToken,
+    required String role,
+  }) async {
+    String url = AppUrl.storeFCMToken;
+
+    final token = await DatabaseProvider().getToken();
+    final body = {
+      "fcm_token": fcmToken,
+      "role": role,
+    };
+
+    print("Sending FCM Token with body: $body");
+
+    try {
+      http.Response req = await http.put(
+        Uri.parse(url),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: json.encode(body),
+      );
+
+      if (req.statusCode == 200) {
+        final res = json.decode(req.body);
+        print("FCM Token stored successfully: $res");
+      } else {
+        final res = json.decode(req.body);
+        print("Failed to store FCM Token: $res");
+      }
+    } catch (e) {
+      print("Error storing FCM Token: $e");
     }
   }
 

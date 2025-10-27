@@ -47,10 +47,10 @@ class DetailPesananView extends GetView<PesananController> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Pesanan(item: data),
-          ListPesanan(item: data),
+          ListPesanan(item: data, controller: controller),
         ],
       )),
-      bottomNavigationBar: data.status == 'done'
+      bottomNavigationBar: (data.status == 'done' || data.status == 'on_delivery')
           ? SizedBox.shrink()
           : Padding(
               padding: EdgeInsets.only(bottom: 14.h),
@@ -59,37 +59,37 @@ class DetailPesananView extends GetView<PesananController> {
                 color: Colors.transparent,
                 child: GestureDetector(
                   onTap: () async {
-                    final detailId = data.details.first.id;
-                    final tabIndex = controller.tabController.index;
-
-                    if (data.status == 'pending') {
-                      await controller.updateOrderProcess(detailId);
-                    } else if (data.status == 'cooking') {
-                      await controller.updateOrderComplete(detailId);
+                    if (data.details.isEmpty) {
+                      Get.snackbar("Error", "Detail pesanan tidak ditemukan.");
+                      return;
                     }
 
-                    controller.tabController.index = tabIndex;
-                    await controller.fetchPesanan();
-                    Get.back();
+                    final detailId = data.details.first.id;
+
+                    if (data.status == 'pending') {
+                      await controller.updateOrderProcess(detailId); 
+                    } else if (data.status == 'cooking') {
+                      await controller.updateOrderComplete(detailId); 
+                    }
                   },
                   child: Container(
                     width: double.infinity,
-                    padding: EdgeInsets.symmetric(vertical: 10.h),
+                    padding: EdgeInsets.symmetric(vertical: 10.h), 
                     decoration: BoxDecoration(
-                      color: Color(0xFF1E2857),
-                      borderRadius: BorderRadius.circular(10.r),
+                      color: Color(0xFF1E2857), 
+                      borderRadius: BorderRadius.circular(10.r), 
                     ),
-                    alignment: Alignment.center,
+                    alignment: Alignment.center, 
                     child: Text(
                       data.status == 'pending'
-                          ? "Masak"
+                          ? "Masak" 
                           : data.status == 'cooking'
-                              ? "Selesaikan"
-                              : "",
+                              ? "Selesaikan" 
+                              : "",  
                       style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.w500,
+                        color: Colors.white, 
+                        fontSize: 16.sp, 
+                        fontWeight: FontWeight.w500, 
                       ),
                     ),
                   ),
@@ -151,9 +151,10 @@ class Pesanan extends StatelessWidget {
 }
 
 class ListPesanan extends StatelessWidget {
-  const ListPesanan({super.key, required this.item});
+  const ListPesanan({super.key, required this.item, required this.controller});
 
   final TransactionModel item;
+  final PesananController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -222,7 +223,7 @@ class ListPesanan extends StatelessWidget {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        "Rp ${pesanan.harga}",
+                                        "Rp ${controller.formatRupiah(pesanan.harga)}",
                                         style: TextStyle(
                                           fontSize: 14.sp,
                                           color: Color(0xFF403E3E),
@@ -238,6 +239,17 @@ class ListPesanan extends StatelessWidget {
                                         ),
                                       ),
                                     ],
+                                  ),
+                                  SizedBox(height: 2.h),
+                                  Text(
+                                    pesanan.note!.isNotEmpty
+                                        ? "Catatan: ${pesanan.note}"
+                                        : "Catatan: -",
+                                    style: TextStyle(
+                                      fontSize: 14.sp,
+                                      color: Color(0xFF403E3E),
+                                      fontWeight: FontWeight.w400,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -261,11 +273,12 @@ class ListPesanan extends StatelessWidget {
                       TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w500),
                 ),
                 Text(
-                  "Rp ${item.mainCost}",
+                  "Rp ${controller.formatRupiah(item.mainCost)}",
                   style: TextStyle(
-                      color: Color(0xFF403E3E),
-                      fontSize: 15.sp,
-                      fontWeight: FontWeight.w500),
+                    color: Color(0xFF403E3E),
+                    fontSize: 15.sp,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ],
             ),

@@ -18,7 +18,7 @@ class AuthenticationProvider extends ChangeNotifier {
 
   String get resMessage => _resMessage;
 
-  void loginUser({
+  Future<void> loginUser({
     required String email,
     required String password,
     BuildContext? context,
@@ -55,13 +55,10 @@ class AuthenticationProvider extends ChangeNotifier {
 
         // Save Token Navigate To Dashboard
         final token = res["data"]["access_token"];
-
         await DatabaseProvider().saveToken(token);
-
         Get.offAllNamed(Routes.NAVIGATION);
       } else {
         final res = json.decode(req.body);
-
         print(res);
 
         _resMessage = res["message"];
@@ -82,7 +79,7 @@ class AuthenticationProvider extends ChangeNotifier {
     }
   }
 
-  void logoutUser() async {
+  Future<void> logoutUser() async {
     EasyLoading.show(status: 'Loading...');
     notifyListeners();
 
@@ -90,7 +87,6 @@ class AuthenticationProvider extends ChangeNotifier {
 
     try {
       String? token = await DatabaseProvider().getToken();
-
       if (token == null) {
         _resMessage = "Token tidak ditemukan";
         return;
@@ -109,17 +105,13 @@ class AuthenticationProvider extends ChangeNotifier {
 
       if (req.statusCode == 200) {
         final res = json.decode(req.body);
-
         print(res);
 
         await DatabaseProvider().clearToken();
-
         _resMessage = "Logout Berhasil";
-
         Get.offAllNamed(Routes.SIGN_IN);
       } else {
         final res = json.decode(req.body);
-
         print(res);
 
         _resMessage = res["message"];

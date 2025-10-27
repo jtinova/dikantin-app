@@ -1,7 +1,9 @@
+// ignore_for_file: deprecated_member_use, no_leading_underscores_for_local_identifiers
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../controllers/menu_controller.dart';
-import 'package:animations/animations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:dikantin_partner/app/models/menu_kantin.dart';
@@ -46,9 +48,9 @@ class MenuKantinView extends GetView<MenuKantinController> {
                   ),
                   content: SingleChildScrollView(
                     child: Text(
-                      "• Tekan tombol 'Ubah Stok' untuk mengubah status menu.\n"
-                      "• Tekan tombol 'Tersedia' untuk mengubah status menjadi Tersedia.\n"
-                      "• Tekan tombol 'Habis' untuk mengubah status menjadi Habis.\n",
+                      "• Tekan tombol 'Ubah Stok' untuk mengubah jumlah stok menu.\n"
+                      "• Masukkan jumlah stok yang baru pada kolom yang tersedia.\n"
+                      "• Tekan 'Simpan' untuk memperbarui stok.\n",
                       style: TextStyle(fontSize: 15.sp),
                     ),
                   ),
@@ -89,7 +91,7 @@ class TabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final MenuKantinController controller = Get.find<MenuKantinController>();
+    Get.find<MenuKantinController>();
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 14.w),
@@ -133,7 +135,8 @@ class ListMenu extends StatelessWidget {
     final MenuKantinController controller = Get.find<MenuKantinController>();
 
     Widget buildListView(RxList<MenuModel> data) {
-      return Obx(() => ListView.builder(
+      return Obx(
+        () => ListView.builder(
           padding: EdgeInsets.all(10.w),
           itemCount: data.length,
           itemBuilder: (context, index) {
@@ -154,9 +157,13 @@ class ListMenu extends StatelessWidget {
                             child: ColorFiltered(
                               colorFilter: menu.isAvailable
                                   ? const ColorFilter.mode(
-                                      Colors.transparent, BlendMode.multiply)
+                                      Colors.transparent,
+                                      BlendMode.multiply,
+                                    )
                                   : const ColorFilter.mode(
-                                      Colors.grey, BlendMode.saturation),
+                                      Colors.grey,
+                                      BlendMode.saturation,
+                                    ),
                               child: Image.network(
                                 menu.imagePath,
                                 width: 60.w,
@@ -182,7 +189,9 @@ class ListMenu extends StatelessWidget {
                               alignment: Alignment.center,
                               child: Container(
                                 padding: EdgeInsets.symmetric(
-                                    horizontal: 8.w, vertical: 4.h),
+                                  horizontal: 8.w,
+                                  vertical: 4.h,
+                                ),
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(50.r),
@@ -195,7 +204,7 @@ class ListMenu extends StatelessWidget {
                                   ],
                                 ),
                                 child: Text(
-                                  menu.status,
+                                  menu.statusLabel,
                                   style: TextStyle(
                                     color: Color(0xFF1E2857),
                                     fontWeight: FontWeight.w600,
@@ -220,17 +229,19 @@ class ListMenu extends StatelessWidget {
                                   Text(
                                     menu.name,
                                     style: TextStyle(
-                                        color: Color(0xFF403E3E),
-                                        fontSize: 15.sp,
-                                        fontWeight: FontWeight.w600),
+                                      color: Color(0xFF403E3E),
+                                      fontSize: 15.sp,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
                                   SizedBox(height: 3.h),
                                   Text(
-                                    menu.hargaFormatted,
+                                    "Rp ${controller.formatRupiah(menu.hargaFormatted)}",
                                     style: TextStyle(
-                                        color: Colors.grey[400],
-                                        fontSize: 14.sp,
-                                        fontWeight: FontWeight.w500),
+                                      color: Colors.grey[400],
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -239,7 +250,7 @@ class ListMenu extends StatelessWidget {
                               padding: EdgeInsets.only(left: 4.w),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  _showStockDialog(context, menu);
+                                  _showUpdateStockDialog(context, menu);
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color(0xFF19345E),
@@ -247,8 +258,9 @@ class ListMenu extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(20.r),
                                   ),
                                   padding: EdgeInsets.symmetric(
-                                          horizontal: 12.w, vertical: 8)
-                                      .h,
+                                    horizontal: 12.w,
+                                    vertical: 8,
+                                  ).h,
                                   minimumSize: const Size(0, 0),
                                   tapTargetSize:
                                       MaterialTapTargetSize.shrinkWrap,
@@ -271,49 +283,86 @@ class ListMenu extends StatelessWidget {
                 ],
               ),
             );
-          }));
+          },
+        ),
+      );
     }
 
-    return Expanded(
-      child: buildListView(controller.daftarMenu),
-    );
+    return buildListView(controller.daftarMenu);
   }
 
-  void _showStockDialog(BuildContext context, MenuModel menuItem) {
+  void _showUpdateStockDialog(BuildContext context, MenuModel menuItem) {
+    final TextEditingController _stockController = TextEditingController();
+    _stockController.text = menuItem.stock.toString();
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Ubah Stok - ${menuItem.name}'),
+          title: Center(
+            child: Text(
+              'Stok ${menuItem.name}',
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 20.sp,
+              ),
+            ),
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Status Saat Ini: ${menuItem.status}'),
-              SizedBox(height: 16.h),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Get.find<MenuKantinController>()
-                          .updateMenuStock(menuItem.id, true);
-                      Navigator.of(context).pop();
-                    },
-                    child: Text('Tersedia'),
-                  ),
-                  SizedBox(width: 10.w),
-                  ElevatedButton(
-                    onPressed: () {
-                      Get.find<MenuKantinController>()
-                          .updateMenuStock(menuItem.id, false);
-                      Navigator.of(context).pop();
-                    },
-                    child: Text('Habis'),
-                  ),
-                ],
+              Text(
+                'Masukkan jumlah stok baru:',
+                style: TextStyle(
+                  fontSize: 15.sp,
+                ),
+              ),
+              SizedBox(height: 20.h),
+              TextField(
+                controller: _stockController,
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                decoration: InputDecoration(
+                  labelText: "Jumlah Stok",
+                  border: OutlineInputBorder(),
+                ),
               ),
             ],
           ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('Batal'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final int? newStock = int.tryParse(_stockController.text);
+
+                if (newStock != null && newStock >= 0) {
+                  Get.find<MenuKantinController>()
+                      .updateMenuStock(menuItem.id, newStock);
+                  Navigator.of(context).pop();
+                } else {
+                  Get.snackbar(
+                    "Input Tidak Valid",
+                    "Harap masukkan angka yang benar (minimal 0).",
+                    snackPosition: SnackPosition.BOTTOM,
+                    backgroundColor: Colors.red,
+                    colorText: Colors.white,
+                  );
+                }
+              },
+              style: TextButton.styleFrom(
+                backgroundColor: Color(0xFF1E2857),
+              ),
+              child: Text(
+                'Simpan',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
         );
       },
     );

@@ -102,7 +102,7 @@ class NavigationView extends GetView<NavigationController> {
               color: Colors.white,
               notchMargin: 10.w,
               elevation: 0,
-              height: 58.h,
+              height: 65.h,
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 12.w),
                 child: Obx(

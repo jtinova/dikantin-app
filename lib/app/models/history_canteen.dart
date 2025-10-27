@@ -11,8 +11,8 @@ class HistoryModel {
     switch (paymentMethod) {
       case 'cash':
         return 'Cash';
-      case 'credit_card':
-        return 'Kartu Kredit';
+      case 'qris':
+        return 'QRIS';
       default:
         return 'Tidak Diketahui';
     }
@@ -73,6 +73,7 @@ class HistoryMenuItem {
   final int qty;
   final int mainSubtotal;
   final String image;
+  final String? note;
 
   HistoryMenuItem({
     required this.menuId,
@@ -81,6 +82,7 @@ class HistoryMenuItem {
     required this.qty,
     required this.mainSubtotal,
     required this.image,
+    this.note,
   });
 
   factory HistoryMenuItem.fromJson(Map<String, dynamic> json) {
@@ -91,6 +93,7 @@ class HistoryMenuItem {
       qty: json['qty'] ?? 0,
       mainSubtotal: json['main_subtotal'] ?? 0,
       image: json['image'],
+      note: json['note'] ?? '',
     );
   }
   String get imagePath => "${AppUrl.imageMenu}$image";
