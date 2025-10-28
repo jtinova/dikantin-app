@@ -15,9 +15,10 @@ class CourierProfileView extends GetView<CourierProfileController> {
 
   void _handleLogout(BuildContext context) {
     try {
-      final authProvider = Provider.of<AuthenticationProvider>(context, listen: false);
+      final authProvider =
+          Provider.of<AuthenticationProvider>(context, listen: false);
       authProvider.logoutUser();
-      
+
       // Show snackbar after logout
       Get.snackbar(
         "Informasi",
@@ -221,7 +222,7 @@ class CourierProfileView extends GetView<CourierProfileController> {
                                                           ?.toString() ??
                                                       '0') ??
                                                   0) >
-                                                  0)
+                                              0)
                                             ElevatedButton.icon(
                                               onPressed: () {
                                                 _showWithdrawalConfirmation(
@@ -266,7 +267,7 @@ class CourierProfileView extends GetView<CourierProfileController> {
                                                                 'total_balance']
                                                             ?.toString() ??
                                                         '0') ??
-                                            0),
+                                                    0),
                                             style: TextStyle(
                                               fontSize: 22,
                                               fontWeight: FontWeight.bold,
@@ -293,7 +294,7 @@ class CourierProfileView extends GetView<CourierProfileController> {
                                                                 'today_earnings']
                                                             ?.toString() ??
                                                         '0') ??
-                                            0),
+                                                    0),
                                             style: TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w500,
@@ -426,6 +427,31 @@ class CourierProfileView extends GetView<CourierProfileController> {
                                   ),
                                 ),
 
+                                // Riwayat Penarikan
+                                Card(
+                                  elevation: 1,
+                                  margin: EdgeInsets.only(bottom: 8),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: ListTile(
+                                    leading: Icon(
+                                      CupertinoIcons.printer,
+                                      color: Colors.grey,
+                                    ),
+                                    title: Text(
+                                      'Riwayat Penarikan',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    trailing:
+                                        Icon(Icons.arrow_forward_ios, size: 16),
+                                    onTap: () => Get.toNamed(
+                                        Routes.COURIER_WITHDRAWAL_HISTORY),
+                                  ),
+                                ),
+
                                 // Informasi Aplikasi
                                 Card(
                                   elevation: 1,
@@ -516,44 +542,6 @@ class CourierProfileView extends GetView<CourierProfileController> {
                                     },
                                   ),
                                 ),
-
-                                // Withdrawal history if any
-                                if (controller
-                                    .withdrawalHistory.isNotEmpty) ...[
-                                  SizedBox(height: 16),
-                                  Text(
-                                    'Riwayat Penarikan',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  SizedBox(height: 8),
-                                  ListView.builder(
-                                    shrinkWrap: true,
-                                    physics: NeverScrollableScrollPhysics(),
-                                    itemCount:
-                                        controller.withdrawalHistory.length,
-                                    itemBuilder: (context, index) {
-                                      final history =
-                                          controller.withdrawalHistory[index];
-                                      return Card(
-                                        child: ListTile(
-                                          title: Text(
-                                            controller.formatCurrency(
-                                                double.tryParse(
-                                                        history['withdrawal_amount']
-                                                                ?.toString() ??
-                                                            '0') ??
-                                                0),
-                                          ),
-                                          subtitle: Text(
-                                              history['withdrawal_date'] ?? ''),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ],
                               ],
                             ),
                           ),

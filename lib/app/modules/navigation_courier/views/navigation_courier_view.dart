@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
@@ -78,17 +79,17 @@ class NavigationCourierView extends GetView<NavigationCourierController> {
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
+              topLeft: Radius.circular(20.r),
+              topRight: Radius.circular(20.r),
             ),
             child: BottomAppBar(
               shape: CircularNotchedRectangle(),
               color: Colors.white,
               notchMargin: 10,
               elevation: 0,
-              height: 80,
+              height: 80.h,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
                 child: Obx(
                   () => Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -141,14 +142,14 @@ class NavigationCourierView extends GetView<NavigationCourierController> {
                   ? Color(0xFF1E2857)
                   : Colors.grey,
             ),
-            const SizedBox(height: 5),
+            SizedBox(height: 5.h),
             Text(
               label,
               style: TextStyle(
                 color: controller.currentPage.value == page
                     ? Color(0xFF1E2857)
                     : Colors.grey,
-                fontSize: 13,
+                fontSize: 13.sp,
                 fontWeight: controller.currentPage.value == page
                     ? FontWeight.w500
                     : null,

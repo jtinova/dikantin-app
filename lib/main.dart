@@ -12,6 +12,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 import 'app/modules/sign_in/controllers/api_controller.dart';
 import 'app/service/api_service.dart';
@@ -27,6 +28,7 @@ void main() async {
   );
 
   await NotificationService.initialize();
+  await initializeDateFormatting('id_ID', null);
 
   await initServices();
 
@@ -35,7 +37,7 @@ void main() async {
 
   if (token != null) {
     String? role = await DatabaseProvider().getRole();
-    if (role == 'courier') {
+    if (role == 'Kurir') {
       initialRoute = Routes.NAVIGATION_COURIER;
     } else {
       initialRoute = Routes.NAVIGATION;

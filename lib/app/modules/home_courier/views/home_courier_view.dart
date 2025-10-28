@@ -4,24 +4,26 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:get/get.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import ScreenUtil
 
+import '../../../routes/app_pages.dart';
 import '../controllers/home_courier_controller.dart';
 
 class HomeCourierView extends GetView<HomeCourierController> {
   HomeCourierView({super.key}) {
-    // Pastikan controller sudah terinisialisasi sebelum widget dibuat
     Get.put(HomeCourierController(), permanent: true);
   }
 
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.init(context,
+        designSize: Size(360, 690), minTextAdapt: true, splitScreenMode: true);
+
     return Scaffold(
       backgroundColor: Colors.grey[100],
       body: FutureBuilder(
-        // Menggunakan FutureBuilder untuk memastikan controller sudah siap
         future: Future.delayed(Duration(milliseconds: 100)),
         builder: (context, snapshot) {
-          // Gunakan GetX untuk mengakses controller yang sudah diinisialisasi
           return GetX<HomeCourierController>(
             builder: (controller) {
               if (controller.isLoading.value) {
@@ -30,11 +32,10 @@ class HomeCourierView extends GetView<HomeCourierController> {
 
               return Column(
                 children: [
-                  // Header dengan info saldo
                   Container(
-                    height: 240,
+                    height: 240.h,
                     color: Color(0xFF1E2857),
-                    padding: EdgeInsets.all(20),
+                    padding: EdgeInsets.all(20.w),
                     child: SafeArea(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -45,10 +46,10 @@ class HomeCourierView extends GetView<HomeCourierController> {
                                 'Saldo Anda',
                                 style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 16,
+                                  fontSize: 16.sp,
                                 ),
                               ),
-                              SizedBox(height: 10),
+                              SizedBox(height: 10.h),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -62,18 +63,18 @@ class HomeCourierView extends GetView<HomeCourierController> {
                                             : '• • • • • •',
                                         style: TextStyle(
                                           color: Colors.white,
-                                          fontSize: 28,
+                                          fontSize: 28.sp,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       )),
-                                  SizedBox(width: 8),
+                                  SizedBox(width: 8.w),
                                   IconButton(
                                     icon: Icon(
                                       controller.isBalanceVisible.value
                                           ? Icons.visibility
                                           : Icons.visibility_off,
                                       color: Colors.white,
-                                      size: 20,
+                                      size: 20.r,
                                     ),
                                     onPressed: () {
                                       controller.isBalanceVisible.value =
@@ -84,16 +85,16 @@ class HomeCourierView extends GetView<HomeCourierController> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 15),
+                          SizedBox(height: 15.h),
                           TextButton(
                             onPressed: () {
-                              controller.showWithdrawalHistory();
+                              Get.toNamed(Routes.COURIER_WITHDRAWAL_HISTORY);
                             },
                             child: Text(
                               'Riwayat Penarikan',
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 14,
+                                fontSize: 14.sp,
                               ),
                             ),
                           ),
@@ -101,32 +102,24 @@ class HomeCourierView extends GetView<HomeCourierController> {
                       ),
                     ),
                   ),
-
-                  // Judul daftar pickup pesanan
                   Padding(
-                    padding: const EdgeInsets.all(15),
+                    padding: EdgeInsets.all(15.w),
                     child: Text(
                       'Daftar Pickup Pesanan',
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 20.sp,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-
-                  // HAPUS DefaultTabController dari sini
                   Expanded(
                     child: Column(
                       children: [
-                        // Tab untuk kategori pesanan
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 15),
+                          padding: EdgeInsets.symmetric(horizontal: 15.w),
                           child: customTabBar(),
                         ),
-
-                        // Daftar pesanan berdasarkan tab
                         Expanded(
-                          // Gunakan controller dari GetX
                           child: TabBarView(
                             controller: controller.tabController,
                             children: [
@@ -139,30 +132,29 @@ class HomeCourierView extends GetView<HomeCourierController> {
                                 child: controller.pendingOrders.isEmpty
                                     ? ListView(
                                         children: [
-                                          SizedBox(height: 50),
+                                          SizedBox(height: 50.h),
                                           Center(
                                             child: Column(
                                               mainAxisAlignment:
                                                   MainAxisAlignment.center,
                                               children: [
-                                                // Menggunakan file JSON lokal dari assets/animations
                                                 Lottie.asset(
                                                   'assets/animations/Animation - 1746119107847.json',
-                                                  width: 200,
-                                                  height: 200,
+                                                  width: 200.w,
+                                                  height: 200.h,
                                                   fit: BoxFit.contain,
-                                                  errorBuilder: (context,
-                                                      error, stackTrace) {
+                                                  errorBuilder: (context, error,
+                                                      stackTrace) {
                                                     print(
                                                         "Error loading Lottie: $error");
                                                     return Icon(
                                                       CupertinoIcons.cube_box,
-                                                      size: 80,
+                                                      size: 80.r,
                                                       color: Colors.grey,
                                                     );
                                                   },
                                                 ),
-                                                SizedBox(height: 16),
+                                                SizedBox(height: 16.h),
                                               ],
                                             ),
                                           ),
@@ -171,17 +163,16 @@ class HomeCourierView extends GetView<HomeCourierController> {
                                     : ListView.builder(
                                         itemCount:
                                             controller.pendingOrders.length,
-                                        padding: EdgeInsets.all(10),
+                                        padding: EdgeInsets.all(10.w),
                                         itemBuilder: (context, index) {
                                           final order =
                                               controller.pendingOrders[index];
                                           return Card(
                                             margin:
-                                                EdgeInsets.only(bottom: 10),
+                                                EdgeInsets.only(bottom: 10.h),
                                             child: ListTile(
                                               onTap: () {
-                                                showOrderDetail(
-                                                    context, order);
+                                                showOrderDetail(context, order);
                                               },
                                               title: Text(
                                                 order['building_name'] ??
@@ -211,21 +202,21 @@ class HomeCourierView extends GetView<HomeCourierController> {
                                               ),
                                               trailing: Container(
                                                 padding: EdgeInsets.symmetric(
-                                                    horizontal: 8,
-                                                    vertical: 4),
+                                                    horizontal: 8.w,
+                                                    vertical: 4.h),
                                                 decoration: BoxDecoration(
                                                   color: getStatusColor(
                                                       order['status']),
                                                   borderRadius:
                                                       BorderRadius.circular(
-                                                          12),
+                                                          12.r),
                                                 ),
                                                 child: Text(
                                                   getStatusText(
                                                       order['status']),
                                                   style: TextStyle(
                                                     color: Colors.white,
-                                                    fontSize: 12,
+                                                    fontSize: 12.sp,
                                                   ),
                                                 ),
                                               ),
@@ -244,30 +235,30 @@ class HomeCourierView extends GetView<HomeCourierController> {
                                 child: controller.deliveredOrders.isEmpty
                                     ? ListView(
                                         children: [
-                                          SizedBox(height: 50),
+                                          SizedBox(height: 50.h),
                                           Center(
                                             child: Column(
                                               mainAxisAlignment:
                                                   MainAxisAlignment.center,
                                               children: [
                                                 Lottie.asset(
-                                                  'assets/images/Animation - 1746119107847.json',
-                                                  width: 200,
-                                                  height: 200,
+                                                  'assets/animations/Animation - 1746119107847.json',
+                                                  width: 200.w,
+                                                  height: 200.h,
                                                   fit: BoxFit.contain,
-                                                  errorBuilder: (context,
-                                                      error, stackTrace) {
+                                                  errorBuilder: (context, error,
+                                                      stackTrace) {
                                                     print(
                                                         "Error loading Lottie: $error");
                                                     return Icon(
                                                       CupertinoIcons
                                                           .check_mark_circled,
-                                                      size: 80,
+                                                      size: 80.r,
                                                       color: Colors.grey,
                                                     );
                                                   },
                                                 ),
-                                                SizedBox(height: 16),
+                                                SizedBox(height: 16.h),
                                               ],
                                             ),
                                           ),
@@ -276,17 +267,16 @@ class HomeCourierView extends GetView<HomeCourierController> {
                                     : ListView.builder(
                                         itemCount:
                                             controller.deliveredOrders.length,
-                                        padding: EdgeInsets.all(10),
+                                        padding: EdgeInsets.all(10.w),
                                         itemBuilder: (context, index) {
-                                          final order = controller
-                                              .deliveredOrders[index];
+                                          final order =
+                                              controller.deliveredOrders[index];
                                           return Card(
                                             margin:
-                                                EdgeInsets.only(bottom: 10),
+                                                EdgeInsets.only(bottom: 10.h),
                                             child: ListTile(
                                               onTap: () {
-                                                showOrderDetail(
-                                                    context, order);
+                                                showOrderDetail(context, order);
                                               },
                                               title: Text(
                                                 order['building_name'] ??
@@ -316,21 +306,21 @@ class HomeCourierView extends GetView<HomeCourierController> {
                                               ),
                                               trailing: Container(
                                                 padding: EdgeInsets.symmetric(
-                                                    horizontal: 8,
-                                                    vertical: 4),
+                                                    horizontal: 8.w,
+                                                    vertical: 4.h),
                                                 decoration: BoxDecoration(
                                                   color: getStatusColor(
                                                       order['status']),
                                                   borderRadius:
                                                       BorderRadius.circular(
-                                                          12),
+                                                          12.r),
                                                 ),
                                                 child: Text(
                                                   getStatusText(
                                                       order['status']),
                                                   style: TextStyle(
                                                     color: Colors.white,
-                                                    fontSize: 12,
+                                                    fontSize: 12.sp,
                                                   ),
                                                 ),
                                               ),
@@ -354,17 +344,15 @@ class HomeCourierView extends GetView<HomeCourierController> {
     );
   }
 
-  // Widget TabBar Custom
   Widget customTabBar() {
     return AnimatedBuilder(
-      // Dengarkan perubahan dari controller
       animation: controller.tabController.animation!,
       builder: (context, child) {
         return Container(
-          height: 45,
+          height: 45.h,
           decoration: BoxDecoration(
             color: Colors.grey[300],
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(8.r),
           ),
           child: Row(
             children: [
@@ -381,22 +369,19 @@ class HomeCourierView extends GetView<HomeCourierController> {
     );
   }
 
-  // Widget Item Tab
   Widget tabItem({required int index, required String title}) {
-    // Cek apakah tab ini yang sedang dipilih
     final bool isSelected = controller.tabController.index == index;
 
     return GestureDetector(
       onTap: () {
-        // Pindah tab menggunakan controller dari GetX
         controller.tabController.animateTo(index);
       },
       child: AnimatedContainer(
         duration: Duration(milliseconds: 200),
-        margin: EdgeInsets.all(3),
+        margin: EdgeInsets.all(3.w),
         decoration: BoxDecoration(
           color: isSelected ? Color(0xFF1E2857) : Colors.transparent,
-          borderRadius: BorderRadius.circular(6),
+          borderRadius: BorderRadius.circular(6.r),
         ),
         child: Center(
           child: Text(
@@ -404,7 +389,7 @@ class HomeCourierView extends GetView<HomeCourierController> {
             style: TextStyle(
               color: isSelected ? Colors.white : Color(0xFF1E2857),
               fontWeight: FontWeight.w500,
-              fontSize: 14,
+              fontSize: 14.sp,
             ),
           ),
         ),
@@ -413,17 +398,17 @@ class HomeCourierView extends GetView<HomeCourierController> {
   }
 
   void showOrderDetail(BuildContext context, Map<String, dynamic> order) async {
-    // Lanjutkan untuk mengambil detail lainnya dari API
     final details = await controller.getOrderDetail(order['id'].toString());
+    final List<dynamic> orderItems = details['transaction_details'] ?? [];
 
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
       ),
       builder: (context) => Container(
-        padding: EdgeInsets.all(20),
+        padding: EdgeInsets.all(20.w),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -431,11 +416,11 @@ class HomeCourierView extends GetView<HomeCourierController> {
             Text(
               'Detail Pesanan',
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 20.sp,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 20.h),
             if (details.isNotEmpty &&
                 details['customer_information'] != null) ...[
               DetailRow(
@@ -454,11 +439,49 @@ class HomeCourierView extends GetView<HomeCourierController> {
             ],
             if (details.isNotEmpty &&
                 details['transaction_summary'] != null) ...[
-              DetailRow(
-                title: 'Total Item',
-                value:
-                    '${details['transaction_summary']['total_qty'] ?? 0} items',
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Text(
+                      'Total Item',
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 10.w),
+                  Expanded(
+                    flex: 3,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '${details['transaction_summary']['total_qty'] ?? 0} items',
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        if (orderItems.isNotEmpty)
+                          InkWell(
+                            onTap: () {
+                              _showOrderItemsDialog(context, orderItems);
+                            },
+                            child: Icon(
+                              CupertinoIcons.info_circle,
+                              size: 18.r,
+                              color: Color(0xFF1E2857),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
+              SizedBox(height: 8.h),
               DetailRow(
                 title: 'Total Harga',
                 value: controller.formatCurrency(
@@ -483,58 +506,142 @@ class HomeCourierView extends GetView<HomeCourierController> {
                     details['transaction_summary']['payment_method'] ?? '-'),
               ),
             ],
-            SizedBox(height: 20),
-            if (order['status'] == 'pending')
+            SizedBox(height: 20.h),
+            if (order['status'] == 'pending') ...{
               ElevatedButton(
                 onPressed: () {
-                  controller.updateOrderToDelivered(order['id'].toString());
+                  controller.startOrderToDelivered(order['id'].toString());
                   Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xFF1E2857),
-                  minimumSize: Size(double.infinity, 45),
+                  minimumSize: Size(double.infinity, 45.h),
                 ),
-                child:
-                    Text('Mulai Antar', style: TextStyle(color: Colors.white)),
+                child: Text(
+                  'Mulai Antar',
+                  style: TextStyle(color: Colors.white, fontSize: 14.sp),
+                ),
               ),
-            if (order['status'] == 'delivered')
+            } else if (order['status'] == 'delivered') ...{
               ElevatedButton(
                 onPressed: () {
-                  // Cukup panggil completeOrder tanpa parameter
+                  controller.markOrderAsArrived(order['id'].toString());
+                  Navigator.pop(context);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.orange,
+                  minimumSize: Size(double.infinity, 45.h),
+                ),
+                child: Text(
+                  'Sampai Tujuan',
+                  style: TextStyle(color: Colors.white, fontSize: 14.sp),
+                ),
+              ),
+            } else if (order['status'] == 'arrived') ...{
+              ElevatedButton(
+                onPressed: () {
                   controller.completeOrder();
                   Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
-                  minimumSize: Size(double.infinity, 45),
+                  minimumSize: Size(double.infinity, 45.h),
                 ),
-                child: Text('Selesaikan Pesanan',
-                    style: TextStyle(color: Colors.white)),
-              ),
-            if (order['status'] == 'delivered')
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
                 child: Text(
-                  'Scan barcode dari pelanggan untuk menyelesaikan pesanan',
+                  'Scan QrCode Pelanggan',
                   style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey[600],
+                    fontSize: 14.sp,
+                    color: Colors.white,
                     fontStyle: FontStyle.italic,
                   ),
                   textAlign: TextAlign.center,
                 ),
               ),
+            },
           ],
         ),
       ),
     );
   }
 
+  void _showOrderItemsDialog(BuildContext context, List<dynamic> items) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Detail Item Pesanan',
+            style: TextStyle(
+              fontSize: 18.sp,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: items.length,
+              itemBuilder: (context, index) {
+                final item = items[index];
+                final String note = item['note'] ?? 'Tidak ada catatan';
+                return Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8.h),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        item['menu_name'] ?? 'Nama Menu Tidak Tersedia',
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      SizedBox(height: 2.h),
+                      Text(
+                        'Jumlah: ${item['qty']} x ${controller.formatCurrency((item['selling_cost'] ?? 0).toDouble())}',
+                        style:
+                            TextStyle(fontSize: 14.sp, color: Colors.grey[700]),
+                      ),
+                      Text(
+                        'Catatan: $note',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: Colors.grey[600],
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                      if (index < items.length - 1) Divider(height: 10.h),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                'Tutup',
+                style: TextStyle(
+                  fontSize: 14.sp,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Color getStatusColor(String? status) {
     switch (status) {
       case 'pending':
-        return Colors.orange;
+        return Colors.amber;
       case 'delivered':
+        return Colors.orange;
+      case 'arrived':
         return Colors.blue;
       case 'completed':
         return Colors.green;
@@ -549,6 +656,8 @@ class HomeCourierView extends GetView<HomeCourierController> {
         return 'Siap Antar';
       case 'delivered':
         return 'Sedang Diantar';
+      case 'arrived':
+        return 'Telah Tiba';
       case 'completed':
         return 'Selesai';
       default:
@@ -570,7 +679,7 @@ class DetailRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: EdgeInsets.symmetric(vertical: 8.h),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -579,16 +688,18 @@ class DetailRow extends StatelessWidget {
             child: Text(
               title,
               style: TextStyle(
+                fontSize: 14.sp,
                 color: Colors.grey[600],
               ),
             ),
           ),
-          SizedBox(width: 10),
+          SizedBox(width: 10.w),
           Expanded(
             flex: 3,
             child: Text(
               value,
               style: TextStyle(
+                fontSize: 14.sp,
                 fontWeight: FontWeight.w500,
               ),
             ),

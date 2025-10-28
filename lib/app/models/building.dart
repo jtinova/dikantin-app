@@ -15,8 +15,8 @@ class Building {
     return Building(
       id: json['id'],
       name: json['name'],
-      latitude: double.parse(json['latitude']),
-      longitude: double.parse(json['longitude']),
+      latitude: json['latitude'],
+      longitude: json['longitude'],
     );
   }
 }

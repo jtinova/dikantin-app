@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
 
@@ -19,7 +20,7 @@ class CourierProfile extends StatelessWidget {
             Text(
               'Simpan',
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 18.sp,
                 color: Colors.black,
                 fontWeight: FontWeight.w500,
               ),
@@ -32,10 +33,10 @@ class CourierProfile extends StatelessWidget {
             elevation: 0.0,
             backgroundColor: Colors.transparent,
           ),
-          child: const Icon(
+          child: Icon(
             CupertinoIcons.chevron_back,
             color: Colors.black,
-            size: 25,
+            size: 25.sp,
           ),
         ),
       ),
@@ -45,21 +46,21 @@ class CourierProfile extends StatelessWidget {
             CircleAvatar(
               backgroundImage: AssetImage('assets/images/logo_dikantin.png'),
               backgroundColor: Colors.black12,
-              radius: 50,
+              radius: 50.r,
             ),
-            SizedBox(height: 5),
+            SizedBox(height: 5.h),
             Text(
               "Ubah Foto",
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 18.sp,
                 color: Colors.blue,
               ),
             ),
-            SizedBox(height: 30),
+            SizedBox(height: 30.h),
             FormBuilder(
               key: _formKey,
               child: Padding(
-                padding: const EdgeInsets.all(25),
+                padding: EdgeInsets.all(25.r),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,98 +68,98 @@ class CourierProfile extends StatelessWidget {
                     Text(
                       'Nama :',
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 18.sp,
                         color: Colors.black,
                       ),
                     ),
-                    const SizedBox(height: 5),
+                    SizedBox(height: 5.h),
                     FormBuilderTextField(
                       name: "name",
                       keyboardType: TextInputType.emailAddress,
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 18.sp,
                         color: Colors.black87,
                       ),
                       scrollPadding: EdgeInsets.only(
                         bottom: MediaQuery.of(context).viewInsets.bottom,
                       ),
                       decoration: InputDecoration(
-                        prefixIcon: const Icon(
+                        prefixIcon: Icon(
                           CupertinoIcons.person,
-                          size: 18,
+                          size: 18.sp,
                           color: Colors.black87,
                         ),
                         hintText: "Masukan Nama",
                         hintStyle: TextStyle(
-                          fontSize: 18,
+                          fontSize: 18.sp,
                           color: Colors.black54,
                         ),
-                        enabledBorder: const OutlineInputBorder(
+                        enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.all(
-                            Radius.circular(15),
+                            Radius.circular(15.r),
                           ),
                           borderSide: BorderSide(color: Colors.black87),
                         ),
-                        focusedBorder: const OutlineInputBorder(
+                        focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.all(
-                            Radius.circular(15),
+                            Radius.circular(15.r),
                           ),
                           borderSide: BorderSide(color: Colors.black87),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          vertical: 15,
-                          horizontal: 15,
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: 15.h,
+                          horizontal: 15.w,
                         ),
                       ),
                       validator: FormBuilderValidators.compose([
                         FormBuilderValidators.required(),
                       ]),
                     ),
-                    const SizedBox(height: 20),
+                    SizedBox(height: 20.h),
                     Text(
                       'Email :',
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 18.sp,
                         color: Colors.black,
                       ),
                     ),
-                    const SizedBox(height: 5),
+                    SizedBox(height: 5.h),
                     FormBuilderTextField(
                       name: "email",
                       keyboardType: TextInputType.emailAddress,
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 18.sp,
                         color: Colors.black87,
                       ),
                       scrollPadding: EdgeInsets.only(
                         bottom: MediaQuery.of(context).viewInsets.bottom,
                       ),
                       decoration: InputDecoration(
-                        prefixIcon: const Icon(
+                        prefixIcon: Icon(
                           CupertinoIcons.mail,
-                          size: 18,
+                          size: 18.sp,
                           color: Colors.black87,
                         ),
                         hintText: "Masukan email",
                         hintStyle: TextStyle(
-                          fontSize: 18,
+                          fontSize: 18.sp,
                           color: Colors.black54,
                         ),
-                        enabledBorder: const OutlineInputBorder(
+                        enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.all(
-                            Radius.circular(15),
+                            Radius.circular(15.r),
                           ),
                           borderSide: BorderSide(color: Colors.black87),
                         ),
-                        focusedBorder: const OutlineInputBorder(
+                        focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.all(
-                            Radius.circular(15),
+                            Radius.circular(15.r),
                           ),
                           borderSide: BorderSide(color: Colors.black87),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          vertical: 15,
-                          horizontal: 15,
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: 15.h,
+                          horizontal: 15.w,
                         ),
                       ),
                       validator: FormBuilderValidators.compose([
@@ -166,102 +167,102 @@ class CourierProfile extends StatelessWidget {
                         FormBuilderValidators.email(),
                       ]),
                     ),
-                    const SizedBox(height: 20),
+                    SizedBox(height: 20.h),
                     Text(
                       'No Telepon :',
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 18.sp,
                         color: Colors.black,
                       ),
                     ),
-                    const SizedBox(height: 5),
+                     SizedBox(height: 5.h),
                     FormBuilderTextField(
                       name: "no_telp",
                       keyboardType: TextInputType.phone,
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 18.sp,
                         color: Colors.black87,
                       ),
                       scrollPadding: EdgeInsets.only(
                         bottom: MediaQuery.of(context).viewInsets.bottom,
                       ),
                       decoration: InputDecoration(
-                        prefixIcon: const Icon(
+                        prefixIcon:  Icon(
                           CupertinoIcons.phone,
-                          size: 18,
+                          size: 18.sp,
                           color: Colors.black87,
                         ),
                         hintText: "No Telepon",
                         hintStyle: TextStyle(
-                          fontSize: 18,
+                          fontSize: 18.sp,
                           color: Colors.black54,
                         ),
-                        enabledBorder: const OutlineInputBorder(
+                        enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.all(
-                            Radius.circular(15),
+                            Radius.circular(15.r),
                           ),
                           borderSide: BorderSide(color: Colors.black87),
                         ),
-                        focusedBorder: const OutlineInputBorder(
+                        focusedBorder:  OutlineInputBorder(
                           borderRadius: BorderRadius.all(
-                            Radius.circular(15),
+                            Radius.circular(15.r),
                           ),
                           borderSide: BorderSide(color: Colors.black87),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          vertical: 15,
-                          horizontal: 15,
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: 15.h,
+                          horizontal: 15.w,
                         ),
                       ),
                       validator: FormBuilderValidators.compose([
                         FormBuilderValidators.required(),
                       ]),
                     ),
-                    const SizedBox(height: 20),
+                    SizedBox(height: 20.h),
                     Text(
                       'Alamat :',
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 18.sp,
                         color: Colors.black,
                       ),
                     ),
-                    const SizedBox(height: 5),
+                    SizedBox(height: 5.h),
                     FormBuilderTextField(
                       name: "address",
                       keyboardType: TextInputType.streetAddress,
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 18.sp,
                         color: Colors.black87,
                       ),
                       scrollPadding: EdgeInsets.only(
                         bottom: MediaQuery.of(context).viewInsets.bottom,
                       ),
                       decoration: InputDecoration(
-                        prefixIcon: const Icon(
+                        prefixIcon: Icon(
                           CupertinoIcons.mail,
-                          size: 18,
+                          size: 18.sp,
                           color: Colors.black87,
                         ),
                         hintText: "Alamat",
                         hintStyle: TextStyle(
-                          fontSize: 18,
+                          fontSize: 18.sp,
                           color: Colors.black54,
                         ),
-                        enabledBorder: const OutlineInputBorder(
+                        enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.all(
-                            Radius.circular(15),
+                            Radius.circular(15.r),
                           ),
                           borderSide: BorderSide(color: Colors.black87),
                         ),
-                        focusedBorder: const OutlineInputBorder(
+                        focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.all(
-                            Radius.circular(15),
+                            Radius.circular(15.r),
                           ),
                           borderSide: BorderSide(color: Colors.black87),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          vertical: 15,
-                          horizontal: 15,
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: 15.h,
+                          horizontal: 15.w,
                         ),
                       ),
                       validator: FormBuilderValidators.compose([

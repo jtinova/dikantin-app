@@ -14,6 +14,7 @@ import '../widgets/canteen_food_grid.dart';
 import '../widgets/canteen_section.dart';
 import '../widgets/category_section.dart';
 import '../widgets/header_section.dart';
+import '../widgets/recommendation_section.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -43,7 +44,6 @@ class _HomeViewState extends State<HomeView> {
   void _onScroll() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent * 0.9) {
-          
       final searchField = _formKey.currentState?.fields['search'];
       bool isSearchActive = searchField?.value != null &&
           (searchField?.value as String).isNotEmpty;
@@ -85,6 +85,14 @@ class _HomeViewState extends State<HomeView> {
                 Header(formKey: _formKey, controller: controller),
                 BannerCarousel(controller: controller),
                 Categories(controller: controller),
+                Obx(() {
+                  if (!controller.isLoading.value &&
+                      controller.recommendedMenus.isNotEmpty) {
+                    return RecommendationSection(controller: controller);
+                  } else {
+                    return const SizedBox.shrink();
+                  }
+                }),
                 Canteens(controller: controller),
                 FoodGrids(controller: controller),
               ],

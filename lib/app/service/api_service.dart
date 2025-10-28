@@ -16,6 +16,9 @@ class AppUrl {
   static String get baseURLAPI => '$_baseURL/api';
   static String get baseImageURL => '$_baseURL/';
 
+  // Recommendation Menu
+  static String get recommendation => '$baseURLAPI/recommendations';
+
   // Authentication User
   static String get signin => '$baseURLAPI/login';
   static String get signup => '$baseURLAPI/register';
@@ -67,6 +70,7 @@ class AppUrl {
   static String get pendingOrders => '$baseURLAPI/shipping/pending';
   static String get detailOrder => '$baseURLAPI/shipping';
   static String get deliveryOrder => '$baseURLAPI/shipping/deliver';
+  static String get arrivedOrder => '$baseURLAPI/shipping/arrived';
   static String get completeOrder => '$baseURLAPI/shipping/delivered';
   static String get shippingHistory => '$baseURLAPI/shipping/history';
   static String get shippingStats => '$baseURLAPI/shipping/stats';

@@ -115,12 +115,12 @@ class AuthenticationProvider extends ChangeNotifier {
         _resMessage = res["message"] ?? "Login successful";
         final token = res["data"]["access_token"];
         await DatabaseProvider().saveToken(token);
-        await DatabaseProvider().saveRole('customer');
+        await DatabaseProvider().saveRole('Pelanggan');
         Get.offAllNamed(Routes.NAVIGATION);
 
         final fcmToken = await FirebaseMessaging.instance.getToken();
         if (fcmToken != null) {
-          storeFCMToken(fcmToken: fcmToken, role: 'customer');
+          storeFCMToken(fcmToken: fcmToken, role: 'Pelanggan');
           print("FCM Token: $fcmToken");
         }
       } else {
@@ -140,12 +140,12 @@ class AuthenticationProvider extends ChangeNotifier {
           _resMessage = courierRes["message"] ?? "Login successful";
           final token = courierRes["data"]["access_token"];
           await DatabaseProvider().saveToken(token);
-          await DatabaseProvider().saveRole('courier');
+          await DatabaseProvider().saveRole('Kurir');
           Get.offAllNamed(Routes.NAVIGATION_COURIER);
 
           final fcmToken = await FirebaseMessaging.instance.getToken();
           if (fcmToken != null) {
-            storeFCMToken(fcmToken: fcmToken, role: 'courier');
+            storeFCMToken(fcmToken: fcmToken, role: 'Kurir');
             print("FCM Token: $fcmToken");
           }
         } else {

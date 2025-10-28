@@ -71,7 +71,7 @@ class HomeCourierController extends GetxController
           pendingOrders.value =
               orderList.where((order) => order['status'] == 'pending').toList();
           deliveredOrders.value = orderList
-              .where((order) => order['status'] == 'delivered')
+              .where((order) => order['status'] == 'delivered' || order['status'] == 'arrived')
               .toList();
         }
       } else {
@@ -100,16 +100,36 @@ class HomeCourierController extends GetxController
     }
   }
 
-  Future<void> updateOrderToDelivered(String orderId) async {
+  Future<void> startOrderToDelivered(String orderId) async {
     try {
       final response = await ApiClient.patch(
         AppUrl.deliveryOrder,
-        body: {'id_order_delivery': orderId},
+        body: {'order_delivery_id': orderId},
       );
 
       if (response.statusCode == 200) {
         await getPendingOrders();
         goToConfirmationTab();
+      } else {
+        print("Error response while updating order: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error updating order status: $e");
+    }
+  }
+
+  Future<void> markOrderAsArrived(String orderId) async {
+    try {
+      final response = await ApiClient.patch(
+        AppUrl.arrivedOrder,
+        body: {'order_delivery_id': orderId},
+      );
+
+      if (response.statusCode == 200) {
+        await getPendingOrders();
+        goToConfirmationTab();
+      } else {
+        print("Error response while updating order: ${response.statusCode}");
       }
     } catch (e) {
       print("Error updating order status: $e");
@@ -122,7 +142,7 @@ class HomeCourierController extends GetxController
       if (barcodeScanResult == null || barcodeScanResult.isEmpty) {
         Get.snackbar(
           'Dibatalkan',
-          'Pemindaian barcode dibatalkan atau kosong.',
+          'Pemindaian QrCode dibatalkan atau kosong.',
           backgroundColor: Colors.orange,
           colorText: Colors.white,
           snackPosition: SnackPosition.TOP,

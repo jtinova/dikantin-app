@@ -20,6 +20,7 @@ import '../modules/profile/widgets/favorite_menu_section.dart';
 import '../modules/profile/widgets/history_order_section.dart';
 import '../modules/profile/widgets/my_profile_section.dart';
 import '../modules/profile/views/profile_view.dart';
+import '../modules/profile_courier/widgets/withdrawal_history_section.dart';
 import '../modules/reset_password/bindings/reset_password_binding.dart';
 import '../modules/reset_password/views/reset_password_view.dart';
 import '../modules/send_email/bindings/send_email_binding.dart';
@@ -119,6 +120,10 @@ class AppPages {
       binding: CourierDeliveryHistoryBinding(),
     ),
     GetPage(
+      name: Routes.COURIER_WITHDRAWAL_HISTORY,
+      page: () => const WithdrawalHistoryView(),
+    ),
+    GetPage(
       name: _Paths.ABOUT_APP,
       page: () => const AboutApp(),
     ),
@@ -133,6 +138,6 @@ class AppPages {
     GetPage(
       name: _Paths.FAVORITE_MENU,
       page: () => FavoriteMenu(),
-    )
+    ),
   ];
 }

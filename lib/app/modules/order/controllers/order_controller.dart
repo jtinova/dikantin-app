@@ -703,6 +703,10 @@ class OrderController extends GetxController {
   }
 
   String capitalizeFirst(String text) {
+    if (text == 'waiting_for_payment') {
+      return 'Belum Bayar';
+    }
+
     return text
         .split('_')
         .map((word) =>
@@ -732,6 +736,8 @@ class OrderController extends GetxController {
 
   Color getStatusColor(String status) {
     switch (status) {
+      case 'waiting_for_payment':
+        return Colors.red;
       case "pending":
         return Color(0xFF1E2857);
       case "cooking":

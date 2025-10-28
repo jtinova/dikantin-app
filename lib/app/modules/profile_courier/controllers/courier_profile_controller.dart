@@ -376,7 +376,7 @@ class CourierProfileController extends GetxController {
           pendingOrders.value =
               orderList.where((order) => order['status'] == 'pending').toList();
           deliveredOrders.value = orderList
-              .where((order) => order['status'] == 'delivered')
+              .where((order) => order['status'] == 'delivered' || order['status'] == 'arrived')
               .toList();
 
           // Update courierData dengan jumlah pesanan yang benar, tanpa menimpa data lain

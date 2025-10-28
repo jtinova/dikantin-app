@@ -43,6 +43,7 @@ class HomeController extends GetxController {
 
   var menus = <Menu>[].obs;
   var allMenus = <Menu>[].obs;
+  var recommendedMenus = <Menu>[].obs;
 
   bool _isThrottled = false;
   Timer? _throttleTimer, _debounce;
@@ -76,6 +77,7 @@ class HomeController extends GetxController {
         getLocation(),
         getFavoriteMenuForHome(),
         getCategories(),
+        getRecommendedMenus(),
         getCanteen(),
         fetchAllMenus(isRefresh: true),
       ]);
@@ -117,6 +119,7 @@ class HomeController extends GetxController {
         getLocation(),
         getFavoriteMenuForHome(),
         getCategories(),
+        getRecommendedMenus(),
         getCanteen(),
         fetchAllMenus(isRefresh: true),
       ]);
@@ -142,6 +145,34 @@ class HomeController extends GetxController {
     } finally {
       isLoading.value = false;
       EasyLoading.dismiss();
+    }
+  }
+
+  Future<void> getRecommendedMenus() async {
+    isMenuLoading.value = true;
+    String url = AppUrl.recommendation;
+
+    try {
+      final req = await ApiClient.get(url);
+
+      if (req.statusCode == 200) {
+        final res = json.decode(req.body);
+        
+        List<dynamic> menuData = res["data"];
+        recommendedMenus.value =
+            menuData.map((item) => Menu.fromJson(item)).toList();
+      } else {
+        recommendedMenus.clear();
+
+        final res = json.decode(req.body);
+        print(res);
+      }
+    } catch (e) {
+      recommendedMenus.clear();
+
+      print(e);
+    } finally {
+      isMenuLoading.value = false;
     }
   }
 

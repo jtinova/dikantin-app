@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -22,6 +23,11 @@ class OrderDetailBottom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isShowBarcode = order.status != "done" &&
+        order.status != "cancel" &&
+        order.status != "pending" &&
+        order.status != "cooking";
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
       child: Column(
@@ -39,14 +45,91 @@ class OrderDetailBottom extends StatelessWidget {
             ),
           ),
           SizedBox(height: 10.h),
-          Center(
-            child: Text(
-              "Detail Pesanan",
-              style: TextStyle(
-                fontSize: 18.sp,
-                fontWeight: FontWeight.w600,
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              Center(
+                child: Text(
+                  "Detail Pesanan",
+                  style: TextStyle(
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
-            ),
+              if (isShowBarcode)
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: IconButton(
+                    icon: Icon(CupertinoIcons.qrcode_viewfinder, size: 28.r),
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          final String dialogTitle = order.delivery != null
+                              ? 'Tunjukkan Barcode ke Kurir'
+                              : 'Tunjukkan Barcode ke Kasir';
+                          return AlertDialog(
+                            title: Text(
+                              dialogTitle,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 20.sp,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            content: SizedBox(
+                              width: 190.w,
+                              height: 190.h,
+                              child: Center(
+                                child: Container(
+                                  padding: EdgeInsets.all(
+                                    8.w,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.grey.shade300,
+                                      width: 2.w,
+                                    ),
+                                    borderRadius: BorderRadius.circular(10.r),
+                                  ),
+                                  child: QrImageView(
+                                    data: order.id,
+                                    version: QrVersions.auto,
+                                    size: 180.w,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            actions: [
+                              SizedBox(
+                                width: double.infinity,
+                                height: 35.h,
+                                child: ElevatedButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Color(0xFF1E2857),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.r),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    "Tutup",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 15.sp,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+            ],
           ),
           SizedBox(height: 10.h),
           Row(
@@ -406,7 +489,8 @@ class OrderDetailBottom extends StatelessWidget {
               builder: (context) {
                 final bool canCancel =
                     order.details.any((item) => item.status == 'pending');
-                    
+
+                // Definisikan ulang isShowBarcode di sini agar scope-nya lokal ke Builder
                 final bool isShowBarcode = order.status != "done" &&
                     order.status != "cancel" &&
                     order.status != "pending" &&
