@@ -173,9 +173,9 @@ class ProfileView extends GetView<ProfileController> {
                                         ? Colors.green
                                         : Colors.red,
                                     colorText: Colors.white,
-                                    borderWidth: 5.0.w,
+                                    borderWidth: 5.w,
                                     snackPosition: SnackPosition.TOP,
-                                    margin: EdgeInsets.all(20.0.w),
+                                    margin: EdgeInsets.all(20.w),
                                     icon: const Icon(
                                       CupertinoIcons.info_circle,
                                       color: Colors.white,

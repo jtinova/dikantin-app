@@ -38,7 +38,8 @@ class MenuKantinView extends GetView<MenuKantinController> {
                 context: context,
                 builder: (context) => AlertDialog(
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
                   title: Text(
                     'Bantuan',
                     style: TextStyle(
@@ -259,7 +260,7 @@ class ListMenu extends StatelessWidget {
                                   ),
                                   padding: EdgeInsets.symmetric(
                                     horizontal: 12.w,
-                                    vertical: 8,
+                                    vertical: 8.h,
                                   ).h,
                                   minimumSize: const Size(0, 0),
                                   tapTargetSize:

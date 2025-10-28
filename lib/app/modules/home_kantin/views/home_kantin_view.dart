@@ -71,87 +71,87 @@ class Header extends StatelessWidget {
                     borderRadius: BorderRadius.circular(30.r),
                   ),
                   padding: EdgeInsets.all(4.w),
-                  child: Obx(() => Row(
-                        children: [
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () {
-                                controller.selectedItem.value = 'Buka';
-                                controller.updateCanteenStatus('open');
-                                Get.snackbar(
-                                  "Status Kantin",
-                                  "Status diubah ke Buka",
-                                  snackPosition: SnackPosition.TOP,
-                                  backgroundColor: Colors.white,
-                                  colorText: Colors.black,
-                                  margin: EdgeInsets.all(10.w),
-                                  borderRadius: 10.r,
-                                  duration: Duration(seconds: 2),
-                                );
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
+                  child: Obx(
+                    () => Row(
+                      children: [
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              controller.selectedItem.value = 'Buka';
+                              controller.updateCanteenStatus('open');
+                              Get.snackbar(
+                                "Status Kantin",
+                                "Status diubah ke Buka",
+                                snackPosition: SnackPosition.TOP,
+                                backgroundColor: Colors.white,
+                                colorText: Colors.black,
+                                margin: EdgeInsets.all(10.w),
+                                borderRadius: 10.r,
+                                duration: Duration(seconds: 2),
+                              );
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: controller.selectedItem.value == 'Buka'
+                                    ? Color(0xFF1E2857)
+                                    : Colors.transparent,
+                                borderRadius: BorderRadius.circular(30.r),
+                              ),
+                              alignment: Alignment.center,
+                              padding: EdgeInsets.symmetric(vertical: 8.h),
+                              child: Text(
+                                'Buka',
+                                style: TextStyle(
                                   color: controller.selectedItem.value == 'Buka'
-                                      ? Color(0xFF1E2857)
-                                      : Colors.transparent,
-                                  borderRadius: BorderRadius.circular(30.r),
-                                ),
-                                alignment: Alignment.center,
-                                padding: EdgeInsets.symmetric(vertical: 8.h),
-                                child: Text(
-                                  'Buka',
-                                  style: TextStyle(
-                                    color:
-                                        controller.selectedItem.value == 'Buka'
-                                            ? Colors.white
-                                            : Color(0xFF1E2857),
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                                      ? Colors.white
+                                      : Color(0xFF1E2857),
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                             ),
                           ),
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () {
-                                controller.selectedItem.value = 'Tutup';
-                                controller.updateCanteenStatus('close');
-                                Get.snackbar(
-                                  "Status Kantin",
-                                  "Status diubah ke Tutup",
-                                  snackPosition: SnackPosition.TOP,
-                                  backgroundColor: Colors.white,
-                                  colorText: Colors.black,
-                                  margin: EdgeInsets.all(10.w),
-                                  borderRadius: 10.r,
-                                  duration: Duration(seconds: 2),
-                                );
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
+                        ),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              controller.selectedItem.value = 'Tutup';
+                              controller.updateCanteenStatus('close');
+                              Get.snackbar(
+                                "Status Kantin",
+                                "Status diubah ke Tutup",
+                                snackPosition: SnackPosition.TOP,
+                                backgroundColor: Colors.white,
+                                colorText: Colors.black,
+                                margin: EdgeInsets.all(10.w),
+                                borderRadius: 10.r,
+                                duration: Duration(seconds: 2),
+                              );
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: controller.selectedItem.value == 'Tutup'
+                                    ? Color(0xFF1E2857)
+                                    : Colors.transparent,
+                                borderRadius: BorderRadius.circular(30.r),
+                              ),
+                              alignment: Alignment.center,
+                              padding: EdgeInsets.symmetric(vertical: 8.h),
+                              child: Text(
+                                'Tutup',
+                                style: TextStyle(
                                   color:
                                       controller.selectedItem.value == 'Tutup'
-                                          ? Color(0xFF1E2857)
-                                          : Colors.transparent,
-                                  borderRadius: BorderRadius.circular(30.r),
-                                ),
-                                alignment: Alignment.center,
-                                padding: EdgeInsets.symmetric(vertical: 8.h),
-                                child: Text(
-                                  'Tutup',
-                                  style: TextStyle(
-                                    color:
-                                        controller.selectedItem.value == 'Tutup'
-                                            ? Colors.white
-                                            : Color(0xFF1E2857),
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                                          ? Colors.white
+                                          : Color(0xFF1E2857),
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                             ),
                           ),
-                        ],
-                      )),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
                 SizedBox(height: 20.h),
                 Column(
@@ -169,26 +169,29 @@ class Header extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
-                            child: Column(
-                          children: [
-                            Text(
-                              "Hari ini",
-                              style: TextStyle(
-                                  color: Color(0xFFeaeaea),
-                                  fontSize: 15.sp,
-                                  fontWeight: FontWeight.w100),
-                            ),
-                            SizedBox(height: 3.h),
-                            Obx(() => Text(
+                          child: Column(
+                            children: [
+                              Text(
+                                "Hari ini",
+                                style: TextStyle(
+                                    color: Color(0xFFeaeaea),
+                                    fontSize: 15.sp,
+                                    fontWeight: FontWeight.w100),
+                              ),
+                              SizedBox(height: 3.h),
+                              Obx(
+                                () => Text(
                                   "Rp ${controller.totalIncomeToday.value.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}",
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 22.sp,
                                     fontWeight: FontWeight.w500,
                                   ),
-                                ))
-                          ],
-                        )),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
                         Expanded(
                             child: Column(
                           children: [
@@ -218,92 +221,96 @@ class Header extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Container(
-                                height: 60.h,
-                                decoration: BoxDecoration(
-                                  color: Color(0xFFf4f8fa),
-                                  borderRadius: BorderRadius.circular(20.r),
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsets.all(8.w),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Icon(
-                                        Icons.shopping_cart_rounded,
-                                        color: Color(0xFF1E2857),
-                                        size: 36.sp,
-                                      ),
-                                      Column(
-                                        children: [
-                                          Text(
-                                            "Dilayani",
+                              height: 60.h,
+                              decoration: BoxDecoration(
+                                color: Color(0xFFf4f8fa),
+                                borderRadius: BorderRadius.circular(20.r),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.all(8.w),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Icon(
+                                      Icons.shopping_cart_rounded,
+                                      color: Color(0xFF1E2857),
+                                      size: 36.sp,
+                                    ),
+                                    Column(
+                                      children: [
+                                        Text(
+                                          "Dilayani",
+                                          style: TextStyle(
+                                              color: Color(0xFF1E2857),
+                                              fontSize: 15.sp,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                        SizedBox(height: 3.h),
+                                        Obx(
+                                          () => Text(
+                                            "${controller.totalOrderServed.value}",
                                             style: TextStyle(
-                                                color: Color(0xFF1E2857),
-                                                fontSize: 15.sp,
-                                                fontWeight: FontWeight.w500),
+                                              color: Color(0xFF1E2857),
+                                              fontSize: 17.sp,
+                                              fontWeight: FontWeight.w500,
+                                            ),
                                           ),
-                                          SizedBox(height: 3.h),
-                                          Obx(() => Text(
-                                                "${controller.totalOrderServed.value}",
-                                                style: TextStyle(
-                                                  color: Color(0xFF1E2857),
-                                                  fontSize: 17.sp,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ))
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                )),
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
                           ),
                           SizedBox(width: 20.w),
                           Expanded(
                             child: Container(
-                                height: 60.h,
-                                decoration: BoxDecoration(
-                                  color: Color(0xFFf4f8fa),
-                                  borderRadius: BorderRadius.circular(20.r),
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsets.all(8.w),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Icon(
-                                        Icons.assignment_turned_in_sharp,
-                                        color: Color(0xFF1E2857),
-                                        size: 36.sp,
-                                      ),
-                                      Column(
-                                        children: [
-                                          Text(
-                                            "Selesai",
+                              height: 60.h,
+                              decoration: BoxDecoration(
+                                color: Color(0xFFf4f8fa),
+                                borderRadius: BorderRadius.circular(20.r),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.all(8.w),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Icon(
+                                      Icons.assignment_turned_in_sharp,
+                                      color: Color(0xFF1E2857),
+                                      size: 36.sp,
+                                    ),
+                                    Column(
+                                      children: [
+                                        Text(
+                                          "Selesai",
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 15.sp,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                        SizedBox(height: 3.h),
+                                        Obx(
+                                          () => Text(
+                                            "${controller.totalOrderDone.value}",
                                             style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 15.sp,
-                                                fontWeight: FontWeight.w500),
+                                              color: Color(0xFF1E2857),
+                                              fontSize: 17.sp,
+                                              fontWeight: FontWeight.w500,
+                                            ),
                                           ),
-                                          SizedBox(height: 3.h),
-                                          Obx(() => Text(
-                                                "${controller.totalOrderDone.value}",
-                                                style: TextStyle(
-                                                  color: Color(0xFF1E2857),
-                                                  fontSize: 17.sp,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ))
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                )),
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -362,7 +369,7 @@ class RiwayatPesanan extends StatelessWidget {
     Widget buildListView(RxList<HistoryModel> data) {
       return Obx(() => ListView.builder(
             physics: const AlwaysScrollableScrollPhysics(),
-            padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 4),
+            padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 4.h),
             itemCount: data.length >= 2 ? 2 : data.length,
             itemBuilder: (context, index) {
               var item = data[index];

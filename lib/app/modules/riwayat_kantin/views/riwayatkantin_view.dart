@@ -35,7 +35,8 @@ class RiwayatKantinView extends GetView<RiwayatKantinController> {
                 context: context,
                 builder: (context) => AlertDialog(
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
                   title: Text(
                     'Bantuan',
                     style: TextStyle(

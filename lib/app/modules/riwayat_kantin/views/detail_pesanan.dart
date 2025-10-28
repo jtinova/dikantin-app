@@ -21,8 +21,9 @@ class DetailPesananView extends GetView<RiwayatKantinController> {
         leading: Container(
           margin: EdgeInsets.all(8.w),
           decoration: BoxDecoration(
-              color: Color(0xFF19345E),
-              borderRadius: BorderRadius.circular(10)),
+            color: Color(0xFF19345E),
+            borderRadius: BorderRadius.circular(10.r),
+          ),
           child: IconButton(
               iconSize: 15.sp,
               onPressed: () {

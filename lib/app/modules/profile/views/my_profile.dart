@@ -55,10 +55,10 @@ class MyProfile extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 30.h),
-
                 _buildReadOnlyField("Nama Kantin", canteen?.name ?? ''),
                 _buildReadOnlyField("Email", canteen?.email ?? ''),
-                _buildReadOnlyField("Nomor Telepon", canteen?.phoneNumber ?? ''),
+                _buildReadOnlyField(
+                    "Nomor Telepon", canteen?.phoneNumber ?? ''),
               ],
             ),
           );
@@ -71,8 +71,13 @@ class MyProfile extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label,
-            style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500)),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
         SizedBox(height: 5.h),
         TextFormField(
           enabled: false,
@@ -82,8 +87,10 @@ class MyProfile extends StatelessWidget {
               borderRadius: BorderRadius.circular(12.r),
               borderSide: const BorderSide(color: Colors.grey),
             ),
-            contentPadding:
-                EdgeInsets.symmetric(vertical: 14.h, horizontal: 12.w),
+            contentPadding: EdgeInsets.symmetric(
+              vertical: 14.h,
+              horizontal: 12.w,
+            ),
           ),
         ),
         SizedBox(height: 14.h),

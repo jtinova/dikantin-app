@@ -121,7 +121,7 @@ class NavigationView extends GetView<NavigationController> {
                         page: 1,
                         label: "Menu",
                       ),
-                      SizedBox(width: 48), 
+                      SizedBox(width: 48.w), 
                       _bottomAppBarItem(
                         context,
                         icon: CupertinoIcons.doc_chart_fill,
