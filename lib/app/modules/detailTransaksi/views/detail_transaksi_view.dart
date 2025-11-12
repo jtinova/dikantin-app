@@ -12,7 +12,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:shimmer/shimmer.dart';
-
+import '../../chat/detail_chat_page.dart';
 import '../../../data/providers/services.dart';
 
 class DetailTransaksiView extends GetView<DetailTransaksiController> {
@@ -549,6 +549,61 @@ class DetailTransaksiView extends GetView<DetailTransaksiController> {
                                                             ],
                                                           ),
                                                         ),
+                                                      ),
+                                                      ElevatedButton(
+                                                        onPressed: () async {
+                                                          if(transaksi.statusPesanan == '3')
+                                                          {
+                                                            final idchat = await controller
+                                                              .fetchMessagesKurir(
+                                                                  transaksi
+                                                                      .kodeTr
+                                                                      .toString(),
+                                                                  transaksi.idKurir.toString());
+                                                        
+                                                          if (idchat != null) {
+                                                            Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                builder: (context) =>
+                                                                    DetailChatPage(
+                                                                        conversationId:
+                                                                            idchat, kantinnn: 'kurir'),
+                                                              ),
+                                                            );
+                                                          } else {
+                                                            print(
+                                                                "Gagal mendapatkan id_chat.");
+                                                          }
+                                                          }else{
+                                                            final idchat = await controller
+                                                              .fetchMessages(
+                                                                  transaksi
+                                                                      .kodeTr
+                                                                      .toString(),
+                                                                  detailTransaksi
+                                                                      .menu!
+                                                                      .idKantin
+                                                                      .toString());
+                                                        
+                                                          if (idchat != null) {
+                                                            Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                builder: (context) =>
+                                                                    DetailChatPage(
+                                                                        conversationId:
+                                                                            idchat, kantinnn: detailTransaksi.menu!.idKantin.toString()),
+                                                              ),
+                                                            );
+                                                          } else {
+                                                            print(
+                                                                "Gagal mendapatkan id_chat.");
+                                                          }
+                                                          }
+                                                        },
+                                                        child:
+                                                            Text("Chat"),
                                                       ),
                                                       if (detailTransaksi
                                                               .statusKonfirm ==

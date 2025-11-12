@@ -1,4 +1,5 @@
 import 'package:dikantin/app/data/providers/customer_provider.dart';
+import 'package:dikantin/app/modules/home/controllers/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -38,6 +39,9 @@ class OrderController extends GetxController {
     speed: 0,
     speedAccuracy: 0,
   ).obs;
+
+  int totalQuantity = 0;
+  HomeController homeController = Get.find<HomeController>();
 
   @override
   void onInit() {
@@ -99,6 +103,27 @@ class OrderController extends GetxController {
 
     Position position = await Geolocator.getCurrentPosition();
     myPosition.value = position;
+  }
+
+  // Perhitungan biaya kurir berdasarkan quantity
+  int calculateValueBasedOnRange() {
+    totalQuantity = 0;
+    homeController.itemQuantities.forEach((key, value) {
+      totalQuantity += value ?? 1;
+    });
+    print(totalQuantity);
+    // return totalQuantity;
+    if (totalQuantity >= 1 && totalQuantity <= 5) {
+      return 2000;
+    } else if (totalQuantity >= 6 && totalQuantity <= 10) {
+      return 4000;
+    } else if (totalQuantity >= 11 && totalQuantity <= 15) {
+      return 6000;
+    } else if (totalQuantity >= 16) {
+      return 7000;
+    } else {
+      throw ArgumentError('Invalid input: jumlah must be 1 or greater');
+    }
   }
 
   Future<void> getAddressFromLatLong(Position position) async {

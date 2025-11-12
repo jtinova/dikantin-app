@@ -13,6 +13,7 @@ import '../../../data/models/waktu_model.dart';
 import '../../../data/providers/customer_provider.dart';
 import '../../../data/providers/menu_provider.dart';
 import '../../../data/providers/services.dart';
+import '../../order/controllers/order_controller.dart';
 
 class HomeController extends GetxController with GetTickerProviderStateMixin {
   final TextEditingController catatanController = TextEditingController();
@@ -56,7 +57,7 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
       total += itemTotal;
     }
     // Menambahkan biaya kirim ke total harga
-    final biayakirim = biayaData.value.data ?? 0;
+    final biayakirim = OrderController().calculateValueBasedOnRange() ?? 0;
     total += biayakirim;
     return total;
   }
@@ -363,10 +364,12 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
     } else {
       totalBayar = totalPriceWithKurir;
     }
+    int biayaKirim = OrderController().calculateValueBasedOnRange() ?? 2000;
 
     Map<String, dynamic> detailOrderan = {
       "total_harga": totalPrice,
       "total_bayar": totalBayar,
+      "biaya_kirim": biayaKirim,
       "kembalian": totalBayar - totalPriceWithKurir,
       "model_pembayaran": paymentMethod
     };

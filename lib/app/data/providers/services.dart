@@ -1,5 +1,5 @@
 class Api {
-  static const koneksi = "https://dikantin.com/api/v5";
+  static const koneksi = "https://dikantin.com/v5";
   static const koneksi1 = "https://dikantin.com/api";
   static const gambar = "https://dikantin.com/";
   static const signUp = "$koneksi1/validate/register";
@@ -44,4 +44,9 @@ class Api {
   static const checkjam = "$koneksi1/transaction/setOperationHour";
   static const checkversion = "$koneksi1/version";
   static const productCancellation = "$koneksi1/cancelled/transaksi?";
+  static const getId = "$koneksi1/getid";
+  static const getIdKurir = "$koneksi1/getidkurir";
+  static const getMessage = "$koneksi1/getallmessage/";
+  static const sendMessage = "$koneksi1/sendmessage";
+  static const socketUrl = "ws://dikantin.com/app/inwzp1yrljbtb0ovplnz";
 }

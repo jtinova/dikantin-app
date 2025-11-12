@@ -6,6 +6,7 @@ environment:
   sdk: ">=3.1.2 <4.0.0"
 
 dependencies:
+  web_socket_channel: ^2.1.0
   android_intent_plus: ^5.0.2
   badges: ^3.1.2
   carbon_icons: ^0.0.1+2

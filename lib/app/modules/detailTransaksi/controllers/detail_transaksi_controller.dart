@@ -1,9 +1,15 @@
+import 'package:dikantin/app/data/providers/services.dart';
 import 'package:dikantin/app/modules/pesanan/controllers/pesanan_controller.dart';
 import 'package:get/get.dart';
 
 import '../../../data/models/cancel_model.dart';
 import '../../../data/models/pesanan_model.dart';
 import '../../../data/providers/pesanan_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+import '../../chat/detail_chat_page.dart';
 
 class DetailTransaksiController extends GetxController {
   //TODO: Implement DetailTransaksiController
@@ -54,7 +60,7 @@ class DetailTransaksiController extends GetxController {
       // Memeriksa apakah detail transaksi kosong
       if (transaksiData.value?.transaksi?.detailTransaksi?.isEmpty ?? true) {
         Get.back();
-    }
+      }
     }
   }
 
@@ -110,7 +116,6 @@ class DetailTransaksiController extends GetxController {
             if (response.kode == 1) {
               await refreshData(kodeTr);
               Get.snackbar("Success", response.status.toString());
-              
             } else {
               refreshData(kodeTr);
               Get.snackbar(
@@ -215,4 +220,74 @@ class DetailTransaksiController extends GetxController {
       print('Error fetching data: $error');
     }
   }
+
+    Future<int?> fetchMessages(String idTransaksi, String idKantin) async {
+      final url = Uri.parse(Api.getId);
+
+      // Membuat body request
+      final body = {
+        "id_transaksi": idTransaksi,
+        "id_kantin": idKantin,
+      };
+
+      try {
+        final response = await http.post(
+          url,
+          headers: {
+            "Content-Type": "application/json", // Set header content type
+          },
+          body: jsonEncode(body), // Mengubah body ke format JSON
+        );
+
+        // Memeriksa status code
+        if (response.statusCode == 200) {
+          final responseData = jsonDecode(response.body);
+          // Mengembalikan id_chat jika respons sukses
+          return responseData['id'];
+        } else {
+          // Menangani jika status code tidak 200
+          print('Request failed with status: ${response.statusCode}.');
+          return null;
+        }
+      } catch (e) {
+        // Menangani kesalahan lainnya
+        print('Error occurred: $e');
+        return null;
+      }
+    }
+
+    Future<int?> fetchMessagesKurir(String idTransaksi, String idKantin) async {
+      final url = Uri.parse(Api.getIdKurir);
+
+      // Membuat body request
+      final body = {
+        "id_transaksi": idTransaksi,
+        "id_kurir": idKantin,
+      };
+
+      try {
+        final response = await http.post(
+          url,
+          headers: {
+            "Content-Type": "application/json", // Set header content type
+          },
+          body: jsonEncode(body), // Mengubah body ke format JSON
+        );
+
+        // Memeriksa status code
+        if (response.statusCode == 200) {
+          final responseData = jsonDecode(response.body);
+          // Mengembalikan id_chat jika respons sukses
+          return responseData['id'];
+        } else {
+          // Menangani jika status code tidak 200
+          print('Request failed with status: ${response.statusCode}.');
+          return null;
+        }
+      } catch (e) {
+        // Menangani kesalahan lainnya
+        print('Error occurred: $e');
+        return null;
+      }
+    }
 }

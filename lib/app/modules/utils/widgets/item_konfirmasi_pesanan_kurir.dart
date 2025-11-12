@@ -1,10 +1,14 @@
+import 'dart:convert';
+
 import 'package:carbon_icons/carbon_icons.dart';
 import 'package:dikantin/app/data/models/pesanan_kirim_model.dart';
+import 'package:dikantin/app/data/providers/services.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:http/http.dart' as http;
 import '../formatDate.dart';
+import '../../chat/detail_chat_page_kurir.dart';
 
 class ItemKonfirmasiPesananKurir extends StatelessWidget {
   final DataPesananKirim orderData;
@@ -18,6 +22,41 @@ class ItemKonfirmasiPesananKurir extends StatelessWidget {
     super.key,
   });
 
+  Future<int?> fetchMessagesKurir(String idTransaksi, String idKurir) async {
+    final url = Uri.parse(Api.getIdKurir);
+
+    // Membuat body request
+    final body = {
+      "id_transaksi": idTransaksi,
+      "id_kurir": idKurir,
+    };
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          "Content-Type": "application/json", // Set header content type
+        },
+        body: jsonEncode(body), // Mengubah body ke format JSON
+      );
+
+      // Memeriksa status code
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        // Mengembalikan id_chat jika respons sukses
+        return responseData['id'];
+      } else {
+        // Menangani jika status code tidak 200
+        print('Request failed with status: ${response.statusCode}.');
+        return null;
+      }
+    } catch (e) {
+      // Menangani kesalahan lainnya
+      print('Error occurred: $e');
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final kodeTransaksi = "#${orderData.transaksi!.kodeTr.toString()}";
@@ -29,6 +68,7 @@ class ItemKonfirmasiPesananKurir extends StatelessWidget {
             ? "Menunggu"
             : orderData.status.toString();
     final alamat = orderData.transaksi?.alamat ?? "";
+    final idKurir = orderData.transaksi?.idKurir ?? "";
     final namaPelanggan = orderData.transaksi?.nama ?? "";
     final noTelpPelanggan = orderData.transaksi?.noTelepon ?? "";
     final jumlahMenu = orderData.transaksi!.detailTransaksi!.length.toString();
@@ -335,6 +375,25 @@ class ItemKonfirmasiPesananKurir extends StatelessWidget {
                                             fontWeight: FontWeight.bold)),
                                   ),
                                 ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          final idchat = await fetchMessagesKurir(
+                              orderData.transaksi!.kodeTr.toString(), idKurir);
+
+                          if (idchat != null) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DetailChatPageKurir(
+                                    conversationId: idchat, kantinnn: namaPelanggan, idkurirr: idKurir),
+                              ),
+                            );
+                          } else {
+                            print("Gagal mendapatkan id_chat.");
+                          }
+                        },
+                        child: Text("Chat"),
+                      ),
                     ],
                   ),
                 ],

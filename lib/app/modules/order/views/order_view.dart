@@ -400,7 +400,8 @@ class OrderView extends GetView<OrderController> {
                             ),
                           ),
                           Text(
-                            '+ ${biayakirim.toRupiah()}',
+                            // '+ ${biayakirim.toRupiah()}',
+                            "+ ${orderController.calculateValueBasedOnRange().toRupiah()}",
                             style: GoogleFonts.poppins(
                               textStyle: const TextStyle(
                                 fontSize: 14,
@@ -622,7 +623,8 @@ class OrderView extends GetView<OrderController> {
                                               Navigator.of(context).pop();
                                               await EasyLoading.show(
                                                 status: 'loading...',
-                                                maskType: EasyLoadingMaskType.black,
+                                                maskType:
+                                                    EasyLoadingMaskType.black,
                                               );
                                               await homeController
                                                   .submitOrder();
