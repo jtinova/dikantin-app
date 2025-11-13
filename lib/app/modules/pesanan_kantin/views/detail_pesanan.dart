@@ -43,59 +43,14 @@ class DetailPesananView extends GetView<PesananController> {
         centerTitle: true,
       ),
       body: SafeArea(
-          child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Pesanan(item: data),
-          ListPesanan(item: data, controller: controller),
-        ],
-      )),
-      bottomNavigationBar: (data.status == 'done' || data.status == 'on_delivery')
-          ? SizedBox.shrink()
-          : Padding(
-              padding: EdgeInsets.only(bottom: 14.h),
-              child: BottomAppBar(
-                elevation: 0,
-                color: Colors.transparent,
-                child: GestureDetector(
-                  onTap: () async {
-                    if (data.details.isEmpty) {
-                      Get.snackbar("Error", "Detail pesanan tidak ditemukan.");
-                      return;
-                    }
-
-                    final detailId = data.details.first.id;
-
-                    if (data.status == 'pending') {
-                      await controller.updateOrderProcess(detailId); 
-                    } else if (data.status == 'cooking') {
-                      await controller.updateOrderComplete(detailId); 
-                    }
-                  },
-                  child: Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.symmetric(vertical: 10.h), 
-                    decoration: BoxDecoration(
-                      color: Color(0xFF1E2857), 
-                      borderRadius: BorderRadius.circular(10.r), 
-                    ),
-                    alignment: Alignment.center, 
-                    child: Text(
-                      data.status == 'pending'
-                          ? "Masak" 
-                          : data.status == 'cooking'
-                              ? "Selesaikan" 
-                              : "",  
-                      style: TextStyle(
-                        color: Colors.white, 
-                        fontSize: 16.sp, 
-                        fontWeight: FontWeight.w500, 
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Pesanan(item: data),
+            ListPesanan(item: data, controller: controller),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -137,10 +92,11 @@ class Pesanan extends StatelessWidget {
                   item.orderTypeLabel,
                   style: TextStyle(color: Color(0xFF403E3E), fontSize: 13.sp),
                 ),
-                Text(
-                  "Meja: ${item.deskNumber}",
-                  style: TextStyle(color: Color(0xFF403E3E), fontSize: 13.sp),
-                ),
+                if (item.deskNumber > 0)
+                  Text(
+                    "Meja: ${item.deskNumber}",
+                    style: TextStyle(color: Color(0xFF403E3E), fontSize: 13.sp),
+                  ),
               ],
             )
           ],
@@ -155,6 +111,85 @@ class ListPesanan extends StatelessWidget {
 
   final TransactionModel item;
   final PesananController controller;
+
+  Widget _buildItemAction(OrderDetail pesanan) {
+    if (pesanan.status == 'pending') {
+      return Align(
+        alignment: Alignment.centerRight,
+        child: ElevatedButton(
+          onPressed: () {
+            controller.updateOrderProcess(pesanan.id);
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Color(0xFF1E2857),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.r),
+            ),
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          ),
+          child: Text(
+            "Masak",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 13.sp,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      );
+    } else if (pesanan.status == 'processing') {
+      return Align(
+        alignment: Alignment.centerRight,
+        child: ElevatedButton(
+          onPressed: () {
+            controller.updateOrderComplete(pesanan.id);
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.green, 
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.r),
+            ),
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          ),
+          child: Text(
+            "Selesaikan",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 13.sp,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      );
+    } else if (pesanan.status == 'completed') {
+      return Align(
+        alignment: Alignment.centerRight,
+        child: Text(
+          "Selesai dimasak",
+          style: TextStyle(
+            color: Colors.green,
+            fontSize: 13.sp,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      );
+    } else if (pesanan.status == 'canceled') {
+      return Align(
+        alignment: Alignment.centerRight,
+        child: Text(
+          "Dibatalkan",
+          style: TextStyle(
+            color: Colors.red,
+            fontSize: 13.sp,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      );
+    }
+    return SizedBox.shrink();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -251,6 +286,8 @@ class ListPesanan extends StatelessWidget {
                                       fontWeight: FontWeight.w400,
                                     ),
                                   ),
+                                  SizedBox(height: 8.h),
+                                  _buildItemAction(pesanan),
                                 ],
                               ),
                             ),
