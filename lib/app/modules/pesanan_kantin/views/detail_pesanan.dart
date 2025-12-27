@@ -175,7 +175,7 @@ class ListPesanan extends StatelessWidget {
           ),
         ),
       );
-    } else if (pesanan.status == 'canceled') {
+    } else if (pesanan.status == 'cancelled') {
       return Align(
         alignment: Alignment.centerRight,
         child: Text(
