@@ -583,30 +583,69 @@ class HomeCourierView extends GetView<HomeCourierController> {
               itemCount: items.length,
               itemBuilder: (context, index) {
                 final item = items[index];
+                print(item);
                 final String note = item['note'] ?? 'Tidak ada catatan';
+                final bool isCanceled = item['status'] == 'cancelled';
+
                 return Padding(
                   padding: EdgeInsets.symmetric(vertical: 8.h),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        item['menu_name'] ?? 'Nama Menu Tidak Tersedia',
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w500,
-                        ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              item['menu_name'] ?? 'Nama Menu Tidak Tersedia',
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.w500,
+                                decoration: isCanceled
+                                    ? TextDecoration.lineThrough
+                                    : TextDecoration.none,
+                                color: isCanceled ? Colors.grey : Colors.black,
+                              ),
+                            ),
+                          ),
+                          if (isCanceled)
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 6.w,
+                                vertical: 2.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.red.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(4.r),
+                                border: Border.all(color: Colors.red),
+                              ),
+                              child: Text(
+                                'Dibatalkan',
+                                style: TextStyle(
+                                  fontSize: 10.sp,
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
                       SizedBox(height: 2.h),
                       Text(
                         'Jumlah: ${item['qty']} x ${controller.formatCurrency((item['selling_cost'] ?? 0).toDouble())}',
-                        style:
-                            TextStyle(fontSize: 14.sp, color: Colors.grey[700]),
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: isCanceled ? Colors.grey : Colors.grey[700],
+                          decoration: isCanceled
+                              ? TextDecoration.lineThrough
+                              : TextDecoration.none,
+                        ),
                       ),
                       Text(
                         'Catatan: $note',
                         style: TextStyle(
                           fontSize: 14.sp,
-                          color: Colors.grey[600],
+                          color: isCanceled ? Colors.grey : Colors.grey[600],
                           fontStyle: FontStyle.italic,
                         ),
                       ),

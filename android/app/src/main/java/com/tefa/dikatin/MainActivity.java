@@ -1,4 +1,4 @@
-package com.tefa.dikantin;
+package com.tefa.dikatin;
 
 import io.flutter.embedding.android.FlutterActivity;
 
