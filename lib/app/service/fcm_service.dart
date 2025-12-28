@@ -10,6 +10,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:dikantin_app_rebuild/firebase_options.dart';
 import 'package:get/get.dart';
 
+import '../modules/home_courier/controllers/home_courier_controller.dart';
 import '../modules/navigation/controllers/navigation_controller.dart';
 
 @pragma('vm:entry-point')
@@ -31,6 +32,29 @@ class NotificationService {
       FirebaseMessaging.instance;
 
   static void _handleNavigation(Map<String, dynamic> data) {
+    if (data['type'] == 'new_delivery_task') {
+      final arguments = {
+        'action': 'open_detail',
+        'transaction_id': data['transaction_id'],
+        'order_delivery_id': data['order_delivery_id'], 
+      };
+
+      if (Get.currentRoute == Routes.NAVIGATION_COURIER || 
+          Get.currentRoute == Routes.HOME_COURIER) {
+          
+        if (Get.isRegistered<HomeCourierController>()) {
+          final controller = Get.find<HomeCourierController>();
+          controller.handleNotificationArguments(arguments);
+        }
+      } else {
+        Get.offAllNamed(
+          Routes.NAVIGATION_COURIER, 
+          arguments: arguments
+        );
+      }
+      return; 
+    }
+
     if (data.containsKey('transaction_id')) {
       final String transactionId = data['transaction_id'];
       final String status = data['status'] ?? '';
@@ -43,11 +67,16 @@ class NotificationService {
       };
 
       if (status == 'done' || status == 'cancel') {
-        arguments['target_page'] = 3;
+        arguments['target_page'] = 3; 
         arguments['go_to'] = Routes.HISTORY_ORDER;
-      } else {
+      } 
+      else if (status == 'delivered' || status == 'arrived') {
         arguments['target_page'] = 1;
-        if (status == 'pending' || status == 'cooking') {
+        arguments['target_sub_tab'] = 3;
+      }
+      else {
+        arguments['target_page'] = 1; 
+        if (status == 'pending') {
           arguments['target_sub_tab'] = 0;
         } else {
           switch (orderType) {

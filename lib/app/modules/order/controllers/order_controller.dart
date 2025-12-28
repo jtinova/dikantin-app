@@ -61,10 +61,26 @@ class OrderController extends GetxController {
       String orderId, String orderType) async {
     EasyLoading.show(status: 'Loading...');
 
-    if (orderType == 'delivery') {
-      await getDetailShipping(orderId);
-    } else {
-      await getDetailProgress(orderId);
+    int retryCount = 0;
+    const int maxRetries = 5;
+    bool isFound = false;
+
+    while (retryCount < maxRetries && !isFound) {
+      if (orderType == 'delivery') {
+        await getDetailShipping(orderId);
+        if (detailShipping.isNotEmpty) isFound = true;
+      } else {
+        await getDetailProgress(orderId);
+        if (detailOrder.isNotEmpty) isFound = true;
+      }
+
+      if (!isFound) {
+        retryCount++;
+        print("Percobaan ke-$retryCount: Data belum ditemukan, menunggu...");
+        if (retryCount < maxRetries) {
+          await Future.delayed(const Duration(seconds: 1));
+        }
+      }
     }
 
     EasyLoading.dismiss();
@@ -93,10 +109,10 @@ class OrderController extends GetxController {
       }
     } else {
       Get.snackbar(
-        "Informasi",
-        "Tidak dapat menemukan detail pesanan dari notifikasi.",
+        "Data Belum Siap",
+        "Server sedang memproses data pesanan. Silakan cek pesanan secara manual sesaat lagi.",
         animationDuration: const Duration(milliseconds: 200),
-        duration: const Duration(milliseconds: 1650),
+        duration: const Duration(seconds: 3),
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
         borderWidth: 5.w,
         snackPosition: SnackPosition.TOP,
@@ -105,7 +121,8 @@ class OrderController extends GetxController {
           vertical: 20.h,
         ),
         icon: const Icon(
-          CupertinoIcons.info_circle,
+          CupertinoIcons.exclamationmark_circle,
+          color: Colors.orange,
         ),
       );
     }
@@ -181,6 +198,10 @@ class OrderController extends GetxController {
         getDineIn(),
         getHistory(),
       ]);
+
+      if (Get.arguments != null && Get.arguments is Map<String, dynamic>) {
+        handleNotificationArguments(Get.arguments);
+      }
     } catch (e) {
       Get.snackbar(
         "Informasi ",

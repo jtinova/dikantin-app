@@ -276,10 +276,16 @@ class OrderDetailBottom extends StatelessWidget {
                     fontSize: 14.sp,
                   ),
                 ),
-                Text(
-                  order.delivery!.buildingName,
-                  style: TextStyle(
-                    fontSize: 14.sp,
+                SizedBox(width: 10.w),
+                Expanded(
+                  child: Text(
+                    order.delivery!.buildingName,
+                    textAlign: TextAlign.end,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                    ),
                   ),
                 ),
               ],

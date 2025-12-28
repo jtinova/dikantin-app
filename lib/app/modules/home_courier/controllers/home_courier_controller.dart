@@ -2,12 +2,17 @@
 
 import 'dart:convert';
 import 'package:dikantin_app_rebuild/app/service/api_service.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:flutter/services.dart';
 
 import '../../../service/api_client_service.dart';
+import '../widgets/courier_detail_sheet.dart';
+import '../widgets/courier_item_dialog.dart';
 
 class HomeCourierController extends GetxController
     with GetTickerProviderStateMixin {
@@ -26,8 +31,94 @@ class HomeCourierController extends GetxController
   void onInit() {
     super.onInit();
     tabController = TabController(length: 2, vsync: this);
-    getProfile();
-    getPendingOrders();
+
+    loadInitialData();
+  }
+
+  Future<void> loadInitialData() async {
+    await getProfile();
+    await getPendingOrders().then((_) {
+      if (Get.arguments != null) {
+        handleNotificationArguments(Get.arguments);
+      }
+    });
+  }
+
+  void handleNotificationArguments(Map<String, dynamic> args) {
+    if (args['action'] == 'open_detail') {
+      final String orderId = args['order_delivery_id']!.toString();
+
+      if (orderId.isNotEmpty) {
+        _showOrderDetailFromNotification(orderId);
+      }
+    }
+  }
+
+  Future<void> _showOrderDetailFromNotification(String orderId) async {
+    EasyLoading.show(status: 'Loading...');
+
+    try {
+      final details = await getOrderDetail(orderId);
+
+      EasyLoading.dismiss();
+
+      if (details.isNotEmpty) {
+        Map<String, dynamic> orderSimple = {
+          'id': orderId,
+          'status': details['transaction_summary']['status'] ?? 'pending',
+          'building_name': details['customer_information']['building_name'],
+          // ... field lain jika diperlukan oleh logika tombol
+        };
+
+        final List<dynamic> orderItems = details['transaction_details'] ?? [];
+        
+        if (Get.context != null) {
+          showModalBottomSheet(
+            context: Get.context!,
+            isScrollControlled: true,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+            ),
+            builder: (context) => CourierDetailSheet(
+              order: orderSimple,
+              details: details,
+              orderItems: orderItems,
+              controller: this,
+              onShowItems: (items) => _showOrderItemsDialog(context, items),
+            ),
+          );
+        }
+      } else {
+        Get.snackbar(
+          "Informasi",
+          "Tidak dapat menemukan detail pesanan dari notifikasi.",
+          animationDuration: const Duration(milliseconds: 200),
+          duration: const Duration(milliseconds: 1650),
+          backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+          borderWidth: 5.w,
+          snackPosition: SnackPosition.TOP,
+          margin: EdgeInsets.symmetric(
+            horizontal: 20.w,
+            vertical: 20.h,
+          ),
+          icon: const Icon(
+            CupertinoIcons.info_circle,
+          ),
+        );
+      }
+    } catch (e) {
+      EasyLoading.dismiss();
+      print("Error notification detail: $e");
+    }
+  }
+
+  void _showOrderItemsDialog(BuildContext context, List<dynamic> items) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CourierItemDialog(items: items);
+      },
+    );
   }
 
   @override
@@ -61,6 +152,7 @@ class HomeCourierController extends GetxController
 
   Future<void> getPendingOrders() async {
     try {
+      isLoading(true);
       final response = await ApiClient.get(AppUrl.pendingOrders);
 
       if (response.statusCode == 200) {
@@ -71,7 +163,9 @@ class HomeCourierController extends GetxController
           pendingOrders.value =
               orderList.where((order) => order['status'] == 'pending').toList();
           deliveredOrders.value = orderList
-              .where((order) => order['status'] == 'delivered' || order['status'] == 'arrived')
+              .where((order) =>
+                  order['status'] == 'delivered' ||
+                  order['status'] == 'arrived')
               .toList();
         }
       } else {
@@ -80,6 +174,8 @@ class HomeCourierController extends GetxController
     } catch (e, stackTrace) {
       print("Error getting orders: $e");
       print("Stack trace: $stackTrace");
+    } finally {
+      isLoading(false);
     }
   }
 
@@ -226,21 +322,6 @@ class HomeCourierController extends GetxController
     }
   }
 
-  String formatCurrency(double amount) {
-    return 'Rp ${amount.toStringAsFixed(0).replaceAllMapped(
-          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-          (Match m) => '${m[1]}.',
-        )}';
-  }
-
-  String capitalizeFirst(String text) {
-    return text
-        .split('_')
-        .map((word) =>
-            word.isNotEmpty ? word[0].toUpperCase() + word.substring(1) : '')
-        .join(' ');
-  }
-
   Future<void> showWithdrawalHistory() async {
     try {
       final response = await ApiClient.get(AppUrl.withDrawlHistory);
@@ -299,5 +380,20 @@ class HomeCourierController extends GetxController
     } catch (e) {
       print("Error getting withdrawal history: $e");
     }
+  }
+
+  String formatCurrency(double amount) {
+    return 'Rp ${amount.toStringAsFixed(0).replaceAllMapped(
+          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+          (Match m) => '${m[1]}.',
+        )}';
+  }
+
+  String capitalizeFirst(String text) {
+    return text
+        .split('_')
+        .map((word) =>
+            word.isNotEmpty ? word[0].toUpperCase() + word.substring(1) : '')
+        .join(' ');
   }
 }
